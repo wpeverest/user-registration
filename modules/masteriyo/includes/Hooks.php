@@ -145,11 +145,13 @@ if ( ! class_exists( 'Hooks' ) ) :
 		/**
 		 * Adds membership block text inside the course sidebar.
 		 *
-		 * @return void
+		 * @param mixed $course Course object.
+		 * @return string
 		 */
 		public function add_single_course_sidebar_content1( $course ) {
 
-			$layout = masteriyo_get_setting( 'single_course.display.template.layout' ) ?? 'default';
+			$setting = masteriyo_get_setting( 'single_course.display.template.layout' );
+			$layout = null !== $setting ? $setting : 'default';
 			if ( masteriyo_is_single_course_page() && 'layout1' === $layout ) {
 				$this->add_single_course_sidebar_content( $course );
 			}
@@ -159,6 +161,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 		/**
 		 * Adds membership block text inside the course sidebar.
 		 *
+		 * @param mixed $course Course object.
 		 * @return void
 		 */
 		public function add_single_course_sidebar_content( $course ) {
@@ -199,12 +202,21 @@ if ( ! class_exists( 'Hooks' ) ) :
 										class="membership-amount">
 										<?php echo esc_html( sprintf( '%s%.2f', $symbol, $membership['amount'] ) ); ?>
 									</span>
-									<span class="ur-membership-duration">
+									<?php
+									$time = '';
+									if ( 'paid' === $membership['type'] ) {
+										$time = esc_html__( 'lifetime', 'user-registration' );
+									}
+									$is_lifetime_listing = ( 'subscription' !== $membership['type'] && $time && false !== stripos( (string) $time, 'lifetime' ) )
+														   || ( isset( $membership['period'] ) && false !== stripos( (string) $membership['period'], 'lifetime' ) );
+									if ( ! $is_lifetime_listing && ( $time || isset( $membership['period'] ) ) ) :
+										?>
+										<span class="ur-membership-duration">
 										<?php
-										if ( $membership['time'] || $membership['subscription'] ) {
-											echo ' / ' . ( 'subscription' === $membership['type'] ? esc_html( $membership['subscription']['value'] ) . ' ' . esc_html( ucfirst( $membership['subscription']['duration'] ) ) : esc_html( $membership['time'] ) ); }
+										echo ' every ' . ( 'subscription' === $membership['type'] ? esc_html( ucfirst( trim( strtolower( explode( 'every', $membership['period'] )[1] ?? '' ) ) ) ) : esc_html( $time ) );
 										?>
 									</span>
+									<?php endif; ?>
 								</div>
 							<?php } else { ?>
 								<div class="ur-membership-amount-wrapper">
@@ -223,9 +235,10 @@ if ( ! class_exists( 'Hooks' ) ) :
 				echo '</div></div>';
 				return;
 			} elseif ( CourseAccessMode::NEED_REGISTRATION === $course->get_access_mode() ) {
-					echo '<div class="masteriyo-single-course-stats urm-masteriyo-membership-list">';
-					echo '<span>' . esc_html__( 'This course is not associated with any membership.', 'user-registration' ) . '</span><br />';
-					echo '</div>';
+				echo '<div class="masteriyo-single-course-stats urm-masteriyo-membership-list">';
+				echo '<span>' . esc_html__( 'This course is not associated with any membership.', 'user-registration' ) . '</span><br />';
+				echo '</div>';
+				echo '<style>.masteriyo-enroll-btn{display:none !important;}</style>';
 			} else {
 				return;
 			}

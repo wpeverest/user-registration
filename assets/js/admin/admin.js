@@ -914,6 +914,10 @@ jQuery(function ($) {
 			$(".ur-builder-wrapper-footer").hide();
 			// Show only the form settings in fields panel.
 			$(".ur-selected-inputs").find("form#ur-field-settings").show();
+			// Re-apply redirect options visibility (Delay Before Redirect, etc.) when switching back to Form Settings tab (instant, no slide animation).
+			if (typeof hide_show_redirection_options === "function") {
+				hide_show_redirection_options(true);
+			}
 		}
 	);
 
@@ -1286,8 +1290,9 @@ jQuery(function ($) {
 
 	/**
 	 * Hide or Show Redirection settings.
+	 * @param {boolean} instant - If true, use show/hide instead of slide to avoid animation flicker (e.g. on tab switch).
 	 */
-	var hide_show_redirection_options = function () {
+	var hide_show_redirection_options = function (instant) {
 		var redirect_after_registration = $(
 			"#user_registration_form_setting_redirect_after_registration"
 		);
@@ -1295,14 +1300,18 @@ jQuery(function ($) {
 			redirect_after_registration.find(":selected");
 		var custom_redirection_page = $(
 			"#user_registration_form_setting_redirect_page"
-		)
-			.closest(".form-row")
-			.slideUp(800);
-		var redirect_url = $("#user_registration_form_setting_redirect_options")
-			.closest(".form-row")
-			.slideUp(800);
+		).closest(".form-row");
+		var redirect_url = $("#user_registration_form_setting_redirect_options").closest(".form-row");
 		var form_row = redirect_after_registration.closest(".form-row");
 		form_row.find("#ur-rar-url-notice").remove();
+
+		if (instant) {
+			custom_redirection_page.hide();
+			redirect_url.hide();
+		} else {
+			custom_redirection_page.slideUp(800);
+			redirect_url.slideUp(800);
+		}
 
 		if (selected_redirection_option.length) {
 			switch (selected_redirection_option.val()) {
@@ -1310,24 +1319,24 @@ jQuery(function ($) {
 					$(
 						"#user_registration_form_setting_redirect_after_field"
 					).show();
-					custom_redirection_page.slideDown(800);
+					instant ? custom_redirection_page.show() : custom_redirection_page.slideDown(800);
 					break;
 				case "external-url":
 					$(
 						"#user_registration_form_setting_redirect_after_field"
 					).show();
-					redirect_url.slideDown(800);
+					instant ? redirect_url.show() : redirect_url.slideDown(800);
 					break;
 				case "no-redirection":
 					$(
 						"#user_registration_form_setting_redirect_after_field"
 					).hide();
-					if (
-						user_registration_form_builder_data.form_has_membership_field
-					) {
-						show_membership_redirection_notice(form_row);
-					}
-					break;
+				// if (
+				// 	user_registration_form_builder_data.form_has_membership_field
+				// ) {
+				// 	show_membership_redirection_notice(form_row);
+				// }
+				break;
 				case "previous-page":
 					$(
 						"#user_registration_form_setting_redirect_after_field"
@@ -2158,7 +2167,7 @@ function ur_init_tooltips($elements, options) {
 	if (undefined !== $elements && null !== $elements && "" !== $elements) {
 		var args = {
 			theme: "tooltipster-borderless",
-			maxWidth: 200,
+			maxWidth: 300,
 			multiple: true,
 			interactive: true,
 			position: "bottom",
