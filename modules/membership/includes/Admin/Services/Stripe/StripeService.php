@@ -691,7 +691,11 @@ class StripeService {
 
 		$payment_status = $intent->status;
 
-		$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+		$latest_order = $this->orders_repository->get_order_by_transaction_id( $intent->id );
+		if ( empty( $latest_order ) ) {
+			$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+		}
+		$latest_order = is_array( $latest_order ) ? $latest_order : ( $latest_order ? (array) $latest_order : array() );
 
 		if ( ! empty( $latest_order ) && 'stripe' !== $latest_order['payment_method'] ) {
 			PaymentGatewayLogging::log_error(
