@@ -240,30 +240,17 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Screenshots ==
 
-1. Setup Wizard
-2. Form Fields
-3. Field Options
-4. Form Settings
-5. Login Form Builder
-6. Membership Creation Page
-7. Payment Settings
-8. Payment History
-9. General Options
-10. Frontend Messages
-11. Google reCaptcha
-12. Basic Restriction Settings
-13. General Email Settings
-14. Export Users
-15. Import/Export Forms
-16. Gutenberg Block
-17. Registration Form
-18. Login Form
-19. Membership Registration Form
-20. User Account Page –  Horizontal Layout
-21. User Account Page –  Vertical Layout
+1. Membership Creation
+2. Payment Setup
+3. Content Restriction Rules
+4. Restricted View
+5. Form Builder
+6. Registration Form
+7. Login Form
+8. My Account Page
+9. Subscription Management
 
 == Changelog ==
-
 
 = 5.1.4    - 25/02/2026 =
 * Fix - Updated .org deploy code
