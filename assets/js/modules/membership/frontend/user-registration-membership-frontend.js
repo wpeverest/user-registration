@@ -892,15 +892,35 @@
 				".ur_membership_input_label"
 			);
 
-			if (total_label.find(".user-registration-badge").length > 0) {
-				total_label.find(".user-registration-badge").remove();
-			}
-			if (upgrade_type) {
-				total_label.append(
-					'<span class="user-registration-badge">' +
-						upgrade_type +
-						"</span>"
+			if ($(".urm-membership-sub-total-value").length > 0) {
+				var sub_total_label = $(".urm-membership-sub-total-value").find(
+					".ur_membership_input_label"
 				);
+
+				if (
+					sub_total_label.find(".user-registration-badge").length > 0
+				) {
+					sub_total_label.find(".user-registration-badge").remove();
+				}
+
+				if (upgrade_type) {
+					sub_total_label.append(
+						'<span class="user-registration-badge">' +
+							upgrade_type +
+							"</span>"
+					);
+				}
+			} else {
+				if (total_label.find(".user-registration-badge").length > 0) {
+					total_label.find(".user-registration-badge").remove();
+				}
+				if (upgrade_type) {
+					total_label.append(
+						'<span class="user-registration-badge">' +
+							upgrade_type +
+							"</span>"
+					);
+				}
 			}
 
 			var totalDetails =
@@ -1039,8 +1059,12 @@
 				),
 				discount_amount =
 					typeof discount_amount !== "undefined"
-						? parseInt(discount_amount)
-						: 0;
+						? parseFloat(discount_amount)
+						: 0,
+				membershipAmount = $membershipRadio.data(
+					"urm-membership-amount"
+				),
+				upgradeType = $membershipRadio.data("urm-upgrade-type") || null;
 
 			totalDetails.total = total;
 			totalDetails.taxAmount = 0;
@@ -1127,7 +1151,14 @@
 				} else {
 					$membershipRadio.data("urm-converted-amount", 0);
 					if (urmf_data.curreny_pos === "left") {
-						if (subTotal) {
+						if (upgradeType) {
+							$span.text(
+								urmf_data.currency_symbol +
+									membershipAmount.toFixed(2) +
+									" " +
+									durationPart
+							);
+						} else if (subTotal) {
 							$span.text(
 								urmf_data.currency_symbol +
 									subTotal.toFixed(2) +
@@ -1148,12 +1179,21 @@
 							totalDetails.subTotal = total;
 						}
 					} else {
-						$span.text(
-							subTotal.toFixed(2) +
-								urmf_data.currency_symbol +
-								" " +
-								durationPart
-						);
+						if (upgradeType) {
+							$span.text(
+								membershipAmount.toFixed(2) +
+									urmf_data.currency_symbol +
+									" " +
+									durationPart
+							);
+						} else if (subTotal) {
+							$span.text(
+								subTotal.toFixed(2) +
+									urmf_data.currency_symbol +
+									" " +
+									durationPart
+							);
+						}
 						if ($membershipRadio.is(":checked")) {
 							taxAmount =
 								ur_membership_ajax_utils.calculate_tax_amount(

@@ -658,12 +658,12 @@ class StripeService {
 		if ( ! empty( $pi_id ) ) {
 			$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
 
-		if ( $intent->status !== 'succeeded' ) {
-			$response['status']  = false;
-			$response['message'] = __( 'Payment not completed.', 'user-registration' );
+			if ( $intent->status !== 'succeeded' ) {
+				$response['status']  = false;
+				$response['message'] = __( 'Payment not completed.', 'user-registration' );
 
-			return $response;
-		}
+				return $response;
+			}
 
 			$payment_status = $intent->status;
 		}
@@ -2395,25 +2395,27 @@ class StripeService {
 		$price = \Stripe\Price::create( $data );
 
 		return $price->id;
-  }
-  
-  /**
+	}
+
+	/**
 	 * Backfill missed subscription update record.
 	 *
 	 * @param string $last_synced Last synced timestamp to fetch events from.
 	 * @return void
 	 */
 	public function run_missed_subscription_backfill( $last_synced ) {
-		$events = \Stripe\Event::all([
-			'types'   => ['customer.subscription.updated', 'customer.subscription.deleted'],
-			'created' => [
-				'gte' => $last_synced
-			],
-			'limit' => 100
-		]);
+		$events = \Stripe\Event::all(
+			array(
+				'types'   => array( 'customer.subscription.updated', 'customer.subscription.deleted' ),
+				'created' => array(
+					'gte' => $last_synced,
+				),
+				'limit'   => 100,
+			)
+		);
 
-		foreach ($events->autoPagingIterator() as $event) {
-			$subscription = $event->data->object;
+		foreach ( $events->autoPagingIterator() as $event ) {
+			$subscription    = $event->data->object;
 			$subscription_id = $subscription->id;
 
 			if ( empty( $subscription_id ) ) {
@@ -2426,17 +2428,16 @@ class StripeService {
 				continue;
 			}
 
-
-			if( $subscription->status !== $membership_subscription['status'] ) {
+			if ( $subscription->status !== $membership_subscription['status'] ) {
 				$update_data = array(
 					'status' => $subscription->status,
 				);
 
 				$current_period_end = $subscription->current_period_end ?? null;
-            	if ( ! empty( $current_period_end ) ) {
-					$next_billing_date                    = gmdate( 'Y-m-d H:i:s', $current_period_end );
-					$update_data['next_billing_date']     = $next_billing_date;
-					$update_data['expiry_date']           = $next_billing_date;
+				if ( ! empty( $current_period_end ) ) {
+					$next_billing_date                = gmdate( 'Y-m-d H:i:s', $current_period_end );
+					$update_data['next_billing_date'] = $next_billing_date;
+					$update_data['expiry_date']       = $next_billing_date;
 				}
 
 				$this->members_subscription_repository->update(
@@ -2454,17 +2455,19 @@ class StripeService {
 	 * @return void
 	 */
 	public function run_missed_payment_backfill( $last_synced ) {
-		$events = \Stripe\Event::all([
-			'types'   => ['invoice.payment_succeeded', 'invoice.paid'],
-			'created' => [
-				'gte' => $last_synced,
-			],
-			'limit' => 100
-		]);
+		$events = \Stripe\Event::all(
+			array(
+				'types'   => array( 'invoice.payment_succeeded', 'invoice.paid' ),
+				'created' => array(
+					'gte' => $last_synced,
+				),
+				'limit'   => 100,
+			)
+		);
 
-		foreach ($events->autoPagingIterator() as $event) {
-			$invoice = $event->data->object;
-			$subscription_id  = $invoice->subscription ?? null;
+		foreach ( $events->autoPagingIterator() as $event ) {
+			$invoice           = $event->data->object;
+			$subscription_id   = $invoice->subscription ?? null;
 			$payment_intent_id = $invoice->payment_intent ?? null;
 
 			if ( empty( $subscription_id ) || empty( $payment_intent_id ) ) {
@@ -2473,17 +2476,17 @@ class StripeService {
 
 			$membership_subscription = $this->members_subscription_repository->get_subscription_by_subscription_id_meta( $subscription_id );
 
-			if( ! empty( $membership_subscription ) ) {
+			if ( ! empty( $membership_subscription ) ) {
 				$payment = $this->orders_repository->get_order_by_transaction_id( $payment_intent_id );
 
-				if( empty( $payment ) ) {
+				if ( empty( $payment ) ) {
 					$payment = $this->orders_repository->get_order_by_transaction_id( $subscription_id );
 					$this->orders_repository->delete( $payment['ID'] );
 
-					$subscription = $this->members_subscription_repository->retrieve( $membership_subscription['ID'] );
+					$subscription   = $this->members_subscription_repository->retrieve( $membership_subscription['ID'] );
 					$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent_id );
-					$paid_amount = $payment_intent->amount_received / 100; // Convert from cents to dollars
-					$created_at = gmdate( 'Y-m-d H:i:s', $invoice->created );
+					$paid_amount    = $payment_intent->amount_received / 100; // Convert from cents to dollars
+					$created_at     = gmdate( 'Y-m-d H:i:s', $invoice->created );
 
 					$order_data = array(
 						'orders_data'      => array(
