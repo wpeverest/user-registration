@@ -543,8 +543,22 @@
 			<span id="payment-gateway-notice" class="notice_red"></span>
 		</div>
 		<?php
+		$show_bank_details_on_form = false;
+		if ( isset( $attributes['user_registration_show_bank_details_on_form'] ) ) {
+			$show_bank_details_on_form = ur_string_to_bool( $attributes['user_registration_show_bank_details_on_form'] );
+		} elseif ( ! empty( $attributes['form_id'] ) && function_exists( 'ur_get_form_field_data' ) ) {
+			$form_id_raw   = $attributes['form_id'];
+			$form_id_int   = is_array( $form_id_raw ) ? ( ! empty( $form_id_raw ) ? absint( reset( $form_id_raw ) ) : 0 ) : absint( $form_id_raw );
+			$form_fields   = $form_id_int > 0 ? ur_get_form_field_data( $form_id_int ) : array();
+			foreach ( (array) $form_fields as $field ) {
+				if ( isset( $field->field_key, $field->general_setting->user_registration_show_bank_details_on_form ) && 'membership' === $field->field_key ) {
+					$show_bank_details_on_form = ur_string_to_bool( $field->general_setting->user_registration_show_bank_details_on_form );
+					break;
+				}
+			}
+		}
+
 		$bank_details = get_option( 'user_registration_global_bank_details', '' );
-		$show_bank_details_on_form = get_option( 'user_registration_show_bank_details_on_form', false);
 		if ( ! empty( $bank_details ) && $show_bank_details_on_form ) :
 			?>
 			<div id="ur-bank-details-container" class="ur-bank-details" style="display:none;">
