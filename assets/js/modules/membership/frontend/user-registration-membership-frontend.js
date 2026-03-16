@@ -2123,13 +2123,24 @@
 									thank_you_data.is_renewing =
 										response.data.is_renewing;
 								}
+
+								var upgradeRedirectUrl =
+									$("#urm-redirect-url").val() ||
+									urmf_data.thank_you_page_url ||
+									window.location.href;
+
 								ur_membership_ajax_utils.show_default_response(
-									window.location.href,
+									upgradeRedirectUrl,
 									thank_you_data
 								);
 							} else {
+								var stripeRedirectUrl =
+									$("#urm-redirect-url").val() ||
+									urmf_data.thank_you_page_url ||
+									window.location.href;
+
 								ur_membership_ajax_utils.show_default_response(
-									urmf_data.thank_you_page_url,
+									stripeRedirectUrl,
 									{
 										username: prepare_members_data.username,
 										transaction_id:
