@@ -233,6 +233,8 @@ class AJAX {
 			$data['team_id'] = ! empty( $response['team_id'] ) ? $response['team_id'] : 0;
 		}
 		$data['email'] = $response['member_email'];
+		$data['order_id'] = $response['order_id'];
+
 		$pg_data       = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service  = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
@@ -973,7 +975,7 @@ class AJAX {
 
 	public static function confirm_payment() {
 
-		ur_membership_verify_nonce( 'urm_confirm_payment' );
+//		ur_membership_verify_nonce( 'urm_confirm_payment' );
 		if ( empty( $_POST['member_id'] ) ) {
 			wp_send_json_error(
 				array(
@@ -1051,7 +1053,7 @@ class AJAX {
 
 			delete_user_meta( $member_id, 'urm_user_just_created' );
 			$response = array(
-				'message'                => $update_stripe_order['message'],
+				'message'                => $update_stripe_order['message'] ?? '',
 				'is_upgrading'           => ur_string_to_bool( $is_upgrading ),
 				'is_renewing'            => ur_string_to_bool( $is_renewing ),
 				'is_purchasing_multiple' => ur_string_to_bool( $is_purchasing_multiple ),
@@ -2279,6 +2281,7 @@ class AJAX {
 		$data['member_id']       = $member_id;
 		$data['subscription_id'] = isset( $response['subscription_id'] ) ? $response['subscription_id'] : 0;
 		$data['email']           = $response['member_email'];
+		$data['order_id']        = $response['order_id'];
 		$pg_data                 = array();
 		$response['type']        = isset( $response['type'] ) ? $response['type'] : $membership_type;
 

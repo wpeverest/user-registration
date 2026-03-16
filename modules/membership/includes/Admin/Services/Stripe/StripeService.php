@@ -564,7 +564,7 @@ class StripeService {
 				);
 
 				$response['client_secret'] = $intent->client_secret;
-
+				$this->orders_repository->update( $response_data['order_id'], array('transaction_id' => $intent->id));
 				PaymentGatewayLogging::log_transaction_success(
 					'stripe',
 					'Payment intent created successfully',
@@ -609,6 +609,7 @@ class StripeService {
 	 * @return array
 	 */
 	public function update_order( $data ) {
+
 		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? $data['payment_result']['id'] ?? '';
 		$payment_status         = sanitize_text_field( $data['payment_status'] );
 		$member_id              = isset( $_POST['member_id'] ) ? absint( wp_unslash( $_POST['member_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -617,12 +618,13 @@ class StripeService {
 		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( wp_unslash( $_POST['current_membership_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'], true );
 		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
-		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? '';
 		$team_id                = isset( $_POST['team_id'] ) && '' !== $_POST['team_id'] ? absint( wp_unslash( $_POST['team_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$order_id               = $data['order_id'] ?? '';
 
-		if ( empty( $transaction_id ) ) {
+		if ( empty( $transaction_id ) || preg_match('/^sub_/', $transaction_id) ) {
 			$transaction_id = $data['payment_result']['latest_invoice']['payment_intent']['id'] ?? '';
 		}
+
 
 		$three_d_secure_2_source = $data['payment_result']['latest_invoice']['payment_intent']['next_action']['use_stripe_sdk']['three_d_secure_2_source'] ?? '';
 
@@ -681,7 +683,43 @@ class StripeService {
 			return $response;
 		}
 
-		$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
+		$latest_order = $this->orders_repository->get_order_by_transaction_id( $pi_id );
+
+		$latest_order = is_array( $latest_order ) ? $latest_order : ( $latest_order ? (array) $latest_order : array() );
+
+		if ( empty( $latest_order ) ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Order not found for member.',
+				array(
+					'error_code' => 'ORDER_NOT_FOUND',
+					'member_id'  => $member_id,
+				)
+			);
+			$response['status']  = false;
+			$response['message'] = __( 'Order not found for  ' . $member_id, 'user-registration' );
+
+			return $response;
+		}
+
+		try {
+			$intent = \Stripe\PaymentIntent::retrieve( $latest_order['transaction_id'] );
+		} catch ( \Stripe\Exception\ApiErrorException $ex ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Stripe API error occurred while retrieving PaymentIntent',
+				array(
+					'error_code'        => 'STRIPE_API_ERROR',
+					'error_message'     => $ex->getMessage(),
+					'member_id'         => $member_id,
+					'payment_intent_id' => $pi_id,
+				)
+			);
+
+			$response['status']  = false;
+			$response['message'] = __( 'Payment verification failed.', 'user-registration' );
+			return $response;
+		}
 
 		if ( $intent->status !== 'succeeded' ) {
 			$response['status']  = false;
@@ -691,11 +729,6 @@ class StripeService {
 
 		$payment_status = $intent->status;
 
-		$latest_order = $this->orders_repository->get_order_by_transaction_id( $intent->id );
-		if ( empty( $latest_order ) ) {
-			$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
-		}
-		$latest_order = is_array( $latest_order ) ? $latest_order : ( $latest_order ? (array) $latest_order : array() );
 
 		if ( ! empty( $latest_order ) && 'stripe' !== $latest_order['payment_method'] ) {
 			PaymentGatewayLogging::log_error(
@@ -713,24 +746,9 @@ class StripeService {
 			return $response;
 		}
 
-		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id ) ) {
+		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id , $order_id ) ) {
 			$response['status']  = false;
 			$response['message'] = __( 'Duplicate transaction id.', 'user-registration' );
-
-			return $response;
-		}
-
-		if ( empty( $latest_order ) ) {
-			PaymentGatewayLogging::log_error(
-				'stripe',
-				'Order not found for member',
-				array(
-					'error_code' => 'ORDER_NOT_FOUND',
-					'member_id'  => $member_id,
-				)
-			);
-			$response['status']  = false;
-			$response['message'] = __( 'Order not found for  ' . $member_id, 'user-registration' );
 
 			return $response;
 		}
@@ -1118,7 +1136,7 @@ class StripeService {
 								$first_month_price = $new_price;
 							}
 
-							if ( $new_price > $current_price ) {
+							if ( ( $new_price > $current_price ) && ( !empty($order_detail['coupon']) ||  "proration" == $upgrade_type) ) {
 								if ( isset( $order_detail['coupon'] ) && ! empty( $order_detail['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 									$coupon_details  = ur_get_coupon_details( $order_detail['coupon'] );
 									$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $first_month_price * $coupon_details['coupon_discount'] / 100;
@@ -1128,9 +1146,7 @@ class StripeService {
 									} else {
 										$amount = $current_price + $discount_amount;
 									}
-								} elseif ( 'full' === $upgrade_type ) {
-									$amount = $new_price;
-								} else {
+								} elseif ( 'proration' === $upgrade_type ) {
 									$amount = $new_price - $first_month_price;
 								}
 
@@ -1230,8 +1246,9 @@ class StripeService {
 					'has_coupon'  => isset( $subscription_details['coupon'] ),
 				)
 			);
-
+			error_log(print_r( $subscription_details, true ));
 			$subscription        = \Stripe\Subscription::create( $subscription_details );
+			error_log(print_r( $subscription, true ));
 			$subscription_status = $subscription->status ?? '';
 			PaymentGatewayLogging::log_api_response(
 				'stripe',

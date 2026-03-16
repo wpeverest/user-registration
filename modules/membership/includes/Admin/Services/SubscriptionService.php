@@ -561,6 +561,7 @@ class SubscriptionService {
 			'ur_authorize_net'       => $ur_authorize_net_data,
 			'selected_membership_id' => $data['selected_membership_id'],
 			'current_membership_id'  => $data['current_membership_id'],
+			'order_id'               => $order['ID'],
 		);
 
 		if ( ! empty( $coupon ) ) {
@@ -931,6 +932,7 @@ class SubscriptionService {
 			'transaction_id'    => $orders_data['orders_data']['transaction_id'],
 			'upgrade'           => false,
 			'subscription_data' => $member_subscription,
+			'order_id'          => $order['ID']
 		);
 
 		$renew_response           = $payment_service->build_response( $data );
