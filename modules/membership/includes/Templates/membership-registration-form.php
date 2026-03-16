@@ -3,20 +3,20 @@
 		<span class="notice_message"></span>
 		<span class="close_notice">&times;</span>
 	</div>
-
-	<?php
-		// Determine redirect URL for membership registration (e.g., form setting / thank you page).
-		if ( function_exists( 'ur_get_form_redirect_url' ) ) {
-			$membership_redirect_url = ur_get_form_redirect_url( $form_id );
-		} else {
-			$membership_redirect_url = '';
-		}
-	?>
-	<input type="hidden" id="urm-redirect-url"
-		   value="<?php echo esc_url( $membership_redirect_url ); ?>"/>
 </div>
-<!--user registration section-->
+
+<?php
+	// Determine redirect URL for membership registration (e.g., form setting / thank you page).
+	if ( function_exists( 'ur_get_form_redirect_url' ) ) {
+		$membership_redirect_url = ur_get_form_redirect_url( $form_id );
+	} else {
+		$membership_redirect_url = '';
+	}
+?>
+<!-- user registration section-->
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
+	<input type="hidden" id="urm-redirect-url"
+		   value="<?php echo esc_url( (string) $membership_redirect_url ); ?>"/>
 	<?php
 
 	$base_currency = get_option( 'user_registration_payment_currency', 'USD' );
