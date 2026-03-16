@@ -140,7 +140,7 @@
 											value="global"
 											<?php checked( $use_global_message, true ); ?>
 											class="urcr-checkbox-radio-input"
-										/>
+										/><b></b>
 										<div class="urcr-checkbox-radio--content">
 												<span class="urcr-checkbox-radio-label" style="display: flex; gap: 8px;">
 													<?php esc_html_e( 'Use Global Restriction Message', 'user-registration' ); ?>
