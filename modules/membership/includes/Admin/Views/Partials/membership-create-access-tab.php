@@ -142,7 +142,7 @@
 											class="urcr-checkbox-radio-input"
 										/><b></b>
 										<div class="urcr-checkbox-radio--content">
-												<span class="urcr-checkbox-radio-label" style="display: flex; gap: 8px;">
+												<span class="urcr-checkbox-radio-label" style="display: flex; gap: 6px;">
 													<?php esc_html_e( 'Use Global Restriction Message', 'user-registration' ); ?>
 												<?php
 												$content_restriction_tip = sprintf(
