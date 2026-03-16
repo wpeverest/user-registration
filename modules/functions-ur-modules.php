@@ -649,6 +649,36 @@ if ( ! function_exists( 'urm_get_form_user_payments' ) ) {
 	}
 }
 
+if ( ! function_exists( 'urwc_is_same_page_url' ) ) {
+	/**
+	 * Compare two URLs by host and path only, ignoring query strings, fragments, and protocol.
+	 *
+	 * Used to detect redirect-to-self loops on the WooCommerce shop page.
+	 *
+	 * @since x.x.x
+	 *
+	 * @param string $url_a First URL.
+	 * @param string $url_b Second URL.
+	 *
+	 * @return bool True if both URLs point to the same host+path.
+	 */
+	function urwc_is_same_page_url( $url_a, $url_b ) {
+		$parsed_a = wp_parse_url( $url_a );
+		$parsed_b = wp_parse_url( $url_b );
+
+		if ( ! $parsed_a || ! $parsed_b ) {
+			return false;
+		}
+
+		$host_a = strtolower( untrailingslashit( isset( $parsed_a['host'] ) ? $parsed_a['host'] : '' ) );
+		$host_b = strtolower( untrailingslashit( isset( $parsed_b['host'] ) ? $parsed_b['host'] : '' ) );
+		$path_a = untrailingslashit( isset( $parsed_a['path'] ) ? $parsed_a['path'] : '/' );
+		$path_b = untrailingslashit( isset( $parsed_b['path'] ) ? $parsed_b['path'] : '/' );
+
+		return $host_a === $host_b && $path_a === $path_b;
+	}
+}
+
 /**
  * Handle WooCommerce shop page content restriction.
  *
@@ -692,87 +722,91 @@ if ( ! function_exists( 'urwc_handle_shop_restriction' ) ) {
 				$redirect_url = home_url();
 			}
 
-			wp_redirect( $redirect_url ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
-			exit;
+			$wc_shop_url = function_exists( 'wc_get_page_id' ) ? get_permalink( wc_get_page_id( 'shop' ) ) : '';
+			if ( ! $wc_shop_url || ! urwc_is_same_page_url( $redirect_url, $wc_shop_url ) ) {
+				wp_redirect( $redirect_url ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
+				exit;
+			}
 
 		} elseif ( 'redirect_to_local_page' === $action_type ) {
-			$page_id = ! empty( $access_rule['actions'][0]['local_page'] ) ? absint( $access_rule['actions'][0]['local_page'] ) : null;
+			$page_id         = ! empty( $access_rule['actions'][0]['local_page'] ) ? absint( $access_rule['actions'][0]['local_page'] ) : null;
+			$wc_shop_page_id = function_exists( 'wc_get_page_id' ) ? wc_get_page_id( 'shop' ) : 0;
 
-			if ( $page_id ) {
-				$page_url = get_page_link( $page_id );
-				if ( $page_url ) {
-					wp_safe_redirect( $page_url ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
-					exit;
-				}
-			}
-
-			wp_safe_redirect( home_url() );
-			exit;
-
-		} else {
-			global $wp_query;
-			if ( $wp_query instanceof WP_Query ) {
-				$wp_query->posts         = array();
-				$wp_query->post_count    = 0;
-				$wp_query->found_posts   = 0;
-				$wp_query->max_num_pages = 0;
-			}
-
-			remove_all_actions( 'woocommerce_archive_description' );
-			remove_all_actions( 'woocommerce_before_shop_loop' );
-			remove_all_actions( 'woocommerce_before_shop_loop_item' );
-			remove_all_actions( 'woocommerce_before_shop_loop_item_title' );
-			remove_all_actions( 'woocommerce_shop_loop_item_title' );
-			remove_all_actions( 'woocommerce_after_shop_loop_item_title' );
-			remove_all_actions( 'woocommerce_after_shop_loop_item' );
-			remove_all_actions( 'woocommerce_after_shop_loop' );
-
-			add_action( 'woocommerce_no_products_found', 'ob_start', 0 );
-			add_action( 'woocommerce_no_products_found', 'ob_end_clean', PHP_INT_MAX );
-
-			add_action(
-				'wp_head',
-				function () {
-					echo '<style>.wp-block-woocommerce-product-collection-no-results{display:none!important}</style>';
-				}
-			);
-
-			$message = ! empty( $access_rule['actions'][0]['message'] )
-				? urldecode( $access_rule['actions'][0]['message'] )
-				: get_option( 'user_registration_content_restriction_message', '' );
-
-			$message = apply_filters( 'user_registration_process_smart_tags', $message );
-
-			$message = do_shortcode( $message );
-
-			$message_to_display = $message;
-
-			add_action(
-				'woocommerce_before_main_content',
-				function () use ( $message_to_display ) {
-					$login_page_id        = get_option( 'user_registration_login_page_id' );
-					$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
-					$login_url            = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
-					$signup_url           = $registration_page_id
-						? get_permalink( $registration_page_id )
-						: ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
-
-					if ( function_exists( 'urcr_get_template' ) ) {
-						urcr_get_template(
-							'base-restriction-template.php',
-							array(
-								'message'    => $message_to_display,
-								'login_url'  => $login_url,
-								'signup_url' => $signup_url,
-							)
-						);
-					} else {
-						echo '<div class="urcr-restrict-msg">' . wp_kses_post( $message_to_display ) . '</div>';
+			if ( ! ( $page_id && $wc_shop_page_id && (int) $page_id === (int) $wc_shop_page_id ) ) {
+				if ( $page_id ) {
+					$page_url = get_page_link( $page_id );
+					if ( $page_url ) {
+						wp_safe_redirect( $page_url ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
+						exit;
 					}
-				},
-				20
-			);
+				}
+				wp_safe_redirect( home_url() );
+				exit;
+			}
 		}
+
+		global $wp_query;
+		if ( $wp_query instanceof WP_Query ) {
+			$wp_query->posts         = array();
+			$wp_query->post_count    = 0;
+			$wp_query->found_posts   = 0;
+			$wp_query->max_num_pages = 0;
+		}
+
+		remove_all_actions( 'woocommerce_archive_description' );
+		remove_all_actions( 'woocommerce_before_shop_loop' );
+		remove_all_actions( 'woocommerce_before_shop_loop_item' );
+		remove_all_actions( 'woocommerce_before_shop_loop_item_title' );
+		remove_all_actions( 'woocommerce_shop_loop_item_title' );
+		remove_all_actions( 'woocommerce_after_shop_loop_item_title' );
+		remove_all_actions( 'woocommerce_after_shop_loop_item' );
+		remove_all_actions( 'woocommerce_after_shop_loop' );
+
+		add_action( 'woocommerce_no_products_found', 'ob_start', 0 );
+		add_action( 'woocommerce_no_products_found', 'ob_end_clean', PHP_INT_MAX );
+
+		add_action(
+			'wp_head',
+			function () {
+				echo '<style>.wp-block-woocommerce-product-collection-no-results{display:none!important}</style>';
+			}
+		);
+
+		$message = ! empty( $access_rule['actions'][0]['message'] )
+			? urldecode( $access_rule['actions'][0]['message'] )
+			: get_option( 'user_registration_content_restriction_message', '' );
+
+		$message = apply_filters( 'user_registration_process_smart_tags', $message );
+
+		$message = do_shortcode( $message );
+
+		$message_to_display = $message;
+
+		add_action(
+			'woocommerce_before_main_content',
+			function () use ( $message_to_display ) {
+				$login_page_id        = get_option( 'user_registration_login_page_id' );
+				$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
+				$login_url            = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
+				$signup_url           = $registration_page_id
+					? get_permalink( $registration_page_id )
+					: ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
+
+				if ( function_exists( 'urcr_get_template' ) ) {
+					urcr_get_template(
+						'base-restriction-template.php',
+						array(
+							'message'    => $message_to_display,
+							'login_url'  => $login_url,
+							'signup_url' => $signup_url,
+						)
+					);
+				} else {
+					echo '<div class="urcr-restrict-msg">' . wp_kses_post( $message_to_display ) . '</div>';
+				}
+			},
+			20
+		);
 
 		return true;
 	}
