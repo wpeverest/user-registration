@@ -134,7 +134,7 @@ class PaypalService {
 				}
 			}
 		} else {
-			$membership_amount = number_format( $membership_metas['amount'] );
+			$membership_amount = (float) $membership_metas['amount'];
 		}
 		$is_automatic       = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
 		$discount_amount    = 0;
