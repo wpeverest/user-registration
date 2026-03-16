@@ -1620,11 +1620,11 @@ class StripeService {
 		}
 		$subscription_status = ( 'trial' === $current_subscription['status'] ) ? 'active' : $current_subscription['status'];
 
-		$member_id     = $current_subscription['user_id'];
-		$membership_id = $current_subscription['item_id'];
-		$invoice_id    = $event['data']['object']['id'];
-
-		$invoice_amount = $event['data']['object']['amount_due']; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		$member_id         = $current_subscription['user_id'];
+		$membership_id     = $current_subscription['item_id'];
+		$invoice_id        = $event['data']['object']['id'];
+		$payment_intent_id = $event['data']['object']['payment_intent'] ?? null;
+		$invoice_amount    = $event['data']['object']['amount_due']; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 
 		// Create new order.
 		$order_info = array(
@@ -1638,19 +1638,25 @@ class StripeService {
 		$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_type  = $membership_metas['type'] ?? 'unknown';
 
-		$order_service                                = new OrderService();
-		$order_repository                             = new OrdersRepository();
-		$order_data                                   = $order_service->prepare_orders_data( $order_info, $member_id, $current_subscription );
-		$order_data['orders_data']['status']          = 'completed';
-		$order_data['orders_data']['user_id']         = $member_id;
-		$order_data['orders_data']['created_by']      = $member_id;
-		$order_data['orders_data']['trial_status']    = 'off';
-		$order_data['orders_data']['notes']           = sanitize_text_field( esc_html__( 'Generated with stripe webhook', 'user-registration' ) );
-		$order_data['orders_data']['total_amount']    = $membership_metas['amount'];
-		$order_data['orders_data']['transaction_id']  = $invoice_id;
-		$order_data['orders_data']['subscription_id'] = $current_subscription['sub_id'];
+		$order_service    = new OrderService();
+		$order_repository = new OrdersRepository();
 
-		$order_id = $order_repository->create( $order_data );
+		$existing_order = $order_repository->get_order_by_transaction_id( $payment_intent_id );
+		if ( empty( $existing_order ) ) {
+			$order_data                                   = $order_service->prepare_orders_data( $order_info, $member_id, $current_subscription );
+			$order_data['orders_data']['status']          = 'completed';
+			$order_data['orders_data']['user_id']         = $member_id;
+			$order_data['orders_data']['created_by']      = $member_id;
+			$order_data['orders_data']['trial_status']    = 'off';
+			$order_data['orders_data']['notes']           = sanitize_text_field( esc_html__( 'Generated with stripe webhook', 'user-registration' ) );
+			$order_data['orders_data']['total_amount']    = $membership_metas['amount'];
+			$order_data['orders_data']['transaction_id']  = $payment_intent_id ? sanitize_text_field( $payment_intent_id ) : '';
+			$order_data['orders_data']['subscription_id'] = $current_subscription['sub_id'];
+
+			$order_id = $order_repository->create( $order_data );
+		} else {
+			$order_id = $existing_order['id'] ?? '';
+		}
 
 		PaymentGatewayLogging::log_general(
 			'stripe',
