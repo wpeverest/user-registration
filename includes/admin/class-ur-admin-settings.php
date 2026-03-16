@@ -452,7 +452,6 @@ class UR_Admin_Settings {
 	 */
 	public static function output_fields( $options ) {
 
-		error_log( print_r( $options, true ) );
 		$settings = '';
 
 		if ( is_array( $options ) && ! empty( $options ) ) {
