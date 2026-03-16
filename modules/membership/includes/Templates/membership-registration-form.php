@@ -11,8 +11,12 @@
 		} else {
 			$membership_redirect_url = '';
 		}
+		// Avoid deprecated notice: ensure this is always a string before passing to esc_url().
+		if ( null === $membership_redirect_url ) {
+			$membership_redirect_url = '';
+		}
 	?>
-	<input type="hidden" id="urm-redirect-url"
+	<input type="hidden" id="urm-redirect-url" name="ur-redirect-url"
 		   value="<?php echo esc_url( $membership_redirect_url ); ?>"/>
 </div>
 <!--user registration section-->
