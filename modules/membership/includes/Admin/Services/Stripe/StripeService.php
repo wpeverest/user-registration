@@ -619,6 +619,7 @@ class StripeService {
 		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
 		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? '';
 		$team_id                = isset( $_POST['team_id'] ) && '' !== $_POST['team_id'] ? absint( wp_unslash( $_POST['team_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$order_id               = $data['order_id'] ?? '';
 
 		if ( empty( $transaction_id ) ) {
 			$transaction_id = $data['payment_result']['latest_invoice']['payment_intent']['id'] ?? '';
@@ -713,7 +714,7 @@ class StripeService {
 			return $response;
 		}
 
-		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id ) ) {
+		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id, $order_id ) ) {
 			$response['status']  = false;
 			$response['message'] = __( 'Duplicate transaction id.', 'user-registration' );
 
@@ -920,7 +921,7 @@ class StripeService {
 				array(
 					'error_code' => 'EMAIL_SEND_FAILED',
 					'member_id'  => $member_id,
-					'order_id'   => $id,
+					'order_id'   => $ID,
 				)
 			);
 		}
@@ -1118,7 +1119,7 @@ class StripeService {
 								$first_month_price = $new_price;
 							}
 
-							if ( $new_price > $current_price ) {
+							if ( ( $new_price > $current_price ) && ( ! empty( $order_detail['coupon'] ) || 'pro-rata' == $upgrade_type ) ) {
 								if ( isset( $order_detail['coupon'] ) && ! empty( $order_detail['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 									$coupon_details  = ur_get_coupon_details( $order_detail['coupon'] );
 									$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $first_month_price * $coupon_details['coupon_discount'] / 100;
@@ -1128,9 +1129,7 @@ class StripeService {
 									} else {
 										$amount = $current_price + $discount_amount;
 									}
-								} elseif ( 'full' === $upgrade_type ) {
-									$amount = $new_price;
-								} else {
+								} elseif ( 'pro-rata' === $upgrade_type ) {
 									$amount = $new_price - $first_month_price;
 								}
 
