@@ -10735,7 +10735,6 @@ if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 			! $site_assistant_data['has_default_form']
 			|| ! empty( $site_assistant_data['missing_pages'] )
 			|| ! $site_assistant_data['test_email_sent']
-			|| ! $site_assistant_data['wordpress_login_handled']
 			|| ! $site_assistant_data['spam_protection_handled']
 			|| ! $site_assistant_data['payment_setup_handled']
 		);

@@ -430,19 +430,27 @@ class AJAX {
 
 			if ( $is_stripe_enabled && 'free' !== $meta_data['type'] ) {
 				$stripe_service = new StripeService();
-				$stripe_result  = $stripe_service->sync_product_and_price_in_stripe(
-					array(
-						'ID'         => $updated_ID,
-						'post_title' => $data['post_data']['post_title'],
-						'meta_value' => $meta_data,
-					)
-				);
+				try {
+					$stripe_result = $stripe_service->sync_product_and_price_in_stripe(
+						array(
+							'ID'         => $updated_ID,
+							'post_title' => $data['post_data']['post_title'],
+							'meta_value' => $meta_data,
+						)
+					);
 
-				if ( empty( $stripe_result['success'] ) ) {
+					if ( empty( $stripe_result['success'] ) ) {
+						wp_send_json_error(
+							array(
+								'message' => $stripe_result['message']
+									?? __( 'Could not update product/price in Stripe.', 'user-registration' ),
+							)
+						);
+					}
+				} catch ( \Exception $e ) {
 					wp_send_json_error(
 						array(
-							'message' => $stripe_result['message']
-								?? __( 'Could not update product/price in Stripe.', 'user-registration' ),
+							'message' => $e->getMessage(),
 						)
 					);
 				}
