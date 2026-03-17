@@ -154,9 +154,7 @@
 				);
 				$form.append(wrapper);
 				$(window).scrollTop(
-					$registration_form
-						.find(".ur-button-container")
-						.offset().top
+					$registration_form.find(".ur-button-container").offset().top
 				);
 				$(".notice-container").removeClass("active");
 			} else {
@@ -168,6 +166,13 @@
 			}
 		},
 		show_form_success_message: function (form_response, thank_you_data) {
+			if (
+				form_response.data &&
+				form_response.data.registration_type === "membership"
+			) {
+				thank_you_data = thank_you_data || {};
+				thank_you_data.context = "hide_message";
+			}
 			var response_data = form_response.data,
 				ursL10n = user_registration_params.ursL10n,
 				$registration_form = $(
@@ -201,7 +206,7 @@
 					}
 				}, timeout);
 			}
-	
+
 			var has_thank_you_params =
 				thank_you_data &&
 				typeof thank_you_data === "object" &&
