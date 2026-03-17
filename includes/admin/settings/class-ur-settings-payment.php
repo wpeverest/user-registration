@@ -92,8 +92,8 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 			$stripe_settings        = $this->get_stripe_settings();
 			$bank_transfer_settings = $this->get_bank_transfer_settings();
 			if ( ! UR_PRO_ACTIVE ) {
-				$mollie_free_settings        = $this->get_free_mollie_transfer_settings();
 				$authorize_net_free_settings = $this->get_free_authorize_net_transfer_settings();
+				$mollie_free_settings        = $this->get_free_mollie_transfer_settings();
 			}
 			if ( 'payment-method' === $current_section ) {
 				add_filter( 'user_registration_settings_hide_save_button', '__return_true' );
@@ -432,38 +432,6 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 				'desc'         => '',
 				'is_connected' => get_option( 'urm_mollie_connection_status', false ),
 				'settings'     => array(
-					array(
-						'type'     => 'toggle',
-						'title'    => __( 'Enable Mollie', 'user-registration' ),
-						'desc'     => __( 'Enable Mollie payment gateway.', 'user-registration' ),
-						'id'       => 'user_registration_mollie_enabled',
-						'desc_tip' => true,
-						'default'  => true,
-						'class'    => 'urm_toggle_pg_status',
-					),
-					array(
-						'type'     => 'toggle',
-						'title'    => __( 'Enable Test Mode', 'user-registration' ),
-						'desc'     => __( 'Check if using test mode.', 'user-registration' ),
-						'id'       => 'user_registration_free_mollie_test_mode',
-						'desc_tip' => true,
-						'default'  => '',
-					),
-					array(
-						'title'    => __( 'Live API key', 'user-registration' ),
-						'desc'     => __( 'Mollie Live key', 'user-registration' ),
-						'id'       => 'user_registration_free_mollie_live__key',
-						'type'     => 'text',
-						'css'      => 'min-width: 350px',
-						'desc_tip' => true,
-						'default'  => '',
-					),
-					array(
-						'title' => __( 'Save', 'user-registration' ),
-						'id'    => 'user_registration_free_mollie_save_settings',
-						'type'  => 'button',
-						'class' => 'payment-settings-btn',
-					),
 				),
 			);
 		}
@@ -472,45 +440,13 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 
 			return array(
 				'id'           => 'free-authorize-net',
-				'title'        => __( 'Authorize.net Settings', 'user-registration' ),
+				'title'        => __( 'Authorize.net', 'user-registration' ),
 				'type'         => 'accordian',
 				'show_status'  => true,
 				'class'        => 'urm-mollie-settings',
 				'desc'         => '',
 				'is_connected' => get_option( 'urm_authorize_net_connection_status', false ),
 				'settings'     => array(
-					array(
-						'type'     => 'toggle',
-						'title'    => __( 'Enable Test Mode', 'user-registration' ),
-						'desc'     => __( 'Check if using test mode.', 'user-registration' ),
-						'id'       => 'user_registration_free_authorize_net_test_mode',
-						'desc_tip' => true,
-						'default'  => '',
-					),
-					array(
-						'title'    => __( 'Live Api Login ID', 'user-registration' ),
-						'desc'     => __( 'Authorize Net Live Api Login ID', 'user-registration' ),
-						'id'       => 'user_registration_free_authorize_net_live_login_id',
-						'type'     => 'text',
-						'css'      => 'min-width: 350px',
-						'desc_tip' => true,
-						'default'  => '',
-					),
-					array(
-						'title'    => __( 'Live Transaction key', 'user-registration' ),
-						'desc'     => __( 'Authorize Net Live key', 'user-registration' ),
-						'id'       => 'user_registration_free_authorize_net_live__key',
-						'type'     => 'text',
-						'css'      => 'min-width: 350px',
-						'desc_tip' => true,
-						'default'  => '',
-					),
-					array(
-						'title' => __( 'Save', 'user-registration' ),
-						'id'    => 'user_registration_free_authorize_net_save_settings',
-						'type'  => 'button',
-						'class' => 'payment-settings-btn',
-					),
 				),
 			);
 		}
