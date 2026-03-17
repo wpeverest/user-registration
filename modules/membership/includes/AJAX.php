@@ -232,8 +232,10 @@ class AJAX {
 		if ( ur_check_module_activation( 'team' ) ) {
 			$data['team_id'] = ! empty( $response['team_id'] ) ? $response['team_id'] : 0;
 		}
-		$data['email'] = $response['member_email'];
-		$pg_data       = array();
+		$data['email']    = $response['member_email'];
+		$data['order_id'] = $response['order_id'];
+
+		$pg_data = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service  = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
@@ -2279,6 +2281,7 @@ class AJAX {
 		$data['member_id']       = $member_id;
 		$data['subscription_id'] = isset( $response['subscription_id'] ) ? $response['subscription_id'] : 0;
 		$data['email']           = $response['member_email'];
+		$data['order_id']        = $response['order_id'];
 		$pg_data                 = array();
 		$response['type']        = isset( $response['type'] ) ? $response['type'] : $membership_type;
 
