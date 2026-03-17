@@ -1268,9 +1268,20 @@ class SubscriptionService {
 			foreach ( $payment_gateways as $gateway_key => $gateway_details ) {
 				switch ( $gateway_key ) {
 					case 'stripe':
-						$stripe_service = new StripeService();
-						$stripe_service->run_missed_subscription_backfill( $last_synced );
-						$stripe_service->run_missed_payment_backfill( $last_synced );
+						try {
+							$stripe_service = new StripeService();
+							$stripe_service->run_missed_subscription_backfill( $last_synced );
+							$stripe_service->run_missed_payment_backfill( $last_synced );
+						} catch ( \Exception $e ) {
+							ur_get_logger()->error(
+								sprintf(
+									__( 'Error fetching missed events for Stripe: %s', 'user-registration' ),
+									$e->getMessage()
+								),
+								array( 'source' => 'urm-missed-payment-backfill' )
+							);
+							return;
+						}
 						break;
 					default:
 						do_action( 'urm_fetch_and_process_missed_payment_events_for_gateway', $gateway_key, $last_synced, $now );
