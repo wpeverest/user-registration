@@ -1118,7 +1118,7 @@ class StripeService {
 								$first_month_price = $new_price;
 							}
 
-							if ( $new_price > $current_price ) {
+							if ( ( $new_price > $current_price ) && ( ! empty( $order_detail['coupon'] ) || 'pro-rata' == $upgrade_type ) ) {
 								if ( isset( $order_detail['coupon'] ) && ! empty( $order_detail['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 									$coupon_details  = ur_get_coupon_details( $order_detail['coupon'] );
 									$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $first_month_price * $coupon_details['coupon_discount'] / 100;
@@ -1128,9 +1128,7 @@ class StripeService {
 									} else {
 										$amount = $current_price + $discount_amount;
 									}
-								} elseif ( 'full' === $upgrade_type ) {
-									$amount = $new_price;
-								} else {
+								} elseif ( 'pro-rata' === $upgrade_type ) {
 									$amount = $new_price - $first_month_price;
 								}
 
