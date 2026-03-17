@@ -243,6 +243,7 @@ class MembershipService {
 				}
 
 				return array(
+					'order_id'       =>  $order['ID'],
 					'member_id'       => $member->ID,
 					'member_email'    => $member->user_email,
 					'subscription_id' => $subscription['ID'],
