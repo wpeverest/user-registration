@@ -224,9 +224,6 @@
 					return;
 				}
 			}
-			if ("undefined" === typeof redirect_url || redirect_url === "") {
-				redirect_url = urmf_data.thank_you_page_url;
-			}
 			/**
 			 * Remove Spinner.
 			 */
@@ -721,14 +718,13 @@
 		 */
 		show_default_response: function (url, thank_you_data, timeout) {
 			timeout = timeout || 2000;
-			var thank_you_page_url =
-				url && String(url).trim() !== ""
-					? url
-					: urmf_data.thank_you_page_url;
+			if (!url || String(url).trim() === "") {
+				return;
+			}
 
 			var url_params = $.param(thank_you_data).toString();
 			window.setTimeout(function () {
-				window.location.replace(thank_you_page_url + "?" + url_params);
+				window.location.replace(url + "?" + url_params);
 			}, timeout);
 		},
 		validate_coupon: function ($this) {
@@ -1835,11 +1831,11 @@
 					window.location.replace(response.data.redirect);
 					break;
 				case "free":
-					var cleanUrl =
-						window.location.origin + window.location.pathname;
-
-					window.location.replace(urmf_data.thank_you_page_url);
-
+					var freeRedirectUrl = $("#urm-redirect-url").val() || "";
+					if (freeRedirectUrl) {
+						window.location.replace(freeRedirectUrl);
+					}
+					break;
 				default:
 					ur_membership_ajax_utils.show_bank_response(
 						response,
@@ -2125,9 +2121,7 @@
 								}
 
 								var upgradeRedirectUrl =
-									$("#urm-redirect-url").val() ||
-									urmf_data.thank_you_page_url ||
-									window.location.href;
+									$("#urm-redirect-url").val() || "";
 
 								ur_membership_ajax_utils.show_default_response(
 									upgradeRedirectUrl,
@@ -2135,9 +2129,7 @@
 								);
 							} else {
 								var stripeRedirectUrl =
-									$("#urm-redirect-url").val() ||
-									urmf_data.thank_you_page_url ||
-									window.location.href;
+									$("#urm-redirect-url").val() || "";
 
 								ur_membership_ajax_utils.show_default_response(
 									stripeRedirectUrl,
