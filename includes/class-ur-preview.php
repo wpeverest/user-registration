@@ -430,7 +430,7 @@ class UR_Preview {
 		if ( ! $is_pro_active ) {
 			$html .= '<div class="ur-form-preview-upgrade  id="ur-form-save" data-theme="default" ">';
 			$html .= '<img src="' . esc_url( UR()->plugin_url() . '/assets/images/upgrade-icon.svg' ) . '" alt="Save">';
-			$html .= '<div class="ur-form-preview-upgrade-title">Upgrade to Pro</div>';
+			$html .= '<div class="ur-form-preview-upgrade-title"><a target="_blank" href="https://wpuserregistration.com/upgrade/?utm_source=ur-membership-create&utm_medium=upgrade-link&utm-campaign=lite-version">' . esc_html__('Upgrade to Pro').'</a></div>';
 			$html .= '</div>';
 		}
 
