@@ -2010,7 +2010,7 @@ class AJAX {
 					)
 				);
 			}
-			$message = 'free' === $selected_pg ? __( 'Membership upgraded successfully.', 'user-registration-membership' ) : __( 'New Order created, initializing payment...', 'user-registration-membership' );
+			$message = __( 'Membership upgraded successfully.', 'user-registration-membership' );
 
 			// Prepare data to register subscription upgrade event.
 			$members_subscription_repository = new MembersSubscriptionRepository();
@@ -2326,7 +2326,7 @@ class AJAX {
 				);
 			}
 
-			$message = 'free' === $selected_pg ? __( 'Membership purchased successfully.', 'user-registration-membership' ) : __( 'New Order created, initializing payment...', 'user-registration-membership' );
+			$message = __( 'Membership purchased successfully.', 'user-registration-membership' );
 			wp_send_json_success(
 				array(
 					'is_purchasing_multiple'   => true,
@@ -2509,7 +2509,7 @@ class AJAX {
 
 		$response = $renew_membership['response'];
 		if ( $response['status'] ) {
-			$message = __( 'New Order created, initializing payment...', 'user-registration-membership' );
+			$message = __( 'Membership renewed successfully.', 'user-registration-membership' );
 
 			// Prepare data to register subscription renew event.
 			$members_subscription_repository = new MembersSubscriptionRepository();
