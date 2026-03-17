@@ -1475,16 +1475,33 @@ class StripeService {
 	 * @return array $response array Response with status flag and message.
 	 */
 	public function reactivate_subscription( $subscription_id ) {
-		$response     = array(
+		$response           = array(
 			'status' => false,
 		);
-		$subscription = \Stripe\Subscription::retrieve( $subscription_id );
+		$subscription       = \Stripe\Subscription::retrieve( $subscription_id );
+		$local_subscription = $this->members_subscription_repository->get_subscription_by_subscription_id_meta( $subscription_id );
 		if ( isset( $subscription->id ) ) {
+
 			if ( 'active' === $subscription->status ) {
-				return array(
-					'status'  => true,
-					'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
-				);
+
+				if ( 'canceled' === $local_subscription['status'] && true === $subscription->cancel_at_period_end ) {
+					\Stripe\Subscription::update(
+						$subscription_id,
+						array(
+							'cancel_at_period_end' => false,
+						)
+					);
+
+					return array(
+						'status'  => true,
+						'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
+					);
+				} else {
+					return array(
+						'status'  => true,
+						'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
+					);
+				}
 			} elseif ( 'canceled' !== $subscription->status && true === $subscription->cancel_at_period_end ) {
 				\Stripe\Subscription::update(
 					$subscription_id,
@@ -2478,6 +2495,12 @@ class StripeService {
 			}
 
 			if ( $subscription->status !== $membership_subscription['status'] ) {
+
+				if ( 'active' === $subscription->status && 'canceled' === $membership_subscription['status'] && $subscription->cancel_at_period_end ) {
+					// If Stripe subscription is active but our record is canceled and Stripe subscription is set to cancel at period end, we should not update the status to active as it will cause confusion. We will wait for the next event to update the status.
+					continue;
+				}
+
 				$update_data = array(
 					'status' => $subscription->status,
 				);
