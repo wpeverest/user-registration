@@ -702,12 +702,23 @@
 				payment_type: "unpaid",
 				info: response.data.pg_data.data,
 				username: prepare_members_data.username,
-				context: "hide_message"
+				context: "hide_message",
+				message: response.data.message || ""
 			};
 
-			if (response.data.is_renewing) {
+			var shouldRedirect =
+				!!response.data.is_renewing ||
+				!!response.data.is_upgrading ||
+				!!response.data.is_purchasing_multiple;
+
+			var redirectUrl =
+				$("#urm-redirect-url").val() ||
+				response.data.redirect_url ||
+				window.location.href;
+
+			if (shouldRedirect) {
 				ur_membership_ajax_utils.show_default_response(
-					window.location.href,
+					redirectUrl,
 					bank_data
 				);
 			} else {
@@ -729,7 +740,9 @@
 
 			var url_params = $.param(thank_you_data).toString();
 			window.setTimeout(function () {
-				window.location.replace(url + "?" + url_params);
+				var hasQuery = url.indexOf("?") !== -1;
+				var concatenator = hasQuery ? "&" : "?";
+				window.location.replace(url + concatenator + url_params);
 			}, timeout);
 		},
 		validate_coupon: function ($this) {

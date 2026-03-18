@@ -1,6 +1,7 @@
 <?php
 
 $bank_data         = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post( $_GET['info'] ) : '';
+$bank_data 			= 'Free' === $bank_data ? false : true;
 $transaction_id    = ( isset( $_GET['transaction_id'] ) && ! empty( $_GET['transaction_id'] ) ) ? wp_kses_post( $_GET['transaction_id'] ) : '';
 $username          = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) ) ? wp_kses_post( $_GET['username'] ) : '';
 $main_content      = ! empty( $attributes['header'] ) ? wp_kses_post( $attributes['header'] ) : sprintf(
