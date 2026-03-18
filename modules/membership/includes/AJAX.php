@@ -1061,7 +1061,7 @@ class AJAX {
 
 			delete_user_meta( $member_id, 'urm_user_just_created' );
 			$response = array(
-				'message'                => $update_stripe_order['message'],
+				'message'                => $update_stripe_order['message'] ?? '',
 				'is_upgrading'           => ur_string_to_bool( $is_upgrading ),
 				'is_renewing'            => ur_string_to_bool( $is_renewing ),
 				'is_purchasing_multiple' => ur_string_to_bool( $is_purchasing_multiple ),

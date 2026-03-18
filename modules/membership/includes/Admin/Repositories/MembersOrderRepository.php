@@ -122,7 +122,7 @@ class MembersOrderRepository extends BaseRepository implements MembersOrderInter
 
 		$result = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT id FROM {$this->table} WHERE transaction_id = %s AND ID IS NOT %d LIMIT 1",
+				"SELECT id FROM {$this->table} WHERE transaction_id = %s AND id != %d LIMIT 1",
 				$transaction_id,
 				$order_id
 			)
