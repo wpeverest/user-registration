@@ -52,7 +52,7 @@
 * Fix      - Duplicate order created in payment history after successful payment with stripe.
 * Fix      - Fatal error when upgrading from one-time payment to subscription plan with stripe.
 * Fix      - Legacy my account dashboard content visible in profile details tab on some old instances.
-* Fix      - Upon reactivation of stripe subscription, the cancel at expiry is not being removed in stripe.
+* Fix      - Upon reactivation of stripe subscription, the cancel at expiry is not being removed in stripe. 
 
 = 5.1.4    - 25/02/2026 =
 * Fix      - Updated .org deploy code
