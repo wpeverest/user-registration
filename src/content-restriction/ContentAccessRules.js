@@ -103,12 +103,21 @@ const ContentAccessRules = () => {
 			? membershipRules
 			: []
 		: activeTab === "membership"
-			? membershipRules
-			: customRules;
+		? membershipRules
+		: customRules;
 
 	const [hasSetDefaultTab, setHasSetDefaultTab] = useState(false);
 	useEffect(() => {
 		if (!hasSetDefaultTab && !isLoading) {
+			const urlParams = new URLSearchParams(window.location.search);
+			const tabParam = urlParams.get("urcr_tab");
+
+			if (tabParam === "membership" || tabParam === "custom") {
+				setActiveTab(tabParam);
+				setHasSetDefaultTab(true);
+				return;
+			}
+
 			if (!isContentRestrictionEnabled) {
 				setActiveTab("membership");
 				setHasSetDefaultTab(true);
@@ -273,21 +282,42 @@ const ContentAccessRules = () => {
 
 	const activateAddon = async () => {
 		setModuleStatus("activating");
+
+		const ajaxUrl = urcrData?.ajax_url;
+		const security = urcrData?.labels?.ajax_all_forms_nonce;
+
+		if (!ajaxUrl || !security) {
+			showError(
+				__(
+					"Activation failed: AJAX settings are missing. Please refresh the page and try again.",
+					"user-registration"
+				)
+			);
+			setModuleStatus("failed");
+			return;
+		}
+
 		const formData = new FormData();
 		formData.append(
 			"action",
 			"user_registration_activate_dependent_module"
 		);
-		formData.append("security", urcrData.ajax_all_forms_nonce);
-		formData.append("slug", "content-restriction");
+		formData.append("security", security);
+		formData.append("slug", "user-registration-content-restriction");
+
 		try {
 			const res = await apiFetch({
-				url: urcrData.ajax_url,
+				url: ajaxUrl,
+				method: "POST",
 				body: formData
 			});
-			if (res.success) {
+
+			if (res && res.success) {
 				setModuleStatus("active");
-				window.location.reload();
+
+				const url = new URL(window.location.href);
+				url.searchParams.set("urcr_tab", "custom");
+				window.location.href = url.toString();
 			} else {
 				setModuleStatus("failed");
 			}
@@ -396,6 +426,8 @@ const ContentAccessRules = () => {
 									</div>
 									{isProAccess() ? (
 										<button
+											type="button"
+											onClick={activateAddon}
 											disabled={
 												moduleStatus === "activating"
 											}
@@ -407,7 +439,11 @@ const ContentAccessRules = () => {
 											)}
 										</button>
 									) : (
-										<a className="ur-feature__btn" href="">
+										<a
+											className="ur-feature__btn"
+											target="_blank"
+											href="https://wpuserregistration.com/upgrade/?utm_source=ur-membership-create&utm_medium=upgrade-link&utm-campaign=lite-version"
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												width="24"
@@ -439,7 +475,9 @@ const ContentAccessRules = () => {
 						{currentRules.length === 0 ? (
 							<div className="user-registration-card ur-text-center urcr-no-rules">
 								<img
-									src={`${assetsURL || ""}images/empty-table.png`}
+									src={`${
+										assetsURL || ""
+									}images/empty-table.png`}
 									alt={__(
 										"No rules found",
 										"user-registration"

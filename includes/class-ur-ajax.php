@@ -1005,10 +1005,13 @@ class UR_AJAX {
 		$page_id  = empty( $_POST['page_id'] ) ? 0 : sanitize_text_field( absint( $_POST['page_id'] ) );
 		$form_id  = ! empty( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		$is_login = ! empty( $_POST['is_login'] ) ? sanitize_text_field( wp_unslash( $_POST['is_login'] ) ) : 'no';
-		if ( ! current_user_can( 'edit_post', $page_id ) ) {
-			wp_send_json_error( __( 'You do not have permission to edit this page.', 'user-registration' ) );
-		}
+		
 		if ( empty( $page_id ) ) {
+
+			if ( ! current_user_can( 'publish_pages' ) ) {
+				wp_send_json_error( __( 'You do not have permission to create pages.', 'user-registration' ) );
+			}	
+
 			$url              = add_query_arg( 'post_type', 'page', admin_url( 'post-new.php' ) );
 			$meta             = array(
 				'embed_page'       => 0,
@@ -1026,6 +1029,11 @@ class UR_AJAX {
 			UR_Admin_Embed_Wizard::set_meta( $meta );
 			wp_send_json_success( $page_url );
 		} else {
+
+			if ( ! current_user_can( 'edit_post', $page_id ) ) {
+						wp_send_json_error( __( 'You do not have permission to edit this page.', 'user-registration' ) );
+			}
+
 			UR_Admin_Embed_Wizard::delete_meta();
 			$url  = get_edit_post_link( $page_id, '' );
 			$post = get_post( $page_id );

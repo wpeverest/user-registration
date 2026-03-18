@@ -80,6 +80,8 @@ class Analytics {
 			return;
 		}
 
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
 		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
 			wp_register_style(
 				'ur-snackbar',

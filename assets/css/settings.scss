@@ -2837,3 +2837,36 @@ body {
 		}
 	}
 }
+
+#free-mollie {
+
+	.user-registration-card__body {
+		display: none !important;
+	}
+
+	.integration-action {
+		display: none !important;
+	}
+}
+
+.user-registration-settings-container .user-registration-options-container #free-mollie .user-registration-card__header {
+	border: none !important;
+}
+
+.user-registration-settings-container .user-registration-options-container #free-authorize-net .user-registration-card__header {
+	border: none !important;
+}
+
+#free-authorize-net {
+	.active {
+
+	}
+
+	.user-registration-card__body {
+		display: none !important;
+	}
+
+	.integration-action {
+		display: none !important;
+	}
+}

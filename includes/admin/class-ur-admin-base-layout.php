@@ -1,6 +1,7 @@
 <?php
 /**
  * Base Page class for pages.
+ *
  * @package UserRegistration
  */
 
@@ -12,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Base Layout class for pages.
+ *
  * @package UserRegistration
  */
 class UR_Base_Layout {
@@ -206,8 +208,8 @@ class UR_Base_Layout {
 			<h3><?php echo esc_html( $primary_message ); ?></h3>
 			<div class="empty-list-table-subtext">
 				<p><?php echo wp_kses_post( $secondary_message ); ?></p>
-				<?php if ( ! empty( $video_url && 'Memberships' === $type ) ) : ?>
-					<a class="empty-video-url" href="<?php echo esc_url( $video_url ); ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+				<?php if ( ! empty( $video_url ) && 'Memberships' === $type ) : ?>
+					<a class="empty-video-url" target="_blank" href="<?php echo esc_url( $video_url ); ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
 						<?php echo 'Watch Tutorials'; ?></a>
 				<?php endif; ?>
 			</div>
