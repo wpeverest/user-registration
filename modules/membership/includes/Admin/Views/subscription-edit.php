@@ -136,7 +136,6 @@ $delete_url = wp_nonce_url(
 );
 
 $payment_method = $subscription_order['payment_method'] ?? 'bank';
-$edit_style     = 'bank' !== $payment_method ? disabled( true ) : '';
 ?>
 <div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
 	<div class="ur-page-title__wrapper">
@@ -551,7 +550,7 @@ $edit_style     = 'bank' !== $payment_method ? disabled( true ) : '';
 								);
 								$status_options = apply_filters( 'ur_membership_subscription_edit_status_options', $status_options, $subscription );
 								?>
-								<select name="status" id="ur-subscription-status" class="ur-enhanced-select" required <?php echo esc_attr( $edit_style ); ?>>
+								<select name="status" id="ur-subscription-status" class="ur-enhanced-select" required <?php echo esc_attr( 'bank' !== $payment_method ? disabled( true ) : '' ); ?>>
 									<?php foreach ( $status_options as $status_value => $status_label ) : ?>
 									<option value="<?php echo esc_attr( $status_value ); ?>"
 										<?php selected( $subscription['status'], $status_value ); ?>>
