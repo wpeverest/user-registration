@@ -245,6 +245,9 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	public function display() {
 		$singular = $this->_args['singular'];
 
+		$this->views();
+		echo '</br>';
+
 		$this->display_tablenav( 'top' );
 
 		$this->screen->render_screen_reader_content( 'heading_list' );
