@@ -134,7 +134,7 @@ class PaypalService {
 				}
 			}
 		} else {
-			$membership_amount = number_format( $membership_metas['amount'] );
+			$membership_amount = (float) $membership_metas['amount'];
 		}
 		$is_automatic       = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
 		$discount_amount    = 0;
@@ -342,7 +342,7 @@ class PaypalService {
 		$is_renewing         = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'] );
 
 		if ( 'completed' === $member_order['status'] ) {
-			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
+			 ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 		}
 
 		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );

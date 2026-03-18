@@ -597,7 +597,7 @@ if ( ! function_exists( 'urm_check_user_membership_has_access' ) ) {
 		$active_memberships = array_filter(
 			array_map(
 				function ( $user_memberships ) {
-					if ( ! empty( $user_memberships['status'] ) && 'active' === $user_memberships['status'] ) {
+					if ( ! empty( $user_memberships['status'] ) && in_array( $user_memberships['status'], array( 'active', 'trial' ), true ) ) {
 						return $user_memberships['item_id'];
 					}
 				},
