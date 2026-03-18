@@ -1,7 +1,7 @@
 <?php
 
 $bank_data         = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post( $_GET['info'] ) : '';
-$bank_data 			= 'Free' === $bank_data ? false : true;
+$show_bank_data 			= ( 'Free' === $bank_data || empty($bank_data)) ? false : true;
 $transaction_id    = ( isset( $_GET['transaction_id'] ) && ! empty( $_GET['transaction_id'] ) ) ? wp_kses_post( $_GET['transaction_id'] ) : '';
 $username          = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) ) ? wp_kses_post( $_GET['username'] ) : '';
 $main_content      = ! empty( $attributes['header'] ) ? wp_kses_post( $attributes['header'] ) : sprintf(
@@ -31,43 +31,43 @@ $redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
 <!-- Thank You Page Section -->
 <div id="order-complete-section" class="ur-thank-you-page">
 	<div class="thank-you-page-container">
-	<div class="ur-thank-you-headline-wrapper">
-		<?php if ( $show_heading_icon ) : ?>
-			<div class="ur-success-icon">
-				<svg width="50px" height="50px" viewBox="-102.4 -102.4 1228.80 1228.80" xmlns="http://www.w3.org/2000/svg" fill="#000000" stroke="#000000" transform="matrix(1, 0, 0, 1, 0, 0)" stroke-width="0.01024"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="2.048"></g><g id="SVGRepo_iconCarrier"><path fill="#00a32a" d="M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm-55.808 536.384-99.52-99.584a38.4 38.4 0 1 0-54.336 54.336l126.72 126.72a38.272 38.272 0 0 0 54.336 0l262.4-262.464a38.4 38.4 0 1 0-54.272-54.336L456.192 600.384z"></path></g></svg>
-			</div>
-		<?php endif; ?>
+		<div class="ur-thank-you-headline-wrapper">
+			<?php if ( $show_heading_icon ) : ?>
+				<div class="ur-success-icon">
+					<svg width="50px" height="50px" viewBox="-102.4 -102.4 1228.80 1228.80" xmlns="http://www.w3.org/2000/svg" fill="#000000" stroke="#000000" transform="matrix(1, 0, 0, 1, 0, 0)" stroke-width="0.01024"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="2.048"></g><g id="SVGRepo_iconCarrier"><path fill="#00a32a" d="M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm-55.808 536.384-99.52-99.584a38.4 38.4 0 1 0-54.336 54.336l126.72 126.72a38.272 38.272 0 0 0 54.336 0l262.4-262.464a38.4 38.4 0 1 0-54.272-54.336L456.192 600.384z"></path></g></svg>
+				</div>
+			<?php endif; ?>
 
-		<?php if ( $show_headline ) : ?>
-			<div class="ur-headline">
-				<h1><?php echo $headline_text; ?></h1>
-			</div>
-		<?php endif; ?>
-	</div>
+			<?php if ( $show_headline ) : ?>
+				<div class="ur-headline">
+					<h1><?php echo $headline_text; ?></h1>
+				</div>
+			<?php endif; ?>
+		</div>
 
 		<div class="ur-message">
 			<p>
-			<?php
+				<?php
 				$username = isset( $_GET['username'] ) ? $_GET['username'] : '';
 
 				$values = array();
 
-			if ( ! empty( $username ) ) {
-				$user                = get_user_by( 'login', sanitize_text_field( $username ) );
-				$values['member_id'] = $user->ID;
-				$values['email']     = $user->user_email;
-				$values['context']   = 'thank_you_page';
-				if ( ! empty( $transaction_id ) ) {
-					$values['transaction_id'] = $transaction_id;
-				}
+				if ( ! empty( $username ) ) {
+					$user                = get_user_by( 'login', sanitize_text_field( $username ) );
+					$values['member_id'] = $user->ID;
+					$values['email']     = $user->user_email;
+					$values['context']   = 'thank_you_page';
+					if ( ! empty( $transaction_id ) ) {
+						$values['transaction_id'] = $transaction_id;
+					}
 
-				$main_content = apply_filters( 'user_registration_process_smart_tags', $main_content, $values );
-			}
+					$main_content = apply_filters( 'user_registration_process_smart_tags', $main_content, $values );
+				}
 				echo $main_content;
-			?>
+				?>
 			</p>
 
-			<?php if ( $show_bank_details && ! empty( $bank_data ) ) : ?>
+			<?php if ( $show_bank_data && $show_bank_details  ) : ?>
 				<div class="ur-bank-details">
 					<p class="ur-bank-details-title" ><?php echo __( 'Bank Details :') ?></p>
 					<?php echo $bank_data; ?>
