@@ -2682,7 +2682,7 @@ img.tips {
 
 	&:not(.no-icon) {
 		&::after {
-			background-image: url(../images/settings-icons/information2.svg) !important;
+			background-image: url(../images/settings-icons/information.svg) !important;
 			content: "";
 			background-repeat: no-repeat !important;
 			background-size: 100% !important;
@@ -2693,6 +2693,18 @@ img.tips {
 			cursor: pointer;
 			padding: 4px;
 			border-radius: 3px;
+		}
+	}
+}
+
+.urcr-input-container {
+	.urcr-checkbox-radio-group {
+		.urcr-checkbox-radio--content {
+			.user-cr-registration-help {
+				&::after {
+					background-image: url(../images/settings-icons/information2.svg) !important;
+				}
+			}
 		}
 	}
 }
@@ -9533,7 +9545,7 @@ body.user-registration-page {
 						flex-wrap: wrap;
 
 						.urmg-gateway-btn {
-							flex: 1;
+							flex-basis: 30%;
 							min-width: 120px;
 							padding: 0 $spacing_20px;
 							border: $border_width solid #e0e0e0;

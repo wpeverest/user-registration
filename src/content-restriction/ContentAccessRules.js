@@ -103,8 +103,8 @@ const ContentAccessRules = () => {
 			? membershipRules
 			: []
 		: activeTab === "membership"
-			? membershipRules
-			: customRules;
+		? membershipRules
+		: customRules;
 
 	const [hasSetDefaultTab, setHasSetDefaultTab] = useState(false);
 	useEffect(() => {
@@ -439,7 +439,11 @@ const ContentAccessRules = () => {
 											)}
 										</button>
 									) : (
-										<a className="ur-feature__btn" href="">
+										<a
+											className="ur-feature__btn"
+											target="_blank"
+											href="https://wpuserregistration.com/upgrade/?utm_source=ur-membership-create&utm_medium=upgrade-link&utm-campaign=lite-version"
+										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												width="24"
@@ -471,7 +475,9 @@ const ContentAccessRules = () => {
 						{currentRules.length === 0 ? (
 							<div className="user-registration-card ur-text-center urcr-no-rules">
 								<img
-									src={`${assetsURL || ""}images/empty-table.png`}
+									src={`${
+										assetsURL || ""
+									}images/empty-table.png`}
 									alt={__(
 										"No rules found",
 										"user-registration"

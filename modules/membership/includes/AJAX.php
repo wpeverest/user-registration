@@ -232,10 +232,10 @@ class AJAX {
 		if ( ur_check_module_activation( 'team' ) ) {
 			$data['team_id'] = ! empty( $response['team_id'] ) ? $response['team_id'] : 0;
 		}
-		$data['email'] = $response['member_email'];
+		$data['email']    = $response['member_email'];
 		$data['order_id'] = $response['order_id'];
 
-		$pg_data       = array();
+		$pg_data = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service  = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
@@ -430,19 +430,27 @@ class AJAX {
 
 			if ( $is_stripe_enabled && 'free' !== $meta_data['type'] ) {
 				$stripe_service = new StripeService();
-				$stripe_result  = $stripe_service->sync_product_and_price_in_stripe(
-					array(
-						'ID'         => $updated_ID,
-						'post_title' => $data['post_data']['post_title'],
-						'meta_value' => $meta_data,
-					)
-				);
+				try {
+					$stripe_result = $stripe_service->sync_product_and_price_in_stripe(
+						array(
+							'ID'         => $updated_ID,
+							'post_title' => $data['post_data']['post_title'],
+							'meta_value' => $meta_data,
+						)
+					);
 
-				if ( empty( $stripe_result['success'] ) ) {
+					if ( empty( $stripe_result['success'] ) ) {
+						wp_send_json_error(
+							array(
+								'message' => $stripe_result['message']
+									?? __( 'Could not update product/price in Stripe.', 'user-registration' ),
+							)
+						);
+					}
+				} catch ( \Exception $e ) {
 					wp_send_json_error(
 						array(
-							'message' => $stripe_result['message']
-								?? __( 'Could not update product/price in Stripe.', 'user-registration' ),
+							'message' => $e->getMessage(),
 						)
 					);
 				}
@@ -2012,7 +2020,7 @@ class AJAX {
 					)
 				);
 			}
-			$message = 'free' === $selected_pg ? __( 'Membership upgraded successfully.', 'user-registration-membership' ) : __( 'New Order created, initializing payment...', 'user-registration-membership' );
+			$message = __( 'Membership upgraded successfully.', 'user-registration-membership' );
 
 			// Prepare data to register subscription upgrade event.
 			$members_subscription_repository = new MembersSubscriptionRepository();
@@ -2329,7 +2337,7 @@ class AJAX {
 				);
 			}
 
-			$message = 'free' === $selected_pg ? __( 'Membership purchased successfully.', 'user-registration-membership' ) : __( 'New Order created, initializing payment...', 'user-registration-membership' );
+			$message = __( 'Membership purchased successfully.', 'user-registration-membership' );
 			wp_send_json_success(
 				array(
 					'is_purchasing_multiple'   => true,
@@ -2512,7 +2520,7 @@ class AJAX {
 
 		$response = $renew_membership['response'];
 		if ( $response['status'] ) {
-			$message = __( 'New Order created, initializing payment...', 'user-registration-membership' );
+			$message = __( 'Membership renewed successfully.', 'user-registration-membership' );
 
 			// Prepare data to register subscription renew event.
 			$members_subscription_repository = new MembersSubscriptionRepository();

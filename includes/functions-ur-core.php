@@ -411,7 +411,7 @@ function ur_render_premium_feature_gate_template( $args = array() ) {
 			<div class="ur-feature__title">
 				<?php esc_html_e( 'You have run into a premium feature, please upgrade to URM Pro', 'user-registration' ); ?>
 			</div>
-			<a class="ur-feature__btn" href="<?php echo esc_url( $args['upgrade_url'] ); ?>">
+			<a class="ur-feature__btn" target="_blank" href="<?php echo esc_url( $args['upgrade_url'] ); ?>">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
 				<?php esc_html_e( 'Upgrade to Pro', 'user-registration' ); ?>
 			</a>
@@ -10735,7 +10735,6 @@ if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 			! $site_assistant_data['has_default_form']
 			|| ! empty( $site_assistant_data['missing_pages'] )
 			|| ! $site_assistant_data['test_email_sent']
-			|| ! $site_assistant_data['wordpress_login_handled']
 			|| ! $site_assistant_data['spam_protection_handled']
 			|| ! $site_assistant_data['payment_setup_handled']
 		);

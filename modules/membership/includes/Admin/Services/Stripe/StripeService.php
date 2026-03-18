@@ -704,6 +704,19 @@ class StripeService {
 			);
 		}
 
+		if ( ! empty( $latest_order ) && 'stripe' !== $latest_order['payment_method'] ) {
+			return $this->update_order_error(
+				$response,
+				__( 'Payment method mismatch: order payment method is not stripe' ),
+				'Payment method mismatch: order payment method is not stripe',
+				array( 'error_code' => 'PAYMENT_METHOD_MISMATCH', 'member_id' => $member_id,
+				'order_id'       => $latest_order['ID'],
+					'payment_method' => $latest_order['payment_method'], )
+			);
+
+			return $response;
+		}
+
 		try {
 			$intent = \Stripe\PaymentIntent::retrieve( $latest_order['transaction_id'] );
 		} catch ( \Stripe\Exception\ApiErrorException $ex ) {
@@ -911,7 +924,7 @@ class StripeService {
 				array(
 					'error_code' => 'EMAIL_SEND_FAILED',
 					'member_id'  => $member_id,
-					'order_id'   => $id,
+					'order_id'   => $ID,
 				)
 			);
 		}
@@ -1109,7 +1122,7 @@ class StripeService {
 								$first_month_price = $new_price;
 							}
 
-							if ( ( $new_price > $current_price ) && ( !empty($order_detail['coupon']) ||  "proration" == $upgrade_type) ) {
+							if ( ( $new_price > $current_price ) && ( ! empty( $order_detail['coupon'] ) || 'pro-rata' == $upgrade_type ) ) {
 								if ( isset( $order_detail['coupon'] ) && ! empty( $order_detail['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 									$coupon_details  = ur_get_coupon_details( $order_detail['coupon'] );
 									$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $first_month_price * $coupon_details['coupon_discount'] / 100;
@@ -1119,7 +1132,7 @@ class StripeService {
 									} else {
 										$amount = $current_price + $discount_amount;
 									}
-								} elseif ( 'proration' === $upgrade_type ) {
+								} elseif ( 'pro-rata' === $upgrade_type ) {
 									$amount = $new_price - $first_month_price;
 								}
 
@@ -1464,16 +1477,33 @@ class StripeService {
 	 * @return array $response array Response with status flag and message.
 	 */
 	public function reactivate_subscription( $subscription_id ) {
-		$response     = array(
+		$response           = array(
 			'status' => false,
 		);
-		$subscription = \Stripe\Subscription::retrieve( $subscription_id );
+		$subscription       = \Stripe\Subscription::retrieve( $subscription_id );
+		$local_subscription = $this->members_subscription_repository->get_subscription_by_subscription_id_meta( $subscription_id );
 		if ( isset( $subscription->id ) ) {
+
 			if ( 'active' === $subscription->status ) {
-				return array(
-					'status'  => true,
-					'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
-				);
+
+				if ( 'canceled' === $local_subscription['status'] && true === $subscription->cancel_at_period_end ) {
+					\Stripe\Subscription::update(
+						$subscription_id,
+						array(
+							'cancel_at_period_end' => false,
+						)
+					);
+
+					return array(
+						'status'  => true,
+						'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
+					);
+				} else {
+					return array(
+						'status'  => true,
+						'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
+					);
+				}
 			} elseif ( 'canceled' !== $subscription->status && true === $subscription->cancel_at_period_end ) {
 				\Stripe\Subscription::update(
 					$subscription_id,
@@ -2467,6 +2497,12 @@ class StripeService {
 			}
 
 			if ( $subscription->status !== $membership_subscription['status'] ) {
+
+				if ( 'active' === $subscription->status && 'canceled' === $membership_subscription['status'] && $subscription->cancel_at_period_end ) {
+					// If Stripe subscription is active but our record is canceled and Stripe subscription is set to cancel at period end, we should not update the status to active as it will cause confusion. We will wait for the next event to update the status.
+					continue;
+				}
+
 				$update_data = array(
 					'status' => $subscription->status,
 				);
