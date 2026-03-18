@@ -2060,6 +2060,7 @@ class AJAX {
 					'message'                  => $message,
 					'selected_membership_id'   => $data['selected_membership_id'],
 					'current_membership_id'    => $data['current_membership_id'],
+					'order_id'                 => $upgrade_membership_response['extra']['order_id'],
 				)
 			);
 		}
