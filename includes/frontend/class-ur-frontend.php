@@ -365,7 +365,11 @@ class UR_Frontend {
 
 		$ur_payment_subscription = get_user_meta( $user_id, 'ur_payment_subscription', true );
 
-		if ( 'membership' === $user_source || $payment_method ) {
+		$user = wp_get_current_user();
+
+		$is_admin = in_array( 'administrator', (array) $user->roles, true );
+
+		if ( 'membership' === $user_source || $payment_method || $is_admin ) {
 			add_action( 'wp_loaded', array( $this, 'ur_add_payments_tab_endpoint' ) );
 			add_filter( 'user_registration_account_menu_items', array( $this, 'urm_payment_history_tab' ), 10, 1 );
 			add_action(
@@ -436,6 +440,16 @@ class UR_Frontend {
 	 * Membership tab content.
 	 */
 	public function user_registration_urm_payments_tab_endpoint_content() {
+
+		$user = wp_get_current_user();
+
+		$is_admin = in_array( 'administrator', (array) $user->roles, true );
+
+		if ( $is_admin ) {
+			echo esc_html_e( 'You do not have any payment records', 'user-registration' );
+			return;
+		}
+
 		do_action( 'user_registration_before_payments_tab_contents' );
 
 		$layout = get_option( 'user_registration_my_account_layout', 'vertical' );
@@ -618,7 +632,7 @@ class UR_Frontend {
 					$membership['active_gateways'] = $active_gateways;
 					$membership_process            = urm_get_membership_process( $user_id );
 
-					$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $membership['post_id'] ] );
+					$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $membership['post_id'] ] );
 					$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $membership['post_id'], $membership_process['multiple'] );
 					$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $membership['post_id'], $membership_process['renew'] );
 
@@ -636,13 +650,13 @@ class UR_Frontend {
 					$subscription_data = $members_subscription_repository->get_subscription_data_by_subscription_id( $membership['subscription_id'] );
 
 					$data = array(
-						'membership'        => $membership,
-						'is_upgrading'      => $is_upgrading,
-						'is_purchasing_multiple'      => $is_purchasing_multiple,
-						'is_renewing'      => $is_renewing,
-						'bank_data'         => $bank_data,
-						'renewal_behaviour' => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
-						'subscription_data' => $subscription_data,
+						'membership'             => $membership,
+						'is_upgrading'           => $is_upgrading,
+						'is_purchasing_multiple' => $is_purchasing_multiple,
+						'is_renewing'            => $is_renewing,
+						'bank_data'              => $bank_data,
+						'renewal_behaviour'      => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
+						'subscription_data'      => $subscription_data,
 					);
 
 					if ( ! empty( $last_order ) ) {
