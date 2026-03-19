@@ -332,12 +332,11 @@ class SubscriptionService {
 		$total                          = $order['total_amount'];
 		$membership_tab_url             = esc_url( ur_get_my_account_url() . 'ur-membership' );
 
-
 		$order_repository = new OrdersRepository();
-		$local_currency = $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'local_currency' );
+		$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'local_currency' );
 
 		$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
-		$symbol = ur_get_currency_symbol( $currency );
+		$symbol   = ur_get_currency_symbol( $currency );
 
 		if ( ! empty( $data['context'] ) && 'thank_you_page' == $data['context'] ) {
 			$data['payment_method'] = ! empty( $member_order['payment_method'] ) ? $member_order['payment_method'] : '';
@@ -561,6 +560,7 @@ class SubscriptionService {
 			'ur_authorize_net'       => $ur_authorize_net_data,
 			'selected_membership_id' => $data['selected_membership_id'],
 			'current_membership_id'  => $data['current_membership_id'],
+			'order_id'               => $order['ID'],
 		);
 
 		if ( ! empty( $coupon ) ) {
@@ -931,6 +931,7 @@ class SubscriptionService {
 			'transaction_id'    => $orders_data['orders_data']['transaction_id'],
 			'upgrade'           => false,
 			'subscription_data' => $member_subscription,
+			'order_id'          => $order['ID'],
 		);
 
 		$renew_response           = $payment_service->build_response( $data );
@@ -957,7 +958,7 @@ class SubscriptionService {
 				'username'                 => $username,
 				'transaction_id'           => $orders_data['orders_data']['transaction_id'],
 				'updated_membership_title' => $membership['post_title'],
-				'order_id'   => $order['ID'],
+				'order_id'                 => $order['ID'],
 			),
 			'response' => $renew_response,
 		);
@@ -1160,7 +1161,7 @@ class SubscriptionService {
 		$expired_count = 0;
 		$expired_users = array();
 		foreach ( $subscriptions as $subscription ) {
-			//only handle the subscription case.
+			// only handle the subscription case.
 			if ( $subscription['order_type'] !== 'subscription' ) {
 				continue;
 			}
@@ -1175,7 +1176,7 @@ class SubscriptionService {
 	 * Payment retry callback for a failed attempt.
 	 */
 	public function failed_payment_retry_callback( $subscription ) {
-		//update the counter for failed payment retry.
+		// update the counter for failed payment retry.
 		$retry_count = (int) get_user_meta( $subscription['member_id'], 'urm_is_payment_retrying', true );
 		update_user_meta( $subscription['member_id'], 'urm_is_payment_retrying', $retry_count + 1 );
 		switch ( $subscription['payment_method'] ) {
@@ -1200,32 +1201,32 @@ class SubscriptionService {
 	 * @param int $subscription_id Subscription ID.
 	 * @return boolean
 	 */
-	public function is_user_membership_expired($user_id, $subscription_id) {
+	public function is_user_membership_expired( $user_id, $subscription_id ) {
 		$subscription = $this->members_subscription_repository->retrieve( $subscription_id );
 
 		if ( empty( $subscription ) || $subscription['user_id'] != $user_id ) {
 			return false;
 		}
 
-		if( $subscription['status'] === 'expired' ) {
+		if ( $subscription['status'] === 'expired' ) {
 			return true;
 		}
 
-		if (empty($subscription['expiry_date'])) {
+		if ( empty( $subscription['expiry_date'] ) ) {
 			return false;
 		}
 
-		if( empty( $subscription['billing_cycle'] ) ) {
+		if ( empty( $subscription['billing_cycle'] ) ) {
 			return false;
 		}
 
 		try {
-			$expiry_date = new \DateTime($subscription['expiry_date']);
-		} catch (\Exception $e) {
+			$expiry_date = new \DateTime( $subscription['expiry_date'] );
+		} catch ( \Exception $e ) {
 			return false;
 		}
 
-		$today       = new \DateTime( 'today' );
+		$today = new \DateTime( 'today' );
 
 		return $expiry_date <= $today;
 	}
@@ -1235,16 +1236,16 @@ class SubscriptionService {
 	 */
 	public function membership_missed_payment_check() {
 
-    	$last_synced = (int) get_option( 'urm_last_missed_payment_events_check_sync_time', 0 );
-		$now = time();
+		$last_synced = (int) get_option( 'urm_last_missed_payment_events_check_sync_time', 0 );
+		$now         = time();
 
 		if ( $last_synced <= 0 ) {
 			$last_synced = $now - 3 * MONTH_IN_SECONDS; // fallback to 3 months back if no previous sync time found, to avoid missing old events.
 		}
 
-    	$this->urm_backfill_missed_payment_events( $last_synced, $now );
+		$this->urm_backfill_missed_payment_events( $last_synced, $now );
 
-		update_option('urm_last_missed_payment_events_check_sync_time', $now);
+		update_option( 'urm_last_missed_payment_events_check_sync_time', $now );
 	}
 
 	/**
@@ -1252,24 +1253,35 @@ class SubscriptionService {
 	 *
 	 * This method fetches payment provider events for subscription updates and payment successes that occurred between the last synced time and now. It then processes these events to update the local subscription records and create any missing payment records in the database.
 	 *
-	 * @param int $last_synced The timestamp of the last successful sync, used to fetch events that occurred after this time.
+	 * @param int      $last_synced The timestamp of the last successful sync, used to fetch events that occurred after this time.
 	 * @param int|null $now The current timestamp, used to limit the events fetched. If null, it defaults to the current time.
 	 * @return void
 	 */
-	public function urm_backfill_missed_payment_events($last_synced, $now = null) {
+	public function urm_backfill_missed_payment_events( $last_synced, $now = null ) {
 		if ( $now === null ) {
 			$now = time();
 		}
 
 		$payment_gateways = get_option( 'ur_membership_payment_gateways', array() );
 
-		if( ! empty( $payment_gateways ) ) {
+		if ( ! empty( $payment_gateways ) ) {
 			foreach ( $payment_gateways as $gateway_key => $gateway_details ) {
 				switch ( $gateway_key ) {
 					case 'stripe':
-						$stripe_service = new StripeService();
-						$stripe_service->run_missed_subscription_backfill( $last_synced );
-						$stripe_service->run_missed_payment_backfill( $last_synced );
+						try {
+							$stripe_service = new StripeService();
+							$stripe_service->run_missed_subscription_backfill( $last_synced );
+							$stripe_service->run_missed_payment_backfill( $last_synced );
+						} catch ( \Exception $e ) {
+							ur_get_logger()->error(
+								sprintf(
+									__( 'Error fetching missed events for Stripe: %s', 'user-registration' ),
+									$e->getMessage()
+								),
+								array( 'source' => 'urm-missed-payment-backfill' )
+							);
+							return;
+						}
 						break;
 					default:
 						do_action( 'urm_fetch_and_process_missed_payment_events_for_gateway', $gateway_key, $last_synced, $now );

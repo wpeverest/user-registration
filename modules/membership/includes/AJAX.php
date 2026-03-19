@@ -232,8 +232,10 @@ class AJAX {
 		if ( ur_check_module_activation( 'team' ) ) {
 			$data['team_id'] = ! empty( $response['team_id'] ) ? $response['team_id'] : 0;
 		}
-		$data['email'] = $response['member_email'];
-		$pg_data       = array();
+		$data['email']    = $response['member_email'];
+		$data['order_id'] = $response['order_id'];
+
+		$pg_data = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service  = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
@@ -428,19 +430,27 @@ class AJAX {
 
 			if ( $is_stripe_enabled && 'free' !== $meta_data['type'] ) {
 				$stripe_service = new StripeService();
-				$stripe_result  = $stripe_service->sync_product_and_price_in_stripe(
-					array(
-						'ID'         => $updated_ID,
-						'post_title' => $data['post_data']['post_title'],
-						'meta_value' => $meta_data,
-					)
-				);
+				try {
+					$stripe_result = $stripe_service->sync_product_and_price_in_stripe(
+						array(
+							'ID'         => $updated_ID,
+							'post_title' => $data['post_data']['post_title'],
+							'meta_value' => $meta_data,
+						)
+					);
 
-				if ( empty( $stripe_result['success'] ) ) {
+					if ( empty( $stripe_result['success'] ) ) {
+						wp_send_json_error(
+							array(
+								'message' => $stripe_result['message']
+									?? __( 'Could not update product/price in Stripe.', 'user-registration' ),
+							)
+						);
+					}
+				} catch ( \Exception $e ) {
 					wp_send_json_error(
 						array(
-							'message' => $stripe_result['message']
-								?? __( 'Could not update product/price in Stripe.', 'user-registration' ),
+							'message' => $e->getMessage(),
 						)
 					);
 				}
@@ -1051,7 +1061,7 @@ class AJAX {
 
 			delete_user_meta( $member_id, 'urm_user_just_created' );
 			$response = array(
-				'message'                => $update_stripe_order['message'],
+				'message'                => $update_stripe_order['message'] ?? '',
 				'is_upgrading'           => ur_string_to_bool( $is_upgrading ),
 				'is_renewing'            => ur_string_to_bool( $is_renewing ),
 				'is_purchasing_multiple' => ur_string_to_bool( $is_purchasing_multiple ),
@@ -2010,7 +2020,7 @@ class AJAX {
 					)
 				);
 			}
-			$message = 'free' === $selected_pg ? __( 'Membership upgraded successfully.', 'user-registration-membership' ) : __( 'New Order created, initializing payment...', 'user-registration-membership' );
+			$message = __( 'Membership upgraded successfully.', 'user-registration-membership' );
 
 			// Prepare data to register subscription upgrade event.
 			$members_subscription_repository = new MembersSubscriptionRepository();
@@ -2050,6 +2060,7 @@ class AJAX {
 					'message'                  => $message,
 					'selected_membership_id'   => $data['selected_membership_id'],
 					'current_membership_id'    => $data['current_membership_id'],
+					'order_id'                 => $upgrade_membership_response['extra']['order_id'],
 				)
 			);
 		}
@@ -2279,6 +2290,7 @@ class AJAX {
 		$data['member_id']       = $member_id;
 		$data['subscription_id'] = isset( $response['subscription_id'] ) ? $response['subscription_id'] : 0;
 		$data['email']           = $response['member_email'];
+		$data['order_id']        = $response['order_id'];
 		$pg_data                 = array();
 		$response['type']        = isset( $response['type'] ) ? $response['type'] : $membership_type;
 
@@ -2326,7 +2338,7 @@ class AJAX {
 				);
 			}
 
-			$message = 'free' === $selected_pg ? __( 'Membership purchased successfully.', 'user-registration-membership' ) : __( 'New Order created, initializing payment...', 'user-registration-membership' );
+			$message = __( 'Membership purchased successfully.', 'user-registration-membership' );
 			wp_send_json_success(
 				array(
 					'is_purchasing_multiple'   => true,
@@ -2509,7 +2521,7 @@ class AJAX {
 
 		$response = $renew_membership['response'];
 		if ( $response['status'] ) {
-			$message = __( 'New Order created, initializing payment...', 'user-registration-membership' );
+			$message = __( 'Membership renewed successfully.', 'user-registration-membership' );
 
 			// Prepare data to register subscription renew event.
 			$members_subscription_repository = new MembersSubscriptionRepository();

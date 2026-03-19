@@ -255,12 +255,18 @@
 						),
 						active_memberships_field = $(
 							"#ur-setting-form .ur-general-setting-membership_active_memberships"
-						);
+						),
+						$formSelect = active_memberships_field.find("select");
 					group_select_field
 						.hide()
 						.find("select")
 						.prop("selectedIndex", 0)
 						.trigger("change");
+					// Preserve selected memberships from form select before hiding (for restore when switching back)
+					var preservedVal = $formSelect.length ? ($formSelect.val() || []) : [];
+					if (!Array.isArray(preservedVal)) {
+						preservedVal = preservedVal ? [].concat(preservedVal) : [];
+					}
 					active_memberships_field.hide();
 					$(
 						".ur-general-setting-membership_listing_option select"
@@ -270,6 +276,26 @@
 						group_select_field.show();
 					} else if ($this.val() === "selected") {
 						active_memberships_field.show();
+						// Restore selected memberships from grid item (source of truth) or preserved value
+						var $gridSelect = $(
+							".ur-item-active .ur-general-setting-membership_active_memberships select"
+						);
+						var restoreVal = $gridSelect.length && ($gridSelect.val() || []).length
+							? ($gridSelect.val() || [])
+							: preservedVal;
+						if (!Array.isArray(restoreVal)) {
+							restoreVal = restoreVal ? [].concat(restoreVal) : [];
+						}
+						if (restoreVal.length && $formSelect.length) {
+							$formSelect.val(restoreVal);
+							if ($formSelect.hasClass("select2-hidden-accessible")) {
+								$formSelect.trigger("change");
+							}
+							// Keep grid in sync when restoring from preserved value
+							if ($gridSelect.length) {
+								$gridSelect.val(restoreVal);
+							}
+						}
 					} else {
 						membership_group_object.fetch_memberships(-1);
 					}

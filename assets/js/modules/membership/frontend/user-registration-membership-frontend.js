@@ -154,9 +154,7 @@
 				);
 				$form.append(wrapper);
 				$(window).scrollTop(
-					$registration_form
-						.find(".ur-button-container")
-						.offset().top
+					$registration_form.find(".ur-button-container").offset().top
 				);
 				$(".notice-container").removeClass("active");
 			} else {
@@ -168,6 +166,13 @@
 			}
 		},
 		show_form_success_message: function (form_response, thank_you_data) {
+			if (
+				form_response.data &&
+				form_response.data.registration_type === "membership"
+			) {
+				thank_you_data = thank_you_data || {};
+				thank_you_data.context = "hide_message";
+			}
 			var response_data = form_response.data,
 				ursL10n = user_registration_params.ursL10n,
 				$registration_form = $(
@@ -201,7 +206,6 @@
 					}
 				}, timeout);
 			}
-	
 			var has_thank_you_params =
 				thank_you_data &&
 				typeof thank_you_data === "object" &&
@@ -223,9 +227,6 @@
 				if ("" != originalRedirectUrl) {
 					return;
 				}
-			}
-			if ("undefined" === typeof redirect_url || redirect_url === "") {
-				redirect_url = urmf_data.thank_you_page_url;
 			}
 			/**
 			 * Remove Spinner.
@@ -700,12 +701,23 @@
 				payment_type: "unpaid",
 				info: response.data.pg_data.data,
 				username: prepare_members_data.username,
-				context: "hide_message"
+				context: "hide_message",
+				message: response.data.message || ""
 			};
 
-			if (response.data.is_renewing) {
+			var shouldRedirect =
+				!!response.data.is_renewing ||
+				!!response.data.is_upgrading ||
+				!!response.data.is_purchasing_multiple;
+
+			var redirectUrl =
+				$("#urm-redirect-url").val() ||
+				response.data.redirect_url ||
+				window.location.href;
+
+			if (shouldRedirect) {
 				ur_membership_ajax_utils.show_default_response(
-					window.location.href,
+					redirectUrl,
 					bank_data
 				);
 			} else {
@@ -721,14 +733,15 @@
 		 */
 		show_default_response: function (url, thank_you_data, timeout) {
 			timeout = timeout || 2000;
-			var thank_you_page_url =
-				url && String(url).trim() !== ""
-					? url
-					: urmf_data.thank_you_page_url;
+			if (!url || String(url).trim() === "") {
+				return;
+			}
 
 			var url_params = $.param(thank_you_data).toString();
 			window.setTimeout(function () {
-				window.location.replace(thank_you_page_url + "?" + url_params);
+				var hasQuery = url.indexOf("?") !== -1;
+				var concatenator = hasQuery ? "&" : "?";
+				window.location.replace(url + concatenator + url_params);
 			}, timeout);
 		},
 		validate_coupon: function ($this) {
@@ -1835,11 +1848,11 @@
 					window.location.replace(response.data.redirect);
 					break;
 				case "free":
-					var cleanUrl =
-						window.location.origin + window.location.pathname;
-
-					window.location.replace(urmf_data.thank_you_page_url);
-
+					var freeRedirectUrl = $("#urm-redirect-url").val() || "";
+					if (freeRedirectUrl) {
+						window.location.replace(freeRedirectUrl);
+					}
+					break;
 				default:
 					ur_membership_ajax_utils.show_bank_response(
 						response,
@@ -2102,7 +2115,10 @@
 					current_membership_id: response.data.current_membership_id
 						? response.data.current_membership_id
 						: "",
-					team_id: response.data.team_id ? response.data.team_id : ""
+					team_id: response.data.team_id ? response.data.team_id : "",
+					order_id: response.data.order_id
+						? response.data.order_id
+						: ""
 				},
 				{
 					success: function (response) {
@@ -2123,13 +2139,20 @@
 									thank_you_data.is_renewing =
 										response.data.is_renewing;
 								}
+
+								var upgradeRedirectUrl =
+									$("#urm-redirect-url").val() || "";
+
 								ur_membership_ajax_utils.show_default_response(
-									window.location.href,
+									upgradeRedirectUrl,
 									thank_you_data
 								);
 							} else {
+								var stripeRedirectUrl =
+									$("#urm-redirect-url").val() || "";
+
 								ur_membership_ajax_utils.show_default_response(
-									urmf_data.thank_you_page_url,
+									stripeRedirectUrl,
 									{
 										username: prepare_members_data.username,
 										transaction_id:

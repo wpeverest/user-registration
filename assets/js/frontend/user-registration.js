@@ -1620,6 +1620,15 @@
 										}
 
 										if (type === "message") {
+											// Membership/subscription registration: do not show "User successfully registered."; membership module shows "New member has been successfully created." only.
+											if (
+												response.data &&
+												response.data.registration_type === "membership"
+											) {
+												type = "membership_handled";
+											}
+										}
+										if (type === "message") {
 											$this
 												.find(
 													".user-registration-password-hint"
