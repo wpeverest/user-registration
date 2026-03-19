@@ -88,7 +88,7 @@ if ( ! function_exists( 'ur_membership_verify_nonce' ) ) {
 		if ( ! check_ajax_referer( $nonce, 'security' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Nonce error please reload.', 'user-registration-membership' ),
+					'message' => __( 'Nonce error please reload.', 'user-registration' ),
 				)
 			);
 		}
@@ -107,7 +107,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 
 		$currencies = array(
 			'USD' => array(
-				'name'                => esc_html__( 'U.S. Dollar', 'user-registration-membership' ),
+				'name'                => esc_html__( 'U.S. Dollar', 'user-registration' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -115,7 +115,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'GBP' => array(
-				'name'                => esc_html__( 'Pound Sterling', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Pound Sterling', 'user-registration' ),
 				'symbol'              => '&pound;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -123,7 +123,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'EUR' => array(
-				'name'                => esc_html__( 'Euro', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Euro', 'user-registration' ),
 				'symbol'              => '&euro;',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => '.',
@@ -131,7 +131,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'AUD' => array(
-				'name'                => esc_html__( 'Australian Dollar', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Australian Dollar', 'user-registration' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -139,7 +139,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'BRL' => array(
-				'name'                => esc_html__( 'Brazilian Real', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Brazilian Real', 'user-registration' ),
 				'symbol'              => 'R$',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => '.',
@@ -147,7 +147,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'CAD' => array(
-				'name'                => esc_html__( 'Canadian Dollar', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Canadian Dollar', 'user-registration' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -155,7 +155,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'CZK' => array(
-				'name'                => esc_html__( 'Czech Koruna', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Czech Koruna', 'user-registration' ),
 				'symbol'              => '&#75;&#269;',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => '.',
@@ -163,7 +163,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'DKK' => array(
-				'name'                => esc_html__( 'Danish Krone', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Danish Krone', 'user-registration' ),
 				'symbol'              => 'kr.',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => '.',
@@ -171,7 +171,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'HKD' => array(
-				'name'                => esc_html__( 'Hong Kong Dollar', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Hong Kong Dollar', 'user-registration' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => ',',
@@ -179,7 +179,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'HUF' => array(
-				'name'                => esc_html__( 'Hungarian Forint', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Hungarian Forint', 'user-registration' ),
 				'symbol'              => 'Ft',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => '.',
@@ -187,7 +187,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'ILS' => array(
-				'name'                => esc_html__( 'Israeli New Sheqel', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Israeli New Sheqel', 'user-registration' ),
 				'symbol'              => '&#8362;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -195,7 +195,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'MYR' => array(
-				'name'                => esc_html__( 'Malaysian Ringgit', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Malaysian Ringgit', 'user-registration' ),
 				'symbol'              => '&#82;&#77;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -203,7 +203,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'MXN' => array(
-				'name'                => esc_html__( 'Mexican Peso', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Mexican Peso', 'user-registration' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -211,7 +211,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'NOK' => array(
-				'name'                => esc_html__( 'Norwegian Krone', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Norwegian Krone', 'user-registration' ),
 				'symbol'              => 'Kr',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => '.',
@@ -219,7 +219,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'NZD' => array(
-				'name'                => esc_html__( 'New Zealand Dollar', 'user-registration-membership' ),
+				'name'                => esc_html__( 'New Zealand Dollar', 'user-registration' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -227,7 +227,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'PHP' => array(
-				'name'                => esc_html__( 'Philippine Peso', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Philippine Peso', 'user-registration' ),
 				'symbol'              => 'Php',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -235,7 +235,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'PLN' => array(
-				'name'                => esc_html__( 'Polish Zloty', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Polish Zloty', 'user-registration' ),
 				'symbol'              => '&#122;&#322;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => '.',
@@ -243,7 +243,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'RUB' => array(
-				'name'                => esc_html__( 'Russian Ruble', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Russian Ruble', 'user-registration' ),
 				'symbol'              => 'pyб',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => ' ',
@@ -251,7 +251,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'SGD' => array(
-				'name'                => esc_html__( 'Singapore Dollar', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Singapore Dollar', 'user-registration' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -259,7 +259,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'ZAR' => array(
-				'name'                => esc_html__( 'South African Rand', 'user-registration-membership' ),
+				'name'                => esc_html__( 'South African Rand', 'user-registration' ),
 				'symbol'              => 'R',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -267,7 +267,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'SEK' => array(
-				'name'                => esc_html__( 'Swedish Krona', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Swedish Krona', 'user-registration' ),
 				'symbol'              => 'Kr',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => '.',
@@ -275,7 +275,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'CHF' => array(
-				'name'                => esc_html__( 'Swiss Franc', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Swiss Franc', 'user-registration' ),
 				'symbol'              => 'CHF',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -283,7 +283,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'TWD' => array(
-				'name'                => esc_html__( 'Taiwan New Dollar', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Taiwan New Dollar', 'user-registration' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -291,7 +291,7 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 				'decimals'            => 2,
 			),
 			'THB' => array(
-				'name'                => esc_html__( 'Thai Baht', 'user-registration-membership' ),
+				'name'                => esc_html__( 'Thai Baht', 'user-registration' ),
 				'symbol'              => '&#3647;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -391,6 +391,17 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				);
 				$duration_label  = $duration_labels[ $duration_key ] ?? ucfirst( $duration_key );
 			}
+
+			$subscription_period = $membership_cur_amount;
+			if ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] && ! empty( $duration_label ) ) {
+				$sub_value = (int) $membership['meta_value']['subscription']['value'];
+				if ( 1 === $sub_value ) {
+					$subscription_period = $membership_cur_amount . ' ' . __( 'every', 'user-registration' ) . ' ' . $duration_label;
+				} else {
+					$subscription_period = $membership_cur_amount . ' ' . __( 'every', 'user-registration' ) . ' ' . number_format( $sub_value ) . ' ' . ucfirst( $duration_label ) . __( 's', 'user-registration' );
+				}
+			}
+
 			$new_mem[ $k ] = array(
 				'ID'                => $membership_id,
 				'title'             => ! empty( $membership['post_title'] ) ? $membership['post_title'] : '',
@@ -399,7 +410,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'amount'            => ! empty( $membership_meta_value ) ? $membership['meta_value']['amount'] : 0,
 				'currency_symbol'   => $symbol,
 				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? round( $membership_meta_value['amount'] ) : 0 ),
-				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] ) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? __( 's', 'user-registration' ) : '' ) : $membership_cur_amount ),
+				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : $subscription_period,
 			);
 
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {

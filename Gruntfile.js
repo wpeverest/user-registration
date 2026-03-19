@@ -1,14 +1,19 @@
 const fs = require("fs");
+const path = require("path");
 
 /** @param {import('grunt')} grunt */
 module.exports = function (grunt) {
+	const distIgnorePath = path.join(process.cwd(), ".distignore");
+	if (!fs.existsSync(distIgnorePath)) {
+		throw new Error(".distignore is required for release zip (WordPress deploy). Create it in the plugin root.");
+	}
 	const distIgnorePatterns = fs
-		.readFileSync(".distignore", "utf-8")
+		.readFileSync(distIgnorePath, "utf-8")
 		.split("\n")
 		.filter((line) => line.trim() && !line.startsWith("#"))
 		.map((line) => `!${line.trim()}`);
 
-	// Define the files to be included in the zip archive.
+	// Define the files to be included in the zip archive (respects .distignore for WordPress-style deploy).
 	const filesToCompress = [
 		{
 			expand: true,
@@ -236,6 +241,18 @@ module.exports = function (grunt) {
 		shell: {
 			composerProd: {
 				command: "composer install --no-dev --optimize-autoloader"
+			},
+			composerDev: {
+				command: "composer install --no-dev"
+			},
+			pnpmInstall: {
+				command: "pnpm install"
+			},
+			pnpmBuild: {
+				command: "pnpm run build"
+			},
+			pnpmBuildNoMakepot: {
+				command: "pnpm run build:no-makepot"
 			}
 		}
 	});
@@ -249,6 +266,48 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.loadNpmTasks("grunt-contrib-compress");
 	grunt.loadNpmTasks("grunt-shell");
+
+	// Ensures .distignore is used for the zip (same as WordPress.org deploy). Run before compress in release tasks.
+	grunt.registerTask("checkDistignore", function () {
+		const distIgnorePath = path.join(process.cwd(), ".distignore");
+		if (!fs.existsSync(distIgnorePath)) {
+			grunt.fail.fatal(".distignore not found.");
+		}
+		const patterns = fs
+			.readFileSync(distIgnorePath, "utf-8")
+			.split("\n")
+			.filter((line) => line.trim() && !line.startsWith("#"));
+		grunt.log.writeln("Using .distignore for zip (" + patterns.length + " exclude patterns).");
+	});
+
+	// When --clear-all is passed: remove chunks/, vendor/, composer.lock (run before release/release:dev)
+	grunt.registerTask("cleanAllIfRequested", function () {
+		if (!grunt.option("clear-all")) {
+			return;
+		}
+		const base = process.cwd();
+		const targets = [
+			path.join(base, "chunks"),
+			path.join(base, "vendor"),
+			path.join(base, "composer.lock")
+		];
+		targets.forEach((target) => {
+			try {
+				const stat = fs.statSync(target);
+				if (stat.isDirectory()) {
+					fs.rmSync(target, { recursive: true });
+					grunt.log.writeln("Cleaned: " + target);
+				} else {
+					fs.unlinkSync(target);
+					grunt.log.writeln("Cleaned: " + target);
+				}
+			} catch (err) {
+				if (err.code !== "ENOENT") {
+					grunt.warn("clean-all: " + err.message);
+				}
+			}
+		});
+	});
 
 	grunt.registerTask("default", ["terser"]);
 
@@ -268,13 +327,27 @@ module.exports = function (grunt) {
 		"concat"
 	]);
 
-	grunt.registerTask("release", [
+	// Production release: .distignore check, composer prod, pnpm install, grunt css, grunt js, pnpm run build, zip (WordPress-style)
+	grunt.registerTask("release:prod", [
+		"cleanAllIfRequested",
+		"checkDistignore",
 		"shell:composerProd",
-		"sass",
-		"rtlcss",
-		"cssmin",
-		"concat",
-		"terser",
+		"shell:pnpmInstall",
+		"css",
+		"js",
+		"shell:pnpmBuild",
+		"compress:withVersion"
+	]);
+
+	// Development release: .distignore check, composer --no-dev, pnpm install, grunt css, grunt js, pnpm run build (no makepot), zip (WordPress-style)
+	grunt.registerTask("release:dev", [
+		"cleanAllIfRequested",
+		"checkDistignore",
+		"shell:composerDev",
+		"shell:pnpmInstall",
+		"css",
+		"js",
+		"shell:pnpmBuildNoMakepot",
 		"compress:withVersion"
 	]);
 

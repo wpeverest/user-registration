@@ -134,7 +134,7 @@ class PaypalService {
 				}
 			}
 		} else {
-			$membership_amount = number_format( $membership_metas['amount'] );
+			$membership_amount = (float) $membership_metas['amount'];
 		}
 		$is_automatic       = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
 		$discount_amount    = 0;
@@ -342,7 +342,7 @@ class PaypalService {
 		$is_renewing         = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'] );
 
 		if ( 'completed' === $member_order['status'] ) {
-			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
+			 ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 		}
 
 		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
@@ -443,12 +443,14 @@ class PaypalService {
 		}
 
 		$login_option = ur_get_user_login_option( $member_id );
+		$data = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
+
 		if ( 'auto_login' === $login_option ) {
 			$member_service = new MembersService();
-			$member_service->login_member( $member_id, true );
+			$password        = isset( $data['password'] ) ? $data['password'] : '';
+			$member_service->login_member( $member_id, true, $password );
 		}
-
-		update_user_meta( $member_id, 'urm_user_just_created', true );
+		delete_user_meta( $member_id, 'urm_user_just_created' );
 		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 	}
 
@@ -976,6 +978,7 @@ class PaypalService {
 			);
 			$email_service->send_email( $email_data, 'payment_retry_failed' );
 		}
+		delete_user_meta( $member_id, 'urm_user_just_created' );
 	}
 
 	/**

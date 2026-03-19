@@ -214,7 +214,7 @@ class ListTable extends \UR_List_Table {
 			</p>
 			<div id="user-registration-list-search-form">
 				<?php
-				$placeholder = __( 'Search Subscription', 'user-registration' );
+				$placeholder = __( 'Search member or email', 'user-registration' );
 				UR_Base_Layout::display_search_field( $search_id, $placeholder );
 				?>
 				</div>

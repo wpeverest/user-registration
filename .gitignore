@@ -33,6 +33,9 @@ Thumbs.db
 # PHP Unit Tests
 /tests/
 
+# act local secrets (do not commit)
+.act/.secrets
+
 # Local overrides
 phpcs.xml
 phpunit.xml

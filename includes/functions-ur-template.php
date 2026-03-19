@@ -36,7 +36,7 @@ function ur_template_redirect() {
 		// Check if external url is present in URL.
 		if ( isset( $_GET['redirect_to_on_logout'] ) ) {
 			wp_logout();
-			wp_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to_on_logout'] ) ) );
+			wp_safe_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to_on_logout'] ) ) );
 			exit;
 		}
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
@@ -81,7 +81,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 
 			if ( ! empty( $form_id ) ) {
 
-				$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
+				$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', ur_get_default_redirect_after_registration( $form_id ) );
 
 				switch ( $redirect_option ) {
 					case 'no-redirection':
@@ -89,11 +89,13 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 						break;
 
 					case 'internal-page':
-						$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' );
+						$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', get_option( 'user_registration_thank_you_page_id', '' ) );
 
-						if ( ! empty( $selected_page ) ) {
+						if ( ! empty( $selected_page ) && 'no-redirection' !== $selected_page ) {
 							$page_url     = get_permalink( $selected_page );
 							$redirect_url = $page_url;
+						} else {
+							$redirect_url = '';
 						}
 
 						break;
@@ -160,9 +162,9 @@ function ur_body_class( $classes ) {
 }
 
 /**
- * ur_admin_body_class
+ * Admin body class.
  *
- * @param $classes
+ * @param string $classes Classes.
  *
  * @return string
  */
@@ -177,8 +179,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 *
 	 * @param string $key Key.
 	 * @param mixed  $args Arguments.
-	 * @param string $value (default: null).
-	 * @param string $current_row (default: empty).
+	 * @param string $value Value (default: null).
+	 * @param string $current_row Current Row (default: empty).
+	 * @param bool   $is_edit Is edit flag.
 	 *
 	 * @return string
 	 */
@@ -818,7 +821,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$options         = $field .= '';
 				$backtrace       = debug_backtrace();
 				$parent_function = isset( $backtrace[1] ) ? $backtrace[1]['function'] : '';
-				$args['options'] = ( $parent_function === 'frontend_includes' ) ? apply_filters( 'override_options_for_select_field', $args['options'], $args['id'] ) : $args['options'];
+				$args['options'] = ( 'frontend_includes' === $parent_function ) ? apply_filters( 'override_options_for_select_field', $args['options'], $args['id'] ) : $args['options'];
 
 				if ( ! empty( $args['options'] ) ) {
 					// If we have a blank option, select2 needs a placeholder.
@@ -835,7 +838,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					if ( $is_json ) {
 						$value = json_decode( $value, true );
 					}
-					$country = is_array( $value ) && ! empty(  $value['country']) ? $value['country'] : $value;
+					$country = is_array( $value ) && ! empty( $value['country'] ) ? $value['country'] : $value;
 
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
@@ -846,7 +849,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . $selected_attribute . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 					$state_enabled = ! empty( $args['enable_state'] ) && '1' == $args['enable_state'];
-					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="ur-field-address-country select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '" data-state-enabled="' . $state_enabled . '">
+					$field        .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="ur-field-address-country select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '" data-state-enabled="' . $state_enabled . '">
 					' . $options . '
 					</select>';
 
@@ -858,7 +861,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					if ( $state_enabled ) {
 						$field .= '<label for="' . $args['id'] . '" class="ur-label ur-state-label">' . __( 'State', 'user-registration' ) . '</label>';
 						$field .= '<span class="input-wrapper ur-field-address-state-outer-wrapper">';
-						if ( isset($value['state'], $states[ $value['state']  ] ) ) {
+						if ( isset( $value['state'], $states[ $value['state'] ] ) ) {
 							$field .= '<select id="' . esc_attr( $args['id'] ) . '_state" class="ur-field-address-state select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state">';
 							foreach ( $states as $state_key => $state_name ) {
 								$state_selected_attribute = '';
@@ -868,7 +871,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 								$field .= '<option value="' . esc_attr( trim( $state_key ) ) . '" ' . $state_selected_attribute . '>' . esc_attr( trim( $state_name ) ) . '</option>';
 							}
 							$field .= '</select>';
-						}else {
+						} else {
 							$field .= '<input type="text" class="ur-field-address-state input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state" value="' . esc_attr( ! empty( $value['state'] ) ? $value['state'] : '' ) . '" />';
 						}
 						$field .= '</span>';
@@ -971,7 +974,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 							esc_attr( $key ),
 							esc_attr( implode( ' ', $args['input_class'] ) ),
 							esc_attr( trim( $option_index ) ),
-							esc_attr( $key . ( $current_row !== '' ? "_{$current_row}" : '' ) ),
+							esc_attr( $key . ( '' !== $current_row ? "_{$current_row}" : '' ) ),
 							esc_attr( "{$args['id']}_{$option_text}" ),
 							implode( ' ', $custom_attributes ),
 							$checked
@@ -1015,6 +1018,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$field .= ( $is_edit ) ? '</span>' : '';
 				break;
 			case 'tinymce':
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7.
+
 				$editor_settings = array(
 					'name'          => esc_attr( $args['id'] ),
 					'id'            => esc_attr( $args['id'] ),
@@ -1052,6 +1057,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		// End switch().
 		if ( $args['description'] ) {
 			$field .= '<span class="description">' . $args['description'] . '</span>';
+		}
+
+		if ( isset( $args['notice'] ) && ! empty( $args['notice'] ) ) {
+			$notice_type    = isset( $args['notice']['type'] ) ? $args['notice']['type'] : 'info';
+			$notice_message = isset( $args['notice']['message'] ) ? $args['notice']['message'] : '';
+			$field         .= '<span class="ur-settings-notice ur-settings-notice--' . $notice_type . '">' . $notice_message . '</span>';
 		}
 
 		if ( ! empty( $field ) ) {
@@ -1248,12 +1259,12 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						}
 						$user_profile_fields = ur_get_user_profile_field_only();
 
-						$is_admin_request = $_REQUEST['is_admin_user'] ?? false;
-						if ( $is_admin_request || ( isset( $_REQUEST['action'] ) && sanitize_text_field( ( $_REQUEST['action'] ) === 'edit' || $_REQUEST['action'] === 'view' ) && $user_id !== get_current_user_id() ) ) {
+						$is_admin_request = $_REQUEST['is_admin_user'] ?? false; // phpcs:ignore
+						if ( $is_admin_request || ( isset( $_REQUEST['action'] ) && sanitize_text_field( 'edit' === $_REQUEST['action'] || 'view' === $_REQUEST['action'] ) && $user_id !== get_current_user_id() ) ) { // phpcs:ignore
 							array_push( $user_profile_fields, 'user_pass' );
 						}
 
-						if ( in_array( $field_key, $user_profile_fields ) ) {
+						if ( in_array( $field_key, $user_profile_fields ) ) { // phpcs:ignore
 
 							$fields[ 'user_registration_' . $field_name ] = array(
 								'label'       => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_label', $field_label ),
@@ -1358,13 +1369,11 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 		}
 
 		if ( ur_string_to_bool( get_option( 'urm_is_new_installation', false ) ) ) {
-			$user_id   = get_current_user_id();
-			$form_id   = ur_get_form_id_by_userid( $user_id );
-			$user_data = get_userdata( $user_id );
-			$user_data = $user_data->data;
-
+			$user_id         = get_current_user_id();
+			$form_id         = ur_get_form_id_by_userid( $user_id );
+			$user_data       = get_userdata( $user_id );
+			$user_data       = $user_data->data;
 			$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
-
 			if ( ! empty( $form_data_array ) ) {
 				// No endpoint found? Default to dashboard.
 				ur_get_template(
@@ -1537,7 +1546,7 @@ function ur_logout_url( $redirect = '' ) {
 	$redirect = apply_filters( 'user_registration_redirect_after_logout', $redirect );
 
 	if ( $logout_endpoint && ! is_front_page() ) {
-		if ( $redirect === home_url( '/' ) ) {
+		if ( home_url( '/' ) === $redirect ) {
 			return wp_logout_url( $redirect );
 		} else {
 			return wp_nonce_url( ur_get_endpoint_url( 'user-logout', '', $redirect ), 'user-logout' );
@@ -1589,8 +1598,9 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 	 *
 	 * @param string $key Key.
 	 * @param mixed  $args Arguments.
-	 * @param string $value (default: null).
-	 * @param string $current_row (default: empty).
+	 * @param string $value Value (default: null).
+	 * @param string $current_row Current Row (default: empty).
+	 * @param string $is_edit Is edit flag.
 	 *
 	 * @return string
 	 */
@@ -1816,6 +1826,12 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 
 				if ( $args['description'] ) {
 					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+
+				if ( isset( $args['notice'] ) && ! empty( $args['notice'] ) ) {
+					$notice_type    = isset( $args['notice']['type'] ) ? $args['notice']['type'] : 'info';
+					$notice_message = isset( $args['notice']['message'] ) ? $args['notice']['message'] : '';
+					$field         .= '<span class="ur-settings-notice ur-settings-notice--' . $notice_type . '">' . $notice_message . '</span>';
 				}
 
 				$field .= '</div>';
@@ -2123,7 +2139,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				$field          .= '<div class="ur-settings-field">';
 				$backtrace       = debug_backtrace();
 				$parent_function = isset( $backtrace[1] ) ? $backtrace[1]['function'] : '';
-				$args['options'] = ( $parent_function === 'frontend_includes' ) ? apply_filters( 'override_options_for_select_field', $args['options'], $args['id'] ) : $args['options'];
+				$args['options'] = ( 'frontend_includes' === $parent_function ) ? apply_filters( 'override_options_for_select_field', $args['options'], $args['id'] ) : $args['options'];
 
 				if ( ! empty( $args['options'] ) ) {
 					// If we have a blank option, select2 needs a placeholder.
@@ -2276,6 +2292,8 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				break;
 
 			case 'tinymce':
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7.
+
 				$editor_settings = array(
 					'name'       => esc_attr( $args['id'] ),
 					'id'         => esc_attr( $args['id'] ),

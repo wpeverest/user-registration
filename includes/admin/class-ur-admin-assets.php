@@ -174,6 +174,9 @@ class UR_Admin_Assets {
 			);
 		}
 
+		wp_register_script( 'popper', UR()->plugin_url() . "/assets/js/popper/popper$suffix.js", [], UR_VERSION, true );
+		wp_register_script( 'tippy', UR()->plugin_url() . "/assets/js/tippy/tippy$suffix.js", [ 'popper' ], UR_VERSION, true );
+
 		wp_register_script( 'jquery-blockui', UR()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_register_script( 'tooltipster', UR()->plugin_url() . '/assets/js/tooltipster/tooltipster.bundle' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_register_script( 'jquery-confirm', UR()->plugin_url() . '/assets/js/jquery-confirm/jquery-confirm' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
@@ -380,6 +383,7 @@ class UR_Admin_Assets {
 				'form_one_time_draggable_fields_locked_message' => esc_html__( '%field% field can be used only one time in the form.', 'user-registration' ),
 				'form_membership_payment_fields_disabled_message' => esc_html__( 'Payment fields cannot be used alongside the membership field.', 'user-registration' ),
 				'form_membership_field_disabled_message'   => esc_html__( 'Membership field cannot be used alongside the payment fields.', 'user-registration' ),
+				'form_has_membership_available'             => function_exists( 'ur_has_membership_available' ) ? ur_has_membership_available() : false,
 				/* translators: %field%: Field Text */
 				'form_membership_payment_settings_disabled_title' => esc_html__( '%field% setting is disabled.', 'user-registration' ),
 				'form_membership_payment_settings_disabled_message' => esc_html__( 'Payment setting is not available when membership field is present in the form.', 'user-registration' ),
@@ -421,7 +425,7 @@ class UR_Admin_Assets {
 				'ur_assets_url'                            => UR()->plugin_url() . '/assets/',
 				'i18n_prompt_no_membership_group_selected' => __( 'Membership Field requires a membership group to be selected.', 'user-registration' ),
 				'i18n_default_redirection_notice_for_membership' => esc_html__( 'If the form includes a membership field, users will be redirected to the membership thank you page after submission.', 'user-registration' ),
-				'i18n_email_confirmation_disabled_notice'  => esc_html__( 'If email confirmation is not enabled in email settings, users will not receive a confirmation email when this login option is selected.', 'user_registration' ),
+				'i18n_email_confirmation_disabled_notice'  => esc_html__( 'If email confirmation is not enabled in email settings, users will not receive a confirmation email when this login option is selected.', 'user-registration' ),
 				'email_confirmation_disabled'              => ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) ? 'no' : 'yes',
 				'form_has_membership_field'                => check_membership_field_in_form( $form_id ),
 				'paypal_settings'                          => array(
