@@ -5402,11 +5402,36 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		 * Default value is 'create_users'.
 		 */
 		$logger = ur_get_logger();
-		$logger->info( __( 'Checking permissions.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+
+		$logger->info(
+			sprintf( '[Form #%d] ------- Registration started -------', $form_id ) . "\n",
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
+
+		$logger->info(
+			sprintf( '[Form #%d] Checking user capability permissions...', $form_id ) . "\n",
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
+
 		$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
 
 		if ( is_user_logged_in() && ! current_user_can( 'administrator' ) && ! current_user_can( $current_user_capability ) ) { //phpcs:ignore
-			$logger->warning( __( 'User is already logged in and lacks permission.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+			$logger->warning(
+				sprintf( '[Form #%d] User is already logged in and does not have permission to register a new account.', $form_id ) . "\n",
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
 			wp_send_json_error(
 				array(
 					'message' => __( 'You are already logged in.', 'user-registration' ),
@@ -5415,7 +5440,14 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		}
 
 		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) && empty( $_POST['ur_fallback_submit'] ) ) {
-			$logger->error( __( 'Nonce verification failed.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+			$logger->error(
+				sprintf( '[Form #%d] AJAX nonce verification failed for form submission.', $form_id ) . "\n",
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
 			wp_send_json_error(
 				array(
 					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
@@ -5423,14 +5455,14 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			);
 		}
 
-		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		$logger->info(
-			__( 'Processing form submission.', 'user-registration' ),
+			sprintf( '[Form #%d] Processing form submission.', $form_id ) . "\n",
 			array(
 				'source'  => 'form-submission',
 				'form_id' => $form_id,
 			)
 		);
+
 		$nonce            = $nonce_value;
 		$captcha_response = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
 		$flag             = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
@@ -5456,17 +5488,26 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
 			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 		}
+
 		if ( $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
 			if ( ! empty( $captcha_response ) ) {
 				if ( 'hCaptcha' === $recaptcha_type ) {
 					$data = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 					$data = json_decode( wp_remote_retrieve_body( $data ) );
+
 					/**
 					 * Filter to modify hcaptcha threshold.
 					 * Default value is 0.5
 					 */
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
-						$logger->error( __( 'Error on hCaptcha.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+						$logger->error(
+							sprintf( '[Form #%d] hCaptcha validation failed. Submission could not be verified.', $form_id ) . "\n",
+							array(
+								'source'  => 'form-submission',
+								'form_id' => $form_id,
+							)
+						);
+
 						wp_send_json_error(
 							array(
 								'message' => __( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ),
@@ -5484,8 +5525,16 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 					);
 					$data   = wp_safe_remote_post( $url, $params );
 					$data   = json_decode( wp_remote_retrieve_body( $data ) );
+
 					if ( empty( $data->success ) ) {
-						$logger->error( __( 'Error on Cloudflare Turnstile', 'user-registration' ), array( 'source' => 'form-submission' ) );
+						$logger->error(
+							sprintf( '[Form #%d] Cloudflare Turnstile verification failed. Submission could not be verified.', $form_id ) . "\n",
+							array(
+								'source'  => 'form-submission',
+								'form_id' => $form_id,
+							)
+						);
+
 						wp_send_json_error(
 							array(
 								'message' => __( 'Error on Cloudflare Turnstile. Contact your site administrator.', 'user-registration' ),
@@ -5495,12 +5544,20 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 				} else {
 					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 					$data = json_decode( wp_remote_retrieve_body( $data ) );
+
 					/**
 					 * Filter to modify V3 recaptcha threshold.
 					 * Default value is 0.5
 					 */
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
-						$logger->error( __( 'Error on google reCaptcha.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+						$logger->error(
+							sprintf( '[Form #%d] Google reCAPTCHA verification failed. Submission could not be verified.', $form_id ) . "\n",
+							array(
+								'source'  => 'form-submission',
+								'form_id' => $form_id,
+							)
+						);
+
 						wp_send_json_error(
 							array(
 								'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
@@ -5509,7 +5566,14 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 					}
 				}
 			} else {
-				$logger->error( __( 'Captcha code error.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+				$logger->error(
+					sprintf( '[Form #%d] Captcha response is missing from the submitted form data.', $form_id ) . "\n",
+					array(
+						'source'  => 'form-submission',
+						'form_id' => $form_id,
+					)
+				);
+
 				wp_send_json_error(
 					array(
 						'message' => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
@@ -5519,7 +5583,14 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		}
 
 		if ( true != $flag || is_wp_error( $flag ) ) {
-			$logger->error( __( 'Nonce error, please reload.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+			$logger->error(
+				sprintf( '[Form #%d] Frontend form nonce verification failed. Please reload and try again.', $form_id ) . "\n",
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
 			wp_send_json_error(
 				array(
 					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
@@ -5541,6 +5612,14 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 
 			if ( ! current_user_can( $current_user_capability ) ) {
 				global $wp;
+
+				$logger->warning(
+					sprintf( '[Form #%d] Logged-in user does not have the required capability to proceed with registration.', $form_id ) . "\n",
+					array(
+						'source'  => 'form-submission',
+						'form_id' => $form_id,
+					)
+				);
 
 				$user_ID      = get_current_user_id();
 				$user         = get_user_by( 'ID', $user_ID );
@@ -5565,13 +5644,36 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		}
 
 		$form_data = array();
-		$logger->info( __( 'Form data receiving', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+		$logger->info(
+			sprintf( '[Form #%d] Receiving submitted form data.', $form_id ) . "\n",
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
+
 		if ( isset( $_POST['form_data'] ) ) {
 			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
-		$logger->info( __( 'Form data received', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+		$logger->info(
+			sprintf( '[Form #%d] Form data received successfully.', $form_id ) . "\n",
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
+
 		UR_Frontend_Form_Handler::handle_form( $form_data, $form_id );
-		$logger->info( __( 'Form submission processed successfully.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+		$logger->info(
+			sprintf( '[Form #%d] Form submission processed successfully.', $form_id ) . "\n",
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
 	}
 }
 
