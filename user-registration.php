@@ -173,7 +173,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_ASSET_PATH', plugins_url( 'assets/', UR_PLUGIN_FILE ) );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
-			$this->define( 'UR_PRO_ACTIVE', false );
+			$this->define( 'UR_PRO_ACTIVE', true );
 			$this->define( 'UR_DEV', false );
 		}
 
@@ -329,6 +329,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				|| is_plugin_active( 'learning-management-system-pro/lms.php' ) ) ) {
 					include_once UR_ABSPATH . 'modules/masteriyo/user-registration-masteriyo.php';
 				}
+
+				// if ( ur_check_module_activation( 'fixed-period-membership' ) ) {
+					include_once UR_ABSPATH . 'modules/fixed-period-membership/user-registration-fixed-period-membership.php';
+				// }
 			}
 
 			if ( ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) ) ) {

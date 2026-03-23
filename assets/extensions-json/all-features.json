@@ -287,6 +287,20 @@
         "professional",
         "themegrill agency"
       ]
+    },
+    {
+      "title": "Fixed Period Membership",
+      "slug": "user-registration-fixed-period-membership",
+      "name": "User Registration Fixed Period Membership",
+      "image": "extensions-json/sections/icons/file_downloads.png",
+      "excerpt": "A Fixed Period Membership lasts for a set time (e.g., 1 month or 1 year) and expires unless renewed.",
+      "category": "Membership",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-fixed-period-membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan": [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
     }
   ]
 }
