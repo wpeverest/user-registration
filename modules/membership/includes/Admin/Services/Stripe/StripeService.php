@@ -108,6 +108,52 @@ class StripeService {
 	}
 
 	/**
+	 * Validate that a Stripe PaymentMethod's livemode matches the configured mode.
+	 *
+	 * Returns ['valid' => true] on match, or ['valid' => false, 'message' => '...'] on mismatch.
+	 *
+	 * @param string $payment_method_id Stripe PaymentMethod ID (pm_...).
+	 * @return array
+	 */
+	public function validate_card_mode( $payment_method_id ) {
+		$stripe_settings = self::get_stripe_settings();
+		$mode            = $stripe_settings['mode'];
+
+		try {
+			$payment_method = \Stripe\PaymentMethod::retrieve( $payment_method_id );
+			$ur_log         = new PaymentGatewayLogging();
+			$ur_log->log_error(
+				'stripe',
+				'Payment method retrieved',
+				array(
+					'payment_method' => $payment_method,
+				)
+			);
+			if ( ! $payment_method->livemode && 'live' === $mode ) {
+				return array(
+					'valid'   => false,
+					'message' => __( 'Test card numbers are not accepted in live mode. Please use a real payment card.', 'user-registration' ),
+				);
+			}
+
+			if ( $payment_method->livemode && 'test' === $mode ) {
+				return array(
+					'valid'   => false,
+					'message' => __( 'Real card numbers are not accepted in test mode. Please use a Stripe test card.', 'user-registration' ),
+				);
+			}
+
+			return array( 'valid' => true );
+
+		} catch ( \Exception $e ) {
+			return array(
+				'valid'   => false,
+				'message' => $e->getMessage(),
+			);
+		}
+	}
+
+	/**
 	 * Default for webhook registration.
 	 *
 	 * @return string[]
@@ -684,6 +730,18 @@ class StripeService {
 
 		$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
 
+		if ( ! $intent->livemode && 'live' === $stripe_settings['mode'] ) {
+			$response['status']  = false;
+			$response['message'] = __( 'Test card numbers are not accepted in live mode. Please use a real payment card.', 'user-registration' );
+			return $response;
+		}
+
+		if ( $intent->livemode && 'test' === $stripe_settings['mode'] ) {
+			$response['status']  = false;
+			$response['message'] = __( 'Real card numbers are not accepted in test mode. Please use a Stripe test card.', 'user-registration' );
+			return $response;
+		}
+
 		if ( $intent->status !== 'succeeded' ) {
 			$response['status']  = false;
 			$response['message'] = __( 'Payment not completed.', 'user-registration' );
@@ -1044,8 +1102,20 @@ class StripeService {
 				$total_amount = (int) round( $total_amount * 100 );
 			}
 
-			$customer       = \Stripe\Customer::retrieve( $customer_id );
-			$payment_method = \Stripe\PaymentMethod::retrieve( $payment_method_id );
+			$customer            = \Stripe\Customer::retrieve( $customer_id );
+			$payment_method      = \Stripe\PaymentMethod::retrieve( $payment_method_id );
+			$current_stripe_mode = self::get_stripe_settings()['mode'];
+			if ( ! $payment_method->livemode && 'live' === $current_stripe_mode ) {
+				$response['status']  = false;
+				$response['message'] = __( 'Test card numbers are not accepted in live mode. Please use a real payment card.', 'user-registration' );
+				return $response;
+			}
+
+			if ( $payment_method->livemode && 'test' === $current_stripe_mode ) {
+				$response['status']  = false;
+				$response['message'] = __( 'Real card numbers are not accepted in test mode. Please use a Stripe test card.', 'user-registration' );
+				return $response;
+			}
 			$payment_method->attach(
 				array(
 					'customer' => $customer->id,

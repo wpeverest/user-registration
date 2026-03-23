@@ -1,6 +1,8 @@
 /*global console, user_registration_params, Promise */
 (function ($, urmf_data) {
 	var elements = {};
+	var stripe_mode_validated = false;
+	var validated_stripe_pm_id = null;
 	var ur_membership_frontend_utils = {
 		/**
 		 * Appends a spinner element to the specified element.
@@ -154,7 +156,9 @@
 				);
 				$form.append(wrapper);
 				$(window).scrollTop(
-					$registration_form.find(".ur-button-container").offset().top
+					$registration_form
+						.find(".ur-button-container")
+						.offset().top
 				);
 				$(".notice-container").removeClass("active");
 			} else {
@@ -206,7 +210,7 @@
 					}
 				}, timeout);
 			}
-
+	
 			var has_thank_you_params =
 				thank_you_data &&
 				typeof thank_you_data === "object" &&
@@ -581,42 +585,67 @@
 		create_member: function (form_response) {
 			var prepare_members_data = this.prepare_members_data();
 			prepare_members_data.username = form_response.data.username;
+			var self = this;
 
-			this.send_data(
-				{
-					action: "user_registration_membership_register_member",
-					members_data: JSON.stringify(prepare_members_data),
-					form_response: JSON.stringify(form_response.data)
-				},
-				{
-					success: function (response) {
-						if (response.success) {
-							ur_membership_ajax_utils.handle_response(
-								response,
-								prepare_members_data,
-								form_response
-							);
-						} else {
+			function do_send() {
+				self.send_data(
+					{
+						action: "user_registration_membership_register_member",
+						members_data: JSON.stringify(prepare_members_data),
+						form_response: JSON.stringify(form_response.data)
+					},
+					{
+						success: function (response) {
+							if (response.success) {
+								ur_membership_ajax_utils.handle_response(
+									response,
+									prepare_members_data,
+									form_response
+								);
+							} else {
+								ur_membership_frontend_utils.show_failure_message(
+									response.data.message
+								);
+								form_object.hide_loader(form_response.form_id);
+							}
+						},
+						failure: function (xhr, statusText) {
 							ur_membership_frontend_utils.show_failure_message(
-								response.data.message
+								urmf_data.labels.network_error +
+									"(" +
+									statusText +
+									")"
 							);
 							form_object.hide_loader(form_response.form_id);
+						},
+						complete: function () {
+							// form_object.hide_loader(form_response.form_id);
 						}
-					},
-					failure: function (xhr, statusText) {
-						ur_membership_frontend_utils.show_failure_message(
-							urmf_data.labels.network_error +
-								"(" +
-								statusText +
-								")"
-						);
-						form_object.hide_loader(form_response.form_id);
-					},
-					complete: function () {
-						// form_object.hide_loader(form_response.form_id);
 					}
-				}
-			);
+				);
+			}
+
+			if (
+				prepare_members_data.payment_method === "stripe" &&
+				elements &&
+				elements.stripe &&
+				elements.card
+			) {
+				elements.stripe
+					.createPaymentMethod({ type: "card", card: elements.card })
+					.then(function (result) {
+						if (result.error) {
+							prepare_members_data.stripe_pm_error =
+								result.error.message;
+						} else {
+							prepare_members_data.payment_method_id =
+								result.paymentMethod.id;
+						}
+						do_send();
+					});
+			} else {
+				do_send();
+			}
 		},
 		/**
 		 * Handles the response based on the payment method selected.
@@ -1980,6 +2009,8 @@
 		},
 		triggerInputChange: function () {
 			elements.card.addEventListener("change", function (e) {
+				stripe_mode_validated = false;
+				validated_stripe_pm_id = null;
 				if (e.error) {
 					stripe_settings.show_stripe_error(e.error.message);
 				} else {
@@ -2925,6 +2956,77 @@
 					ur_membership_ajax_utils.validate_membership_form();
 				}
 			);
+
+			$(document).on(
+				"user_registration_frontend_validate_before_form_submit",
+				function (e, $form) {
+					var stripe_selected = false;
+					$('input[name="urm_payment_method"]:visible').each(function () {
+						if ($(this).val() === "stripe" && $(this).is(":checked")) {
+							stripe_selected = true;
+						}
+					});
+					console.log('[URM Stripe Debug] stripe_selected:', stripe_selected, '| stripe_mode_validated:', stripe_mode_validated, '| elements.card:', !!elements.card, '| elements.stripe:', !!elements.stripe);
+					if (!stripe_selected) return;
+
+					if (stripe_mode_validated) return;
+
+					var stripeEmpty = $(".ur-frontend-form").find(".stripe-input-container .StripeElement--empty").length;
+					console.log('[URM Stripe Debug] elements.card:', !!elements.card, '| StripeElement--empty found:', stripeEmpty);
+					if (
+						!elements ||
+						!elements.stripe ||
+						!elements.card ||
+						stripeEmpty
+					) {
+						console.log('[URM Stripe Debug] Early return — skipping pre-validation');
+						return;
+					}
+
+					stripe_settings.show_stripe_error(
+						urmf_data.labels.i18n_validating_stripe_card
+					);
+
+					elements.stripe
+						.createPaymentMethod({ type: "card", card: elements.card })
+						.then(function (pmResult) {
+							if (pmResult.error) {
+								stripe_settings.show_stripe_error(pmResult.error.message);
+								return;
+							}
+
+							$.post(
+								urmf_data.ajax_url,
+								{
+									action: "user_registration_membership_validate_stripe_card_mode",
+									_nonce: urmf_data._nonce,
+									payment_method_id: pmResult.paymentMethod.id
+								},
+								function (response) {
+									if (response.success) {
+										$membership_registration_form
+											.find("#stripe-errors")
+											.remove();
+										validated_stripe_pm_id = pmResult.paymentMethod.id;
+										stripe_mode_validated = true;
+										if ($form && $form.length) {
+											$form
+												.find(".ur-submit-button")
+												.prop("disabled", false);
+											$form.submit();
+										}
+									} else {
+										stripe_settings.show_stripe_error(
+											response.data && response.data.message
+												? response.data.message
+												: urmf_data.labels.i18n_stripe_mode_error
+										);
+									}
+								}
+							);
+						});
+				}
+			);
 			$(document).on(
 				"user_registration_frontend_before_form_submit",
 				function (event, data, pointer, $error_message) {
@@ -2938,6 +3040,9 @@
 						data["membership_type"] = $(
 							'input[name="urm_membership"]:checked'
 						).val();
+					}
+					if (validated_stripe_pm_id) {
+						data["urm_stripe_pm_id"] = validated_stripe_pm_id;
 					}
 				}
 			);
