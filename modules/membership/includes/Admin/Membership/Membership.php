@@ -62,6 +62,15 @@ class Membership {
 			$parent_file  = 'user-registration';
 			$submenu_file = 'user-registration-membership';
 		}
+
+		if (
+			isset( $_GET['page'], $_GET['action'] )
+			&& 'user-registration-membership' === $_GET['page']
+			&& in_array( $_GET['action'], array( 'list_groups', 'add_groups' ), true )
+		) {
+			$parent_file  = 'user-registration';
+			$submenu_file = 'user-registration-membership&action=list_groups';
+		}
 	}
 
 	/**
@@ -76,6 +85,8 @@ class Membership {
 		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] ) {
 			return;
 		}
+
+		wp_enqueue_script( 'tippy' );
 
 		// Enqueue jQuery UI Sortable for drag-and-drop functionality
 		wp_enqueue_script( 'jquery-ui-sortable' );
@@ -367,19 +378,6 @@ class Membership {
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
 
 		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history', 'user-registration-team' ) ) ) {
-			// add_submenu_page(
-			// 'user-registration',
-			// __( 'All Plans', 'user-registration' ),
-			// '↳ ' . __( 'All Plans', 'user-registration' ),
-			// 'edit_posts',
-			// 'user-registration-membership',
-			// array(
-			// $this,
-			// 'render_membership_page',
-			// ),
-			// 3
-			// );
-
 			add_submenu_page(
 				'user-registration',
 				__( 'Membership Groups', 'user-registration' ),

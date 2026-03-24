@@ -1631,7 +1631,7 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 									$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options', 'default' ) );
 
 									if ( current_user_can( 'manage_options' ) && $user_id === get_current_user_id() ) {
-										$this->errors[] = new WP_Error( 'edit_users', __( 'Sorry, Admin cannot deny themselves.', 'user_registration' ) );
+										$this->errors[] = new WP_Error( 'edit_users', __( 'Sorry, Admin cannot deny themselves.', 'user-registration' ) );
 										continue;
 									}
 									$user_manager->deny();

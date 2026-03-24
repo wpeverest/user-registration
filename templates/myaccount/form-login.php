@@ -37,7 +37,7 @@ if ( isset( $_GET['urm_error'] ) ) {
 		delete_transient( $error_key );
 	} else {
 
-		//filter to add your custom message if the message is not found.
+		// filter to add your custom message if the message is not found.
 		$urm_error_not_found_message = apply_filters(
 			'user_registration_login_errors_not_found_message',
 			''
@@ -320,7 +320,7 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 				</div>
 				<input type="hidden" name="redirect"
 						value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>"/>
-
+				<input type="hidden" name="previous_page" value="<?php echo esc_attr( wp_get_raw_referer() ); ?>"/>
 				<?php
 
 				$url_options = get_option( 'user_registration_general_setting_registration_url_options', get_permalink( get_option( 'user_registration_registration_page_id' ) ) );

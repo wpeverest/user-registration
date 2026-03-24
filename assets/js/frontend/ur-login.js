@@ -82,7 +82,8 @@ jQuery(function ($) {
 						username: username,
 						password: password,
 						CaptchaResponse: CaptchaResponse,
-						redirect: redirect_url
+						redirect: redirect_url,
+						previous_page: document.referrer ? document.referrer : ''
 					};
 
 					if (

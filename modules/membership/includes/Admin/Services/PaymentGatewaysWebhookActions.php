@@ -77,7 +77,6 @@ class PaymentGatewaysWebhookActions {
 	}
 
 	public function verify_stripe_webhook_signature( \WP_REST_Request $request ) {
-
 		PaymentGatewayLogging::log_webhook_received(
 			'stripe',
 			'Stripe webhook received, starting signature verification.',
@@ -85,13 +84,14 @@ class PaymentGatewaysWebhookActions {
 		);
 
 		$stripe_signature = $request->get_header( 'stripe_signature' );
+		$body             = $request->get_body();
 
-		$body = $request->get_body();
+		$legacy  = apply_filters( 'user_registration_stripe_webhook_secret', get_option( 'user_registration_stripe_webhook_secret', '' ) );
+		$secret_test = get_option( 'user_registration_stripe_webhook_secret_test', '' );
+		$secret_live = get_option( 'user_registration_stripe_webhook_secret_live', '' );
+		$candidates  = array_filter( array( $legacy, $secret_test, $secret_live ) );
 
-		new StripeService();
-		$webhook_secret = apply_filters( 'user_registration_stripe_webhook_secret', get_option( 'user_registration_stripe_webhook_secret', false ) );
-
-		if ( empty( $webhook_secret ) ) {
+		if ( empty( $candidates ) ) {
 			PaymentGatewayLogging::log_general(
 				'stripe',
 				'Missing webhook secret, skipping verification.',
@@ -99,48 +99,48 @@ class PaymentGatewaysWebhookActions {
 			);
 			return true;
 		}
-		try {
-			\Stripe\Webhook::constructEvent(
-				$body,
-				$stripe_signature,
-				$webhook_secret,
-			);
-		} catch ( \Exception $e ) {
-			PaymentGatewayLogging::log_error(
-				'stripe',
-				'Stripe webhook verification failed.',
-				array(
-					'error_code'    => 'SIGNATURE_VERIFICATION_FAILED',
-					'error_message' => $e->getMessage(),
-				)
-			);
+
+		new StripeService();
+		foreach ( $candidates as $secret ) {
+			try {
+				\Stripe\Webhook::constructEvent( $body, $stripe_signature, $secret );
+				PaymentGatewayLogging::log_general(
+					'stripe',
+					'Webhook signature verification successful.',
+					'success'
+				);
+				return true;
+			} catch ( \Exception $e ) {
+				continue;
+			}
 		}
-		PaymentGatewayLogging::log_general(
+
+		PaymentGatewayLogging::log_error(
 			'stripe',
-			'Webhook signature verification successful.',
-			'success'
+			'Stripe webhook verification failed.',
+			array(
+				'error_code'    => 'SIGNATURE_VERIFICATION_FAILED',
+				'error_message' => 'No matching signing secret',
+			)
 		);
-		return true;
+		return false;
 	}
 	/**
 	 * handle_stripe_webhook
 	 *
+	 * @param \WP_REST_Request $request Request.
 	 * @return void
 	 */
 	public function handle_stripe_webhook( \WP_REST_Request $request ) {
-
 		$body = $request->get_body();
-
-		$stripe_service = new StripeService();
-
-		$event = json_decode( $body, true );
-
-		$subscription_id = $event['data']['object']['subscription'];
-
-		if ( empty( $body ) && '' == $subscription_id ) {
+		if ( empty( $body ) ) {
 			return;
 		}
 
+		$event          = json_decode( $body, true );
+		$subscription_id = isset( $event['data']['object']['subscription'] ) ? $event['data']['object']['subscription'] : null;
+
+		$stripe_service = new StripeService();
 		$stripe_service->handle_webhook( $event, $subscription_id );
 	}
 }

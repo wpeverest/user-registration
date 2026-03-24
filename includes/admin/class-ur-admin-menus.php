@@ -539,38 +539,23 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			if ( class_exists( 'WPEverest\URMembership\Admin\Membership\Membership' ) && ur_check_module_activation( 'membership' ) ) {
 				$membership_obj = new WPEverest\URMembership\Admin\Membership\Membership();
 
-					$rules_page = add_submenu_page(
-						'user-registration',
-						__( 'Memberships', 'user-registration' ), // page title
-						__( 'Memberships', 'user-registration' ), // menu title
-						'edit_posts', // capability
-						'user-registration-membership', // slug
-						array(
-							$membership_obj,
-							'render_membership_page',
-						),
-						2
-					);
-					add_action( 'load-' . $rules_page, array( $membership_obj, 'membership_initialization' ) );
+				$rules_page = add_submenu_page(
+					'user-registration',
+					__( 'Memberships', 'user-registration' ), // page title
+					__( 'Memberships', 'user-registration' ), // menu title
+					'edit_posts', // capability
+					'user-registration-membership', // slug
+					array(
+						$membership_obj,
+						'render_membership_page',
+					),
+					2
+				);
+				add_action( 'load-' . $rules_page, array( $membership_obj, 'membership_initialization' ) );
 
-				// if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
-
-					// add_submenu_page(
-					// 'user-registration',
-					// __( 'All Plans', 'user-registration' ),
-					// '↳ ' . __( 'All Plans', 'user-registration' ),
-					// 'edit_posts',
-					// 'user-registration-membership',
-					// array(
-					// $this,
-					// 'render_membership_page',
-					// ),
-					// 3
-					// );
-
-					$membership_groups_repository = new MembershipGroupRepository();
-					$membership_groups            = $membership_groups_repository->get_all_membership_groups();
-					$group_installation_flag      = get_option( 'urm_group_module_installation_flag', false );
+				$membership_groups_repository = new MembershipGroupRepository();
+				$membership_groups            = $membership_groups_repository->get_all_membership_groups();
+				$group_installation_flag      = get_option( 'urm_group_module_installation_flag', false );
 
 				if ( ur_check_module_activation( 'membership-groups' ) || ( ! $group_installation_flag && ! empty( $membership_groups ) ) ) {
 					add_submenu_page(
@@ -586,18 +571,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						3
 					);
 				}
-
-					// $members = new Members();
-					// add_submenu_page(
-					// 'user-registration',
-					// __( 'Membership Members', 'user-registration' ),
-					// '↳ ' . __( 'Members', 'user-registration' ),
-					// 'manage_user_registration',
-					// 'user-registration-members',
-					// array( $members, 'render_members_page'),
-					// 4
-					// );
-				// }
 			}
 
 			$membership_rules_count = 0;
@@ -610,10 +583,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$content_rules->add_urcr_menus();
 			}
 
-			if ( ur_check_module_activation( 'payment-history' ) ) {
-				$orders_obj = new Orders();
-				$orders_obj->add_orders_menu();
-			}
+			$orders_obj = new Orders();
+			$orders_obj->add_orders_menu();
 
 			if ( ur_check_module_activation( 'membership' ) ) {
 				$subscription_obj = new Subscriptions();
@@ -643,12 +614,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 
 				if ( isset( $_GET['page'] ) && in_array(
-					$_GET['page'],
-					array(
-						'user-registration',
-						'user-registration-login-forms',
-					)
-				) ) {
+						$_GET['page'],
+						array(
+							'user-registration',
+							'user-registration-login-forms',
+						)
+					) ) {
 					add_submenu_page(
 						'user-registration',
 						__( 'Registration Forms', 'user-registration' ),
@@ -788,13 +759,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 
 			if ( isset( $_GET['page'] ) && in_array(
-				$_GET['page'],
-				array(
-					'user-registration-status',
-					'user-registration-status&tab=logs',
-					'user-registration-status&tab=system_info',
-				)
-			) ) {
+					$_GET['page'],
+					array(
+						'user-registration-status',
+						'user-registration-status&tab=logs',
+						'user-registration-status&tab=system_info',
+					)
+				) ) {
 
 				add_submenu_page(
 					'user-registration',
@@ -1145,7 +1116,20 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				update_option( 'user_registration_onboarding_skipped', true );
 			}
 			wp_enqueue_script( 'ur-setup' );
+			wp_enqueue_style( 'ur-toast' );
 			wp_enqueue_script( 'ur-enhanced-select-custom' );
+
+			wp_add_inline_script(
+				'ur-enhanced-select-custom',
+				"
+			(function($) {
+				'use strict';
+				$(document).ready(function() {
+					$('.ur-multiselect').select2();
+				});
+			})(jQuery);
+			"
+			);
 
 			wp_localize_script(
 				'ur-setup',
@@ -1179,6 +1163,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'download_failed'              => esc_html__( 'Download Failed. Please download and activate addon manually.', 'user-registration' ),
 					'download_successful_title'    => esc_html__( 'Installation Successful.', 'user-registration' ),
 					'download_successful_message'  => esc_html__( 'Addons have been installed and Activated. You have to reload the page.', 'user-registration' ),
+					'i18n_activation_success'     => esc_html__( 'Successfully activated. Reloading...', 'user-registration' ),
 					'save_changes_text'            => esc_html__( 'Save Changes and Reload', 'user-registration' ),
 					'save_changes_warning'         => esc_html__( 'Save changes before activating the plugin', 'user-registration' ),
 					'reload_text'                  => esc_html__( 'Just Reload', 'user-registration' ),
@@ -1281,19 +1266,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							<li>
 								<label class="menu-item-title">
 									<input type="checkbox" class="menu-item-checkbox"
-											name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
-											value="<?php echo esc_attr( $i ); ?>"/> <?php echo esc_html( $value ); ?>
+										   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
+										   value="<?php echo esc_attr( $i ); ?>"/> <?php echo esc_html( $value ); ?>
 								</label>
 								<input type="hidden" class="menu-item-type"
-										name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom"/>
+									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom"/>
 								<input type="hidden" class="menu-item-title"
-										name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
-										value="<?php echo esc_html( $value ); ?>"/>
+									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
+									   value="<?php echo esc_html( $value ); ?>"/>
 								<input type="hidden" class="menu-item-url"
-										name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
-										value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>"/>
+									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
+									   value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>"/>
 								<input type="hidden" class="menu-item-classes"
-										name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]"/>
+									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]"/>
 							</li>
 							<?php
 							--$i;
@@ -1310,9 +1295,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					</span>
 					<span class="add-to-menu">
 						<input type="submit" class="button-secondary submit-add-to-menu right"
-								value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>"
-								name="add-post-type-menu-item"
-								id="submit-posttype-user-registration-endpoints">
+							   value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>"
+							   name="add-post-type-menu-item"
+							   id="submit-posttype-user-registration-endpoints">
 						<span class="spinner"></span>
 					</span>
 				</p>
@@ -1380,10 +1365,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					$form_title = isset( $form_data->post_title ) ? trim( $form_data->post_title ) : __( 'Untitled', 'user-registration' );
 					?>
 					<input name="ur-form-name" id="ur-form-name" type="text"
-							class="user-registration-editable-title__input ur-form-name regular-text menu-item-textbox"
-							value="<?php echo esc_html( $form_title ); ?>" data-editing="false">
+						   class="user-registration-editable-title__input ur-form-name regular-text menu-item-textbox"
+						   value="<?php echo esc_html( $form_title ); ?>" data-editing="false">
 					<span id="ur-form-name-edit-button"
-							class="user-registration-editable-title__icon ur-edit-form-name dashicons dashicons-edit"></span>
+						  class="user-registration-editable-title__icon ur-edit-form-name dashicons dashicons-edit"></span>
 				</div>
 				<div class="ur-builder-header-right">
 					<?php

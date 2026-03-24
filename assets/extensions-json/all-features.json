@@ -22,35 +22,13 @@
       "image": "extensions-json/sections/icons/multiple-registration.png",
       "excerpt": "Allows creating multiple registration forms, each as a separate and independent form.",
       "category": "Others",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-advanced-fields/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/how-to-create-a-user-registration-form/#1-toc-title",
       "plan": [
         "free"
       ],
       "setting_url": "",
       "demo_video_url": "X1h7xCLfIPA",
       "released_date": "25/06/2018"
-    },
-    {
-      "title": "Payment History",
-      "slug": "user-registration-payment-history",
-      "name": "User Registration Membership - Payment History",
-      "image": "extensions-json/sections/icons/payment_history.png",
-      "excerpt": "Displays a transaction history for payments made during registration.",
-      "category": "E-Commerce",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-pro/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "released_date": "20/06/2024",
-      "plan": [
-        "free"
-      ],
-      "setting_url": "",
-      "demo_video_url": "DuWX7i7eYsY",
-      "activation_requirements": [
-        "membership",
-        "pro",
-        "stripe",
-        "authorize-net",
-        "payments"
-      ]
     },
     {
       "title": "PayPal Payment",
@@ -98,7 +76,7 @@
       "image": "extensions-json/sections/icons/coupons.png",
       "excerpt": "Offer personalized discounts and boost engagement.",
       "category": "E-Commerce",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-pro/?utm_source=dashboard-all-features&utm_medium=card-documentation-link#42-toc-title",
+      "link": "https://docs.wpuserregistration.com/docs/coupons-addon/?utm_source=dashboard-all-features&utm_medium=card-documentation-link#42-toc-title",
       "released_date": "20/06/2024",
       "plan": [
         "personal",
@@ -134,7 +112,7 @@
       "image": "extensions-json/sections/icons/frontend_listing.png",
       "excerpt": "Display users registered on the site as a directory (for community sites or directories).",
       "category": "User Management",
-      "link": "https://docs.wpuserregistration.com/docs/frontend-listing/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/member-directory/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "06/04/2021",
       "plan": [
         "personal",
@@ -160,7 +138,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration&section=sms-integration",
       "demo_video_url": "-iUMcr03FP8"
     },
     {
@@ -170,7 +148,7 @@
       "image": "extensions-json/sections/icons/membership.png",
       "excerpt": "Organize membership plans into groups, enabling seamless upgrades and multi-plan purchases.",
       "category": "Membership",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/membership-groups/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "07/01/2026",
       "plan": [
         "free"
@@ -202,7 +180,7 @@
       "image": "extensions-json/sections/icons/local-currency.png",
       "excerpt": "Enable local currency pricing so members are charged in their own currency.",
       "category": "Membership",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-local-currency/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/local-currency-with-membership-forms/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",
         "professional",
@@ -236,7 +214,7 @@
       "image": "extensions-json/sections/icons/masteriyo.gif",
       "excerpt": "Give the access to the selective course based on the membership.",
       "category": "Membership",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-masteriyo-course-integration/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/masteriyo-integration/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "free"
       ],
@@ -286,7 +264,7 @@
       "image": "extensions-json/sections/icons/team_membership.png",
       "excerpt": "Sell and manage team memberships with flexible seat control and pricing tiers.",
       "category": "Membership",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-team-membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "19/01/2026",
       "plan": [
         "plus",

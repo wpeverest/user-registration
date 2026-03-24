@@ -302,32 +302,41 @@ class SubscriptionService {
 		$symbol     = $currencies[ $currency ]['symbol'];
 
 		$subscription_id = '';
+		$member_order    = null;
+
+		if ( ! empty( $data['context'] ) && 'thank_you_page' === $data['context'] && ! empty( $data['transaction_id'] ) ) {
+			$order_by_txn = $this->orders_repository->get_order_by_transaction_id( $data['transaction_id'] );
+			if ( ! empty( $order_by_txn ) && ! empty( $order_by_txn['ID'] ) ) {
+				$member_order = $order_by_txn;
+			}
+		}
+
+		if ( empty( $member_order ) ) {
+			$member_order = $this->members_orders_repository->get_member_orders( $data['member_id'] );
+		}
 
 		if ( isset( $data['subscription']['ID'] ) ) {
 			$subscription_id = $data['subscription']['ID'] ?? 0;
 		} else {
-			$members_order_repository = new MembersOrderRepository();
-			$last_order               = $members_order_repository->get_member_orders( $data['member_id'] );
-			$subscription_id          = ! empty( $last_order ) ? $last_order['subscription_id'] : '';
+			$subscription_id = ! empty( $member_order ) ? ( $member_order['subscription_id'] ?? '' ) : '';
 		}
 
 		$subscription  = $this->members_subscription_repository->get_subscription_by_subscription_id( $subscription_id );
-		$membership_id = isset( $data['membership'] ) ? $data['membership'] : $subscription['item_id'];
+		$membership_id = isset( $data['membership'] ) ? $data['membership'] : ( isset( $subscription['item_id'] ) ? $subscription['item_id'] : 0 );
 		$membership    = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
-		$member_order                   = $this->members_orders_repository->get_member_orders( $data['member_id'] );
-		$order                          = $this->orders_repository->get_order_detail( $member_order['ID'] );
+		$member_order                   = $member_order ? $member_order : $this->members_orders_repository->get_member_orders( $data['member_id'] );
+		$order                          = ! empty( $member_order['ID'] ) ? $this->orders_repository->get_order_detail( $member_order['ID'] ) : array();
 		$total                          = $order['total_amount'];
 		$membership_tab_url             = esc_url( ur_get_my_account_url() . 'ur-membership' );
 
-
 		$order_repository = new OrdersRepository();
-		$local_currency = $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'local_currency' );
+		$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'local_currency' );
 
 		$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
-		$symbol = ur_get_currency_symbol( $currency );
+		$symbol   = ur_get_currency_symbol( $currency );
 
 		if ( ! empty( $data['context'] ) && 'thank_you_page' == $data['context'] ) {
 			$data['payment_method'] = ! empty( $member_order['payment_method'] ) ? $member_order['payment_method'] : '';
@@ -551,6 +560,7 @@ class SubscriptionService {
 			'ur_authorize_net'       => $ur_authorize_net_data,
 			'selected_membership_id' => $data['selected_membership_id'],
 			'current_membership_id'  => $data['current_membership_id'],
+			'order_id'               => $order['ID'],
 		);
 
 		if ( ! empty( $coupon ) ) {
@@ -772,7 +782,13 @@ class SubscriptionService {
 	public function run_daily_delayed_membership_subscriptions() {
 		$all_delayed_orders = $this->orders_repository->get_all_delayed_orders( date( 'Y-m-d 00:00:00' ) );
 
-		ur_get_logger()->notice( __( 'Scheduled Subscriptions job started for the date: (' . date( 'd F,Y' ) . ')', 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
+		ur_get_logger()->notice(
+			sprintf(
+				__( 'Scheduled Subscriptions job started for the date: (%s)', 'user-registration' ),
+				date( 'd F,Y' )
+			),
+			array( 'source' => 'urm-membership-crons' )
+		);
 
 		if ( empty( $all_delayed_orders ) ) {
 			ur_get_logger()->notice( __( 'No delayed orders found.', 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
@@ -810,7 +826,13 @@ class SubscriptionService {
 			}
 		}
 
-		ur_get_logger()->notice( __( 'Subscription updated for ' . implode( ',', $updated_subscription_for_users ), 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
+		ur_get_logger()->notice(
+			sprintf(
+				__( 'Subscription updated for %s', 'user-registration' ),
+				implode( ',', $updated_subscription_for_users )
+			),
+			array( 'source' => 'urm-membership-crons' )
+		);
 	}
 
 	/**
@@ -909,6 +931,7 @@ class SubscriptionService {
 			'transaction_id'    => $orders_data['orders_data']['transaction_id'],
 			'upgrade'           => false,
 			'subscription_data' => $member_subscription,
+			'order_id'          => $order['ID'],
 		);
 
 		$renew_response           = $payment_service->build_response( $data );
@@ -935,7 +958,7 @@ class SubscriptionService {
 				'username'                 => $username,
 				'transaction_id'           => $orders_data['orders_data']['transaction_id'],
 				'updated_membership_title' => $membership['post_title'],
-				'order_id'   => $order['ID'],
+				'order_id'                 => $order['ID'],
 			),
 			'response' => $renew_response,
 		);
@@ -1053,9 +1076,14 @@ class SubscriptionService {
 		$date          = new \DateTime( 'today' );
 		$check_date    = $date->format( 'Y-m-d H:i:s' );
 		$subscriptions = $this->members_subscription_repository->get_subscriptions_to_expire( $check_date );
-
 		if ( empty( $subscriptions ) ) {
-			ur_get_logger()->notice( __( 'No memberships found to expire for date: ' . $check_date, 'user-registration' ), array( 'source' => 'urm-membership-expiration' ) );
+			ur_get_logger()->notice(
+				sprintf(
+					__( 'No memberships found to expire for date: %s', 'user-registration' ),
+					$check_date
+				),
+				array( 'source' => 'urm-membership-expiration' )
+			);
 			return;
 		}
 
@@ -1133,7 +1161,7 @@ class SubscriptionService {
 		$expired_count = 0;
 		$expired_users = array();
 		foreach ( $subscriptions as $subscription ) {
-			//only handle the subscription case.
+			// only handle the subscription case.
 			if ( $subscription['order_type'] !== 'subscription' ) {
 				continue;
 			}
@@ -1148,7 +1176,7 @@ class SubscriptionService {
 	 * Payment retry callback for a failed attempt.
 	 */
 	public function failed_payment_retry_callback( $subscription ) {
-		//update the counter for failed payment retry.
+		// update the counter for failed payment retry.
 		$retry_count = (int) get_user_meta( $subscription['member_id'], 'urm_is_payment_retrying', true );
 		update_user_meta( $subscription['member_id'], 'urm_is_payment_retrying', $retry_count + 1 );
 		switch ( $subscription['payment_method'] ) {
@@ -1173,33 +1201,93 @@ class SubscriptionService {
 	 * @param int $subscription_id Subscription ID.
 	 * @return boolean
 	 */
-	public function is_user_membership_expired($user_id, $subscription_id) {
+	public function is_user_membership_expired( $user_id, $subscription_id ) {
 		$subscription = $this->members_subscription_repository->retrieve( $subscription_id );
 
 		if ( empty( $subscription ) || $subscription['user_id'] != $user_id ) {
 			return false;
 		}
 
-		if( $subscription['status'] === 'expired' ) {
+		if ( $subscription['status'] === 'expired' ) {
 			return true;
 		}
 
-		if (empty($subscription['expiry_date'])) {
+		if ( empty( $subscription['expiry_date'] ) ) {
 			return false;
 		}
 
-		if( empty( $subscription['billing_cycle'] ) ) {
+		if ( empty( $subscription['billing_cycle'] ) ) {
 			return false;
 		}
 
 		try {
-			$expiry_date = new \DateTime($subscription['expiry_date']);
-		} catch (\Exception $e) {
+			$expiry_date = new \DateTime( $subscription['expiry_date'] );
+		} catch ( \Exception $e ) {
 			return false;
 		}
 
-		$today       = new \DateTime( 'today' );
+		$today = new \DateTime( 'today' );
 
 		return $expiry_date <= $today;
+	}
+
+	/**
+	 * Callback for missed payment check.
+	 */
+	public function membership_missed_payment_check() {
+
+		$last_synced = (int) get_option( 'urm_last_missed_payment_events_check_sync_time', 0 );
+		$now         = time();
+
+		if ( $last_synced <= 0 ) {
+			$last_synced = $now - 3 * MONTH_IN_SECONDS; // fallback to 3 months back if no previous sync time found, to avoid missing old events.
+		}
+
+		$this->urm_backfill_missed_payment_events( $last_synced, $now );
+
+		update_option( 'urm_last_missed_payment_events_check_sync_time', $now );
+	}
+
+	/**
+	 * Backfill missed payment events from payment providers.
+	 *
+	 * This method fetches payment provider events for subscription updates and payment successes that occurred between the last synced time and now. It then processes these events to update the local subscription records and create any missing payment records in the database.
+	 *
+	 * @param int      $last_synced The timestamp of the last successful sync, used to fetch events that occurred after this time.
+	 * @param int|null $now The current timestamp, used to limit the events fetched. If null, it defaults to the current time.
+	 * @return void
+	 */
+	public function urm_backfill_missed_payment_events( $last_synced, $now = null ) {
+		if ( $now === null ) {
+			$now = time();
+		}
+
+		$payment_gateways = get_option( 'ur_membership_payment_gateways', array() );
+
+		if ( ! empty( $payment_gateways ) ) {
+			foreach ( $payment_gateways as $gateway_key => $gateway_details ) {
+				switch ( $gateway_key ) {
+					case 'stripe':
+						try {
+							$stripe_service = new StripeService();
+							$stripe_service->run_missed_subscription_backfill( $last_synced );
+							$stripe_service->run_missed_payment_backfill( $last_synced );
+						} catch ( \Exception $e ) {
+							ur_get_logger()->error(
+								sprintf(
+									__( 'Error fetching missed events for Stripe: %s', 'user-registration' ),
+									$e->getMessage()
+								),
+								array( 'source' => 'urm-missed-payment-backfill' )
+							);
+							return;
+						}
+						break;
+					default:
+						do_action( 'urm_fetch_and_process_missed_payment_events_for_gateway', $gateway_key, $last_synced, $now );
+						break;
+				}
+			}
+		}
 	}
 }

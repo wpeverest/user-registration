@@ -1,0 +1,280 @@
+name: Security Check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+      - master
+    paths:
+      - "**.php"
+      - "**.js"
+      - "!**.min.js"
+      - "!**/vendor/**"
+      - "!**/node_modules/**"
+
+jobs:
+  security:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'sync') && !contains(github.event.pull_request.labels.*.name, 'ignore-claude-scan') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check changes
+        id: check
+        run: |
+          # Get all PHP and JS files changed in this PR (diff against base branch)
+          BASE_SHA=${{ github.event.pull_request.base.sha }}
+          HEAD_SHA=${{ github.event.pull_request.head.sha }}
+
+          git diff --name-only --diff-filter=ACMR "$BASE_SHA"..."$HEAD_SHA" -- '*.php' '*.js' \
+            | grep -v '/vendor/' \
+            | grep -v '/node_modules/' \
+            | grep -v '\.min\.js$' \
+            | grep -v 'Gruntfile\.js$' \
+            | grep -v 'gulpfile\.js$' \
+            | grep -v 'webpack\.config\.js$' \
+            | sort > .files_list.txt
+
+          CHANGED=$(cat .files_list.txt)
+
+          if [ -z "$CHANGED" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          FILE_COUNT=$(echo "$CHANGED" | wc -l)
+          echo "skip=false" >> $GITHUB_OUTPUT
+          echo "files_count=$FILE_COUNT" >> $GITHUB_OUTPUT
+          echo "Scanning $FILE_COUNT PHP/JS files changed in this PR"
+          echo "# Changed PHP/JS files in this PR" > diff.txt
+
+          echo "$CHANGED" | while IFS= read -r file; do
+            if [ -n "$file" ] && [ -f "$file" ]; then
+              echo "## $file" >> diff.txt
+              # Include only the diff for this file, not the entire file
+              git diff "$BASE_SHA"..."$HEAD_SHA" -- "$file" >> diff.txt
+              echo "" >> diff.txt
+            fi
+          done
+
+          # Fail if content exceeds 20,000 token limit (rough: ~4 chars per token)
+          MAX_TOKENS=20000
+          DIFF_BYTES=$(wc -c < diff.txt)
+          EST_TOKENS=$((DIFF_BYTES / 4))
+          if [ "$EST_TOKENS" -gt "$MAX_TOKENS" ]; then
+            echo "::error::Content exceeds ${MAX_TOKENS} token limit (estimated ${EST_TOKENS} input tokens). Too many changes in this PR."
+            exit 1
+          fi
+          echo "Estimated input tokens: $EST_TOKENS (limit $MAX_TOKENS)"
+
+      - name: Security scan
+        if: steps.check.outputs.skip != 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+        run: |
+          # Verify API key is set
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "Error: CLAUDE_API_KEY secret is not set"
+            echo "Please add it in: Settings > Secrets > Actions"
+            exit 1
+          fi
+
+          cat > scan.js << 'END'
+          const fs = require('fs');
+          const https = require('https');
+
+          function check(prompt) {
+            return new Promise((resolve, reject) => {
+              const apiKey = process.env.ANTHROPIC_API_KEY;
+
+              if (!apiKey || apiKey.trim() === '') {
+                reject(new Error('ANTHROPIC_API_KEY is not set or empty'));
+                return;
+              }
+
+              const data = JSON.stringify({
+                model: "claude-sonnet-4-20250514",
+                max_tokens: 2000,
+                messages: [{ role: "user", content: prompt }]
+              });
+
+              const req = https.request({
+                hostname: 'api.anthropic.com',
+                path: '/v1/messages',
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-api-key': apiKey.trim(),
+                  'anthropic-version': '2023-06-01',
+                  'Content-Length': Buffer.byteLength(data)
+                }
+              }, (res) => {
+                let body = '';
+                res.on('data', d => body += d);
+                res.on('end', () => {
+                  try {
+                    const json = JSON.parse(body);
+                    if (json.error) {
+                      reject(new Error('API Error: ' + (json.error.message || JSON.stringify(json.error))));
+                    } else if (json.content && json.content[0]) {
+                      resolve(json.content[0].text);
+                    } else {
+                      reject(new Error('Invalid API response: ' + body));
+                    }
+                  } catch (e) {
+                    reject(new Error('Failed to parse response: ' + e.message + ' - Body: ' + body));
+                  }
+                });
+              });
+              req.on('error', reject);
+              req.write(data);
+              req.end();
+            });
+          }
+
+          async function main() {
+            try {
+              const apiKey = process.env.ANTHROPIC_API_KEY;
+
+              if (!apiKey) {
+                throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+              }
+
+              const diff = fs.readFileSync('diff.txt', 'utf8');
+
+              const prompt = `WordPress security check on PR diff. Review ONLY the new/changed code (lines starting with +) and find critical issues:
+
+          1. SQL Injection - missing $wpdb->prepare()
+          2. XSS - missing esc_html/esc_attr/esc_url
+          3. CSRF - missing wp_verify_nonce()
+          4. Auth - missing current_user_can()
+          5. AJAX nonce missing
+
+          ${diff}
+
+          IMPORTANT: Respond with ONLY valid JSON. No markdown, no code blocks, no extra text.
+          If no issues found, respond with exactly: {"status":"CLEAN","issues":[]}
+          If issues found, respond with:
+          {"status":"ISSUES","issues":[{"file":"path/to/file.php","line":123,"issue":"Description of the issue","fix":"How to fix it"}]}
+          The "line" must be the actual line number from the diff header (e.g. @@ -0,0 +1,50 @@ means new lines start at 1). Use the + side line numbers.`;
+
+              const result = await check(prompt);
+              fs.writeFileSync('result.txt', result);
+
+              // Parse JSON response
+              try {
+                const parsed = JSON.parse(result);
+                fs.writeFileSync('status.txt', parsed.status === 'CLEAN' ? 'ok' : 'issues');
+                fs.writeFileSync('issues.json', JSON.stringify(parsed.issues || []));
+              } catch (e) {
+                // If JSON parsing fails, fall back to text check
+                fs.writeFileSync('status.txt', result.includes('CLEAN') ? 'ok' : 'issues');
+                fs.writeFileSync('issues.json', '[]');
+              }
+
+            } catch (e) {
+              fs.writeFileSync('result.txt', 'Check failed: ' + e.message);
+              fs.writeFileSync('status.txt', 'error');
+            }
+          }
+          main();
+          END
+
+          node scan.js
+
+      - name: Comment
+        if: steps.check.outputs.skip != 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const status = fs.readFileSync('status.txt', 'utf8').trim();
+            const result = fs.readFileSync('result.txt', 'utf8');
+            let issues = [];
+
+            try {
+              issues = JSON.parse(fs.readFileSync('issues.json', 'utf8'));
+            } catch (e) {
+              issues = [];
+            }
+
+            // Dismiss any previous security review from this bot
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+
+            for (const review of reviews) {
+              if (review.body && review.body.includes('Security Check') && review.state === 'CHANGES_REQUESTED') {
+                try {
+                  await github.rest.pulls.dismissReview({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    pull_number: context.issue.number,
+                    review_id: review.id,
+                    message: 'Superseded by new security scan',
+                  });
+                } catch (e) {
+                  // Dismiss may fail if permissions are limited, continue
+                }
+              }
+            }
+
+            if (status === 'ok' || issues.length === 0) {
+              // No issues — post a clean review comment
+              await github.rest.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                commit_id: context.payload.pull_request.head.sha,
+                event: 'COMMENT',
+                body: '## Security Check\n\n✅ No security issues found.',
+              });
+            } else {
+              // Build inline review comments
+              const comments = [];
+              for (const issue of issues) {
+                if (issue.file && issue.line) {
+                  comments.push({
+                    path: issue.file,
+                    line: issue.line,
+                    body: `⚠️ **Security Issue**: ${issue.issue}\n\n💡 **Fix**: ${issue.fix}`,
+                  });
+                }
+              }
+
+              // If we have inline comments, create a review with them
+              if (comments.length > 0) {
+                await github.rest.pulls.createReview({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: context.issue.number,
+                  commit_id: context.payload.pull_request.head.sha,
+                  event: 'REQUEST_CHANGES',
+                  body: `## Security Check\n\n🔴 Found ${comments.length} security issue(s). See inline comments below.`,
+                  comments: comments,
+                });
+              } else {
+                // Issues found but couldn't map to lines — fall back to summary comment
+                await github.rest.pulls.createReview({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: context.issue.number,
+                  commit_id: context.payload.pull_request.head.sha,
+                  event: 'REQUEST_CHANGES',
+                  body: '## Security Check\n\n🔴 Security issues found:\n\n' + result,
+                });
+              }
+
+              core.setFailed('Security issues found');
+            }

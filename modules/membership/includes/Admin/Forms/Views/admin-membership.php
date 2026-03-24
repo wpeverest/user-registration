@@ -51,6 +51,19 @@ if ( 'group' === $membership_list_options ) {
 			$memberships = $membership_group_service->get_group_memberships( $selected_group_id );
 		}
 	}
+} elseif ( 'selected' === $membership_list_options ) {
+	$membership_service = new MembershipService();
+	$all_memberships    = $membership_service->list_active_memberships();
+	$selected_ids      = isset( $this->admin_data->general_setting->membership_active_memberships )
+		? $this->admin_data->general_setting->membership_active_memberships
+		: array();
+	$selected_ids      = is_array( $selected_ids ) ? $selected_ids : (array) maybe_unserialize( $selected_ids );
+	$selected_ids      = array_filter( array_map( 'absint', $selected_ids ) );
+	$memberships       = array_filter( $all_memberships, function ( $m ) use ( $selected_ids ) {
+		$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
+		return $id && in_array( $id, $selected_ids, true );
+	} );
+	$memberships       = array_values( $memberships );
 } else {
 	$membership_service = new MembershipService();
 	$memberships        = $membership_service->list_active_memberships();
@@ -99,7 +112,7 @@ $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 	</div>
 	<div class="ur-field" data-field-key="membership">
 		<span class="empty-urmg-label"<?php echo $empty_label_style; ?>>
-			<?php esc_html_e( 'Please select a membership group.', 'user-registration' ); ?>
+			<?php esc_html_e( 'No memberships found. Please create one or more memberships.', 'user-registration' ); ?>
 		</span>
 		<span class="urmg-loader"></span>
 		<div class="urmg-container">

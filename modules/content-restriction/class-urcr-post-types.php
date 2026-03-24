@@ -56,7 +56,7 @@ class URCR_Post_Types {
 						'menu_name'          => esc_html_x( 'Access Rules', 'Admin menu name', 'user-registration' ),
 						'add_new'            => esc_html__( 'Add content access rule', 'user-registration' ),
 						'add_new_item'       => esc_html__( 'Add new content access rule', 'user-registration' ),
-						'edit'               => esc_html__( 'Edit', 'user-content access rule' ),
+						'edit'               => esc_html__( 'Edit', 'user-registration' ),
 						'edit_item'          => esc_html__( 'Edit content access rule', 'user-registration' ),
 						'new_item'           => esc_html__( 'New content access rule', 'user-registration' ),
 						'view'               => esc_html__( 'View content access rules', 'user-registration' ),

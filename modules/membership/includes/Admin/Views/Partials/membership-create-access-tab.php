@@ -140,10 +140,18 @@
 											value="global"
 											<?php checked( $use_global_message, true ); ?>
 											class="urcr-checkbox-radio-input"
-										/>
+										/><b></b>
 										<div class="urcr-checkbox-radio--content">
-											<span class="urcr-checkbox-radio-label">
+												<span class="urcr-checkbox-radio-label" style="display: flex; gap: 6px;">
 													<?php esc_html_e( 'Use Global Restriction Message', 'user-registration' ); ?>
+												<?php
+												$content_restriction_tip = sprintf(
+													/* translators: %s: link to Content Restriction Settings */
+													__( 'Show visitors the default restricted message. Customize it in <a href="%s">Content Restriction Settings</a>.', 'user-registration' ),
+													esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=membership&section=content-rules' ) )
+												);
+												?>
+												<span class="user-registration-help-tip tooltipstered user-cr-registration-help" data-tip="<?php echo esc_attr( $content_restriction_tip ); ?>"></span>
 											</span>
 										</div>
 									</label>

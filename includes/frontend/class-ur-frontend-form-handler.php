@@ -172,6 +172,7 @@ class UR_Frontend_Form_Handler {
 					}
 				}
 				elseif ( 'auto_login' === $login_option ) {
+					delete_user_meta( $user_id, 'urm_user_just_created' );
 					wp_clear_auth_cookie();
 					$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 					wp_set_auth_cookie( $user_id, $remember );
@@ -181,7 +182,7 @@ class UR_Frontend_Form_Handler {
 				$success_params['form_login_option']       = ! ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) && 'email_confirmation' === $login_option ?  'email_confirmation' : $login_option;
 
 				$redirect_timeout = (int) ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ) * 1000;
-				$redirect_after_registration = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
+				$redirect_after_registration = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', ur_get_default_redirect_after_registration( $form_id ) );
 				$success_params['redirect_timeout'] = "no-redirection" !== $redirect_after_registration ? apply_filters( 'user_registration_hold_success_message_before_redirect', $redirect_timeout ) : 0;
 
 				$redirect_url = ur_get_form_redirect_url( $form_id );
@@ -329,7 +330,16 @@ class UR_Frontend_Form_Handler {
 		$current_language = isset( $_POST['registration_language'] ) ? ur_clean( $_POST['registration_language'] ) : $current_language; //phpcs:ignore.
 		update_user_meta( $user_id, 'ur_registered_language', $current_language );
 		$login_option   = ur_get_user_login_option( $user_id );
-		update_user_meta( $user_id, 'urm_user_just_created', 'yes' );
+
+		if( !empty( $_POST['membership_type'] ) ) {
+			$hash = hash_hmac(
+				'sha256',
+				(string) $user_id,
+				wp_salt( 'auth' )
+			);
+
+			update_user_meta( $user_id, 'urm_user_just_created', $hash );
+		}
 	}
 }
 

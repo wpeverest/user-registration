@@ -13,11 +13,57 @@ use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
-use WPEverest\URMembership\TableList;
 
+/**
+ * Membership Service class.
+ */
 class MembershipService {
-	private $membership_repository, $members_repository, $members_service, $subscription_repository, $orders_repository, $logger;
 
+	/**
+	 * Membership repository instance.
+	 *
+	 * @var MembershipRepository
+	 */
+	private $membership_repository;
+
+	/**
+	 * Members repository instance.
+	 *
+	 * @var MembersRepository
+	 */
+	private $members_repository;
+
+	/**
+	 * Members service instance.
+	 *
+	 * @var MembersService
+	 */
+	private $members_service;
+
+	/**
+	 * Subscription repository instance.
+	 *
+	 * @var SubscriptionRepository
+	 */
+	private $subscription_repository;
+
+	/**
+	 * Orders repository instance.
+	 *
+	 * @var OrdersRepository
+	 */
+	private $orders_repository;
+
+	/**
+	 * Logger instance.
+	 *
+	 * @var mixed
+	 */
+	private $logger;
+
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 		$this->membership_repository   = new MembershipRepository();
 		$this->members_repository      = new MembersRepository();
@@ -28,9 +74,9 @@ class MembershipService {
 	}
 
 	/**
-	 * assign_users_to_new_form
+	 * Assign users to new form.
 	 *
-	 * @param $form_id
+	 * @param int $form_id Form ID.
 	 *
 	 * @return void
 	 */
@@ -78,45 +124,57 @@ class MembershipService {
 	 *               or an error message and status on failure.
 	 */
 	public function create_membership_order_and_subscription( $data ) {
+
 		try {
-			$this->members_repository->wpdb()->query( 'START TRANSACTION' ); // Start the transaction.
-			$members_data = $this->members_service->prepare_members_data( $data );
+			// Start the transaction.
+			$this->members_repository->wpdb()->query( 'START TRANSACTION' );
+
+			$members_data = $this->members_service->prepare_members_data( $data, 'frontend' );
 			$member       = get_user_by( 'login', $data['username'] );
 
-			// update user source and add membership_role
+			// Update user source and add membership_role.
 			$this->members_service->update_user_meta( $members_data, $member->ID );
 
 			$subscription_service = new SubscriptionService();
 			$subscription_data    = $subscription_service->prepare_subscription_data( $members_data, $member );
 			$subscription         = $this->subscription_repository->create( $subscription_data );
 			$order_service        = new OrderService();
-			$orders_data          = $order_service->prepare_orders_data( $members_data, $member->ID, $subscription ); // prepare data for orders table.
+			$orders_data          = $order_service->prepare_orders_data( $members_data, $member->ID, $subscription ); // Prepare data for orders table.
 
 			$order   = $this->orders_repository->create( $orders_data );
 			$team_id = '';
+
 			if ( $subscription && $order ) {
-				$this->logger->info( 'Subscription and order created successfully for ' . $data['username'] . '.', array( 'source' => 'urm-registration-logs' ) );
+				$this->logger->info(
+					'Subscription and order created successfully for ' . $data['username'] . '.',
+					array( 'source' => 'urm-registration-logs' )
+				);
+
 				if ( ! empty( $members_data['team'] ) && ur_check_module_activation( 'team' ) ) {
 					$first_name      = get_user_meta( $member->ID, 'first_name', true );
 					$team_post_count = wp_count_posts( 'ur_membership_team' );
 					$team_index      = (int) ( $team_post_count->publish ?? 0 ) + 1;
+
 					if ( $first_name ) {
 						$team_name = $first_name . '-Team-#' . $team_index;
 					} else {
 						$team_name = 'Team-#' . $team_index;
 					}
+
 					$team_id = wp_insert_post(
-						[
+						array(
 							'post_type'   => 'ur_membership_team',
 							'post_title'  => $team_name,
 							'post_status' => 'publish',
-						]
+						)
 					);
 
 					if ( 0 === $team_id ) {
 						throw new \Exception( 'Failed to create team post' );
 					}
+
 					update_post_meta( $team_id, 'urm_team_data', $members_data['team'] );
+
 					if ( ! empty( $members_data['tier'] ) ) {
 						update_post_meta(
 							$team_id,
@@ -124,6 +182,7 @@ class MembershipService {
 							$members_data['tier']
 						);
 					}
+
 					update_post_meta( $team_id, 'urm_team_seats', $members_data['team_seats'] );
 					update_post_meta( $team_id, 'urm_used_seats', 1 );
 					update_post_meta( $team_id, 'urm_order_id', $order['ID'] );
@@ -132,6 +191,7 @@ class MembershipService {
 					update_post_meta( $team_id, 'urm_member_emails', array( $member->user_email ) );
 					update_post_meta( $team_id, 'urm_member_ids', array( $member->ID ) );
 					update_post_meta( $team_id, 'urm_membership_id', $subscription_data['item_id'] );
+
 					$team_ids = get_user_meta( $member->ID, 'urm_team_ids', true );
 
 					if ( ! is_array( $team_ids ) ) {
@@ -141,6 +201,7 @@ class MembershipService {
 					$team_ids[] = $team_id;
 
 					update_user_meta( $member->ID, 'urm_team_ids', $team_ids );
+
 					$this->orders_repository->update_order_meta(
 						array(
 							'order_id'   => $order['ID'],
@@ -149,6 +210,7 @@ class MembershipService {
 						)
 					);
 				}
+
 				$this->members_repository->wpdb()->query( 'COMMIT' );
 
 				$payload = array(
@@ -168,7 +230,6 @@ class MembershipService {
 
 					do_action( 'ur_membership_subscription_event_triggered', $payload );
 				} else {
-
 					// Register subscription created event.
 					$payload['event_type'] = 'created';
 					$payload['meta']       = array(
@@ -177,10 +238,12 @@ class MembershipService {
 						'payment_method'    => $order['payment_method'],
 						'next_billing_date' => $subscription_data['next_billing_date'],
 					);
+
 					do_action( 'ur_membership_subscription_event_triggered', $payload );
 				}
 
 				return array(
+					'order_id'        => $order['ID'],
 					'member_id'       => $member->ID,
 					'member_email'    => $member->user_email,
 					'subscription_id' => $subscription['ID'],
@@ -209,16 +272,17 @@ class MembershipService {
 	 *
 	 * @return array Prepared membership data.
 	 */
-	public function prepare_membership_data(
-		$memberships
-	) {
+	public function prepare_membership_data( $memberships ) {
 		foreach ( $memberships as $key => $membership ) {
 			$membership_post_content = json_decode( wp_unslash( $membership['post_content'] ), true );
+
 			if ( ! $membership_post_content['status'] ) {
 				unset( $memberships[ $key ] );
 				continue;
 			}
+
 			$memberships[ $key ]['post_content'] = $membership_post_content;
+
 			if ( isset( $membership['meta_value'] ) ) {
 				$memberships[ $key ]['meta_value'] = json_decode( wp_unslash( $membership['meta_value'] ), true );
 			}
@@ -228,18 +292,16 @@ class MembershipService {
 	}
 
 	/**
-	 * Prepare membership data without filtering by status
-	 * Used for content restriction where all memberships should be available
+	 * Prepare membership data without filtering by status.
+	 * Used for content restriction where all memberships should be available.
 	 *
-	 * @param array $memberships Raw membership data from database
-	 * @return array Prepared membership data
+	 * @param array $memberships Raw membership data from database.
+	 *
+	 * @return array Prepared membership data.
 	 */
-	public function prepare_membership_data_without_status_filter(
-		$memberships
-	) {
+	public function prepare_membership_data_without_status_filter( $memberships ) {
 		foreach ( $memberships as $key => $membership ) {
-			$membership_post_content = json_decode( wp_unslash( $membership['post_content'] ), true );
-			// Don't filter by status - include all memberships
+			$membership_post_content             = json_decode( wp_unslash( $membership['post_content'] ), true );
 			$memberships[ $key ]['post_content'] = $membership_post_content;
 			if ( isset( $membership['meta_value'] ) ) {
 				$memberships[ $key ]['meta_value'] = json_decode( wp_unslash( $membership['meta_value'] ), true );
@@ -248,7 +310,6 @@ class MembershipService {
 
 		return array_values( $memberships );
 	}
-
 
 	/**
 	 * Prepare membership post data by validating and sanitizing it.
@@ -260,27 +321,16 @@ class MembershipService {
 	 *
 	 * @param array $data The data required to create a membership post.
 	 *
-	 * @return array An associative array with 'post_data' and 'post_meta_data' keys.
+	 * @return array An associative array with 'post_data' and 'post_meta_data' keys or error data.
 	 */
-	public function prepare_membership_post_data(
-		$data
-	) {
+	public function prepare_membership_post_data( $data ) {
 		$membership_id = ! empty( $data['post_data']['ID'] ) ? absint( $data['post_data']['ID'] ) : '';
 		$validate_data = $this->validate_membership_data( $data );
-		// if( !empty($data['post_meta_data']['payment_gateways']) ) {
-		// foreach ($data['post_meta_data']['payment_gateways'] as $pg => $pg_data) {
-		// if("on" == $pg_data['status']) {
-		// $validate_pg = $this->validate_payment_gateway( array($pg, $data['post_meta_data']['type']));
-		// if(!$validate_pg['status']) {
-		// $validate_data = $validate_pg;
-		// }
-		// }
-		// }
-		// }
 
 		if ( ! $validate_data['status'] ) {
 			return $validate_data;
 		}
+
 		$post_meta_data = $this->sanitize_membership_meta_data( $data['post_meta_data'], $membership_id );
 
 		return array(
@@ -313,19 +363,18 @@ class MembershipService {
 	}
 
 	/**
-	 * Sanitize membership meta data
+	 * Sanitize membership meta data.
 	 *
-	 * @param $data
+	 * @param array $data          Raw meta data.
+	 * @param int   $membership_id Membership ID.
 	 *
-	 * @return array
+	 * @return array Sanitized meta data.
 	 */
-	public function sanitize_membership_meta_data(
-		$data,
-		$membership_id
-	) {
+	public function sanitize_membership_meta_data( $data, $membership_id ) {
 
 		$product_id = '';
 		$price_id   = '';
+
 		if ( ! empty( $membership_id ) ) {
 			$membership_meta = get_post_meta( $membership_id, 'ur_membership' );
 			$membership_meta = json_decode( $membership_meta[0], true );
@@ -336,20 +385,22 @@ class MembershipService {
 			}
 		}
 
-		// Todo: make this dynamic in future
+		// Todo: make this dynamic in future.
 		$data['type'] = sanitize_text_field( $data['type'] );
+
 		if ( isset( $data['subscription'] ) && is_array( $data['subscription'] ) ) {
 			$data['subscription']['value']    = isset( $data['subscription']['value'] ) ? absint( $data['subscription']['value'] ) : '';
 			$data['subscription']['duration'] = isset( $data['subscription']['duration'] ) ? sanitize_text_field( $data['subscription']['duration'] ) : '';
 			$data['trial_status']             = isset( $data['trial_status'] ) ? sanitize_text_field( $data['trial_status'] ) : '';
+
 			if ( 'on' === $data['trial_status'] && isset( $data['trial_data'] ) && is_array( $data['trial_data'] ) ) {
 				$data['trial_data']['value']    = absint( $data['trial_data']['value'] );
 				$data['trial_data']['duration'] = sanitize_text_field( $data['trial_data']['duration'] );
 			}
 		}
-		$data['cancel_subscription'] = sanitize_text_field( ! empty( $data['cancel_subscription'] ) ? $data['cancel_subscription'] : '' );
 
-		$data['amount'] = $data['amount'] ?? 0;
+		$data['cancel_subscription'] = sanitize_text_field( ! empty( $data['cancel_subscription'] ) ? $data['cancel_subscription'] : '' );
+		$data['amount']              = $data['amount'] ?? 0;
 
 		if ( isset( $data['payment_gateways'] ) ) {
 			if ( isset( $data['payment_gateways']['paypal'] ) && is_array( $data['payment_gateways']['paypal'] ) ) {
@@ -359,9 +410,11 @@ class MembershipService {
 				$data['payment_gateways']['paypal']['cancel_url'] = esc_url( ! empty( $data['payment_gateways']['paypal']['cancel_url'] ) ? $data['payment_gateways']['paypal']['cancel_url'] : '' );
 				$data['payment_gateways']['paypal']['return_url'] = esc_url( ! empty( $data['payment_gateways']['paypal']['return_url'] ) ? $data['payment_gateways']['paypal']['return_url'] : '' );
 			}
+
 			if ( isset( $data['payment_gateways']['bank'] ) && is_array( $data['payment_gateways']['bank'] ) ) {
 				$data['payment_gateways']['bank']['status'] = sanitize_text_field( $data['payment_gateways']['bank']['status'] );
 			}
+
 			if ( isset( $data['payment_gateways']['stripe'] ) && is_array( $data['payment_gateways']['stripe'] ) ) {
 				$data['payment_gateways']['stripe']['status']     = sanitize_text_field( $data['payment_gateways']['stripe']['status'] );
 				$data['payment_gateways']['stripe']['product_id'] = sanitize_text_field( $product_id );
@@ -371,11 +424,13 @@ class MembershipService {
 
 		if ( isset( $data['upgrade_settings'] ) && ! empty( $data['upgrade_settings']['upgrade_action'] ) ) {
 			$data['upgrade_settings']['upgrade_action'] = absint( $data['upgrade_settings']['upgrade_action'] );
+
 			if ( isset( $data['upgrade_settings']['upgrade_path'] ) && is_array( $data['upgrade_settings']['upgrade_path'] ) ) {
 				$data['upgrade_settings']['upgrade_path'] = sanitize_text_field( implode( ',', $data['upgrade_settings']['upgrade_path'] ) );
 			} elseif ( isset( $data['upgrade_settings']['upgrade_path'] ) ) {
 				$data['upgrade_settings']['upgrade_path'] = sanitize_text_field( $data['upgrade_settings']['upgrade_path'] );
 			}
+
 			$data['upgrade_settings']['upgrade_type'] = ! empty( $data['upgrade_settings']['upgrade_type'] ) ? sanitize_text_field( $data['upgrade_settings']['upgrade_type'] ) : 'full';
 		}
 
@@ -383,20 +438,18 @@ class MembershipService {
 	}
 
 	/**
-	 * Validate Membership Data
+	 * Validate Membership Data.
 	 *
-	 * @param $data
+	 * @param array $data Membership data.
 	 *
-	 * @return array
+	 * @return array Validation result.
 	 */
-	public function validate_membership_data(
-		$data
-	) {
+	public function validate_membership_data( $data ) {
 		$result = array(
 			'status' => true,
 		);
 
-		if ( isset( $data['post_meta_data']['type'] ) && 'subscription' === $data['post_meta_data']['type'] && ! ( UR_PRO_ACTIVE ) ) {
+		if ( isset( $data['post_meta_data']['type'] ) && 'subscription' === $data['post_meta_data']['type'] && ! UR_PRO_ACTIVE ) {
 			$result['status']  = false;
 			$result['message'] = esc_html__( 'Subscription type is a paid feature.', 'user-registration' );
 
@@ -404,12 +457,12 @@ class MembershipService {
 		}
 
 		/**
-		 * Filters the membership data validation result
+		 * Filters the membership data validation result.
 		 *
 		 * This hook should be used by new payment gateway integrations add-on to validate the membership data.
 		 *
-		 * @param array $result Membership validation result data
-		 * @param array $data Membership data.
+		 * @param array $result Membership validation result data.
+		 * @param array $data   Membership data.
 		 *
 		 * @since 4.2.3
 		 */
@@ -417,32 +470,41 @@ class MembershipService {
 	}
 
 	/**
-	 * Retrieve Membership Details
+	 * Retrieve Membership Details.
 	 *
-	 * @param int $membership_id
+	 * @param int $membership_id Membership ID.
 	 *
 	 * @return array
 	 */
-	public function get_membership_details(
-		$membership_id
-	) {
+	public function get_membership_details( $membership_id ) {
 		$membership_repository = new MembershipRepository();
 		$membership            = $membership_repository->get_single_membership_by_ID( $membership_id );
 
 		return ( is_array( $membership ) && ! empty( $membership['meta_value'] ) ) ? wp_unslash( json_decode( $membership['meta_value'], true ) ) : array();
 	}
 
+	/**
+	 * Verify page content for required shortcodes.
+	 *
+	 * @param string $type    Page type.
+	 * @param int    $post_id Post ID.
+	 *
+	 * @return array
+	 */
 	public function verify_page_content( $type, $post_id ) {
 		$response = array(
 			'status' => true,
 		);
-		$post     = get_post( $post_id );
+
+		$post = get_post( $post_id );
 		if ( empty( $post ) ) {
 			$response['status']  = false;
 			$response['message'] = __( 'No page selected.', 'user-registration' );
 
-			return $response; // return since the post does not exist;
+			// Return since the post does not exist.
+			return $response;
 		}
+
 		switch ( $type ) {
 			case 'user_registration_member_registration_page_id':
 				$response = self::verify_membership_registration_form_shortcode( $post, $response );
@@ -455,61 +517,67 @@ class MembershipService {
 	}
 
 	/**
-	 * verify_membership_registration_form_shortcode
+	 * Verify membership registration form shortcode.
 	 *
-	 * @param $post
-	 * @param $response
+	 * @param \WP_Post $post     Post object.
+	 * @param array    $response Response array.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
 	private static function verify_membership_registration_form_shortcode( $post, $response ) {
 		$membership_field_exists = false;
 		$form_id                 = 0;
+		$matches                 = array();
 
 		if ( preg_match_all( '/\[user_registration_form\s+id="(\d+)"\]/', $post->post_content, $matches ) ) {
 			$form_id = ! empty( $matches[1][0] ) ? absint( $matches[1][0] ) : 0;
 		}
 
 		if ( ! $form_id && preg_match( '/<!--\s*\/wp:user-registration\/registration-form\s*-->/', $post->post_content ) ) {
-			$form_id = ! empty( $matches[1][0] ) ? absint( $matches[1][0] ) : 0;
+			// Gutenberg block exists; we assume form is valid.
 			return $response;
 		}
 
 		if ( ! $form_id ) {
 			$response['status']  = false;
-			$response['message'] = __( 'The selected page does not consist any User Registration & Membership Form.' );
+			$response['message'] = __( 'The selected page does not consist any User Registration & Membership Form.', 'user-registration' );
+
 			return $response;
 		}
 
 		$fields = ur_get_form_fields( $matches[1][0] );
-		foreach ( $fields as $k => $field ) {
+		foreach ( $fields as $field ) {
 			if ( 'membership' === $field->field_key ) {
 				$membership_field_exists = true;
 			}
 		}
-		$response['status']  = $membership_field_exists;
-		$response['message'] = ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.' ) : '';
+
+		$response['status']           = $membership_field_exists;
+		$response['message']          = ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.', 'user-registration' ) : '';
+		$response['disable_save_btn'] = 'no';
 
 		return $response;
 	}
 
 	/**
-	 * verify_thank_you_shortcode
+	 * Verify thank you page shortcode.
 	 *
-	 * @param $post
-	 * @param $response
+	 * @param \WP_Post $post     Post object.
+	 * @param array    $response Response array.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
 	private static function verify_thank_you_shortcode( $post, $response ) {
 
 		$content = $post->post_content;
 		$match   = preg_match( '/\[user_registration_membership_thank_you\]/', $content );
+
 		if ( ! $match ) {
 			$match = preg_match( '<!-- /wp:user-registration/thank-you -->', $content );
+
 			if ( ! $match ) {
 				$response['status']  = false;
-				$response['message'] = __( 'The selected page does not consist the User Registration & Membership Thank you page Shortcode.' );
+				$response['message'] = __( 'The selected page does not consist the User Registration & Membership Thank you page Shortcode.', 'user-registration' );
 
 				return $response;
 			}
@@ -519,16 +587,17 @@ class MembershipService {
 	}
 
 	/**
-	 * validate_payment_gateway
+	 * Validate payment gateway.
 	 *
-	 * @param $data
+	 * @param array $data Payment gateway data.
 	 *
-	 * @return string[]
+	 * @return array
 	 */
 	public function validate_payment_gateway( $data ) {
 		$response = array(
 			'status' => 'true',
 		);
+
 		switch ( $data[0] ) {
 			case 'paypal':
 				$paypal_service = new PaypalService();
@@ -548,11 +617,12 @@ class MembershipService {
 				$result = empty( get_option( 'user_registration_global_bank_details' ) ) || ! $is_bank_enabled;
 				break;
 		}
+
 		/**
 		 * Filters whether the payment gateway setup is valid.
 		 *
-		 * @param bool $result Payment setup validation check, yield true for invalid setup.
-		 * @param array $data Payment data.
+		 * @param bool  $result Payment setup validation check, yield true for invalid setup.
+		 * @param array $data   Payment data.
 		 *
 		 * @return bool $result
 		 */
@@ -566,6 +636,13 @@ class MembershipService {
 		return $response;
 	}
 
+	/**
+	 * Get upgradable membership(s) for given membership ID.
+	 *
+	 * @param int $membership_id Membership ID.
+	 *
+	 * @return array
+	 */
 	public function get_upgradable_membership( $membership_id ) {
 		$membership_group_repository = new MembershipGroupRepository();
 		$membership_details          = $this->get_membership_details( $membership_id );
@@ -576,6 +653,7 @@ class MembershipService {
 		if ( ! empty( $group_details ) ) {
 			if ( isset( $group_details['mode'] ) && 'upgrade' === $group_details['mode'] ) {
 				$group_mode = 'upgrade';
+
 				if ( isset( $group_details['upgrade_path'] ) && '' !== $group_details['upgrade_path'] ) {
 					$upgrade_paths = json_decode( $group_details['upgrade_path'], true );
 
@@ -598,7 +676,7 @@ class MembershipService {
 		}
 
 		if ( empty( $memberships ) && empty( $group_mode ) ) {
-			if ( ! empty( $membership_details['upgrade_settings'] ) && $membership_details['upgrade_settings']['upgrade_action'] ) {
+			if ( ! empty( $membership_details['upgrade_settings'] ) && ! empty( $membership_details['upgrade_settings']['upgrade_action'] ) ) {
 				$memberships = $this->membership_repository->get_multiple_membership_by_ID( $membership_details['upgrade_settings']['upgrade_path'] );
 			}
 		}
@@ -611,7 +689,7 @@ class MembershipService {
 	}
 
 	/**
-	 * create or update a membership using prepared post data.
+	 * Create or update a membership using prepared post data.
 	 *
 	 * @since x.x.x
 	 *
@@ -625,6 +703,7 @@ class MembershipService {
 
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
 			$message = isset( $data['message'] ) ? $data['message'] : __( 'Invalid membership data.', 'user-registration' );
+
 			return new \WP_Error( 'ur_membership_invalid_data', $message );
 		}
 
@@ -632,9 +711,11 @@ class MembershipService {
 		$is_stripe_active = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && 'on' === $data['post_meta_data']['payment_gateways']['stripe']['status'];
 
 		$new_membership_id = wp_insert_post( $data['post_data'], true );
+
 		if ( is_wp_error( $new_membership_id ) ) {
 			return $new_membership_id;
 		}
+
 		if ( ! $new_membership_id ) {
 			return new \WP_Error( 'ur_membership_insert_failed', __( 'Failed to create membership.', 'user-registration' ) );
 		}
@@ -647,12 +728,15 @@ class MembershipService {
 
 		if ( $is_stripe_active && ! empty( $data['post_meta_data']['ur_membership']['meta_value'] ) ) {
 			$meta_data = json_decode( $data['post_meta_data']['ur_membership']['meta_value'], true );
+
 			if ( isset( $meta_data['type'] ) && 'free' !== $meta_data['type'] ) {
 				$stripe_service           = new StripeService();
 				$args                     = $data;
 				$args['membership_id']    = $new_membership_id;
-				$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $args['post_data'], $meta_data, false );
+				$stripe_price_and_product = $stripe_service->sync_product_and_price_in_stripe( $args['post_data'] );
 
+				// Note: sync_product_and_price_in_stripe currently returns ['success' => true] only.
+				// Kept here for backward compatibility in case it returns price/product in future.
 				if ( ! empty( $stripe_price_and_product['success'] ) && $stripe_price_and_product['success'] ) {
 					$meta_data['payment_gateways']['stripe']['product_id'] = $stripe_price_and_product['price']->product;
 					$meta_data['payment_gateways']['stripe']['price_id']   = $stripe_price_and_product['price']->id;
@@ -668,11 +752,18 @@ class MembershipService {
 		return $new_membership_id;
 	}
 
-
+	/**
+	 * Delete membership if allowed.
+	 *
+	 * @param int $membership_id Membership ID.
+	 *
+	 * @return array
+	 */
 	public function delete_membership( $membership_id ) {
-		$response                  = array(
+		$response = array(
 			'status' => true,
 		);
+
 		$valid_membership_statuses = apply_filters(
 			'urm_valid_membership_statuses',
 			array(
@@ -681,15 +772,17 @@ class MembershipService {
 				__( 'trial', 'user-registration' ),
 			)
 		);
-		$active_members            = $this->membership_repository->check_deletable_membership( $membership_id, $valid_membership_statuses );
+
+		$active_members = $this->membership_repository->check_deletable_membership( $membership_id, $valid_membership_statuses );
+
 		if ( $active_members['total'] > 0 ) {
 			$html  = '<p>' . __( 'You cannot delete a membership plan if it has active users assigned to it with any of the following statuses:', 'user-registration' ) . '</p>';
 			$html .= '<ul>';
 			foreach ( $valid_membership_statuses as $status ) {
 				$html .= '<li>' . ucfirst( $status ) . '</li>';
 			}
-			$html .= '</ul >';
-			$html .= '<p >' . __( 'To proceed, update all memberships to Expired or Cancelled, or assign users to a different plan . Once no active users remain, the plan can be deleted', 'user-registration' ) . '</p > ';
+			$html .= '</ul>';
+			$html .= '<p>' . __( 'To proceed, update all memberships to Expired or Cancelled, or assign users to a different plan. Once no active users remain, the plan can be deleted', 'user-registration' ) . '</p>';
 
 			$response = array(
 				'status'  => false,
@@ -702,14 +795,22 @@ class MembershipService {
 		return $response;
 	}
 
-	public function prepare_single_membership_data(
-		$membership
-	) {
+	/**
+	 * Prepare single membership data.
+	 *
+	 * @param array $membership Raw membership data.
+	 *
+	 * @return array
+	 */
+	public function prepare_single_membership_data( $membership ) {
 		$membership_post_content = json_decode( wp_unslash( $membership['post_content'] ), true );
+
 		if ( ! $membership_post_content['status'] ) {
 			return array();
 		}
+
 		$membership['post_content'] = $membership_post_content;
+
 		if ( isset( $membership['meta_value'] ) ) {
 			$membership['meta_value'] = json_decode( wp_unslash( $membership['meta_value'] ), true );
 		}
@@ -721,6 +822,8 @@ class MembershipService {
 	 * Fetch Membership details from intended actions like upgrade or purchase multiple.
 	 *
 	 * @param array $data Intended actions data.
+	 *
+	 * @return array
 	 */
 	public function fetch_membership_details_from_intended_actions( $data ) {
 		$subscription_repository     = new SubscriptionRepository();
@@ -743,7 +846,6 @@ class MembershipService {
 		$user_membership_ids = array();
 
 		if ( $current_user_id ) {
-
 			$user_memberships = $members_repository->get_member_membership_by_id( $current_user_id );
 
 			$user_membership_ids = array_filter(
@@ -763,10 +865,22 @@ class MembershipService {
 
 			if ( ! empty( $last_order ) ) {
 				$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
+
 				if ( ! empty( $order_meta ) ) {
 					$upcoming_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
 					$membership            = get_post( $upcoming_subscription['membership'] );
-					$message               = apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, please proceed from my account page.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), 'user-registration' ), $membership->post_title, $order_meta['meta_value'] );
+
+					$message = apply_filters(
+						'urm_delayed_plan_exist_notice',
+						sprintf(
+							/* translators: 1: membership name, 2: date string */
+							__( 'You already have a scheduled upgrade to the <b>%1$s</b> plan at the end of your current subscription cycle (<i><b>%2$s</b></i>). <br> If you\'d like to cancel this upcoming change, please proceed from my account page.', 'user-registration' ),
+							$membership->post_title,
+							date( 'M d, Y', strtotime( $order_meta['meta_value'] ) )
+						),
+						$membership->post_title,
+						$order_meta['meta_value']
+					);
 
 					return array(
 						'status'  => false,
@@ -779,23 +893,29 @@ class MembershipService {
 			if ( isset( $data['current'] ) && '' !== $data['current'] ) {
 
 				$membership_process = urm_get_membership_process( $member_id );
-				if ( $membership_process && isset( $membership_process['upgrade'][ $current_membership_id ] ) ) {
-					$current_membership       = $membership_repository->get_single_membership_by_ID( $current_membership_id );
-						$current_plan_name    = $current_membership['post_title'] ?? '';
-						$initiated_membership = $membership_repository->get_single_membership_by_ID( $membership_process['upgrade'][ $current_membership_id ]['to'] ?? 0 );
-						$initiated_plan_name  = $initiated_membership['post_title'] ?? '';
 
-						return array(
-							'status'  => false,
-							'message' => sprintf( esc_html__( 'You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again.', 'user-registration' ), $current_plan_name, $initiated_plan_name ),
-						);
+				if ( $membership_process && isset( $membership_process['upgrade'][ $current_membership_id ] ) ) {
+
+					$current_membership   = $membership_repository->get_single_membership_by_ID( $current_membership_id );
+					$current_plan_name    = $current_membership['post_title'] ?? '';
+					$initiated_membership = $membership_repository->get_single_membership_by_ID( $membership_process['upgrade'][ $current_membership_id ]['to'] ?? 0 );
+					$initiated_plan_name  = $initiated_membership['post_title'] ?? '';
+
+					return array(
+						'status'  => false,
+						'message' => sprintf(
+							esc_html__( 'You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again.', 'user-registration' ),
+							$current_plan_name,
+							$initiated_plan_name
+						),
+					);
 				}
 
 				$memberships = $this->get_upgradable_membership( $current_membership_id );
 				$memberships = array_filter(
 					$memberships,
 					function ( $membership ) use ( $user_membership_ids ) {
-						return ! in_array( $membership['ID'], $user_membership_ids );
+						return ! in_array( $membership['ID'], $user_membership_ids ); // phpcs:ignore
 					}
 				);
 
@@ -820,14 +940,14 @@ class MembershipService {
 						)
 					);
 
-					if ( in_array( $intended_membership_id, $user_membership_ids ) ) {
+					if ( in_array( $intended_membership_id, $user_membership_ids ) ) { // phpcs:ignore
 						return array(
 							'status'  => false,
 							'message' => esc_html__( 'You already have purchased this membership plan.', 'user-registration' ),
 						);
 					}
 
-					if ( in_array( $intended_membership_id, $current_upgradable_memberships_ids ) ) {
+					if ( in_array( $intended_membership_id, $current_upgradable_memberships_ids ) ) { // phpcs:ignore
 						$user_membership_id  = $membership['post_id'];
 						$member_subscription = $members_subscription_repo->get_subscription_data_by_member_and_membership_id( $current_user_id, $user_membership_id );
 						$subscription_id     = $member_subscription['ID'] ?? 0;
@@ -839,6 +959,7 @@ class MembershipService {
 					$current_membership_id = $user_membership_id;
 
 					$membership_process = urm_get_membership_process( $member_id );
+
 					if ( $membership_process && isset( $membership_process['upgrade'][ $current_membership_id ] ) ) {
 
 						$current_membership   = $membership_repository->get_single_membership_by_ID( $current_membership_id );
@@ -848,7 +969,11 @@ class MembershipService {
 
 						return array(
 							'status'  => false,
-							'message' => sprintf( esc_html__( 'You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again.', 'user-registration' ), $current_plan_name, $initiated_plan_name ),
+							'message' => sprintf(
+								esc_html__( 'You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again.', 'user-registration' ),
+								$current_plan_name,
+								$initiated_plan_name
+							),
 						);
 					}
 
@@ -868,6 +993,7 @@ class MembershipService {
 
 			foreach ( $memberships as $key => &$membership ) {
 				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
+
 				if ( ! empty( $membership_group ) && isset( $membership_group['ID'] ) ) {
 					$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
 
@@ -880,15 +1006,14 @@ class MembershipService {
 				$selected_membership_details       = $this->get_membership_details( $membership['ID'] );
 				$selected_membership_details['ID'] = $membership['ID'];
 
-				$upgrade_details = $subscription_service->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
+				$upgrade_details = $subscription_service->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription ); // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 
 				$selected_membership_amount = $selected_membership_details['amount'];
 				$current_membership_amount  = $current_membership_details['amount'];
 
 				$upgrade_service = new UpgradeMembershipService();
-
-				$upgrade_data = $upgrade_service->get_upgrade_details( $current_membership_details );
-				$upgrade_type = ! empty( $upgrade_data['upgrade_type'] ) ? $upgrade_data['upgrade_type'] : '';
+				$upgrade_data    = $upgrade_service->get_upgrade_details( $current_membership_details );
+				$upgrade_type    = ! empty( $upgrade_data['upgrade_type'] ) ? $upgrade_data['upgrade_type'] : '';
 
 				if ( empty( $upgrade_type ) || empty( $upgrade_data['upgrade_path'] ) ) {
 					return array(
@@ -897,20 +1022,23 @@ class MembershipService {
 					);
 				}
 
-				$remaining_subscription_value = isset( $selected_membership_details['subscription']['value'] ) ? $selected_membership_details['subscription']['value'] : '';
-				$delayed_until                = '';
+				$remaining_subscription_value = isset( $selected_membership_details['subscription']['value'] ) ? $selected_membership_details['subscription']['value'] : ''; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+				$delayed_until                = ''; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 
 				if ( $subscription_service->is_user_membership_expired( $current_user_id, $current_membership_id ) ) {
-					$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
+					$chargeable_amount               = $upgrade_service->calculate_chargeable_amount(
 						$selected_membership_amount,
 						$current_membership_amount,
 						$upgrade_type
 					);
-					$membership['amount'] = $chargeable_amount;
+					$membership['calculated_amount'] = $chargeable_amount;
+				} else {
+					$membership['calculated_amount'] = $upgrade_details['chargeable_amount'] ?? $selected_membership_amount;
 				}
 			}
 			unset( $membership );
 		} elseif ( isset( $data['action'] ) && 'multiple' === $data['action'] ) {
+
 			if ( UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() && ur_check_module_activation( 'membership-groups' ) ) {
 				$membership_id    = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
 				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
@@ -920,16 +1048,16 @@ class MembershipService {
 					$multiple_allowed = false;
 
 					if ( $current_user_id ) {
-
-						if ( in_array( $membership_id, $user_membership_ids ) ) {
+						if ( in_array( $membership_id, $user_membership_ids ) ) { // phpcs:ignore
 							return array(
 								'status'  => false,
 								'message' => esc_html__( 'You already have purchased this membership plan.', 'user-registration' ),
 							);
 						} else {
+							$group_memberships = json_decode( $membership_group['memberships'] );
+							$group_diff        = array_diff( $user_membership_ids, $group_memberships );
+							$overlap           = array_intersect( $user_membership_ids, $group_memberships );
 
-							$group_diff = array_diff( $user_membership_ids, json_decode( $membership_group['memberships'] ) );
-							$overlap    = array_intersect( $user_membership_ids, json_decode( $membership_group['memberships'] ) );
 							if ( ! $overlap ) {
 								$multiple_allowed = true;
 							} else {
@@ -988,22 +1116,24 @@ class MembershipService {
 				'status'  => false,
 				'message' => esc_html__( 'Selected membership details not found. Please contact your site administrator.', 'user-registration' ),
 			);
-		} else {
-			return array(
-				'status'                  => true,
-				'memberships'             => $memberships,
-				'current_subscription_id' => $subscription_id,
-				'current_membership_id'   => $current_membership_id,
-			);
 		}
+
+		return array(
+			'status'                  => true,
+			'memberships'             => $memberships,
+			'current_subscription_id' => $subscription_id,
+			'current_membership_id'   => $current_membership_id,
+		);
 	}
 
 	/**
 	 * Fetch intended action from details.
 	 *
-	 * @param string $intended_action Intended action.
-	 * @param array  $membership Membership Details.
-	 * @param array  $user_membership_ids User Membership ID.
+	 * @param string $intended_action   Intended action.
+	 * @param array  $membership        Membership details.
+	 * @param array  $user_membership_ids User membership IDs.
+	 *
+	 * @return string
 	 */
 	public function fetch_intended_action( $intended_action, $membership, $user_membership_ids ) {
 
@@ -1030,9 +1160,9 @@ class MembershipService {
 
 			if ( ! empty( $current_membership_group ) ) {
 
-				if ( in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
+				if ( in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) { // phpcs:ignore
 					foreach ( $user_membership_group_ids as $group_id ) {
-						if ( $current_membership_group['ID'] === $group_id ) {
+						if ( (int) $current_membership_group['ID'] === (int) $group_id ) {
 							$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $current_membership_group['ID'] );
 							$upgrade_allowed              = $membership_group_service->check_if_upgrade_allowed( $current_membership_group['ID'] );
 
@@ -1056,7 +1186,6 @@ class MembershipService {
 		return $intended_action;
 	}
 
-
 	/**
 	 * Retrieve the membership title and description.
 	 *
@@ -1074,8 +1203,9 @@ class MembershipService {
 	 */
 	public function get_membership_title_and_description( $membership_id ) {
 		$membership             = get_post( $membership_id );
-		$membership_title       = $membership->post_title;
+		$membership_title       = $membership ? $membership->post_title : '';
 		$membership_description = get_post_meta( $membership_id, 'ur_membership_description', true );
+
 		return array(
 			'item_title'       => $membership_title,
 			'item_description' => $membership_description,

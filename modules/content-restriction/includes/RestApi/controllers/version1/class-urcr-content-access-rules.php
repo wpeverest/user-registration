@@ -32,7 +32,6 @@ class URCR_Content_Access_Rules {
 	 *
 	 * @return void
 	 * @since 4.0
-	 *
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -114,7 +113,7 @@ class URCR_Content_Access_Rules {
 	 * @return WP_Error|bool
 	 */
 	public static function check_permissions( $request ) {
-		return current_user_can( 'edit_posts' );
+		return current_user_can( 'manage_options' );
 	}
 
 	/**
@@ -124,7 +123,6 @@ class URCR_Content_Access_Rules {
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
-	 *
 	 */
 	public static function get_rules( $request ) {
 		$query_args = array(
@@ -214,7 +212,6 @@ class URCR_Content_Access_Rules {
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
-	 *
 	 */
 	public static function create_rule( $request ) {
 		$title = isset( $request['title'] ) ? sanitize_text_field( $request['title'] ) : __( 'Untitled Rule', 'user-registration' );
@@ -222,7 +219,7 @@ class URCR_Content_Access_Rules {
 		$access_rule_data = isset( $request['access_rule_data'] ) ? $request['access_rule_data'] : array();
 
 		if ( empty( $access_rule_data ) ) {
-			$timestamp = time() * 1000;
+			$timestamp        = time() * 1000;
 			$access_rule_data = array(
 				'enabled'         => true,
 				'logic_map'       => array(
@@ -332,7 +329,6 @@ class URCR_Content_Access_Rules {
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
-	 *
 	 */
 	public static function get_rule( $request ) {
 		$rule_id   = absint( $request['id'] );
@@ -392,7 +388,6 @@ class URCR_Content_Access_Rules {
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
-	 *
 	 */
 	public static function toggle_rule_status( $request ) {
 		$rule_id = absint( $request['id'] );
@@ -419,7 +414,7 @@ class URCR_Content_Access_Rules {
 		$content_rule_content['enabled'] = $enabled;
 		$enabled_text                    = $enabled ? 'enabled' : 'disabled';
 
-		$content_rule->post_content = wp_json_encode( $content_rule_content );
+		$content_rule->post_content = wp_slash( wp_json_encode( $content_rule_content ) );
 
 		$saved_post = wp_insert_post( $content_rule );
 
@@ -451,7 +446,6 @@ class URCR_Content_Access_Rules {
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
-	 *
 	 */
 	public static function update_rule( $request ) {
 		$rule_id = absint( $request['id'] );
@@ -587,7 +581,6 @@ class URCR_Content_Access_Rules {
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
-	 *
 	 */
 	public static function duplicate_rule( $request ) {
 		$rule_id   = absint( $request['id'] );
@@ -678,7 +671,6 @@ class URCR_Content_Access_Rules {
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
-	 *
 	 */
 	public static function delete_rule( $request ) {
 		$rule_id = absint( $request['id'] );
