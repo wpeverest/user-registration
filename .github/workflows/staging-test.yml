@@ -44,7 +44,7 @@ jobs:
               run: |
                 pnpm install
                 composer install
-                npm run build
+                pnpm run build
                 composer install --no-dev
                 mkdir user-registration
                 rsync -rc --exclude-from="./.distignore" "./" "./user-registration" --delete --delete-excluded
