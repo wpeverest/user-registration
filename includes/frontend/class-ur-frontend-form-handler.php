@@ -53,7 +53,7 @@ class UR_Frontend_Form_Handler {
 
 		$logger = ur_get_logger();
 		$logger->info(
-			sprintf( '[Form #%d] Function == %s() - Started execution', $form_id, __FUNCTION__ ),
+			sprintf( '[Form #%d] Function == ***%s()*** - Started execution', $form_id, __FUNCTION__ ),
 			array(
 				'source'  => 'form-submission',
 				'form_id' => $form_id,
@@ -165,7 +165,7 @@ class UR_Frontend_Form_Handler {
 			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
 
 			$logger->info(
-				sprintf( '[Form #%d] Action == user_registration_before_register_user_action - Triggered.', $form_id ),
+				sprintf( '[Form #%d] Action == ***user_registration_before_register_user_action*** - Triggered.', $form_id ),
 				array(
 					'source'  => 'form-submission',
 					'form_id' => $form_id,
@@ -285,7 +285,7 @@ class UR_Frontend_Form_Handler {
 				do_action( 'user_registration_after_user_meta_update', self::$valid_form_data, $form_id, $user_id );
 
 				$logger->info(
-					sprintf( '[Form #%d] Action hook == user_registration_after_user_meta_update - Triggered.', $form_id ),
+					sprintf( '[Form #%d] Action hook == ***user_registration_after_user_meta_update*** - Triggered.', $form_id ),
 					array(
 						'source'  => 'form-submission',
 						'form_id' => $form_id,
@@ -369,7 +369,7 @@ class UR_Frontend_Form_Handler {
 					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
 
 					$logger->info(
-						sprintf( '[Form #%d] Action hook == user_registration_after_register_user_action - Triggered.', $form_id ),
+						sprintf( '[Form #%d] Action hook == ***user_registration_after_register_user_action*** - Triggered.', $form_id ),
 						array(
 							'source'  => 'form-submission',
 							'form_id' => $form_id,
@@ -389,7 +389,7 @@ class UR_Frontend_Form_Handler {
 				);
 
 				$logger->info(
-					sprintf( '[Form #%d] _______________User registration process completed_______________', $form_id ) . "\n   ",
+					sprintf( '[Form #%d] _______________***User registration process completed***_______________', $form_id ) . "\n   ",
 					array(
 						'source'  => 'form-submission',
 						'form_id' => $form_id,
