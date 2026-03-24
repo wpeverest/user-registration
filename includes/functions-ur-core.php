@@ -5406,7 +5406,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 
 		$logger->info(
-			sprintf( '[Form #%d] ------- Registration started -------', $form_id ) . "\n",
+			sprintf( '[Form #%d] _______________ ***Registration started***_______________', $form_id ),
 			array(
 				'source'  => 'form-submission',
 				'form_id' => $form_id,
@@ -5414,7 +5414,16 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		);
 
 		$logger->info(
-			sprintf( '[Form #%d] Checking user capability permissions...', $form_id ) . "\n",
+			sprintf( '[Form #%d] Function == ***%s()*** - Started execution.', $form_id, __FUNCTION__ ),
+			array(
+				'source'   => 'form-submission',
+				'form_id'  => $form_id,
+				'function' => __FUNCTION__,
+			)
+		);
+
+		$logger->info(
+			sprintf( '[Form #%d] Checking user capability permissions...', $form_id ),
 			array(
 				'source'  => 'form-submission',
 				'form_id' => $form_id,
@@ -5425,7 +5434,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 
 		if ( is_user_logged_in() && ! current_user_can( 'administrator' ) && ! current_user_can( $current_user_capability ) ) { //phpcs:ignore
 			$logger->warning(
-				sprintf( '[Form #%d] User is already logged in and does not have permission to register a new account.', $form_id ) . "\n",
+				sprintf( '[Form #%d] User is already logged in and does not have permission to register a new account.', $form_id ) . "\n  ",
 				array(
 					'source'  => 'form-submission',
 					'form_id' => $form_id,
@@ -5441,7 +5450,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 
 		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) && empty( $_POST['ur_fallback_submit'] ) ) {
 			$logger->error(
-				sprintf( '[Form #%d] AJAX nonce verification failed for form submission.', $form_id ) . "\n",
+				sprintf( '[Form #%d] AJAX nonce verification failed for form submission.', $form_id ) . "\n   ",
 				array(
 					'source'  => 'form-submission',
 					'form_id' => $form_id,
@@ -5456,7 +5465,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		}
 
 		$logger->info(
-			sprintf( '[Form #%d] Processing form submission.', $form_id ) . "\n",
+			sprintf( '[Form #%d] Processing form submission.', $form_id ),
 			array(
 				'source'  => 'form-submission',
 				'form_id' => $form_id,
@@ -5501,7 +5510,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 					 */
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
 						$logger->error(
-							sprintf( '[Form #%d] hCaptcha validation failed. Submission could not be verified.', $form_id ) . "\n",
+							sprintf( '[Form #%d] hCaptcha validation failed. Submission could not be verified.', $form_id ) . "\n  ",
 							array(
 								'source'  => 'form-submission',
 								'form_id' => $form_id,
@@ -5528,7 +5537,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 
 					if ( empty( $data->success ) ) {
 						$logger->error(
-							sprintf( '[Form #%d] Cloudflare Turnstile verification failed. Submission could not be verified.', $form_id ) . "\n",
+							sprintf( '[Form #%d] Cloudflare Turnstile verification failed. Submission could not be verified.', $form_id ) . "\n  ",
 							array(
 								'source'  => 'form-submission',
 								'form_id' => $form_id,
@@ -5551,7 +5560,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 					 */
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
 						$logger->error(
-							sprintf( '[Form #%d] Google reCAPTCHA verification failed. Submission could not be verified.', $form_id ) . "\n",
+							sprintf( '[Form #%d] Google reCAPTCHA verification failed. Submission could not be verified.', $form_id ) . "\n  ",
 							array(
 								'source'  => 'form-submission',
 								'form_id' => $form_id,
@@ -5567,7 +5576,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 				}
 			} else {
 				$logger->error(
-					sprintf( '[Form #%d] Captcha response is missing from the submitted form data.', $form_id ) . "\n",
+					sprintf( '[Form #%d] Captcha response is missing from the submitted form data.', $form_id ) . "\n  ",
 					array(
 						'source'  => 'form-submission',
 						'form_id' => $form_id,
@@ -5584,7 +5593,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 
 		if ( true != $flag || is_wp_error( $flag ) ) {
 			$logger->error(
-				sprintf( '[Form #%d] Frontend form nonce verification failed. Please reload and try again.', $form_id ) . "\n",
+				sprintf( '[Form #%d] Frontend form nonce verification failed. Please reload and try again.', $form_id ) . "\n  ",
 				array(
 					'source'  => 'form-submission',
 					'form_id' => $form_id,
@@ -5646,7 +5655,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		$form_data = array();
 
 		$logger->info(
-			sprintf( '[Form #%d] Receiving submitted form data.', $form_id ) . "\n",
+			sprintf( '[Form #%d] Receiving submitted form data.', $form_id ),
 			array(
 				'source'  => 'form-submission',
 				'form_id' => $form_id,
@@ -5657,8 +5666,22 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
 
+		$loggable_form_data = array();
+
+		if ( is_array( $form_data ) ) {
+			foreach ( $form_data as $field ) {
+				$log_field = clone $field;
+
+				if ( isset( $log_field->field_type ) && 'password' === $log_field->field_type ) {
+					$log_field->value = '********';
+				}
+
+				$loggable_form_data[] = $log_field;
+			}
+		}
+
 		$logger->info(
-			sprintf( '[Form #%d] Form data received successfully.', $form_id ) . "\n",
+			sprintf( '[Form #%d] Form data received successfully.', $form_id ) . "\n" . wp_json_encode( $loggable_form_data, JSON_PRETTY_PRINT ),
 			array(
 				'source'  => 'form-submission',
 				'form_id' => $form_id,
