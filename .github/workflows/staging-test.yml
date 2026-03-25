@@ -1,100 +1,111 @@
 name: UR Staging Test
 
 on:
-    push:
-        branches:
-            - staging
+  push:
+    branches:
+      - staging
+
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code From Current Branch
-              uses: actions/checkout@v2
+  deploy:
+    runs-on: ubuntu-latest
 
-            - name: Add Private SSH Key
-              run: |
-                mkdir -p ~/.ssh
-                echo "${{ secrets.TG_PRIVATE_SSH_KEY }}" > ~/.ssh/id_rsa
-                chmod 600 ~/.ssh/id_rsa
+    steps:
+      - name: Checkout Code From Current Branch
+        uses: actions/checkout@v2
 
-            - name: Add GitHub Email & Username
-              env:
-                MY_EMAIL: ${{ secrets.TG_GITHUB_EMAIL}}
-                MY_USERNAME: ${{ secrets.TG_GITHUB_USERNAME }}
-              run: |
-                git config --global user.email "$MY_EMAIL"
-                git config --global user.name "$MY_USERNAME"
+      - name: Add Private SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TG_PRIVATE_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-            - name: Use Node.js 20.x
-              uses: actions/setup-node@v2
-              with:
-                node-version: 20.x
+      - name: Add GitHub Email & Username
+        env:
+          MY_EMAIL: ${{ secrets.TG_GITHUB_EMAIL }}
+          MY_USERNAME: ${{ secrets.TG_GITHUB_USERNAME }}
+        run: |
+          git config --global user.email "$MY_EMAIL"
+          git config --global user.name "$MY_USERNAME"
 
-            - name: Setup PHP v7.4
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: '7.4'
-                extensions: cli, dev, curl, mbstring, xmlrpc
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20.x
 
-            - name: Setup Pnpm
-              uses: pnpm/action-setup@v3
-              with:
-               version: 9
-            - name: NPM, Composer Install & NPM Build
-              run: |
-                pnpm install
-                composer install
-                pnpm run build
-                composer install --no-dev
-                mkdir user-registration
-                rsync -rc --exclude-from="./.distignore" "./" "./user-registration" --delete --delete-excluded
+      - name: Setup PHP v7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: cli, dev, curl, mbstring, xmlrpc
 
-            - name: Copy plugin file to server
-              env:
-                Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
-                Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
-                Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
-              run: |
-                sshpass -p "$Server_PASS" rsync -ahPz -e "ssh -o StrictHostKeyChecking=no" user-registration $Srv_UsrName@$Srv_IP:/var/www/anup-urautomation.wp1.site/wp-content/plugins
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
 
-            - name: Setup Chrome
-              uses: browser-actions/setup-chrome@v1
-            - run: chrome --version
+      - name: NPM, Composer Install & NPM Build
+        run: |
+          pnpm install
+          composer install
+          pnpm run build
+          composer install --no-dev
+          mkdir user-registration
+          rsync -rc --exclude-from="./.distignore" "./" "./user-registration" --delete --delete-excluded
 
-            - name: Set up Python 3.12.1
-              uses: actions/setup-python@v3
-              with:
-                python-version: 3.12.1
-            - run: python -v
+      - name: Copy plugin file to server
+        env:
+          Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
+          Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
+          Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
+        run: |
+          sshpass -p "$Server_PASS" rsync -ahPz -e "ssh -o StrictHostKeyChecking=no" user-registration $Srv_UsrName@$Srv_IP:/var/www/anup-urautomation.wp1.site/wp-content/plugins
 
-            - name: Automation Test Script User Registration
-              run: |
-                mkdir python-code
-                cd python-code
-                git init
-                git remote add origin git@github.com:wpeverest/UR-Automation.git
-                git pull origin test-ur-free
-                pip install -r requirements.txt
-                chmod +x test_ur_free.sh
-                bash ./test_ur_free.sh
-              continue-on-error: true
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
 
-            - name: Test Report Generation
-              uses: actions/upload-artifact@v4
-              if: success() || failure()
-              with:
-                name: Report                # Name of the folder
-                path: python-code/results
+      - run: chrome --version
 
-            - name: Find Test Report Url Below
-              if: success() || failure()
-              env:
-                Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
-                Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
-                Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
-              run: |
-                sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'rm -rf /home/master/applications/ycrdmckpsu/public_html/urqatest/reports/*'
-                sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no -r python-code/results/* $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/urqatest/reports/
-                echo "https://qatest.wptests.net/urqatest/reports/report.html"
-                echo "https://qatest.wptests.net/urqatest/reports/test_report.html"
-              continue-on-error: true
+      - name: Set up Python 3.12.1
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.12.1
+
+      - run: python -v
+
+      - name: Automation Test Script User Registration
+        run: |
+          mkdir python-code
+          cd python-code
+          git init
+          git remote add origin git@github.com:wpeverest/UR-Automation.git
+          git pull origin test-ur-free
+          pip install -r requirements.txt
+          chmod +x test_ur_free.sh
+          bash ./test_ur_free.sh
+        continue-on-error: true
+
+      - name: Test Report Generation
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: Report
+          path: python-code/results
+
+      - name: Find Test Report Url Below
+        if: success() || failure()
+        env:
+          Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
+          Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
+          Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
+        run: |
+          REPORT_DIR=/var/www/anup-urautomation.wp1.site/reports
+
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP "mkdir -p $REPORT_DIR && rm -rf $REPORT_DIR/*"
+          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no -r python-code/results/* $Srv_UsrName@$Srv_IP:$REPORT_DIR/
+
+          echo "Final Robot Report URL:"
+          echo "https://anup-urautomation.wp1.site/reports/report.html"
+
+          echo "Final Robot Log URL:"
+          echo "https://anup-urautomation.wp1.site/reports/log.html"
+        continue-on-error: true
