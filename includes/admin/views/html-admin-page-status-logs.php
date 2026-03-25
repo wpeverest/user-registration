@@ -94,14 +94,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 		}
 
 		#log-viewer details.log-payload summary {
+			display:none;
 			cursor: pointer;
 			font-weight: 600;
 		}
 
 		#log-viewer .payload-box {
 			margin-top: 6px;
-			background: #f6f7f7;
-			border: 1px solid #dcdcde;
+			background: #f6f8f887;
+			/* border: 1px solid #dcdcde; */
 			border-radius: 4px;
 			padding: 10px 12px;
 			white-space: pre-wrap;
@@ -133,8 +134,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			}
 
 			echo '</pre>';
-			echo '<details class="log-payload">';
-			echo '<summary>' . esc_html__( 'View data', 'user-registration' ) . '</summary>';
+			echo '<details class="log-payload" open>';
+			echo '<summary>' . esc_html__( 'View', 'user-registration' ) . '</summary>';
 			echo '<div class="payload-box">' . esc_html( $payload ) . '</div>';
 			echo '</details>';
 			echo '<pre>';
