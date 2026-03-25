@@ -145,10 +145,6 @@ class MembershipService {
 			$team_id = '';
 
 			if ( $subscription && $order ) {
-				$this->logger->info(
-					'Subscription and order created successfully for ' . $data['username'] . '.',
-					array( 'source' => 'urm-registration-logs' )
-				);
 
 				if ( ! empty( $members_data['team'] ) && ur_check_module_activation( 'team' ) ) {
 					$first_name      = get_user_meta( $member->ID, 'first_name', true );

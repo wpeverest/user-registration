@@ -8047,14 +8047,39 @@ if ( ! function_exists( 'ur_email_send_failed_handler' ) ) {
 	 */
 	function ur_email_send_failed_handler( $error_instance ) {
 		$error_message = '';
+		$error_data    = $error_instance->get_error_data();
+
+		ur_get_logger()->debug(
+			sprintf(
+				'Mail action ***wp_mail_failed*** triggered. Callback function :: ***%s()***',
+				__FUNCTION__
+			),
+			array( 'source' => 'ur_mail_logs' )
+		);
+
+		$mail_log_data = array(
+			'reason'      => $error_instance->get_error_message(),
+			'to'          => isset( $error_data['to'] ) ? $error_data['to'] : '',
+			'subject'     => isset( $error_data['subject'] ) ? $error_data['subject'] : '',
+			'headers'     => isset( $error_data['headers'] ) ? $error_data['headers'] : array(),
+			'attachments' => isset( $error_data['attachments'] ) ? $error_data['attachments'] : array(),
+		);
+
+		ur_get_logger()->error(
+			'Mail send failed. Details:' . "\n" . wp_json_encode( $mail_log_data, JSON_PRETTY_PRINT ),
+			array( 'source' => 'ur_mail_logs' )
+		);
 
 		if ( '' !== json_decode( $error_instance->get_error_message() ) ) {
 			/* translators: %s: Status Log URL*/
-			$error_message = wp_kses_post( sprintf( __( 'Please check the `ur_mail_logs` log under <a target="_blank" href= "%s"> Status Log </a> section.', 'user-registration' ), admin_url( 'admin.php?page=user-registration-status' ) ) );
-			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_logs' ) );
+			$error_message = wp_kses_post(
+				sprintf(
+					__( 'Please check the `ur_mail_logs` log under <a target="_blank" href="%s">Status Log</a> section.', 'user-registration' ),
+					admin_url( 'admin.php?page=user-registration-status' )
+				)
+			);
 		} else {
 			$error_message = $error_instance->get_error_message();
-			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_logs' ) );
 		}
 
 		if ( '' !== $error_message ) {
