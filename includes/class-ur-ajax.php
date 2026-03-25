@@ -695,8 +695,8 @@ class UR_AJAX {
 		$start   = microtime( true );
 
 		try {
-			$logger->info(
-				sprintf( '[Form #%d] _______________***Form save started***______________', $form_id ),
+			$logger->notice(
+				sprintf( '[Form #%d] =============== ***Form save started*** ===============', $form_id ),
 				array(
 					'source'   => 'form-save',
 					'form_id'  => $form_id,
@@ -726,7 +726,7 @@ class UR_AJAX {
 				throw new Exception( __( "You don't have enough permission to perform this task. Please contact the Administrator.", 'user-registration' ) );
 			}
 
-			$logger->info(
+			$logger->debug(
 				sprintf( '[Form #%d] Security checks passed', $form_id ),
 				array(
 					'source'   => 'form-save',
@@ -759,7 +759,7 @@ class UR_AJAX {
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 			}
 
-			$logger->info(
+			$logger->debug(
 				sprintf( '[Form #%d] Form payload validated', $form_id ),
 				array(
 					'source'   => 'form-save',
@@ -771,7 +771,7 @@ class UR_AJAX {
 			$post_data = json_decode( wp_unslash( $_POST['data']['form_data'] ) ); // phpcs:ignore
 			self::sweep_array( $post_data );
 
-			$logger->info(
+			$logger->debug(
 				sprintf( '[Form #%d] Form builder data decoded', $form_id ) . "\n" . wp_json_encode( $post_data, JSON_PRETTY_PRINT ),
 				array(
 					'source'   => 'form-save',
@@ -872,7 +872,7 @@ class UR_AJAX {
 
 			do_action( 'user_registration_admin_backend_validation_before_form_save' );
 
-			$logger->info(
+			$logger->debug(
 				sprintf( '[Form #%d] Action == ***user_registration_admin_backend_validation_before_form_save*** - Triggered.', $form_id ),
 				array(
 					'source'  => 'form-save',
@@ -932,7 +932,7 @@ class UR_AJAX {
 			 */
 			do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); // phpcs:ignore
 
-			$logger->info(
+			$logger->debug(
 				sprintf( '[Form #%d] Action == ***user_registration_after_form_settings_save*** - Triggered.', $form_id ),
 				array(
 					'source'  => 'form-save',
@@ -942,7 +942,7 @@ class UR_AJAX {
 
 			$duration = round( microtime( true ) - $start, 2 );
 
-			$logger->info(
+			$logger->notice(
 				sprintf( '[Form #%d] Form saved successfully', $post_id ? $post_id : absint( $form_id ) ) . "\n" . wp_json_encode(
 					$post_data,
 					JSON_PRETTY_PRINT
@@ -955,8 +955,8 @@ class UR_AJAX {
 				)
 			);
 
-			$logger->info(
-				sprintf( '[Form #%d]  _______________***Form save completed***_______________', $post_id ? $post_id : absint( $form_id ) ) . "\n  ",
+			$logger->success(
+				sprintf( '[Form #%d]  =============== ***Form save completed*** ===============', $post_id ? $post_id : absint( $form_id ) ) . "\n  ",
 				array(
 					'source'   => 'form-save',
 					'form_id'  => $post_id ? $post_id : absint( $form_id ),

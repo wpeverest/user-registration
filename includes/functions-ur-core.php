@@ -5405,15 +5405,15 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 
 		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 
-		$logger->info(
-			sprintf( '[Form #%d] _______________ ***Registration started***_______________', $form_id ),
+		$logger->notice(
+			sprintf( '[Form #%d] =============== ***USER REGISTRATION STARTED*** ===============', $form_id ),
 			array(
 				'source'  => 'form-submission',
 				'form_id' => $form_id,
 			)
 		);
 
-		$logger->info(
+		$logger->debug(
 			sprintf( '[Form #%d] Function == ***%s()*** - Started execution.', $form_id, __FUNCTION__ ),
 			array(
 				'source'   => 'form-submission',
@@ -5690,7 +5690,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 
 		UR_Frontend_Form_Handler::handle_form( $form_data, $form_id );
 
-		$logger->info(
+		$logger->success(
 			sprintf( '[Form #%d] Form submission processed successfully.', $form_id ) . "\n",
 			array(
 				'source'  => 'form-submission',

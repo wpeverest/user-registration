@@ -52,7 +52,7 @@ class UR_Frontend_Form_Handler {
 	public static function handle_form( $form_data, $form_id ) {
 
 		$logger = ur_get_logger();
-		$logger->info(
+		$logger->debug(
 			sprintf( '[Form #%d] Function == ***%s()*** - Started execution', $form_id, __FUNCTION__ ),
 			array(
 				'source'  => 'form-submission',
@@ -78,7 +78,7 @@ class UR_Frontend_Form_Handler {
 
 		$form_field_data = self::get_form_field_data( $post_content_array );
 
-		$logger->info(
+		$logger->notice(
 			sprintf( '[Form #%d] Form fields received.', $form_id ),
 			array(
 				'source'  => 'form-submission',
@@ -164,7 +164,7 @@ class UR_Frontend_Form_Handler {
 
 			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
 
-			$logger->info(
+			$logger->debug(
 				sprintf( '[Form #%d] Action == ***user_registration_before_register_user_action*** - Triggered.', $form_id ),
 				array(
 					'source'  => 'form-submission',
@@ -242,7 +242,7 @@ class UR_Frontend_Form_Handler {
 
 			self::ur_update_user_meta( $user_id, $filtered_form_data, $form_id ); // Insert user data in usermeta table.
 
-			$logger->info(
+			$logger->notice(
 				sprintf( '[Form #%d] User meta data inserted successfully.', $form_id ),
 				array(
 					'source'  => 'form-submission',
@@ -251,7 +251,7 @@ class UR_Frontend_Form_Handler {
 			);
 
 			if ( $user_id > 0 ) {
-				$logger->info(
+				$logger->notice(
 					sprintf( '[Form #%d] User created successfully.', $form_id ),
 					array(
 						'source'  => 'form-submission',
@@ -272,7 +272,7 @@ class UR_Frontend_Form_Handler {
 						'roles'           => $user->roles,
 					);
 
-					$logger->info(
+					$logger->debug(
 						sprintf( '[Form #%d] Created user data:', $form_id ) . "\n" . wp_json_encode( $user_data, JSON_PRETTY_PRINT ),
 						array(
 							'source'  => 'form-submission',
@@ -284,7 +284,7 @@ class UR_Frontend_Form_Handler {
 
 				do_action( 'user_registration_after_user_meta_update', self::$valid_form_data, $form_id, $user_id );
 
-				$logger->info(
+				$logger->debug(
 					sprintf( '[Form #%d] Action hook == ***user_registration_after_user_meta_update*** - Triggered.', $form_id ),
 					array(
 						'source'  => 'form-submission',
@@ -368,7 +368,7 @@ class UR_Frontend_Form_Handler {
 
 					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
 
-					$logger->info(
+					$logger->debug(
 						sprintf( '[Form #%d] Action hook == ***user_registration_after_register_user_action*** - Triggered.', $form_id ),
 						array(
 							'source'  => 'form-submission',
@@ -379,7 +379,7 @@ class UR_Frontend_Form_Handler {
 
 				$success_params = apply_filters( 'user_registration_success_params_before_send_json', $success_params, self::$valid_form_data, $form_id, $user_id );
 
-				$logger->info(
+				$logger->debug(
 					sprintf( '[Form #%d] Success params:', $form_id ) . "\n" . wp_json_encode( $success_params, JSON_PRETTY_PRINT ),
 					array(
 						'source'  => 'form-submission',
@@ -388,8 +388,8 @@ class UR_Frontend_Form_Handler {
 					)
 				);
 
-				$logger->info(
-					sprintf( '[Form #%d] _______________***User registration process completed***_______________', $form_id ) . "\n   ",
+				$logger->success(
+					sprintf( '[Form #%d] =============== ***User registration process completed*** ===============', $form_id ) . "\n   ",
 					array(
 						'source'  => 'form-submission',
 						'form_id' => $form_id,
