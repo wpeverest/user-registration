@@ -1,0 +1,2166 @@
+<?php
+/**
+ * New PayPal REST service.
+ *
+ * This class keeps the old PaypalService untouched and provides a REST-based implementation
+ * with safe fallback to the legacy service for parity-critical scenarios.
+ *
+ * Recommended file name:
+ * /WPEverest/URMembership/Admin/Services/Paypal/NewPaypalService.php
+ */
+
+namespace WPEverest\URMembership\Admin\Services\Paypal;
+
+use DateTime;
+use DateTimeZone;
+use Exception;
+use WP_Error;
+use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
+use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+use WPEverest\URMembership\Admin\Services\EmailService;
+use WPEverest\URMembership\Admin\Services\MembersService;
+use WPEverest\URMembership\Admin\Services\OrderService;
+use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
+use WPEverest\URMembership\Admin\Services\SubscriptionService;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
+
+defined( 'ABSPATH' ) || exit;
+
+class NewPaypalService {
+
+	/**
+	 * @var MembersOrderRepository
+	 */
+	protected $members_orders_repository;
+
+	/**
+	 * @var MembersSubscriptionRepository
+	 */
+	protected $members_subscription_repository;
+
+	/**
+	 * @var MembershipRepository
+	 */
+	protected $membership_repository;
+
+	/**
+	 * @var OrdersRepository
+	 */
+	protected $orders_repository;
+
+	/**
+	 * @var SubscriptionRepository
+	 */
+	protected $subscription_repository;
+
+	/**
+	 * @var PaypalService
+	 */
+	protected $legacy_service;
+
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		$this->members_orders_repository       = new MembersOrderRepository();
+		$this->members_subscription_repository = new MembersSubscriptionRepository();
+		$this->membership_repository           = new MembershipRepository();
+		$this->orders_repository               = new OrdersRepository();
+		$this->subscription_repository         = new SubscriptionRepository();
+		$this->legacy_service                  = new PaypalService(); // keep old service as-is.
+	}
+
+	/**
+	 * Build approval URL using PayPal REST APIs.
+	 *
+	 * Falls back to legacy flow when:
+	 * - REST credentials are missing
+	 * - subscription plan id is missing
+	 * - upgrade/trial/proration case cannot be mapped safely to REST
+	 *
+	 * @param array $data
+	 * @param int   $membership
+	 * @param string $member_email
+	 * @param int|string $subscription_id
+	 * @param int   $member_id
+	 * @param array $response_data
+	 *
+	 * @return string|WP_Error
+	 */
+	public function build_url( $data, $membership, $member_email, $subscription_id, $member_id, $response_data = array() ) {
+		$context = $this->prepare_paypal_context( $data, $membership, $member_email, $subscription_id, $member_id, $response_data );
+
+		if ( is_wp_error( $context ) ) {
+			return $context;
+		}
+
+		PaymentGatewayLogging::log_transaction_start(
+			'paypal',
+			'Building PayPal REST payment URL',
+			array(
+				'member_id'       => $member_id,
+				'membership_id'   => $membership,
+				'member_email'    => $member_email,
+				'subscription_id' => $subscription_id,
+				'membership_type' => $context['membership_type'],
+				'mode'            => $context['paypal_options']['mode'],
+				'is_upgrading'    => $context['is_upgrading'],
+				'is_renewing'     => $context['is_renewing'],
+				'has_team'        => $context['has_team'],
+			)
+		);
+
+		// if ( $this->should_fallback_to_legacy_paypal( $context ) ) {
+		//  PaymentGatewayLogging::log_general(
+		//      'paypal',
+		//      'Falling back to legacy PayPal Standard flow',
+		//      'notice',
+		//      array(
+		//          'member_id'        => $member_id,
+		//          'membership_id'    => $membership,
+		//          'fallback_reasons' => $context['fallback_reasons'],
+		//      )
+		//  );
+
+		//  return $this->legacy_service->old_build_url( $data, $membership, $member_email, $subscription_id, $member_id, $response_data );
+		// }
+
+		if ( $context['is_subscription_upgrade_revise'] ) {
+			return $this->revise_paypal_subscription_for_upgrade( $context );
+		}
+
+		if ( $context['is_subscription'] ) {
+			return $this->create_paypal_subscription_order( $context );
+		}
+
+		return $this->create_paypal_one_time_order( $context );
+	}
+
+	/**
+	 * Prepare a normalized context for all payment cases.
+	 *
+	 * @param array $data
+	 * @param int   $membership
+	 * @param string $member_email
+	 * @param int|string $subscription_id
+	 * @param int   $member_id
+	 * @param array $response_data
+	 *
+	 * @return array|WP_Error
+	 */
+	private function prepare_paypal_context( $data, $membership, $member_email, $subscription_id, $member_id, $response_data = array() ) {
+		$is_upgrading                 = ! empty( $data['upgrade'] );
+		$paypal_options               = is_array( $data['payment_gateways']['paypal'] ?? null ) ? $data['payment_gateways']['paypal'] : array();
+		$mode                         = $this->get_paypal_mode();
+		$paypal_options['mode']       = $mode;
+		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
+		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
+
+		// REST credentials.
+		$paypal_options['client_id']  = get_option(
+			sprintf( 'user_registration_global_paypal_%s_client_id', $mode ),
+			$paypal_options['client_id'] ?? get_option( 'user_registration_global_paypal_client_id', '' )
+		);
+		$paypal_options['secret_key'] = get_option(
+			sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ),
+			$paypal_options['secret_key'] ?? get_option( 'user_registration_global_paypal_client_secret', '' )
+		);
+
+		// Optional fallback email for compatibility and validation.
+		$paypal_options['email'] = get_option(
+			sprintf( 'user_registration_global_paypal_%s_email_address', $mode ),
+			get_option( 'user_registration_global_paypal_email_address', '' )
+		);
+
+		$membership_data = $this->membership_repository->get_single_membership_by_ID( $membership );
+		if ( empty( $membership_data ) ) {
+			return new WP_Error(
+				'paypal_membership_not_found',
+				__( 'Membership not found.', 'user-registration' )
+			);
+		}
+
+		$membership_metas = wp_unslash( json_decode( $membership_data['meta_value'], true ) );
+		if ( ! is_array( $membership_metas ) ) {
+			$membership_metas = array();
+		}
+
+		$has_team = ! empty( $data['team_id'] ) && ! empty( $data['team_data'] );
+
+		if ( $has_team ) {
+			$membership_type = $data['team_data']['team_plan_type'] ?? 'unknown';
+			if ( 'one-time' === $membership_type ) {
+				$membership_type = 'paid';
+			}
+		} else {
+			$membership_type = $membership_metas['type'] ?? 'unknown';
+		}
+
+		$membership_amount = $this->resolve_membership_amount_or_fail( $data, $membership_metas, $member_id );
+		if ( is_wp_error( $membership_amount ) ) {
+			return $membership_amount;
+		}
+
+		$is_automatic       = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
+		$membership_process = urm_get_membership_process( $member_id );
+		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $data['current_membership_id'], $membership_process['renew'], true );
+
+		$currency       = get_option( 'user_registration_payment_currency', 'USD' );
+		$local_currency = $response_data['switched_currency'] ?? '';
+		$ur_zone_id     = $response_data['urm_zone_id'] ?? '';
+
+		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
+			$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
+			$local_currency_data = ! empty( $data['local_currency'] ) ? $data['local_currency'] : array();
+
+			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
+				$currency          = $local_currency;
+				$membership_amount = CoreFunctions::ur_get_amount_after_conversion(
+					$membership_amount,
+					$currency,
+					$pricing_data,
+					$local_currency_data,
+					$ur_zone_id
+				);
+			}
+		}
+
+		$final_amount   = (float) $membership_amount;
+		$coupon_details = array();
+		$discount_value = 0.0;
+
+		if ( $is_upgrading ) {
+			$final_amount = (float) ( $data['amount'] ?? $final_amount );
+		} elseif ( ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
+			$coupon_details = ur_get_coupon_details( $data['coupon'] );
+			$discount_value = ( 'fixed' === ( $coupon_details['coupon_discount_type'] ?? '' ) )
+				? (float) ( $coupon_details['coupon_discount'] ?? 0 )
+				: ( $final_amount * (float) ( $coupon_details['coupon_discount'] ?? 0 ) / 100 );
+
+			$final_amount = max( 0.0, (float) user_registration_sanitize_amount( $final_amount - $discount_value ) );
+		}
+
+		$tax_rate = 0.0;
+		if (
+			! empty( $response_data['tax_rate'] ) &&
+			! empty( $response_data['tax_calculation_method'] ) &&
+			ur_string_to_bool( $response_data['tax_calculation_method'] )
+		) {
+			$tax_rate     = (float) $response_data['tax_rate'];
+			$final_amount = $final_amount + ( $final_amount * $tax_rate / 100 );
+		}
+
+		$paypal_verification_token = wp_generate_uuid4();
+		update_user_meta( $member_id, 'urm_paypal_verification_token', $paypal_verification_token );
+
+		$query_args = 'membership=' . absint( $membership ) .
+			'&member_id=' . absint( $member_id ) .
+			'&current_membership_id=' . absint( $data['current_membership_id'] ) .
+			'&hash=' . wp_hash( $membership . ',' . $member_id . ',' . $paypal_verification_token );
+
+		$return_url = esc_url_raw(
+			add_query_arg(
+				array(
+					'ur-membership-return' => base64_encode( $query_args ),
+				),
+				apply_filters( 'user_registration_paypal_return_url', $paypal_options['return_url'], array() )
+			)
+		);
+
+		$item_name = $membership_data['post_title'] ?? __( 'Membership Purchase', 'user-registration' );
+
+		if ( 'subscription' === $membership_type ) {
+			$duration_data = $has_team
+				? array(
+					'value'    => $data['team_data']['team_duration_value'] ?? 1,
+					'duration' => $data['team_data']['team_duration_period'] ?? '',
+				)
+				: ( $data['subscription'] ?? array() );
+
+			if ( ! empty( $duration_data['duration'] ) ) {
+				$currency_symbol = 'USD' === $currency ? '$' : $currency;
+				$item_name      .= ' - ' . $currency_symbol . number_format( (float) $final_amount, 2, '.', '' ) . ' for ' . $duration_data['value'] . ' ' . $duration_data['duration'];
+			}
+		}
+
+		$paypal_subscription_id = get_user_meta( $member_id, 'urm_paypal_subscription_paypal_id', true );
+		if ( empty( $paypal_subscription_id ) ) {
+			$member_subscription = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $subscription_id );
+			if ( ! empty( $member_subscription['subscription_id'] ) ) {
+				$paypal_subscription_id = $member_subscription['subscription_id'];
+			}
+		}
+
+		$context = array(
+			'data'                            => $data,
+			'membership'                      => $membership,
+			'membership_data'                 => $membership_data,
+			'membership_metas'                => $membership_metas,
+			'member_email'                    => $member_email,
+			'member_id'                       => $member_id,
+			'subscription_id'                 => $subscription_id,
+			'response_data'                   => $response_data,
+			'membership_type'                 => $membership_type,
+			'is_subscription'                 => 'subscription' === $membership_type,
+			'is_upgrading'                    => $is_upgrading,
+			'is_renewing'                     => $is_renewing,
+			'is_automatic'                    => $is_automatic,
+			'currency'                        => $currency,
+			'final_amount'                    => number_format( (float) $final_amount, 2, '.', '' ),
+			'raw_final_amount'                => (float) $final_amount,
+			'return_url'                      => $return_url,
+			'cancel_url'                      => $paypal_options['cancel_url'],
+			'paypal_options'                  => $paypal_options,
+			'item_name'                       => $item_name,
+			'coupon_details'                  => $coupon_details,
+			'discount_value'                  => $discount_value,
+			'tax_rate'                        => $tax_rate,
+			'has_team'                        => $has_team,
+			'team_quantity'                   => $this->resolve_team_quantity( $data ),
+			'fallback_reasons'                => array(),
+			'existing_paypal_subscription_id' => $paypal_subscription_id,
+			'is_subscription_upgrade_revise'  => false,
+		);
+
+		if (
+			$context['is_subscription'] &&
+			$context['is_upgrading'] &&
+			! empty( $context['existing_paypal_subscription_id'] ) &&
+			empty( $data['chargeable_amount'] ) &&
+			empty( $data['trial_status'] )
+		) {
+			$context['is_subscription_upgrade_revise'] = true;
+		}
+
+		return $context;
+	}
+
+	/**
+	 * Decide whether to fall back to legacy flow.
+	 *
+	 * @param array $context
+	 *
+	 * @return bool
+	 */
+	private function should_fallback_to_legacy_paypal( &$context ) {
+		$paypal_options = $context['paypal_options'];
+
+		if ( empty( $paypal_options['client_id'] ) || empty( $paypal_options['secret_key'] ) ) {
+			$context['fallback_reasons'][] = 'missing_rest_credentials';
+			return true;
+		}
+
+		if ( $context['is_subscription'] && empty( $context['data']['paypal_plan_id'] ) ) {
+			$context['fallback_reasons'][] = 'missing_paypal_plan_id';
+			return true;
+		}
+
+		// Legacy trial/proration/delayed upgrade flows are not a clean 1:1 REST map.
+		if (
+			$context['is_subscription'] &&
+			$context['is_upgrading'] &&
+			(
+				! empty( $context['data']['trial_status'] ) ||
+				! empty( $context['data']['chargeable_amount'] )
+			)
+		) {
+			$context['fallback_reasons'][] = 'subscription_upgrade_with_trial_or_proration';
+			return true;
+		}
+
+		// Team subscription must have quantity when plan is quantity based.
+		if (
+			$context['is_subscription'] &&
+			$context['has_team'] &&
+			! empty( $context['data']['team_data']['seat_model'] ) &&
+			'fixed' !== $context['data']['team_data']['seat_model'] &&
+			empty( $context['team_quantity'] )
+		) {
+			$context['fallback_reasons'][] = 'team_subscription_missing_quantity';
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Resolve membership amount for normal/team pricing.
+	 *
+	 * @param array $data
+	 * @param array $membership_metas
+	 * @param int   $member_id
+	 *
+	 * @return float|WP_Error
+	 */
+	private function resolve_membership_amount_or_fail( $data, $membership_metas, $member_id ) {
+		$membership_amount = 0.0;
+
+		if ( ! empty( $data['team_id'] ) && ! empty( $data['team_data'] ) ) {
+			$team_data  = $data['team_data'];
+			$seat_model = $team_data['seat_model'] ?? '';
+
+			if ( 'fixed' === $seat_model ) {
+				$membership_amount = (float) ( $team_data['team_price'] ?? 0 );
+			} else {
+				$team_seats = absint( $team_data['team_seats'] ?? 0 );
+
+				if ( $team_seats <= 0 ) {
+					PaymentGatewayLogging::log_error(
+						'paypal',
+						'Invalid team seats for payment',
+						array(
+							'error_code' => 'INVALID_TEAM_SEATS',
+							'member_id'  => $member_id,
+						)
+					);
+
+					if ( empty( $data['upgrade'] ) ) {
+						wp_delete_user( absint( $member_id ) );
+					}
+
+					return new WP_Error(
+						'paypal_invalid_team_seats',
+						__( 'PayPal payment stopped. Invalid team seats.', 'user-registration' )
+					);
+				}
+
+				$pricing_model = $team_data['pricing_model'] ?? '';
+
+				if ( 'per_seat' === $pricing_model ) {
+					$membership_amount = $team_seats * (float) ( $team_data['per_seat_price'] ?? 0 );
+				} else {
+					$tier = $data['team_tier_info'] ?? '';
+
+					if ( empty( $tier ) ) {
+						PaymentGatewayLogging::log_error(
+							'paypal',
+							'Invalid team pricing tier',
+							array(
+								'error_code' => 'INVALID_TIER',
+								'member_id'  => $member_id,
+							)
+						);
+
+						if ( empty( $data['upgrade'] ) ) {
+							wp_delete_user( absint( $member_id ) );
+						}
+
+						return new WP_Error(
+							'paypal_invalid_pricing_tier',
+							__( 'PayPal payment stopped. Invalid pricing tier.', 'user-registration' )
+						);
+					}
+
+					$membership_amount = $team_seats * (float) ( $data['team_tier_info']['tier_per_seat_price'] ?? 0 );
+				}
+			}
+		} else {
+			$membership_amount = (float) ( $membership_metas['amount'] ?? 0 );
+		}
+
+		return (float) $membership_amount;
+	}
+
+	/**
+	 * Resolve quantity for team subscriptions.
+	 *
+	 * @param array $data
+	 *
+	 * @return string
+	 */
+	private function resolve_team_quantity( $data ) {
+		if ( empty( $data['team_id'] ) || empty( $data['team_data'] ) ) {
+			return '';
+		}
+
+		$team_data     = $data['team_data'];
+		$seat_model    = $team_data['seat_model'] ?? '';
+		$pricing_model = $team_data['pricing_model'] ?? '';
+
+		if ( 'fixed' === $seat_model ) {
+			return '';
+		}
+
+		$team_seats = absint( $team_data['team_seats'] ?? 0 );
+		if ( $team_seats <= 0 ) {
+			return '';
+		}
+
+		if ( in_array( $pricing_model, array( 'per_seat', 'tier' ), true ) ) {
+			return (string) $team_seats;
+		}
+
+		return '';
+	}
+
+	/**
+	 * Create a one-time PayPal order.
+	 *
+	 * @param array $context
+	 *
+	 * @return string|WP_Error
+	 */
+	private function create_paypal_one_time_order( $context ) {
+		$custom_id = $this->build_custom_id( $context );
+
+		$payload = array(
+			'intent'              => 'CAPTURE',
+			'purchase_units'      => array(
+				array(
+					'reference_id' => (string) $custom_id,
+					'custom_id'    => (string) $custom_id,
+					'description'  => sanitize_text_field( $context['item_name'] ),
+					'amount'       => array(
+						'currency_code' => $context['currency'],
+						'value'         => $context['final_amount'],
+					),
+				),
+			),
+			'application_context' => array(
+				'return_url'          => $context['return_url'],
+				'cancel_url'          => $context['cancel_url'],
+				'user_action'         => 'PAY_NOW',
+				'shipping_preference' => 'NO_SHIPPING',
+				'brand_name'          => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
+			),
+			'payer'               => array(
+				'email_address' => sanitize_email( $context['member_email'] ),
+			),
+		);
+
+		$response = $this->create_paypal_rest_order( $payload, $context['paypal_options'] );
+
+		if ( is_wp_error( $response ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'PayPal REST order creation failed',
+				array(
+					'error_code' => $response->get_error_code(),
+					'message'    => $response->get_error_message(),
+					'member_id'  => $context['member_id'],
+				)
+			);
+			return $response;
+		}
+
+		if ( ! empty( $response['id'] ) ) {
+			update_user_meta( $context['member_id'], 'urm_paypal_order_id', sanitize_text_field( $response['id'] ) );
+		}
+
+		PaymentGatewayLogging::log_transaction_success(
+			'paypal',
+			'PayPal REST one-time order created successfully',
+			array(
+				'member_id'       => $context['member_id'],
+				'membership_id'   => $context['membership'],
+				'subscription_id' => $context['subscription_id'],
+				'paypal_order_id' => $response['id'] ?? '',
+				'amount'          => $context['final_amount'],
+				'currency'        => $context['currency'],
+			)
+		);
+
+		return $this->extract_paypal_approval_url( $response );
+	}
+
+	/**
+	 * Create a subscription with PayPal REST subscriptions API.
+	 *
+	 * @param array $context
+	 *
+	 * @return string|WP_Error
+	 */
+	private function create_paypal_subscription_order( $context ) {
+		$plan_id = $context['data']['paypal_plan_id'] ?? '';
+
+		$plan_id = $this->get_or_create_paypal_plan_id( $context );
+		if ( is_wp_error( $plan_id ) ) {
+			return $plan_id;
+		}
+
+		$custom_id = $this->build_custom_id( $context );
+
+		$payload = array(
+			'plan_id'             => sanitize_text_field( $plan_id ),
+			'custom_id'           => (string) $custom_id,
+			'subscriber'          => array(
+				'email_address' => sanitize_email( $context['member_email'] ),
+			),
+			'application_context' => array(
+				'brand_name'          => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
+				'user_action'         => 'SUBSCRIBE_NOW',
+				'shipping_preference' => 'NO_SHIPPING',
+				'return_url'          => $context['return_url'],
+				'cancel_url'          => $context['cancel_url'],
+			),
+		);
+
+		if ( ! empty( $context['team_quantity'] ) ) {
+			$payload['quantity'] = (string) $context['team_quantity'];
+		}
+
+		// $plan_override = $this->build_subscription_plan_override( $context );
+		// if ( ! empty( $plan_override ) ) {
+		//  $payload['plan'] = $plan_override;
+		// }
+		$has_trial = ! empty( $context['data']['trial_status'] ) && 'on' === $context['data']['trial_status'];
+
+		if ( ! $has_trial ) {
+			$plan_override = $this->build_subscription_plan_override( $context );
+			if ( ! empty( $plan_override ) ) {
+				$payload['plan'] = $plan_override;
+			}
+		}
+
+		// Start time can help prevent immediate timezone confusion.
+		$payload['start_time'] = gmdate( 'Y-m-d\TH:i:s\Z', time() + 60 );
+
+		$response = $this->create_paypal_subscription( $payload, $context['paypal_options'] );
+
+		if ( is_wp_error( $response ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'PayPal subscription creation failed',
+				array(
+					'error_code' => $response->get_error_code(),
+					'message'    => $response->get_error_message(),
+					'member_id'  => $context['member_id'],
+				)
+			);
+			return $response;
+		}
+
+		if ( ! empty( $response['id'] ) ) {
+			update_user_meta( $context['member_id'], 'urm_paypal_subscription_paypal_id', sanitize_text_field( $response['id'] ) );
+		}
+
+		PaymentGatewayLogging::log_transaction_success(
+			'paypal',
+			'PayPal REST subscription created successfully',
+			array(
+				'member_id'              => $context['member_id'],
+				'membership_id'          => $context['membership'],
+				'subscription_id'        => $context['subscription_id'],
+				'paypal_subscription_id' => $response['id'] ?? '',
+				'team_quantity'          => $context['team_quantity'],
+			)
+		);
+
+		return $this->extract_paypal_approval_url( $response );
+	}
+
+	/**
+	 * Revise an existing PayPal subscription for clean upgrade path.
+	 *
+	 * @param array $context
+	 *
+	 * @return string|WP_Error
+	 */
+	private function revise_paypal_subscription_for_upgrade( $context ) {
+		$paypal_subscription_id = $context['existing_paypal_subscription_id'];
+		$new_plan_id            = $context['data']['paypal_plan_id'] ?? '';
+
+		if ( empty( $paypal_subscription_id ) || empty( $new_plan_id ) ) {
+			return new WP_Error(
+				'paypal_revise_missing_data',
+				__( 'Missing PayPal subscription ID or new plan ID for subscription upgrade.', 'user-registration' )
+			);
+		}
+
+		$payload = array(
+			'plan_id' => sanitize_text_field( $new_plan_id ),
+		);
+
+		if ( ! empty( $context['team_quantity'] ) ) {
+			$payload['quantity'] = (string) $context['team_quantity'];
+		}
+
+		$response = $this->revise_paypal_subscription(
+			$paypal_subscription_id,
+			$payload,
+			$context['paypal_options']
+		);
+
+		if ( is_wp_error( $response ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'PayPal subscription revise failed',
+				array(
+					'message'                => $response->get_error_message(),
+					'member_id'              => $context['member_id'],
+					'paypal_subscription_id' => $paypal_subscription_id,
+				)
+			);
+			return $response;
+		}
+
+		PaymentGatewayLogging::log_transaction_success(
+			'paypal',
+			'PayPal subscription revised successfully',
+			array(
+				'member_id'              => $context['member_id'],
+				'membership_id'          => $context['membership'],
+				'subscription_id'        => $context['subscription_id'],
+				'paypal_subscription_id' => $paypal_subscription_id,
+				'new_plan_id'            => $new_plan_id,
+			)
+		);
+
+		return $this->extract_paypal_approval_url( $response );
+	}
+
+	/**
+	 * Build optional plan override.
+	 *
+	 * @param array $context
+	 *
+	 * @return array
+	 */
+	private function build_subscription_plan_override( $context ) {
+		$override = array();
+
+		// Tax override.
+		if ( $context['tax_rate'] > 0 ) {
+			$override['taxes'] = array(
+				'percentage' => number_format( (float) $context['tax_rate'], 2, '.', '' ),
+				'inclusive'  => false,
+			);
+		}
+
+		// Price override when coupon/local currency changes effective amount.
+		$needs_custom_price = ! empty( $context['coupon_details'] ) || ! empty( $context['response_data']['switched_currency'] );
+
+		if ( $needs_custom_price ) {
+			$subscription_data = ! empty( $context['has_team'] ) ? array(
+				'duration' => $context['data']['team_data']['team_duration_period'] ?? '',
+				'value'    => $context['data']['team_data']['team_duration_value'] ?? 1,
+			) : ( $context['data']['subscription'] ?? array() );
+
+			$duration = strtoupper( substr( (string) ( $subscription_data['duration'] ?? '' ), 0, 1 ) );
+			$value    = max( 1, (int) ( $subscription_data['value'] ?? 1 ) );
+
+			$interval_unit_map = array(
+				'D' => 'DAY',
+				'W' => 'WEEK',
+				'M' => 'MONTH',
+				'Y' => 'YEAR',
+			);
+
+			if ( isset( $interval_unit_map[ $duration ] ) ) {
+				$override['billing_cycles'] = array(
+					array(
+						'frequency'      => array(
+							'interval_unit'  => $interval_unit_map[ $duration ],
+							'interval_count' => $value,
+						),
+						'tenure_type'    => 'REGULAR',
+						'sequence'       => 1,
+						'total_cycles'   => 0,
+						'pricing_scheme' => array(
+							'fixed_price' => array(
+								'currency_code' => $context['currency'],
+								'value'         => $context['final_amount'],
+							),
+						),
+					),
+				);
+			}
+		}
+
+		return $override;
+	}
+
+	/**
+	 * Build custom id.
+	 *
+	 * @param array $context
+	 *
+	 * @return string
+	 */
+	private function build_custom_id( $context ) {
+		return $context['membership'] . '-' . $context['member_id'] . '-' . $context['data']['current_membership_id'] . '-' . $context['subscription_id'];
+	}
+
+	/**
+	 * Extract PayPal approval URL from response.
+	 *
+	 * @param array|WP_Error $response
+	 *
+	 * @return string|WP_Error
+	 */
+	private function extract_paypal_approval_url( $response ) {
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		if ( empty( $response['links'] ) || ! is_array( $response['links'] ) ) {
+			return new WP_Error(
+				'paypal_missing_links',
+				__( 'PayPal response does not contain approval links.', 'user-registration' )
+			);
+		}
+
+		foreach ( $response['links'] as $link ) {
+			if ( ! empty( $link['rel'] ) && in_array( $link['rel'], array( 'approve', 'payer-action' ), true ) && ! empty( $link['href'] ) ) {
+				return esc_url_raw( $link['href'] );
+			}
+		}
+
+		return new WP_Error(
+			'paypal_missing_approve_url',
+			__( 'PayPal approval URL not found.', 'user-registration' )
+		);
+	}
+
+	/**
+	 * Handle redirect response after buyer returns from PayPal.
+	 *
+	 * For REST one-time orders:
+	 * - buyer approves order
+	 * - we capture the order here
+	 *
+	 * For REST subscriptions:
+	 * - buyer approves subscription
+	 * - PayPal redirects back with subscription_id/token
+	 * - we can confirm subscription and then finalize local records
+	 *
+	 * @param string $params
+	 * @param string $payer_id
+	 *
+	 * @return void
+	 */
+	public function handle_paypal_redirect_response( $params, $payer_id ) {
+		parse_str( $params, $url_params );
+
+		$membership_id = absint( $url_params['membership'] ?? 0 );
+		$member_id     = absint( $url_params['member_id'] ?? 0 );
+
+		if ( empty( $membership_id ) || empty( $member_id ) ) {
+			return;
+		}
+
+		$supplied_hash             = $url_params['hash'] ?? '';
+		$paypal_verification_token = get_user_meta( $member_id, 'urm_paypal_verification_token', true );
+		$expected_hash             = wp_hash( $membership_id . ',' . $member_id . ',' . $paypal_verification_token );
+
+		if ( empty( $supplied_hash ) || ! hash_equals( $supplied_hash, $expected_hash ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'PayPal redirect hash validation failed',
+				array(
+					'membership_id' => $membership_id,
+					'member_id'     => $member_id,
+				)
+			);
+			return;
+		}
+
+		delete_user_meta( $member_id, 'urm_paypal_verification_token' );
+
+		$member_order = $this->members_orders_repository->get_member_orders( $member_id );
+		if ( empty( $member_order ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'Member order not found during PayPal redirect',
+				array(
+					'membership_id' => $membership_id,
+					'member_id'     => $member_id,
+				)
+			);
+			return;
+		}
+
+		$membership = $this->membership_repository->get_single_membership_by_ID( $membership_id );
+		if ( empty( $membership ) ) {
+			return;
+		}
+
+		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
+		$membership_metas               = is_array( $membership_metas ) ? $membership_metas : array();
+		$membership_metas['post_title'] = $membership['post_title'] ?? '';
+		$membership_type                = $membership_metas['type'] ?? 'unknown';
+		$membership_process             = urm_get_membership_process( $member_id );
+
+		PaymentGatewayLogging::log_webhook_received(
+			'paypal',
+			'PayPal redirect callback received',
+			array(
+				'webhook_type'    => 'redirect_callback',
+				'payer_id'        => $payer_id,
+				'membership_id'   => $membership_id,
+				'member_id'       => $member_id,
+				'membership_type' => $membership_type,
+			)
+		);
+
+		$order_token              = sanitize_text_field( $_GET['token'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$paypal_subscription_id   = sanitize_text_field( $_GET['subscription_id'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$member_subscription      = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
+		$is_renewing              = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'], true );
+		$is_rest_one_time_payment = ( 'paid' === $member_order['order_type'] || 'one-time' === $membership_type );
+
+		// if buyer already returned and internal order is completed, just redirect .
+		// if ( 'completed' === ( $member_order['status'] ?? '' ) ) {
+		//  ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
+		// }
+
+		// REST one-time order capture.
+		if ( ! empty( $order_token ) && $is_rest_one_time_payment ) {
+			$capture_response = $this->capture_paypal_order( $order_token, $this->get_paypal_rest_credentials() );
+
+			if ( is_wp_error( $capture_response ) ) {
+				PaymentGatewayLogging::log_error(
+					'paypal',
+					'PayPal order capture failed after redirect',
+					array(
+						'paypal_order_id' => $order_token,
+						'member_id'       => $member_id,
+						'message'         => $capture_response->get_error_message(),
+					)
+				);
+				return;
+			}
+
+			update_user_meta( $member_id, 'urm_paypal_order_capture_response', wp_json_encode( $capture_response ) );
+
+			$transaction_id = $this->extract_capture_id_from_order_response( $capture_response );
+			$this->members_orders_repository->update(
+				$member_order['ID'],
+				array(
+					'status' => 'completed',
+					// 'transaction_id' => $transaction_id,
+				)
+			);
+
+			if ( ! empty( $member_subscription ) ) {
+				$this->members_subscription_repository->update(
+					$member_subscription['ID'],
+					array(
+						'status'     => 'active',
+						'start_date' => date( 'Y-m-d 00:00:00' ),
+					)
+				);
+			}
+		}
+
+		// REST subscription return.
+		if ( ! empty( $paypal_subscription_id ) && 'subscription' === $membership_type ) {
+			update_user_meta( $member_id, 'urm_paypal_subscription_paypal_id', $paypal_subscription_id );
+
+			$subscription_details = $this->get_paypal_subscription(
+				$paypal_subscription_id,
+				$this->get_paypal_rest_credentials()
+			);
+
+			if ( is_wp_error( $subscription_details ) ) {
+				PaymentGatewayLogging::log_error(
+					'paypal',
+					'Failed to confirm PayPal subscription after redirect',
+					array(
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'member_id'              => $member_id,
+						'message'                => $subscription_details->get_error_message(),
+					)
+				);
+				return;
+			}
+
+			$new_status = 'ACTIVE' === strtoupper( $subscription_details['status'] ?? '' ) ? 'active' : 'pending';
+
+			$this->members_orders_repository->update(
+				$member_order['ID'],
+				array(
+					'status'         => 'completed',
+					'transaction_id' => sanitize_text_field( $paypal_subscription_id ),
+				)
+			);
+
+			if ( ! empty( $member_subscription ) ) {
+				$this->members_subscription_repository->update(
+					$member_subscription['ID'],
+					array(
+						'status'          => ( 'on' === ( $member_order['trial_status'] ?? '' ) ? 'trial' : $new_status ),
+						'start_date'      => date( 'Y-m-d 00:00:00' ),
+						'subscription_id' => sanitize_text_field( $paypal_subscription_id ),
+					)
+				);
+			}
+		}
+
+		// Reload local subscription after any update.
+		$member_subscription = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
+
+		if ( $is_renewing && ! empty( $member_subscription ) ) {
+			$subscription_service = new SubscriptionService();
+			$subscription_service->update_subscription_data_for_renewal( $member_subscription, $membership_metas );
+		}
+
+		$this->send_payment_success_email( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $membership_id );
+
+		$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $url_params['current_membership_id'] ] );
+
+		if ( $is_upgrading && ! empty( $member_subscription['ID'] ) ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'Processing membership upgrade after PayPal redirect',
+				'notice',
+				array(
+					'member_id'       => $member_id,
+					'subscription_id' => $member_subscription['ID'],
+				)
+			);
+
+			$this->handle_upgrade_for_paypal( $member_id, $member_subscription['ID'] );
+		}
+
+		$this->handle_auto_login_after_payment( $member_id );
+
+		delete_user_meta( $member_id, 'urm_user_just_created' );
+		$member_order = $this->members_orders_repository->get_member_orders( $member_id );
+		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
+	}
+
+	/**
+	 * Shared helper to send payment success email.
+	 *
+	 * @param int   $order_id
+	 * @param array $member_subscription
+	 * @param array $membership_metas
+	 * @param int   $member_id
+	 * @param int   $membership_id
+	 *
+	 * @return void
+	 */
+	private function send_payment_success_email( $order_id, $member_subscription, $membership_metas, $member_id, $membership_id ) {
+		$email_service = new EmailService();
+		$order_detail  = $this->orders_repository->get_order_detail( $order_id );
+
+		if ( ! empty( $order_detail['coupon'] ) ) {
+			$order_detail['coupon_discount']      = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount', true );
+			$order_detail['coupon_discount_type'] = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount_type', true );
+		}
+
+		$email_data = array(
+			'subscription'     => $member_subscription,
+			'order'            => $order_detail,
+			'membership_metas' => $membership_metas,
+			'member_id'        => $member_id,
+			'membership'       => $membership_id,
+		);
+
+		$mail_send = $email_service->send_email( $email_data, 'payment_successful' );
+
+		if ( ! $mail_send ) {
+			PaymentGatewayLogging::log_transaction_failure(
+				'paypal',
+				'Payment successful email failed',
+				array(
+					'member_id'       => $member_id,
+					'subscription_id' => $member_subscription['ID'] ?? '',
+				)
+			);
+			return;
+		}
+
+		PaymentGatewayLogging::log_transaction_success(
+			'paypal',
+			'Payment successful email sent',
+			array(
+				'member_id'       => $member_id,
+				'subscription_id' => $member_subscription['ID'] ?? '',
+			)
+		);
+	}
+
+	/**
+	 * Handle auto login after payment.
+	 *
+	 * @param int $member_id
+	 *
+	 * @return void
+	 */
+	private function handle_auto_login_after_payment( $member_id ) {
+		$login_option = ur_get_user_login_option( $member_id );
+		$data         = apply_filters(
+			'user_registration_membership_before_register_member',
+			isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		);
+
+		if ( 'auto_login' === $login_option ) {
+			$member_service = new MembersService();
+			$password       = isset( $data['password'] ) ? $data['password'] : '';
+			$member_service->login_member( $member_id, true, $password );
+		}
+	}
+
+	/**
+	 * Handle upgrade flow using existing logic.
+	 *
+	 * @param int $member_id
+	 * @param int|string $subscription_id
+	 *
+	 * @return void
+	 */
+	public function handle_upgrade_for_paypal( $member_id, $subscription_id ) {
+		$get_user_old_subscription = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
+		$get_user_old_order        = json_decode( get_user_meta( $member_id, 'urm_previous_order_data', true ), true );
+		$new_subscription_data     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+		$subscription_service      = new SubscriptionService();
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'Handling membership upgrade in new PayPal REST service',
+			'notice',
+			array(
+				'member_id'           => $member_id,
+				'old_subscription_id' => $get_user_old_subscription['ID'] ?? 'unknown',
+				'new_subscription_id' => $subscription_id,
+			)
+		);
+
+		if ( ! empty( $new_subscription_data ) ) {
+			if ( empty( $new_subscription_data['delayed_until'] ) && ! empty( $get_user_old_subscription['subscription_id'] ) ) {
+				$cancel_subscription = $this->cancel_subscription( $get_user_old_order, $get_user_old_subscription );
+
+				if ( empty( $cancel_subscription['status'] ) ) {
+					PaymentGatewayLogging::log_error(
+						'paypal',
+						'Failed to cancel previous subscription during upgrade',
+						array(
+							'member_id'           => $member_id,
+							'old_subscription_id' => $get_user_old_subscription['subscription_id'] ?? '',
+							'message'             => $cancel_subscription['message'] ?? '',
+						)
+					);
+				}
+
+				delete_user_meta( $member_id, 'urm_previous_order_data' );
+				delete_user_meta( $member_id, 'urm_previous_subscription_data' );
+				delete_user_meta( $member_id, 'urm_next_subscription_data' );
+			}
+
+			$subscription_data           = $subscription_service->prepare_upgrade_subscription_data( $new_subscription_data['membership'], $new_subscription_data['member_id'], $new_subscription_data );
+			$subscription_data['status'] = 'active';
+			$this->subscription_repository->update( $subscription_id, $subscription_data );
+		}
+
+		$membership_process = urm_get_membership_process( $member_id );
+		if ( ! empty( $membership_process ) && isset( $membership_process['upgrade'][ $get_user_old_subscription['item_id'] ] ) ) {
+			unset( $membership_process['upgrade'][ $get_user_old_subscription['item_id'] ] );
+			update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+		}
+
+		update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
+
+		PaymentGatewayLogging::log_transaction_success(
+			'paypal',
+			'Membership upgrade completed successfully',
+			array(
+				'member_id'           => $member_id,
+				'new_subscription_id' => $subscription_id,
+			)
+		);
+
+		ur_membership_redirect_now(
+			ur_get_my_account_url() . '/ur-membership',
+			array(
+				'is_upgraded' => 'true',
+				'message'     => __( 'Membership Upgraded successfully', 'user-registration' ),
+			)
+		);
+	}
+
+	/**
+	 * Handle REST webhook event payload.
+	 *
+	 * This is a best-effort implementation for common REST webhook events.
+	 * Wire this to your webhook controller endpoint after signature verification if you add it later.
+	 *
+	 * @param array $event
+	 *
+	 * @return bool
+	 */
+	public function handle_webhook_event( $event ) {
+		if ( empty( $event ) || ! is_array( $event ) ) {
+			return false;
+		}
+
+		$event_type = sanitize_text_field( $event['event_type'] ?? '' );
+		$resource   = $event['resource'] ?? array();
+
+		PaymentGatewayLogging::log_webhook_received(
+			'paypal',
+			'PayPal REST webhook received',
+			array(
+				'webhook_type' => $event_type,
+				'resource_id'  => $resource['id'] ?? '',
+			)
+		);
+
+		switch ( $event_type ) {
+			case 'CHECKOUT.ORDER.APPROVED':
+			case 'PAYMENT.CAPTURE.COMPLETED':
+				return $this->handle_order_webhook_event( $event_type, $resource );
+
+			case 'BILLING.SUBSCRIPTION.CREATED':
+			case 'BILLING.SUBSCRIPTION.ACTIVATED':
+			case 'BILLING.SUBSCRIPTION.UPDATED':
+			case 'BILLING.SUBSCRIPTION.SUSPENDED':
+			case 'BILLING.SUBSCRIPTION.CANCELLED':
+			case 'BILLING.SUBSCRIPTION.EXPIRED':
+				return $this->handle_subscription_webhook_event( $event_type, $resource );
+
+			default:
+				PaymentGatewayLogging::log_general(
+					'paypal',
+					'Unhandled PayPal webhook event type',
+					'info',
+					array(
+						'event_type' => $event_type,
+					)
+				);
+				return true;
+		}
+	}
+
+	/**
+	 * Handle order-related REST webhook.
+	 *
+	 * @param string $event_type
+	 * @param array  $resource
+	 *
+	 * @return bool
+	 */
+	private function handle_order_webhook_event( $event_type, $resource ) {
+		$custom_id = $resource['purchase_units'][0]['custom_id'] ?? '';
+		if ( empty( $custom_id ) ) {
+			return false;
+		}
+
+		$parsed = $this->parse_custom_id( $custom_id );
+		if ( empty( $parsed['member_id'] ) ) {
+			return false;
+		}
+
+		$member_id    = absint( $parsed['member_id'] );
+		$member_order = $this->members_orders_repository->get_member_orders( $member_id );
+		if ( empty( $member_order ) ) {
+			return false;
+		}
+
+		$transaction_id = '';
+		if ( ! empty( $resource['purchase_units'][0]['payments']['captures'][0]['id'] ) ) {
+			$transaction_id = sanitize_text_field( $resource['purchase_units'][0]['payments']['captures'][0]['id'] );
+		} elseif ( ! empty( $resource['id'] ) ) {
+			$transaction_id = sanitize_text_field( $resource['id'] );
+		}
+
+		$this->members_orders_repository->update(
+			$member_order['ID'],
+			array(
+				'status'         => 'completed',
+				'transaction_id' => $transaction_id,
+			)
+		);
+
+		$member_subscription = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
+		if ( ! empty( $member_subscription['ID'] ) ) {
+			$this->members_subscription_repository->update(
+				$member_subscription['ID'],
+				array(
+					'status'     => 'active',
+					'start_date' => date( 'Y-m-d 00:00:00' ),
+				)
+			);
+		}
+
+		PaymentGatewayLogging::log_transaction_success(
+			'paypal',
+			'Order webhook processed successfully',
+			array(
+				'event_type'     => $event_type,
+				'member_id'      => $member_id,
+				'transaction_id' => $transaction_id,
+			)
+		);
+
+		return true;
+	}
+
+	/**
+	 * Handle subscription-related REST webhook.
+	 *
+	 * @param string $event_type
+	 * @param array  $resource
+	 *
+	 * @return bool
+	 */
+	private function handle_subscription_webhook_event( $event_type, $resource ) {
+		$custom_id = $resource['custom_id'] ?? '';
+		$parsed    = $this->parse_custom_id( $custom_id );
+
+		$member_id              = absint( $parsed['member_id'] ?? 0 );
+		$subscription_row_id    = $parsed['subscription_id'] ?? '';
+		$paypal_subscription_id = sanitize_text_field( $resource['id'] ?? '' );
+
+		if ( empty( $member_id ) || empty( $subscription_row_id ) ) {
+			return false;
+		}
+
+		$member_subscription = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $subscription_row_id );
+		if ( empty( $member_subscription ) ) {
+			return false;
+		}
+
+		$status_map = array(
+			'BILLING.SUBSCRIPTION.CREATED'   => 'pending',
+			'BILLING.SUBSCRIPTION.ACTIVATED' => 'active',
+			'BILLING.SUBSCRIPTION.UPDATED'   => $member_subscription['status'] ?? 'active',
+			'BILLING.SUBSCRIPTION.SUSPENDED' => 'suspended',
+			'BILLING.SUBSCRIPTION.CANCELLED' => 'canceled',
+			'BILLING.SUBSCRIPTION.EXPIRED'   => 'expired',
+		);
+
+		$new_status = $status_map[ $event_type ] ?? ( $member_subscription['status'] ?? 'pending' );
+
+		$this->members_subscription_repository->update(
+			$member_subscription['ID'],
+			array(
+				'status'          => $new_status,
+				'subscription_id' => $paypal_subscription_id,
+			)
+		);
+
+		if ( 'active' === $new_status ) {
+			$member_order = $this->members_orders_repository->get_member_orders( $member_id );
+			if ( ! empty( $member_order['ID'] ) ) {
+				$this->members_orders_repository->update(
+					$member_order['ID'],
+					array(
+						'status'         => 'completed',
+						'transaction_id' => $paypal_subscription_id,
+					)
+				);
+			}
+		}
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'Subscription webhook processed',
+			'success',
+			array(
+				'event_type'             => $event_type,
+				'member_id'              => $member_id,
+				'subscription_row_id'    => $subscription_row_id,
+				'paypal_subscription_id' => $paypal_subscription_id,
+				'new_status'             => $new_status,
+			)
+		);
+
+		return true;
+	}
+
+	/**
+	 * Parse custom id format: membership-member_id-current_membership_id-subscription_id
+	 *
+	 * @param string $custom_id
+	 *
+	 * @return array
+	 */
+	private function parse_custom_id( $custom_id ) {
+		$parts = explode( '-', (string) $custom_id );
+
+		return array(
+			'membership'            => $parts[0] ?? '',
+			'member_id'             => $parts[1] ?? '',
+			'current_membership_id' => $parts[2] ?? '',
+			'subscription_id'       => $parts[3] ?? '',
+		);
+	}
+
+	/**
+	 * Validate setup.
+	 *
+	 * Returns true when setup is incomplete, keeping old behavior.
+	 *
+	 * @param string $membership_type
+	 *
+	 * @return bool
+	 */
+	public function validate_setup( $membership_type ) {
+		$paypal_enabled        = get_option( 'user_registration_paypal_enabled', '' );
+		$paypal_toggle_default = ur_string_to_bool( get_option( 'urm_is_new_installation', false ) );
+		$has_user_changed      = ur_string_to_bool( get_option( 'urm_paypal_updated_connection_status', false ) );
+		$is_paypal_enabled     = ( $paypal_enabled ) ? $paypal_enabled : ( $has_user_changed ? $paypal_enabled : ! $paypal_toggle_default );
+
+		if ( ! $is_paypal_enabled ) {
+			return true;
+		}
+
+		$mode = $this->get_paypal_mode();
+
+		$required = array(
+			'client_id'     => get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id', '' ) ),
+			'client_secret' => get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret', '' ) ),
+		);
+
+		// Keep compatibility with old one-time standard/email validation if needed by your UI.
+		if ( 'subscription' !== $membership_type ) {
+			$required['email'] = get_option(
+				sprintf( 'user_registration_global_paypal_%s_email_address', $mode ),
+				get_option( 'user_registration_global_paypal_email_address', '' )
+			);
+		}
+
+		foreach ( $required as $value ) {
+			if ( empty( $value ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Cancel subscription using REST API.
+	 *
+	 * @param array $order
+	 * @param array $subscription
+	 *
+	 * @return array
+	 */
+	public function cancel_subscription( $order, $subscription ) {
+		if ( empty( $subscription['subscription_id'] ) ) {
+			$message = esc_html__( 'PayPal subscription ID not present.', 'user-registration' );
+			return array(
+				'status'  => false,
+				'message' => $message,
+			);
+		}
+
+		$paypal_options = $this->get_paypal_rest_credentials();
+
+		$response = $this->suspend_paypal_subscription(
+			$subscription['subscription_id'],
+			array(
+				'reason' => 'User initiated cancellation',
+			),
+			$paypal_options
+		);
+
+		if ( is_wp_error( $response ) ) {
+			PaymentGatewayLogging::log_transaction_failure(
+				'paypal',
+				'Subscription cancellation failed from PayPal.',
+				array(
+					'message'         => $response->get_error_message(),
+					'subscription_id' => $subscription['subscription_id'],
+				)
+			);
+
+			return array(
+				'status'  => false,
+				'message' => $response->get_error_message(),
+			);
+		}
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'Subscription successfully cancelled from PayPal',
+			'success',
+			array(
+				'subscription_id' => $subscription['subscription_id'],
+			)
+		);
+
+		return array(
+			'status' => true,
+		);
+	}
+
+	/**
+	 * Reactivate subscription using REST API.
+	 *
+	 * @param string $subscription_id
+	 *
+	 * @return array
+	 */
+	public function reactivate_subscription( $subscription_id ) {
+		$paypal_options = $this->get_paypal_rest_credentials();
+
+		$response = $this->activate_paypal_subscription(
+			$subscription_id,
+			array(
+				'reason' => 'User initiated reactivation',
+			),
+			$paypal_options
+		);
+
+		if ( is_wp_error( $response ) ) {
+			PaymentGatewayLogging::log_transaction_failure(
+				'paypal',
+				'Subscription reactivation failed from PayPal.',
+				array(
+					'message'         => $response->get_error_message(),
+					'subscription_id' => $subscription_id,
+				)
+			);
+
+			return array(
+				'status'  => false,
+				'message' => $response->get_error_message(),
+			);
+		}
+
+		PaymentGatewayLogging::log_subscription_reactivation(
+			'paypal',
+			'Subscription successfully reactivated from PayPal.'
+		);
+
+		return array(
+			'status' => true,
+		);
+	}
+
+	/**
+	 * Retry subscription by reactivating suspended/cancelled subscription when possible.
+	 *
+	 * @param array $subscription
+	 *
+	 * @return array
+	 */
+	public function retry_subscription( $subscription ) {
+		$response = array(
+			'status'  => false,
+			'message' => '',
+		);
+
+		$paypal_sub_id = $subscription['sub_id'] ?? $subscription['subscription_id'] ?? '';
+		if ( empty( $paypal_sub_id ) ) {
+			$response['message'] = __( 'Subscription ID not found', 'user-registration' );
+			return $response;
+		}
+
+		$paypal_options      = $this->get_paypal_rest_credentials();
+		$subscription_lookup = $this->get_paypal_subscription( $paypal_sub_id, $paypal_options );
+
+		if ( is_wp_error( $subscription_lookup ) ) {
+			$response['message'] = $subscription_lookup->get_error_message();
+			return $response;
+		}
+
+		$paypal_status = strtoupper( $subscription_lookup['status'] ?? '' );
+
+		if ( in_array( $paypal_status, array( 'SUSPENDED', 'CANCELLED' ), true ) ) {
+			$reactivate = $this->activate_paypal_subscription(
+				$paypal_sub_id,
+				array(
+					'reason' => 'Payment retry - system initiated reactivation',
+				),
+				$paypal_options
+			);
+
+			if ( is_wp_error( $reactivate ) ) {
+				$response['message'] = $reactivate->get_error_message();
+				return $response;
+			}
+
+			$response['status']  = true;
+			$response['message'] = __( 'Subscription payment retried and reactivated successfully', 'user-registration' );
+			return $response;
+		}
+
+		if ( 'ACTIVE' === $paypal_status ) {
+			$response['status']  = true;
+			$response['message'] = __( 'Subscription is already active', 'user-registration' );
+			return $response;
+		}
+
+		$response['message'] = sprintf(
+			__( 'Subscription status is %s and cannot be retried', 'user-registration' ),
+			$paypal_status
+		);
+
+		return $response;
+	}
+
+	/**
+	 * Old IPN validation is not used for REST.
+	 * Keep method for compatibility with existing callers.
+	 *
+	 * @param string $payment_mode
+	 *
+	 * @return bool
+	 */
+	public function validate_ipn( $payment_mode ) {
+		// REST should use webhook verification instead of IPN.
+		// Returning false prevents accidental IPN usage in new flow.
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'validate_ipn called on NewPaypalService; REST flow should use webhooks instead',
+			'info',
+			array(
+				'payment_mode' => $payment_mode,
+			)
+		);
+
+		return false;
+	}
+
+	/**
+	 * Optional compatibility method. If something still calls old IPN handler, use legacy service.
+	 *
+	 * @param array $data
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	public function handle_membership_paypal_ipn( $data ) {
+		// REST should use webhooks, but delegate for compatibility where old listener still exists.
+		$this->legacy_service->handle_membership_paypal_ipn( $data );
+	}
+
+	/**
+	 * Get PayPal mode.
+	 *
+	 * @return string
+	 */
+	private function get_paypal_mode() {
+		return get_option( 'user_registration_global_paypal_mode', 'test' ) === 'test' ? 'test' : 'production';
+	}
+
+	/**
+	 * Get PayPal REST credentials.
+	 *
+	 * @return array
+	 */
+	private function get_paypal_rest_credentials() {
+		$mode = $this->get_paypal_mode();
+
+		return array(
+			'mode'       => $mode,
+			'client_id'  => get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id', '' ) ),
+			'secret_key' => get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret', '' ) ),
+			'email'      => get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address', '' ) ),
+		);
+	}
+
+	/**
+	 * Get PayPal API base URL.
+	 *
+	 * @param string $mode
+	 *
+	 * @return string
+	 */
+	private function get_paypal_api_base_url( $mode ) {
+		return 'production' === $mode
+			? 'https://api-m.paypal.com'
+			: 'https://api-m.sandbox.paypal.com';
+	}
+
+	/**
+	 * Get OAuth access token.
+	 *
+	 * @param array $paypal_options
+	 *
+	 * @return string|WP_Error
+	 */
+	private function get_paypal_access_token( $paypal_options ) {
+		$client_id  = trim( (string) ( $paypal_options['client_id'] ?? '' ) );
+		$secret_key = trim( (string) ( $paypal_options['secret_key'] ?? '' ) );
+		$mode       = $paypal_options['mode'] ?? 'test';
+
+		if ( '' === $client_id || '' === $secret_key ) {
+			return new WP_Error(
+				'paypal_missing_credentials',
+				__( 'PayPal client ID or secret key is missing.', 'user-registration' )
+			);
+		}
+
+		$response = wp_remote_post(
+			$this->get_paypal_api_base_url( $mode ) . '/v1/oauth2/token',
+			array(
+				'timeout' => 45,
+				'headers' => array(
+					'Accept'          => 'application/json',
+					'Accept-Language' => 'en_US',
+					'Authorization'   => 'Basic ' . base64_encode( $client_id . ':' . $secret_key ),
+					'Content-Type'    => 'application/x-www-form-urlencoded',
+				),
+				'body'    => array(
+					'grant_type' => 'client_credentials',
+				),
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$status = wp_remote_retrieve_response_code( $response );
+		$body   = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( $status < 200 || $status >= 300 || empty( $body['access_token'] ) ) {
+			return new WP_Error(
+				'paypal_access_token_failed',
+				$body['error_description'] ?? __( 'Unable to retrieve PayPal access token.', 'user-registration' ),
+				$body
+			);
+		}
+
+		return $body['access_token'];
+	}
+
+	/**
+	 * Generic REST request helper.
+	 *
+	 * @param string $method
+	 * @param string $path
+	 * @param array|null $payload
+	 * @param array $paypal_options
+	 *
+	 * @return array|WP_Error
+	 */
+	private function paypal_rest_request( $method, $path, $payload, $paypal_options ) {
+		$access_token = $this->get_paypal_access_token( $paypal_options );
+		if ( is_wp_error( $access_token ) ) {
+			return $access_token;
+		}
+
+		$args = array(
+			'timeout' => 45,
+			'method'  => strtoupper( $method ),
+			'headers' => array(
+				'Authorization'     => 'Bearer ' . $access_token,
+				'Content-Type'      => 'application/json',
+				'Accept'            => 'application/json',
+				'PayPal-Request-Id' => wp_generate_uuid4(),
+			),
+		);
+
+		if ( null !== $payload ) {
+			$args['body'] = wp_json_encode( $payload );
+		}
+
+		$response = wp_remote_request(
+			$this->get_paypal_api_base_url( $paypal_options['mode'] ?? 'test' ) . $path,
+			$args
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$status = wp_remote_retrieve_response_code( $response );
+		$body   = wp_remote_retrieve_body( $response );
+		$parsed = ! empty( $body ) ? json_decode( $body, true ) : array();
+
+		if ( $status < 200 || $status >= 300 ) {
+			return new WP_Error(
+				'paypal_rest_request_failed',
+				$parsed['message'] ?? __( 'PayPal API request failed.', 'user-registration' ),
+				array(
+					'status' => $status,
+					'body'   => $parsed,
+				)
+			);
+		}
+
+		return is_array( $parsed ) ? $parsed : array( 'status' => $status );
+	}
+
+	/**
+	 * Create order.
+	 *
+	 * @param array $payload
+	 * @param array $paypal_options
+	 *
+	 * @return array|WP_Error
+	 */
+	private function create_paypal_rest_order( $payload, $paypal_options ) {
+		return $this->paypal_rest_request( 'POST', '/v2/checkout/orders', $payload, $paypal_options );
+	}
+
+	/**
+	 * Capture order.
+	 *
+	 * @param string $order_id
+	 * @param array  $paypal_options
+	 *
+	 * @return array|WP_Error
+	 */
+	private function capture_paypal_order( $order_id, $paypal_options ) {
+		return $this->paypal_rest_request(
+			'POST',
+			'/v2/checkout/orders/' . rawurlencode( $order_id ) . '/capture',
+			array(),
+			$paypal_options
+		);
+	}
+
+	/**
+	 * Create subscription.
+	 *
+	 * @param array $payload
+	 * @param array $paypal_options
+	 *
+	 * @return array|WP_Error
+	 */
+	private function create_paypal_subscription( $payload, $paypal_options ) {
+		return $this->paypal_rest_request( 'POST', '/v1/billing/subscriptions', $payload, $paypal_options );
+	}
+
+	/**
+	 * Get subscription details.
+	 *
+	 * @param string $subscription_id
+	 * @param array  $paypal_options
+	 *
+	 * @return array|WP_Error
+	 */
+	private function get_paypal_subscription( $subscription_id, $paypal_options ) {
+		return $this->paypal_rest_request(
+			'GET',
+			'/v1/billing/subscriptions/' . rawurlencode( $subscription_id ),
+			null,
+			$paypal_options
+		);
+	}
+
+	/**
+	 * Revise subscription.
+	 *
+	 * @param string $paypal_subscription_id
+	 * @param array  $payload
+	 * @param array  $paypal_options
+	 *
+	 * @return array|WP_Error
+	 */
+	private function revise_paypal_subscription( $paypal_subscription_id, $payload, $paypal_options ) {
+		return $this->paypal_rest_request(
+			'POST',
+			'/v1/billing/subscriptions/' . rawurlencode( $paypal_subscription_id ) . '/revise',
+			$payload,
+			$paypal_options
+		);
+	}
+
+	/**
+	 * Suspend subscription.
+	 *
+	 * @param string $subscription_id
+	 * @param array  $payload
+	 * @param array  $paypal_options
+	 *
+	 * @return array|WP_Error
+	 */
+	private function suspend_paypal_subscription( $subscription_id, $payload, $paypal_options ) {
+		return $this->paypal_rest_request(
+			'POST',
+			'/v1/billing/subscriptions/' . rawurlencode( $subscription_id ) . '/suspend',
+			$payload,
+			$paypal_options
+		);
+	}
+
+	/**
+	 * Activate subscription.
+	 *
+	 * @param string $subscription_id
+	 * @param array  $payload
+	 * @param array  $paypal_options
+	 *
+	 * @return array|WP_Error
+	 */
+	private function activate_paypal_subscription( $subscription_id, $payload, $paypal_options ) {
+		return $this->paypal_rest_request(
+			'POST',
+			'/v1/billing/subscriptions/' . rawurlencode( $subscription_id ) . '/activate',
+			$payload,
+			$paypal_options
+		);
+	}
+
+	/**
+	 * Extract capture id from order response.
+	 *
+	 * @param array $capture_response
+	 *
+	 * @return string
+	 */
+	private function extract_capture_id_from_order_response( $capture_response ) {
+		if ( ! empty( $capture_response['purchase_units'][0]['payments']['captures'][0]['id'] ) ) {
+			return sanitize_text_field( $capture_response['purchase_units'][0]['payments']['captures'][0]['id'] );
+		}
+
+		if ( ! empty( $capture_response['id'] ) ) {
+			return sanitize_text_field( $capture_response['id'] );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Get existing PayPal plan ID or create product + plan if missing.
+	 *
+	 * Subscription is created with plan_id, but plan needs product_id first.
+	 *
+	 * @param array $context
+	 * @return string|WP_Error
+	 */
+	private function get_or_create_paypal_plan_id( $context ) {
+		// 1. Runtime-provided plan id.
+		$plan_id = $context['data']['paypal_plan_id'] ?? '';
+		if ( ! empty( $plan_id ) ) {
+			return sanitize_text_field( $plan_id );
+		}
+
+		// 2. Cached membership-level plan id by config hash.
+		$plan_cache_key = $this->build_paypal_plan_cache_key( $context );
+		$plan_meta_key  = '_urm_paypal_plan_id_' . md5( $plan_cache_key );
+
+		$cached_plan_id = get_post_meta( $context['membership'], $plan_meta_key, true );
+		if ( ! empty( $cached_plan_id ) ) {
+			return sanitize_text_field( $cached_plan_id );
+		}
+
+		// 3. Product is required before creating plan.
+		$product_id = $this->get_or_create_paypal_product_id( $context );
+		if ( is_wp_error( $product_id ) ) {
+			return $product_id;
+		}
+
+		// 4. Create plan.
+		$plan_payload  = $this->build_paypal_plan_payload( $context, $product_id );
+		$plan_response = $this->create_paypal_plan( $plan_payload, $context['paypal_options'] );
+
+		if ( is_wp_error( $plan_response ) ) {
+			return $plan_response;
+		}
+
+		$plan_id = $plan_response['id'] ?? '';
+		if ( empty( $plan_id ) ) {
+			return new \WP_Error(
+				'paypal_plan_create_failed',
+				__( 'PayPal plan could not be created.', 'user-registration' )
+			);
+		}
+
+		update_post_meta( $context['membership'], $plan_meta_key, sanitize_text_field( $plan_id ) );
+		update_post_meta( $context['membership'], '_urm_paypal_latest_plan_id', sanitize_text_field( $plan_id ) );
+
+		return sanitize_text_field( $plan_id );
+	}
+
+	/**
+	 * Get or create PayPal product ID.
+	 *
+	 * @param array $context
+	 * @return string|WP_Error
+	 */
+	private function get_or_create_paypal_product_id( $context ) {
+		$product_id = get_post_meta( $context['membership'], '_urm_paypal_product_id', true );
+		if ( ! empty( $product_id ) ) {
+			return sanitize_text_field( $product_id );
+		}
+
+		$product_payload = array(
+			'name'        => sanitize_text_field( $context['membership_data']['post_title'] ?? 'Membership' ),
+			'description' => sanitize_text_field( $context['membership_data']['post_title'] ?? 'Membership subscription product' ),
+			'type'        => 'SERVICE',
+			'category'    => 'SOFTWARE',
+		);
+
+		$product_response = $this->create_paypal_product( $product_payload, $context['paypal_options'] );
+
+		if ( is_wp_error( $product_response ) ) {
+			return $product_response;
+		}
+
+		$product_id = $product_response['id'] ?? '';
+		if ( empty( $product_id ) ) {
+			return new \WP_Error(
+				'paypal_product_create_failed',
+				__( 'PayPal product could not be created.', 'user-registration' )
+			);
+		}
+
+		update_post_meta( $context['membership'], '_urm_paypal_product_id', sanitize_text_field( $product_id ) );
+
+		return sanitize_text_field( $product_id );
+	}
+
+	/**
+	 * Build PayPal plan payload from membership subscription data.
+	 *
+	 * @param array  $context
+	 * @param string $product_id
+	 * @return array
+	 */
+	private function build_paypal_plan_payload( $context, $product_id ) {
+		$subscription_data = ! empty( $context['has_team'] )
+		? array(
+			'duration' => $context['data']['team_data']['team_duration_period'] ?? '',
+			'value'    => $context['data']['team_data']['team_duration_value'] ?? 1,
+		)
+		: ( $context['data']['subscription'] ?? array() );
+
+		$duration = strtoupper( substr( (string) ( $subscription_data['duration'] ?? '' ), 0, 1 ) );
+		$value    = max( 1, (int) ( $subscription_data['value'] ?? 1 ) );
+
+		$interval_unit_map = array(
+			'D' => 'DAY',
+			'W' => 'WEEK',
+			'M' => 'MONTH',
+			'Y' => 'YEAR',
+		);
+
+		$interval_unit = $interval_unit_map[ $duration ] ?? 'MONTH';
+
+		$billing_cycles = array(
+			array(
+				'frequency'      => array(
+					'interval_unit'  => $interval_unit,
+					'interval_count' => $value,
+				),
+				'tenure_type'    => 'REGULAR',
+				'sequence'       => 1,
+				'total_cycles'   => 0,
+				'pricing_scheme' => array(
+					'fixed_price' => array(
+						'currency_code' => $context['currency'],
+						'value'         => $context['final_amount'],
+					),
+				),
+			),
+		);
+		// Simple trial support.
+		if (
+		! empty( $context['data']['trial_status'] ) &&
+		'on' === $context['data']['trial_status'] &&
+		! empty( $context['data']['trial_data'] )
+		) {
+			$trial_duration = strtoupper( substr( (string) ( $context['data']['trial_data']['duration'] ?? '' ), 0, 1 ) );
+			$trial_value    = max( 1, (int) ( $context['data']['trial_data']['value'] ?? 1 ) );
+			$trial_unit     = $interval_unit_map[ $trial_duration ] ?? 'MONTH';
+
+			$billing_cycles = array(
+				array(
+					'frequency'    => array(
+						'interval_unit'  => $trial_unit,
+						'interval_count' => $trial_value,
+					),
+					'tenure_type'  => 'TRIAL',
+					'sequence'     => 1,
+					'total_cycles' => 1,
+				),
+				array(
+					'frequency'      => array(
+						'interval_unit'  => $interval_unit,
+						'interval_count' => $value,
+					),
+					'tenure_type'    => 'REGULAR',
+					'sequence'       => 2,
+					'total_cycles'   => 0,
+					'pricing_scheme' => array(
+						'fixed_price' => array(
+							'currency_code' => $context['currency'],
+							'value'         => $context['final_amount'],
+						),
+					),
+				),
+			);
+		}
+
+		$payload = array(
+			'product_id'          => sanitize_text_field( $product_id ),
+			'name'                => sanitize_text_field( $context['membership_data']['post_title'] ?? 'Membership Plan' ),
+			'description'         => sanitize_text_field( $context['item_name'] ?? 'Membership subscription plan' ),
+			'status'              => 'ACTIVE',
+			'billing_cycles'      => $billing_cycles,
+			'payment_preferences' => array(
+				'auto_bill_outstanding'     => true,
+				'setup_fee_failure_action'  => 'CONTINUE',
+				'payment_failure_threshold' => 3,
+			),
+		);
+
+		if ( ! empty( $context['team_quantity'] ) ) {
+			$payload['quantity_supported'] = true;
+		}
+
+		if ( ! empty( $context['tax_rate'] ) && (float) $context['tax_rate'] > 0 ) {
+			$payload['taxes'] = array(
+				'percentage' => number_format( (float) $context['tax_rate'], 2, '.', '' ),
+				'inclusive'  => false,
+			);
+		}
+
+		return $payload;
+	}
+
+	/**
+	 * Build a stable cache key for plan reuse.
+	 *
+	 * @param array $context
+	 * @return string
+	 */
+	private function build_paypal_plan_cache_key( $context ) {
+		$subscription_data = ! empty( $context['has_team'] )
+		? array(
+			'duration' => $context['data']['team_data']['team_duration_period'] ?? '',
+			'value'    => $context['data']['team_data']['team_duration_value'] ?? 1,
+		)
+		: ( $context['data']['subscription'] ?? array() );
+
+		return wp_json_encode(
+			array(
+				'membership_id' => $context['membership'],
+				'currency'      => $context['currency'],
+				'amount'        => $context['final_amount'],
+				'duration'      => $subscription_data['duration'] ?? '',
+				'value'         => $subscription_data['value'] ?? 1,
+				'team_quantity' => $context['team_quantity'] ?? '',
+				'trial_status'  => $context['data']['trial_status'] ?? '',
+				'trial_data'    => $context['data']['trial_data'] ?? array(),
+				'tax_rate'      => $context['tax_rate'] ?? 0,
+			)
+		);
+	}
+
+	/**
+	 * Create PayPal product.
+	 *
+	 * @param array $payload
+	 * @param array $paypal_options
+	 * @return array|WP_Error
+	 */
+	private function create_paypal_product( $payload, $paypal_options ) {
+		return $this->paypal_rest_request(
+			'POST',
+			'/v1/catalogs/products',
+			$payload,
+			$paypal_options
+		);
+	}
+
+	/**
+	 * Create PayPal billing plan.
+	 *
+	 * @param array $payload
+	 * @param array $paypal_options
+	 * @return array|WP_Error
+	 */
+	private function create_paypal_plan( $payload, $paypal_options ) {
+		return $this->paypal_rest_request(
+			'POST',
+			'/v1/billing/plans',
+			$payload,
+			$paypal_options
+		);
+	}
+}

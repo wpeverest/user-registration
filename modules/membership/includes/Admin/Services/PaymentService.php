@@ -7,6 +7,7 @@ use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URM\Mollie\Services\PaymentService as MollieService;
+use WPEverest\URMembership\Admin\Services\Paypal\NewPaypalService;
 
 class PaymentService {
 	/**
@@ -143,6 +144,7 @@ class PaymentService {
 	 */
 	public function build_paypal_response( $data, $subscription_id, $member_id, $response_data = array() ) {
 		$paypal_service = new PaypalService();
+		$paypal_service = new NewPaypalService();
 
 		return array(
 			'payment_url' => $paypal_service->build_url( $data, $this->membership, $this->member_email, $subscription_id, $member_id, $response_data ),
