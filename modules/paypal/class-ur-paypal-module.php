@@ -39,20 +39,20 @@ class User_Registration_Paypal_Module {
 	 * @return array
 	 */
 	public function raw_settings() {
-		$test_admin_email = get_option( 'user_registration_global_paypal_test_admin_email', '' );
-		$test_client_id = get_option( 'user_registration_global_paypal_test_client_id', '' );
+		$test_admin_email   = get_option( 'user_registration_global_paypal_test_admin_email', '' );
+		$test_client_id     = get_option( 'user_registration_global_paypal_test_client_id', '' );
 		$test_client_secret = get_option( 'user_registration_global_paypal_test_client_secret', '' );
 
-		$live_admin_email = get_option( 'user_registration_global_paypal_live_admin_email', '' );
-		$live_client_id = get_option( 'user_registration_global_paypal_live_client_id', '' );
+		$live_admin_email   = get_option( 'user_registration_global_paypal_live_admin_email', '' );
+		$live_client_id     = get_option( 'user_registration_global_paypal_live_client_id', '' );
 		$live_client_secret = get_option( 'user_registration_global_paypal_live_client_secret', '' );
 
-		$paypal_mode = get_option( 'user_registration_global_paypal_mode', '' );
+		$paypal_mode    = get_option( 'user_registration_global_paypal_mode', '' );
 		$paypal_enabled = get_option( 'user_registration_paypal_enabled', '' );
 
 		if ( false === get_option( 'urm_global_paypal_settings_migrated_', false ) ) {
 			//runs for backward compatibility, could be removed in future versions.
-			if( 'test' === $paypal_mode ) {
+			if ( 'test' === $paypal_mode ) {
 				$test_admin_email   = get_option( 'admin_email', '' );
 				$test_client_id     = get_option( 'user_registration_global_paypal_client_id', '' );
 				$test_client_secret = get_option( 'user_registration_global_paypal_client_secret', '' );
@@ -62,8 +62,8 @@ class User_Registration_Paypal_Module {
 				$live_client_secret = get_option( 'user_registration_global_paypal_client_secret', '' );
 			}
 		}
-		$paypal_enabled = get_option( 'user_registration_paypal_enabled', '' );
-		$paypal_toggle_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false )) ;
+		$paypal_enabled        = get_option( 'user_registration_paypal_enabled', '' );
+		$paypal_toggle_default = ur_string_to_bool( get_option( 'urm_is_new_installation', false ) );
 
 		return array(
 			'title'        => __( 'Paypal Settings', 'user-registration' ),
@@ -78,7 +78,7 @@ class User_Registration_Paypal_Module {
 					'desc'     => __( 'Enable PayPal payment gateway.', 'user-registration' ),
 					'id'       => 'user_registration_paypal_enabled',
 					'desc_tip' => true,
-					'default'  => ($paypal_enabled) ? $paypal_enabled : $paypal_toggle_default,
+					'default'  => ( $paypal_enabled ) ? $paypal_enabled : $paypal_toggle_default,
 					'class'    => 'urm_toggle_pg_status',
 				),
 				array(
@@ -120,7 +120,7 @@ class User_Registration_Paypal_Module {
 					'required'    => true,
 					'id'          => 'user_registration_global_paypal_test_email_address',
 					'default'     => $test_admin_email,
-					'placeholder' => $test_admin_email
+					'placeholder' => $test_admin_email,
 				),
 				array(
 					'type'     => 'text',
@@ -200,24 +200,24 @@ class User_Registration_Paypal_Module {
 		$response = array(
 			'status' => true,
 		);
-		if( isset($form_data['user_registration_paypal_enabled']) && ! $form_data['user_registration_paypal_enabled'] ) {
+		if ( isset( $form_data['user_registration_paypal_enabled'] ) && ! $form_data['user_registration_paypal_enabled'] ) {
 			return $response;
 		}
 		//these value should not be empty
-		if ( empty( $form_data['user_registration_global_paypal_cancel_url'] ) ) {
+		if ( empty( $form_data['user_registration_global_paypal_cancel_url'] ) && ! ur_string_to_bool( get_option( 'urm_is_new_installation' ) ) ) {
 			$response['status']  = false;
 			$response['message'] = 'Field Cancel Url is required.';
 
 			return $response;
 		}
-		if ( empty( $form_data['user_registration_global_paypal_return_url'] ) ) {
+		if ( empty( $form_data['user_registration_global_paypal_return_url'] ) && ! ur_string_to_bool( get_option( 'urm_is_new_installation' ) ) ) {
 			$response['status']  = false;
 			$response['message'] = 'Field Return Url is required.';
 
 			return $response;
 		}
 
-		if ( ! ur_is_valid_url( $form_data['user_registration_global_paypal_cancel_url'] ) || ! ur_is_valid_url( $form_data['user_registration_global_paypal_return_url'] ) ) {
+		if ( ( ! ur_is_valid_url( $form_data['user_registration_global_paypal_cancel_url'] ) || ! ur_is_valid_url( $form_data['user_registration_global_paypal_return_url'] ) ) && ! ur_string_to_bool( get_option( 'urm_is_new_installation' ) ) ) {
 			$response['status']  = false;
 			$response['message'] = 'Cancel/Return url must be a valid url.';
 
@@ -226,7 +226,7 @@ class User_Registration_Paypal_Module {
 		preg_match( '#^' . preg_quote( site_url(), '#' ) . '#', $form_data['user_registration_global_paypal_cancel_url'], $cancel_url_matches );
 		preg_match( '#^' . preg_quote( site_url(), '#' ) . '#', $form_data['user_registration_global_paypal_return_url'], $return_url_matches );
 
-		if ( count( $cancel_url_matches ) < 1 || count( $return_url_matches ) < 1 ) {
+		if ( ( count( $cancel_url_matches ) < 1 || count( $return_url_matches ) < 1 ) && ! ur_string_to_bool( get_option( 'urm_is_new_installation' ) ) ) {
 			$response['status']  = false;
 			$response['message'] = 'Cancel/Return url cannot be an external url.';
 
@@ -241,24 +241,24 @@ class User_Registration_Paypal_Module {
 				break;
 			}
 		}
-		$mode = $form_data['user_registration_global_paypal_mode'] == "production" ? "live" : "test";
-//		if client secret is filled then client id is required and vice versa
-		if ( ! empty( $form_data['user_registration_global_paypal_'.$mode.'_client_id'] ) && empty( $form_data['user_registration_global_paypal_'.$mode.'_client_secret'] ) ) {
+		$mode = $form_data['user_registration_global_paypal_mode'] == 'production' ? 'live' : 'test';
+		// if client secret is filled then client id is required and vice versa
+		if ( ! empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_id' ] ) && empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_secret' ] ) ) {
 			$response['status']  = false;
 			$response['message'] = 'Field client secret is required with client id';
 
 			return $response;
 		}
-		if ( ! empty( $form_data['user_registration_global_paypal_'.$mode.'_client_secret'] ) && empty( $form_data['user_registration_global_paypal_'.$mode.'_client_id'] ) ) {
+		if ( ! empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_secret' ] ) && empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_id' ] ) ) {
 			$response['status']  = false;
 			$response['message'] = 'Field client id is required with client secret';
 
 			return $response;
 		}
 
-		if ( ! empty( $form_data['user_registration_global_paypal_'.$mode.'_client_id'] ) && ! empty( $form_data['user_registration_global_paypal_'.$mode.'_client_secret'] ) && $changed ) {
-			$client_id      = $form_data['user_registration_global_paypal_'.$mode.'_client_id'];
-			$client_secret  = $form_data['user_registration_global_paypal_'.$mode.'_client_secret'];
+		if ( ! empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_id' ] ) && ! empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_secret' ] ) && $changed ) {
+			$client_id      = $form_data[ 'user_registration_global_paypal_' . $mode . '_client_id' ];
+			$client_secret  = $form_data[ 'user_registration_global_paypal_' . $mode . '_client_secret' ];
 			$url            = ( 'production' === $form_data['user_registration_global_paypal_mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';
 			$paypal_service = new \WPEverest\URMembership\Admin\Services\Paypal\PaypalService();
 			$request        = $paypal_service->login_paypal( $url, $client_id, $client_secret );

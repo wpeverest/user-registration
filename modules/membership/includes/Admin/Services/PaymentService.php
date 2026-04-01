@@ -143,7 +143,6 @@ class PaymentService {
 	 * @return array
 	 */
 	public function build_paypal_response( $data, $subscription_id, $member_id, $response_data = array() ) {
-		$paypal_service = new PaypalService();
 		$paypal_service = new NewPaypalService();
 
 		return array(

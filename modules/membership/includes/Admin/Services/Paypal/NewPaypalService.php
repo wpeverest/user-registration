@@ -114,20 +114,20 @@ class NewPaypalService {
 			)
 		);
 
-		// if ( $this->should_fallback_to_legacy_paypal( $context ) ) {
-		//  PaymentGatewayLogging::log_general(
-		//      'paypal',
-		//      'Falling back to legacy PayPal Standard flow',
-		//      'notice',
-		//      array(
-		//          'member_id'        => $member_id,
-		//          'membership_id'    => $membership,
-		//          'fallback_reasons' => $context['fallback_reasons'],
-		//      )
-		//  );
+		if ( $this->should_fallback_to_legacy_paypal( $context ) ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'Falling back to legacy PayPal Standard flow',
+				'notice',
+				array(
+					'member_id'        => $member_id,
+					'membership_id'    => $membership,
+					'fallback_reasons' => $context['fallback_reasons'],
+				)
+			);
 
-		//  return $this->legacy_service->old_build_url( $data, $membership, $member_email, $subscription_id, $member_id, $response_data );
-		// }
+			return $this->legacy_service->build_url( $data, $membership, $member_email, $subscription_id, $member_id, $response_data );
+		}
 
 		if ( $context['is_subscription_upgrade_revise'] ) {
 			return $this->revise_paypal_subscription_for_upgrade( $context );
@@ -153,12 +153,18 @@ class NewPaypalService {
 	 * @return array|WP_Error
 	 */
 	private function prepare_paypal_context( $data, $membership, $member_email, $subscription_id, $member_id, $response_data = array() ) {
-		$is_upgrading                 = ! empty( $data['upgrade'] );
-		$paypal_options               = is_array( isset( $data['payment_gateways']['paypal'] ) ? $data['payment_gateways']['paypal'] : null ) ? $data['payment_gateways']['paypal'] : array();
-		$mode                         = $this->get_paypal_mode();
-		$paypal_options['mode']       = $mode;
-		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
-		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
+		$is_upgrading           = ! empty( $data['upgrade'] );
+		$paypal_options         = is_array( isset( $data['payment_gateways']['paypal'] ) ? $data['payment_gateways']['paypal'] : null ) ? $data['payment_gateways']['paypal'] : array();
+		$mode                   = $this->get_paypal_mode();
+		$paypal_options['mode'] = $mode;
+
+		$cancel_url                   = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
+		$return_url                   = get_option(
+			'user_registration_global_paypal_return_url',
+			wp_login_url()
+		);
+		$paypal_options['cancel_url'] = apply_filters( 'urm_paypal_override_cancel_url', '' === $cancel_url ? home_url() : $cancel_url );
+		$paypal_options['return_url'] = apply_filters( 'urm_paypal_override_return_url', '' === $return_url ? wp_login_url() : $return_url );
 
 		// REST credentials.
 		$paypal_options['client_id']  = get_option(
@@ -349,40 +355,50 @@ class NewPaypalService {
 	private function should_fallback_to_legacy_paypal( &$context ) {
 		$paypal_options = $context['paypal_options'];
 
-		if ( empty( $paypal_options['client_id'] ) || empty( $paypal_options['secret_key'] ) ) {
-			$context['fallback_reasons'][] = 'missing_rest_credentials';
-			return true;
+		if ( ur_string_to_bool( get_option( 'urm_is_new_installation' ) ) ) {
+			return false;
 		}
 
-		if ( $context['is_subscription'] && empty( $context['data']['paypal_plan_id'] ) ) {
-			$context['fallback_reasons'][] = 'missing_paypal_plan_id';
-			return true;
+		if ( empty( $paypal_options['client_id'] ) || empty( $paypal_options['secret_key'] ) ) {
+			$context['fallback_reasons'][] = 'missing_rest_credentials';
+
+			$test_admin_email = get_option( 'user_registration_global_paypal_test_admin_email', '' );
+			$live_admin_email = get_option( 'user_registration_global_paypal_live_admin_email', '' );
+			$mode             = $this->get_paypal_mode();
+
+			if ( ( 'test' === $mode && ! empty( $test_admin_email ) ) || ( 'production' === $mode && ! empty( $live_admin_email ) ) ) {
+				$context['fallback_reasons'][] = 'Old flow due to missing client id and secrete key';
+
+				return true;
+			}
+
+			return false;
 		}
 
 		// Legacy trial/proration/delayed upgrade flows are not a clean 1:1 REST map.
-		if (
-			$context['is_subscription'] &&
-			$context['is_upgrading'] &&
-			(
-				! empty( $context['data']['trial_status'] ) ||
-				! empty( $context['data']['chargeable_amount'] )
-			)
-		) {
-			$context['fallback_reasons'][] = 'subscription_upgrade_with_trial_or_proration';
-			return true;
-		}
+		// if (
+		//  $context['is_subscription'] &&
+		//  $context['is_upgrading'] &&
+		//  (
+		//      ! empty( $context['data']['trial_status'] ) ||
+		//      ! empty( $context['data']['chargeable_amount'] )
+		//  )
+		// ) {
+		//  $context['fallback_reasons'][] = 'subscription_upgrade_with_trial_or_proration';
+		//  return true;
+		// }
 
 		// Team subscription must have quantity when plan is quantity based.
-		if (
-			$context['is_subscription'] &&
-			$context['has_team'] &&
-			! empty( $context['data']['team_data']['seat_model'] ) &&
-			'fixed' !== $context['data']['team_data']['seat_model'] &&
-			empty( $context['team_quantity'] )
-		) {
-			$context['fallback_reasons'][] = 'team_subscription_missing_quantity';
-			return true;
-		}
+		// if (
+		//  $context['is_subscription'] &&
+		//  $context['has_team'] &&
+		//  ! empty( $context['data']['team_data']['seat_model'] ) &&
+		//  'fixed' !== $context['data']['team_data']['seat_model'] &&
+		//  empty( $context['team_quantity'] )
+		// ) {
+		//  $context['fallback_reasons'][] = 'team_subscription_missing_quantity';
+		//  return true;
+		// }
 
 		return false;
 	}
@@ -903,6 +919,9 @@ class NewPaypalService {
 		$is_renewing              = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'], true );
 		$is_rest_one_time_payment = ( 'paid' === $member_order['order_type'] || 'one-time' === $membership_type );
 
+		error_log( print_r( $_GET, true ) );
+		error_log( print_r( $order_token, true ) );
+
 		// if buyer already returned and internal order is completed, just redirect .
 		// if ( 'completed' === ( isset( $member_order['status'] ) ? $member_order['status'] : '' ) ) {
 		//  ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
@@ -920,6 +939,7 @@ class NewPaypalService {
 						'paypal_order_id' => $order_token,
 						'member_id'       => $member_id,
 						'message'         => $capture_response->get_error_message(),
+						'error_data'      => $capture_response->get_error_data(),
 					)
 				);
 				return;
@@ -931,8 +951,8 @@ class NewPaypalService {
 			$this->members_orders_repository->update(
 				$member_order['ID'],
 				array(
-					'status' => 'completed',
-					// 'transaction_id' => $transaction_id,
+					'status'         => 'completed',
+					'transaction_id' => $transaction_id,
 				)
 			);
 
@@ -1797,7 +1817,7 @@ class NewPaypalService {
 		return $this->paypal_rest_request(
 			'POST',
 			'/v2/checkout/orders/' . rawurlencode( $order_id ) . '/capture',
-			array(),
+			null,
 			$paypal_options
 		);
 	}
