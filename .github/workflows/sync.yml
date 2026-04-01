@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - refactor/logger-strucuture
+            - UR-4269-refactor/paypal-connection-to-rest-api-method
         workflow_dispatch:
 jobs:
     sync:
