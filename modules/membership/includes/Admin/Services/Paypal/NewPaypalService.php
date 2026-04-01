@@ -154,7 +154,7 @@ class NewPaypalService {
 	 */
 	private function prepare_paypal_context( $data, $membership, $member_email, $subscription_id, $member_id, $response_data = array() ) {
 		$is_upgrading                 = ! empty( $data['upgrade'] );
-		$paypal_options               = is_array( $data['payment_gateways']['paypal'] ?? null ) ? $data['payment_gateways']['paypal'] : array();
+		$paypal_options               = is_array( isset( $data['payment_gateways']['paypal'] ) ? $data['payment_gateways']['paypal'] : null ) ? $data['payment_gateways']['paypal'] : array();
 		$mode                         = $this->get_paypal_mode();
 		$paypal_options['mode']       = $mode;
 		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
@@ -163,11 +163,11 @@ class NewPaypalService {
 		// REST credentials.
 		$paypal_options['client_id']  = get_option(
 			sprintf( 'user_registration_global_paypal_%s_client_id', $mode ),
-			$paypal_options['client_id'] ?? get_option( 'user_registration_global_paypal_client_id', '' )
+			isset( $paypal_options['client_id'] ) ? $paypal_options['client_id'] : get_option( 'user_registration_global_paypal_client_id', '' )
 		);
 		$paypal_options['secret_key'] = get_option(
 			sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ),
-			$paypal_options['secret_key'] ?? get_option( 'user_registration_global_paypal_client_secret', '' )
+			isset( $paypal_options['secret_key'] ) ? $paypal_options['secret_key'] : get_option( 'user_registration_global_paypal_client_secret', '' )
 		);
 
 		// Optional fallback email for compatibility and validation.
@@ -192,12 +192,12 @@ class NewPaypalService {
 		$has_team = ! empty( $data['team_id'] ) && ! empty( $data['team_data'] );
 
 		if ( $has_team ) {
-			$membership_type = $data['team_data']['team_plan_type'] ?? 'unknown';
+			$membership_type = isset( $data['team_data']['team_plan_type'] ) ? $data['team_data']['team_plan_type'] : 'unknown';
 			if ( 'one-time' === $membership_type ) {
 				$membership_type = 'paid';
 			}
 		} else {
-			$membership_type = $membership_metas['type'] ?? 'unknown';
+			$membership_type = isset( $membership_metas['type'] ) ? $membership_metas['type'] : 'unknown';
 		}
 
 		$membership_amount = $this->resolve_membership_amount_or_fail( $data, $membership_metas, $member_id );
@@ -210,8 +210,8 @@ class NewPaypalService {
 		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $data['current_membership_id'], $membership_process['renew'], true );
 
 		$currency       = get_option( 'user_registration_payment_currency', 'USD' );
-		$local_currency = $response_data['switched_currency'] ?? '';
-		$ur_zone_id     = $response_data['urm_zone_id'] ?? '';
+		$local_currency = isset( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
+		$ur_zone_id     = isset( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
 
 		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
 			$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
@@ -234,12 +234,12 @@ class NewPaypalService {
 		$discount_value = 0.0;
 
 		if ( $is_upgrading ) {
-			$final_amount = (float) ( $data['amount'] ?? $final_amount );
+			$final_amount = (float) ( isset( $data['amount'] ) ? $data['amount'] : $final_amount );
 		} elseif ( ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details = ur_get_coupon_details( $data['coupon'] );
-			$discount_value = ( 'fixed' === ( $coupon_details['coupon_discount_type'] ?? '' ) )
-				? (float) ( $coupon_details['coupon_discount'] ?? 0 )
-				: ( $final_amount * (float) ( $coupon_details['coupon_discount'] ?? 0 ) / 100 );
+			$discount_value = ( 'fixed' === ( isset( $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount_type'] : '' ) )
+				? (float) ( isset( $coupon_details['coupon_discount'] ) ? $coupon_details['coupon_discount'] : 0 )
+				: ( $final_amount * (float) ( isset( $coupon_details['coupon_discount'] ) ? $coupon_details['coupon_discount'] : 0 ) / 100 );
 
 			$final_amount = max( 0.0, (float) user_registration_sanitize_amount( $final_amount - $discount_value ) );
 		}
@@ -271,15 +271,15 @@ class NewPaypalService {
 			)
 		);
 
-		$item_name = $membership_data['post_title'] ?? __( 'Membership Purchase', 'user-registration' );
+		$item_name = isset( $membership_data['post_title'] ) ? $membership_data['post_title'] : __( 'Membership Purchase', 'user-registration' );
 
 		if ( 'subscription' === $membership_type ) {
 			$duration_data = $has_team
 				? array(
-					'value'    => $data['team_data']['team_duration_value'] ?? 1,
-					'duration' => $data['team_data']['team_duration_period'] ?? '',
+					'value'    => isset( $data['team_data']['team_duration_value'] ) ? $data['team_data']['team_duration_value'] : 1,
+					'duration' => isset( $data['team_data']['team_duration_period'] ) ? $data['team_data']['team_duration_period'] : '',
 				)
-				: ( $data['subscription'] ?? array() );
+				: ( isset( $data['subscription'] ) ? $data['subscription'] : array() );
 
 			if ( ! empty( $duration_data['duration'] ) ) {
 				$currency_symbol = 'USD' === $currency ? '$' : $currency;
@@ -401,12 +401,12 @@ class NewPaypalService {
 
 		if ( ! empty( $data['team_id'] ) && ! empty( $data['team_data'] ) ) {
 			$team_data  = $data['team_data'];
-			$seat_model = $team_data['seat_model'] ?? '';
+			$seat_model = isset( $team_data['seat_model'] ) ? $team_data['seat_model'] : '';
 
 			if ( 'fixed' === $seat_model ) {
-				$membership_amount = (float) ( $team_data['team_price'] ?? 0 );
+				$membership_amount = (float) ( isset( $team_data['team_price'] ) ? $team_data['team_price'] : 0 );
 			} else {
-				$team_seats = absint( $team_data['team_seats'] ?? 0 );
+				$team_seats = absint( isset( $team_data['team_seats'] ) ? $team_data['team_seats'] : 0 );
 
 				if ( $team_seats <= 0 ) {
 					PaymentGatewayLogging::log_error(
@@ -428,12 +428,12 @@ class NewPaypalService {
 					);
 				}
 
-				$pricing_model = $team_data['pricing_model'] ?? '';
+				$pricing_model = isset( $team_data['pricing_model'] ) ? $team_data['pricing_model'] : '';
 
 				if ( 'per_seat' === $pricing_model ) {
-					$membership_amount = $team_seats * (float) ( $team_data['per_seat_price'] ?? 0 );
+					$membership_amount = $team_seats * (float) ( isset( $team_data['per_seat_price'] ) ? $team_data['per_seat_price'] : 0 );
 				} else {
-					$tier = $data['team_tier_info'] ?? '';
+					$tier = isset( $data['team_tier_info'] ) ? $data['team_tier_info'] : '';
 
 					if ( empty( $tier ) ) {
 						PaymentGatewayLogging::log_error(
@@ -455,11 +455,11 @@ class NewPaypalService {
 						);
 					}
 
-					$membership_amount = $team_seats * (float) ( $data['team_tier_info']['tier_per_seat_price'] ?? 0 );
+					$membership_amount = $team_seats * (float) ( isset( $data['team_tier_info']['tier_per_seat_price'] ) ? $data['team_tier_info']['tier_per_seat_price'] : 0 );
 				}
 			}
 		} else {
-			$membership_amount = (float) ( $membership_metas['amount'] ?? 0 );
+			$membership_amount = (float) ( isset( $membership_metas['amount'] ) ? $membership_metas['amount'] : 0 );
 		}
 
 		return (float) $membership_amount;
@@ -478,14 +478,14 @@ class NewPaypalService {
 		}
 
 		$team_data     = $data['team_data'];
-		$seat_model    = $team_data['seat_model'] ?? '';
-		$pricing_model = $team_data['pricing_model'] ?? '';
+		$seat_model    = isset( $team_data['seat_model'] ) ? $team_data['seat_model'] : '';
+		$pricing_model = isset( $team_data['pricing_model'] ) ? $team_data['pricing_model'] : '';
 
 		if ( 'fixed' === $seat_model ) {
 			return '';
 		}
 
-		$team_seats = absint( $team_data['team_seats'] ?? 0 );
+		$team_seats = absint( isset( $team_data['team_seats'] ) ? $team_data['team_seats'] : 0 );
 		if ( $team_seats <= 0 ) {
 			return '';
 		}
@@ -558,7 +558,7 @@ class NewPaypalService {
 				'member_id'       => $context['member_id'],
 				'membership_id'   => $context['membership'],
 				'subscription_id' => $context['subscription_id'],
-				'paypal_order_id' => $response['id'] ?? '',
+				'paypal_order_id' => isset( $response['id'] ) ? $response['id'] : '',
 				'amount'          => $context['final_amount'],
 				'currency'        => $context['currency'],
 			)
@@ -575,7 +575,7 @@ class NewPaypalService {
 	 * @return string|WP_Error
 	 */
 	private function create_paypal_subscription_order( $context ) {
-		$plan_id = $context['data']['paypal_plan_id'] ?? '';
+		$plan_id = isset( $context['data']['paypal_plan_id'] ) ? $context['data']['paypal_plan_id'] : '';
 
 		$plan_id = $this->get_or_create_paypal_plan_id( $context );
 		if ( is_wp_error( $plan_id ) ) {
@@ -645,7 +645,7 @@ class NewPaypalService {
 				'member_id'              => $context['member_id'],
 				'membership_id'          => $context['membership'],
 				'subscription_id'        => $context['subscription_id'],
-				'paypal_subscription_id' => $response['id'] ?? '',
+				'paypal_subscription_id' => isset( $response['id'] ) ? $response['id'] : '',
 				'team_quantity'          => $context['team_quantity'],
 			)
 		);
@@ -662,7 +662,7 @@ class NewPaypalService {
 	 */
 	private function revise_paypal_subscription_for_upgrade( $context ) {
 		$paypal_subscription_id = $context['existing_paypal_subscription_id'];
-		$new_plan_id            = $context['data']['paypal_plan_id'] ?? '';
+		$new_plan_id            = isset( $context['data']['paypal_plan_id'] ) ? $context['data']['paypal_plan_id'] : '';
 
 		if ( empty( $paypal_subscription_id ) || empty( $new_plan_id ) ) {
 			return new WP_Error(
@@ -736,12 +736,12 @@ class NewPaypalService {
 
 		if ( $needs_custom_price ) {
 			$subscription_data = ! empty( $context['has_team'] ) ? array(
-				'duration' => $context['data']['team_data']['team_duration_period'] ?? '',
-				'value'    => $context['data']['team_data']['team_duration_value'] ?? 1,
-			) : ( $context['data']['subscription'] ?? array() );
+				'duration' => isset( $context['data']['team_data']['team_duration_period'] ) ? $context['data']['team_data']['team_duration_period'] : '',
+				'value'    => isset( $context['data']['team_data']['team_duration_value'] ) ? $context['data']['team_data']['team_duration_value'] : 1,
+			) : ( isset( $context['data']['subscription'] ) ? $context['data']['subscription'] : array() );
 
-			$duration = strtoupper( substr( (string) ( $subscription_data['duration'] ?? '' ), 0, 1 ) );
-			$value    = max( 1, (int) ( $subscription_data['value'] ?? 1 ) );
+			$duration = strtoupper( substr( (string) ( isset( $subscription_data['duration'] ) ? $subscription_data['duration'] : '' ), 0, 1 ) );
+			$value    = max( 1, (int) ( isset( $subscription_data['value'] ) ? $subscription_data['value'] : 1 ) );
 
 			$interval_unit_map = array(
 				'D' => 'DAY',
@@ -836,14 +836,14 @@ class NewPaypalService {
 	public function handle_paypal_redirect_response( $params, $payer_id ) {
 		parse_str( $params, $url_params );
 
-		$membership_id = absint( $url_params['membership'] ?? 0 );
-		$member_id     = absint( $url_params['member_id'] ?? 0 );
+		$membership_id = absint( isset( $url_params['membership'] ) ? $url_params['membership'] : 0 );
+		$member_id     = absint( isset( $url_params['member_id'] ) ? $url_params['member_id'] : 0 );
 
 		if ( empty( $membership_id ) || empty( $member_id ) ) {
 			return;
 		}
 
-		$supplied_hash             = $url_params['hash'] ?? '';
+		$supplied_hash             = isset( $url_params['hash'] ) ? $url_params['hash'] : '';
 		$paypal_verification_token = get_user_meta( $member_id, 'urm_paypal_verification_token', true );
 		$expected_hash             = wp_hash( $membership_id . ',' . $member_id . ',' . $paypal_verification_token );
 
@@ -881,8 +881,8 @@ class NewPaypalService {
 
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas               = is_array( $membership_metas ) ? $membership_metas : array();
-		$membership_metas['post_title'] = $membership['post_title'] ?? '';
-		$membership_type                = $membership_metas['type'] ?? 'unknown';
+		$membership_metas['post_title'] = isset( $membership['post_title'] ) ? $membership['post_title'] : '';
+		$membership_type                = isset( $membership_metas['type'] ) ? $membership_metas['type'] : 'unknown';
 		$membership_process             = urm_get_membership_process( $member_id );
 
 		PaymentGatewayLogging::log_webhook_received(
@@ -897,14 +897,14 @@ class NewPaypalService {
 			)
 		);
 
-		$order_token              = sanitize_text_field( $_GET['token'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$paypal_subscription_id   = sanitize_text_field( $_GET['subscription_id'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$order_token              = sanitize_text_field( isset( $_GET['token'] ) ? $_GET['token'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$paypal_subscription_id   = sanitize_text_field( isset( $_GET['subscription_id'] ) ? $_GET['subscription_id'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$member_subscription      = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
 		$is_renewing              = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'], true );
 		$is_rest_one_time_payment = ( 'paid' === $member_order['order_type'] || 'one-time' === $membership_type );
 
 		// if buyer already returned and internal order is completed, just redirect .
-		// if ( 'completed' === ( $member_order['status'] ?? '' ) ) {
+		// if ( 'completed' === ( isset( $member_order['status'] ) ? $member_order['status'] : '' ) ) {
 		//  ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 		// }
 
@@ -969,7 +969,7 @@ class NewPaypalService {
 				return;
 			}
 
-			$new_status = 'ACTIVE' === strtoupper( $subscription_details['status'] ?? '' ) ? 'active' : 'pending';
+			$new_status = 'ACTIVE' === strtoupper( isset( $subscription_details['status'] ) ? $subscription_details['status'] : '' ) ? 'active' : 'pending';
 
 			$this->members_orders_repository->update(
 				$member_order['ID'],
@@ -983,7 +983,7 @@ class NewPaypalService {
 				$this->members_subscription_repository->update(
 					$member_subscription['ID'],
 					array(
-						'status'          => ( 'on' === ( $member_order['trial_status'] ?? '' ) ? 'trial' : $new_status ),
+						'status'          => ( 'on' === ( isset( $member_order['trial_status'] ) ? $member_order['trial_status'] : '' ) ? 'trial' : $new_status ),
 						'start_date'      => date( 'Y-m-d 00:00:00' ),
 						'subscription_id' => sanitize_text_field( $paypal_subscription_id ),
 					)
@@ -1060,7 +1060,7 @@ class NewPaypalService {
 				'Payment successful email failed',
 				array(
 					'member_id'       => $member_id,
-					'subscription_id' => $member_subscription['ID'] ?? '',
+					'subscription_id' => isset( $member_subscription['ID'] ) ? $member_subscription['ID'] : '',
 				)
 			);
 			return;
@@ -1071,7 +1071,7 @@ class NewPaypalService {
 			'Payment successful email sent',
 			array(
 				'member_id'       => $member_id,
-				'subscription_id' => $member_subscription['ID'] ?? '',
+				'subscription_id' => isset( $member_subscription['ID'] ) ? $member_subscription['ID'] : '',
 			)
 		);
 	}
@@ -1117,7 +1117,7 @@ class NewPaypalService {
 			'notice',
 			array(
 				'member_id'           => $member_id,
-				'old_subscription_id' => $get_user_old_subscription['ID'] ?? 'unknown',
+				'old_subscription_id' => isset( $get_user_old_subscription['ID'] ) ? $get_user_old_subscription['ID'] : 'unknown',
 				'new_subscription_id' => $subscription_id,
 			)
 		);
@@ -1132,8 +1132,8 @@ class NewPaypalService {
 						'Failed to cancel previous subscription during upgrade',
 						array(
 							'member_id'           => $member_id,
-							'old_subscription_id' => $get_user_old_subscription['subscription_id'] ?? '',
-							'message'             => $cancel_subscription['message'] ?? '',
+							'old_subscription_id' => isset( $get_user_old_subscription['subscription_id'] ) ? $get_user_old_subscription['subscription_id'] : '',
+							'message'             => isset( $cancel_subscription['message'] ) ? $cancel_subscription['message'] : '',
 						)
 					);
 				}
@@ -1189,15 +1189,15 @@ class NewPaypalService {
 			return false;
 		}
 
-		$event_type = sanitize_text_field( $event['event_type'] ?? '' );
-		$resource   = $event['resource'] ?? array();
+		$event_type = sanitize_text_field( isset( $event['event_type'] ) ? $event['event_type'] : '' );
+		$resource   = isset( $event['resource'] ) ? $event['resource'] : array();
 
 		PaymentGatewayLogging::log_webhook_received(
 			'paypal',
 			'PayPal REST webhook received',
 			array(
 				'webhook_type' => $event_type,
-				'resource_id'  => $resource['id'] ?? '',
+				'resource_id'  => isset( $resource['id'] ) ? $resource['id'] : '',
 			)
 		);
 
@@ -1236,7 +1236,7 @@ class NewPaypalService {
 	 * @return bool
 	 */
 	private function handle_order_webhook_event( $event_type, $resource ) {
-		$custom_id = $resource['purchase_units'][0]['custom_id'] ?? '';
+		$custom_id = isset( $resource['purchase_units'][0]['custom_id'] ) ? $resource['purchase_units'][0]['custom_id'] : '';
 		if ( empty( $custom_id ) ) {
 			return false;
 		}
@@ -1300,12 +1300,12 @@ class NewPaypalService {
 	 * @return bool
 	 */
 	private function handle_subscription_webhook_event( $event_type, $resource ) {
-		$custom_id = $resource['custom_id'] ?? '';
+		$custom_id = isset( $resource['custom_id'] ) ? $resource['custom_id'] : '';
 		$parsed    = $this->parse_custom_id( $custom_id );
 
-		$member_id              = absint( $parsed['member_id'] ?? 0 );
-		$subscription_row_id    = $parsed['subscription_id'] ?? '';
-		$paypal_subscription_id = sanitize_text_field( $resource['id'] ?? '' );
+		$member_id              = absint( isset( $parsed['member_id'] ) ? $parsed['member_id'] : 0 );
+		$subscription_row_id    = isset( $parsed['subscription_id'] ) ? $parsed['subscription_id'] : '';
+		$paypal_subscription_id = sanitize_text_field( isset( $resource['id'] ) ? $resource['id'] : '' );
 
 		if ( empty( $member_id ) || empty( $subscription_row_id ) ) {
 			return false;
@@ -1319,13 +1319,13 @@ class NewPaypalService {
 		$status_map = array(
 			'BILLING.SUBSCRIPTION.CREATED'   => 'pending',
 			'BILLING.SUBSCRIPTION.ACTIVATED' => 'active',
-			'BILLING.SUBSCRIPTION.UPDATED'   => $member_subscription['status'] ?? 'active',
+			'BILLING.SUBSCRIPTION.UPDATED'   => isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'active',
 			'BILLING.SUBSCRIPTION.SUSPENDED' => 'suspended',
 			'BILLING.SUBSCRIPTION.CANCELLED' => 'canceled',
 			'BILLING.SUBSCRIPTION.EXPIRED'   => 'expired',
 		);
 
-		$new_status = $status_map[ $event_type ] ?? ( $member_subscription['status'] ?? 'pending' );
+		$new_status = isset( $status_map[ $event_type ] ) ? $status_map[ $event_type ] : ( isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'pending' );
 
 		$this->members_subscription_repository->update(
 			$member_subscription['ID'],
@@ -1375,10 +1375,10 @@ class NewPaypalService {
 		$parts = explode( '-', (string) $custom_id );
 
 		return array(
-			'membership'            => $parts[0] ?? '',
-			'member_id'             => $parts[1] ?? '',
-			'current_membership_id' => $parts[2] ?? '',
-			'subscription_id'       => $parts[3] ?? '',
+			'membership'            => isset( $parts[0] ) ? $parts[0] : '',
+			'member_id'             => isset( $parts[1] ) ? $parts[1] : '',
+			'current_membership_id' => isset( $parts[2] ) ? $parts[2] : '',
+			'subscription_id'       => isset( $parts[3] ) ? $parts[3] : '',
 		);
 	}
 
@@ -1539,7 +1539,7 @@ class NewPaypalService {
 			'message' => '',
 		);
 
-		$paypal_sub_id = $subscription['sub_id'] ?? $subscription['subscription_id'] ?? '';
+		$paypal_sub_id = isset( $subscription['sub_id'] ) ? $subscription['sub_id'] : ( isset( $subscription['subscription_id'] ) ? $subscription['subscription_id'] : '' );
 		if ( empty( $paypal_sub_id ) ) {
 			$response['message'] = __( 'Subscription ID not found', 'user-registration' );
 			return $response;
@@ -1553,7 +1553,7 @@ class NewPaypalService {
 			return $response;
 		}
 
-		$paypal_status = strtoupper( $subscription_lookup['status'] ?? '' );
+		$paypal_status = strtoupper( isset( $subscription_lookup['status'] ) ? $subscription_lookup['status'] : '' );
 
 		if ( in_array( $paypal_status, array( 'SUSPENDED', 'CANCELLED' ), true ) ) {
 			$reactivate = $this->activate_paypal_subscription(
@@ -1670,9 +1670,9 @@ class NewPaypalService {
 	 * @return string|WP_Error
 	 */
 	private function get_paypal_access_token( $paypal_options ) {
-		$client_id  = trim( (string) ( $paypal_options['client_id'] ?? '' ) );
-		$secret_key = trim( (string) ( $paypal_options['secret_key'] ?? '' ) );
-		$mode       = $paypal_options['mode'] ?? 'test';
+		$client_id  = trim( (string) ( isset( $paypal_options['client_id'] ) ? $paypal_options['client_id'] : '' ) );
+		$secret_key = trim( (string) ( isset( $paypal_options['secret_key'] ) ? $paypal_options['secret_key'] : '' ) );
+		$mode       = isset( $paypal_options['mode'] ) ? $paypal_options['mode'] : 'test';
 
 		if ( '' === $client_id || '' === $secret_key ) {
 			return new WP_Error(
@@ -1707,7 +1707,7 @@ class NewPaypalService {
 		if ( $status < 200 || $status >= 300 || empty( $body['access_token'] ) ) {
 			return new WP_Error(
 				'paypal_access_token_failed',
-				$body['error_description'] ?? __( 'Unable to retrieve PayPal access token.', 'user-registration' ),
+				isset( $body['error_description'] ) ? $body['error_description'] : __( 'Unable to retrieve PayPal access token.', 'user-registration' ),
 				$body
 			);
 		}
@@ -1747,7 +1747,7 @@ class NewPaypalService {
 		}
 
 		$response = wp_remote_request(
-			$this->get_paypal_api_base_url( $paypal_options['mode'] ?? 'test' ) . $path,
+			$this->get_paypal_api_base_url( isset( $paypal_options['mode'] ) ? $paypal_options['mode'] : 'test' ) . $path,
 			$args
 		);
 
@@ -1762,7 +1762,7 @@ class NewPaypalService {
 		if ( $status < 200 || $status >= 300 ) {
 			return new WP_Error(
 				'paypal_rest_request_failed',
-				$parsed['message'] ?? __( 'PayPal API request failed.', 'user-registration' ),
+				isset( $parsed['message'] ) ? $parsed['message'] : __( 'PayPal API request failed.', 'user-registration' ),
 				array(
 					'status' => $status,
 					'body'   => $parsed,
@@ -1914,7 +1914,7 @@ class NewPaypalService {
 	 */
 	private function get_or_create_paypal_plan_id( $context ) {
 		// 1. Runtime-provided plan id.
-		$plan_id = $context['data']['paypal_plan_id'] ?? '';
+		$plan_id = isset( $context['data']['paypal_plan_id'] ) ? $context['data']['paypal_plan_id'] : '';
 		if ( ! empty( $plan_id ) ) {
 			return sanitize_text_field( $plan_id );
 		}
@@ -1942,7 +1942,7 @@ class NewPaypalService {
 			return $plan_response;
 		}
 
-		$plan_id = $plan_response['id'] ?? '';
+		$plan_id = isset( $plan_response['id'] ) ? $plan_response['id'] : '';
 		if ( empty( $plan_id ) ) {
 			return new \WP_Error(
 				'paypal_plan_create_failed',
@@ -1969,8 +1969,8 @@ class NewPaypalService {
 		}
 
 		$product_payload = array(
-			'name'        => sanitize_text_field( $context['membership_data']['post_title'] ?? 'Membership' ),
-			'description' => sanitize_text_field( $context['membership_data']['post_title'] ?? 'Membership subscription product' ),
+			'name'        => sanitize_text_field( isset( $context['membership_data']['post_title'] ) ? $context['membership_data']['post_title'] : 'Membership' ),
+			'description' => sanitize_text_field( isset( $context['membership_data']['post_title'] ) ? $context['membership_data']['post_title'] : 'Membership subscription product' ),
 			'type'        => 'SERVICE',
 			'category'    => 'SOFTWARE',
 		);
@@ -1981,7 +1981,7 @@ class NewPaypalService {
 			return $product_response;
 		}
 
-		$product_id = $product_response['id'] ?? '';
+		$product_id = isset( $product_response['id'] ) ? $product_response['id'] : '';
 		if ( empty( $product_id ) ) {
 			return new \WP_Error(
 				'paypal_product_create_failed',
@@ -2004,13 +2004,13 @@ class NewPaypalService {
 	private function build_paypal_plan_payload( $context, $product_id ) {
 		$subscription_data = ! empty( $context['has_team'] )
 		? array(
-			'duration' => $context['data']['team_data']['team_duration_period'] ?? '',
-			'value'    => $context['data']['team_data']['team_duration_value'] ?? 1,
+			'duration' => isset( $context['data']['team_data']['team_duration_period'] ) ? $context['data']['team_data']['team_duration_period'] : '',
+			'value'    => isset( $context['data']['team_data']['team_duration_value'] ) ? $context['data']['team_data']['team_duration_value'] : 1,
 		)
-		: ( $context['data']['subscription'] ?? array() );
+		: ( isset( $context['data']['subscription'] ) ? $context['data']['subscription'] : array() );
 
-		$duration = strtoupper( substr( (string) ( $subscription_data['duration'] ?? '' ), 0, 1 ) );
-		$value    = max( 1, (int) ( $subscription_data['value'] ?? 1 ) );
+		$duration = strtoupper( substr( (string) ( isset( $subscription_data['duration'] ) ? $subscription_data['duration'] : '' ), 0, 1 ) );
+		$value    = max( 1, (int) ( isset( $subscription_data['value'] ) ? $subscription_data['value'] : 1 ) );
 
 		$interval_unit_map = array(
 			'D' => 'DAY',
@@ -2019,7 +2019,7 @@ class NewPaypalService {
 			'Y' => 'YEAR',
 		);
 
-		$interval_unit = $interval_unit_map[ $duration ] ?? 'MONTH';
+		$interval_unit = isset( $interval_unit_map[ $duration ] ) ? $interval_unit_map[ $duration ] : 'MONTH';
 
 		$billing_cycles = array(
 			array(
@@ -2044,9 +2044,9 @@ class NewPaypalService {
 		'on' === $context['data']['trial_status'] &&
 		! empty( $context['data']['trial_data'] )
 		) {
-			$trial_duration = strtoupper( substr( (string) ( $context['data']['trial_data']['duration'] ?? '' ), 0, 1 ) );
-			$trial_value    = max( 1, (int) ( $context['data']['trial_data']['value'] ?? 1 ) );
-			$trial_unit     = $interval_unit_map[ $trial_duration ] ?? 'MONTH';
+			$trial_duration = strtoupper( substr( (string) ( isset( $context['data']['trial_data']['duration'] ) ? $context['data']['trial_data']['duration'] : '' ), 0, 1 ) );
+			$trial_value    = max( 1, (int) ( isset( $context['data']['trial_data']['value'] ) ? $context['data']['trial_data']['value'] : 1 ) );
+			$trial_unit     = isset( $interval_unit_map[ $trial_duration ] ) ? $interval_unit_map[ $trial_duration ] : 'MONTH';
 
 			$billing_cycles = array(
 				array(
@@ -2078,8 +2078,8 @@ class NewPaypalService {
 
 		$payload = array(
 			'product_id'          => sanitize_text_field( $product_id ),
-			'name'                => sanitize_text_field( $context['membership_data']['post_title'] ?? 'Membership Plan' ),
-			'description'         => sanitize_text_field( $context['item_name'] ?? 'Membership subscription plan' ),
+			'name'                => sanitize_text_field( isset( $context['membership_data']['post_title'] ) ? $context['membership_data']['post_title'] : 'Membership Plan' ),
+			'description'         => sanitize_text_field( isset( $context['item_name'] ) ? $context['item_name'] : 'Membership subscription plan' ),
 			'status'              => 'ACTIVE',
 			'billing_cycles'      => $billing_cycles,
 			'payment_preferences' => array(
@@ -2112,22 +2112,22 @@ class NewPaypalService {
 	private function build_paypal_plan_cache_key( $context ) {
 		$subscription_data = ! empty( $context['has_team'] )
 		? array(
-			'duration' => $context['data']['team_data']['team_duration_period'] ?? '',
-			'value'    => $context['data']['team_data']['team_duration_value'] ?? 1,
+			'duration' => isset( $context['data']['team_data']['team_duration_period'] ) ? $context['data']['team_data']['team_duration_period'] : '',
+			'value'    => isset( $context['data']['team_data']['team_duration_value'] ) ? $context['data']['team_data']['team_duration_value'] : 1,
 		)
-		: ( $context['data']['subscription'] ?? array() );
+		: ( isset( $context['data']['subscription'] ) ? $context['data']['subscription'] : array() );
 
 		return wp_json_encode(
 			array(
 				'membership_id' => $context['membership'],
 				'currency'      => $context['currency'],
 				'amount'        => $context['final_amount'],
-				'duration'      => $subscription_data['duration'] ?? '',
-				'value'         => $subscription_data['value'] ?? 1,
-				'team_quantity' => $context['team_quantity'] ?? '',
-				'trial_status'  => $context['data']['trial_status'] ?? '',
-				'trial_data'    => $context['data']['trial_data'] ?? array(),
-				'tax_rate'      => $context['tax_rate'] ?? 0,
+				'duration'      => isset( $subscription_data['duration'] ) ? $subscription_data['duration'] : '',
+				'value'         => isset( $subscription_data['value'] ) ? $subscription_data['value'] : 1,
+				'team_quantity' => isset( $context['team_quantity'] ) ? $context['team_quantity'] : '',
+				'trial_status'  => isset( $context['data']['trial_status'] ) ? $context['data']['trial_status'] : '',
+				'trial_data'    => isset( $context['data']['trial_data'] ) ? $context['data']['trial_data'] : array(),
+				'tax_rate'      => isset( $context['tax_rate'] ) ? $context['tax_rate'] : 0,
 			)
 		);
 	}
