@@ -159,29 +159,33 @@ class AJAX {
 			// Add session divider
 			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
 				$payment_gateway,
-				'========== NEW PAYMENT SESSION ==========',
-				'notice',
-				array(
-					'timestamp'       => current_time( 'mysql' ),
-					'membership_type' => $membership_type,
-					'username'        => $member->user_login,
-				)
+				sprintf( ' [Member ID #%s] ========== ***NEW PAYMENT SESSION*** ==========', $member_id ) . "\n" . wp_json_encode(
+					array(
+						'timestamp'       => current_time( 'mysql' ),
+						'membership_type' => $membership_type,
+						'username'        => $member->user_login,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'notice'
 			);
 
 			// Log form submission
 			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
 				$payment_gateway,
-				'Membership registration form submitted',
-				'info',
-				array(
-					'event_type'      => 'form_submission',
-					'member_id'       => $member_id,
-					'username'        => $member->user_login,
-					'email'           => $member->user_email,
-					'membership_id'   => $data['membership'] ?? 'N/A',
-					'payment_method'  => $payment_gateway,
-					'membership_type' => $membership_type,
-				)
+				sprintf( ' [Member ID #%s] Membership registration form submitted.', $member_id ) . "\n" . wp_json_encode(
+					array(
+						'event_type'      => 'form_submission',
+						'member_id'       => $member_id,
+						'username'        => $member->user_login,
+						'email'           => $member->user_email,
+						'membership_id'   => $data['membership'] ?? 'N/A',
+						'payment_method'  => $payment_gateway,
+						'membership_type' => $membership_type,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
 			);
 		}
 
@@ -196,32 +200,37 @@ class AJAX {
 
 			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
 				$payment_gateway,
-				'Order and subscription created - Status: ' . $initial_status,
-				'info',
-				array(
-					'event_type'      => 'status_change',
-					'member_id'       => $member_id,
-					'subscription_id' => $response['subscription_id'] ?? 'N/A',
-					'transaction_id'  => $response['transaction_id'] ?? 'N/A',
-					'status'          => $initial_status,
-					'membership_id'   => $data['membership'] ?? 'N/A',
-					'membership_type' => $membership_type,
-				)
+				sprintf( ' [Member ID #%s] Order and subscription created - Status: %s', $member_id, $initial_status ) . "\n" . wp_json_encode(
+					array(
+						'event_type'      => 'status_change',
+						'member_id'       => $member_id,
+						'subscription_id' => $response['subscription_id'] ?? 'N/A',
+						'transaction_id'  => $response['transaction_id'] ?? 'N/A',
+						'status'          => $initial_status,
+						'membership_id'   => $data['membership'] ?? 'N/A',
+						'membership_type' => $membership_type,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
 			);
 
 			// Log activation for free and bank immediately
 			if ( 'free' === $payment_gateway ) {
-				\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_transaction_success(
+				\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
 					$payment_gateway,
-					'Subscription activated successfully',
-					array(
-						'member_id'       => $member_id,
-						'subscription_id' => $response['subscription_id'] ?? 'N/A',
-						'status'          => 'active',
-						'payment_method'  => $payment_gateway,
-						'membership_type' => $membership_type,
-						'auto_activated'  => true,
-					)
+					sprintf( ' [Member ID #%s] Subscription activated successfully.', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'member_id'       => $member_id,
+							'subscription_id' => $response['subscription_id'] ?? 'N/A',
+							'status'          => 'active',
+							'payment_method'  => $payment_gateway,
+							'membership_type' => $membership_type,
+							'auto_activated'  => true,
+						),
+						JSON_PRETTY_PRINT
+					) . "\n  ",
+					'info'
 				);
 			}
 		}
@@ -2019,6 +2028,19 @@ class AJAX {
 						'membership_type'   => $membership_type,
 					)
 				);
+
+					PaymentGatewayLogging::log_transaction_success(
+						'free',
+						sprintf( ' [Member ID #%s] Free membership upgrade completed.', $member_id ) . "\n" . wp_json_encode(
+							array(
+								'event_type'        => 'upgrade_completed',
+								'member_id'         => $member_id,
+								'new_membership_id' => $data['selected_membership_id'],
+								'membership_type'   => $membership_type,
+							),
+							JSON_PRETTY_PRINT
+						) . "\n "
+					);
 			}
 			$message = __( 'Membership upgraded successfully.', 'user-registration-membership' );
 
@@ -2217,29 +2239,33 @@ class AJAX {
 			// Add session divider
 			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
 				$payment_gateway,
-				'========== NEW PAYMENT SESSION ==========',
-				'notice',
-				array(
-					'timestamp'       => current_time( 'mysql' ),
-					'membership_type' => $membership_type,
-					'username'        => $member->user_login,
-				)
+				sprintf( ' [Member ID #%s] ========== ***NEW PAYMENT SESSION*** ==========', $member_id ) . "\n" . wp_json_encode(
+					array(
+						'timestamp'       => current_time( 'mysql' ),
+						'membership_type' => $membership_type,
+						'username'        => $member->user_login,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'notice'
 			);
 
 			// Log form submission
 			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
 				$payment_gateway,
-				'Membership registration form submitted',
-				'info',
-				array(
-					'event_type'      => 'form_submission',
-					'member_id'       => $member_id,
-					'username'        => $member->user_login,
-					'email'           => $member->user_email,
-					'membership_id'   => $data['membership'] ?? 'N/A',
-					'payment_method'  => $payment_gateway,
-					'membership_type' => $membership_type,
-				)
+				sprintf( ' [Member ID #%s] Membership registration form submitted.', $member_id ) . "\n" . wp_json_encode(
+					array(
+						'event_type'      => 'form_submission',
+						'member_id'       => $member_id,
+						'username'        => $member->user_login,
+						'email'           => $member->user_email,
+						'membership_id'   => $data['membership'] ?? 'N/A',
+						'payment_method'  => $payment_gateway,
+						'membership_type' => $membership_type,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
 			);
 		}
 
@@ -2256,32 +2282,38 @@ class AJAX {
 
 			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
 				$payment_gateway,
-				'Order and subscription created - Status: ' . $initial_status,
-				'info',
-				array(
-					'event_type'      => 'status_change',
-					'member_id'       => $member_id,
-					'subscription_id' => $response['subscription_id'] ?? 'N/A',
-					'transaction_id'  => $response['transaction_id'] ?? 'N/A',
-					'status'          => $initial_status,
-					'membership_id'   => $data['membership'] ?? 'N/A',
-					'membership_type' => $membership_type,
-				)
+				sprintf( ' [Member ID #%s] Order and subscription created - Status: %s', $member_id, $initial_status ) . "\n" . wp_json_encode(
+					array(
+						'event_type'      => 'status_change',
+						'member_id'       => $member_id,
+						'subscription_id' => $response['subscription_id'] ?? 'N/A',
+						'transaction_id'  => $response['transaction_id'] ?? 'N/A',
+						'status'          => $initial_status,
+						'membership_id'   => $data['membership'] ?? 'N/A',
+						'membership_type' => $membership_type,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
 			);
 
 			// Log activation for free and bank immediately
 			if ( 'free' === $payment_gateway ) {
-				\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_transaction_success(
+
+				\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
 					$payment_gateway,
-					'Subscription activated successfully',
-					array(
-						'member_id'       => $member_id,
-						'subscription_id' => $response['subscription_id'] ?? 'N/A',
-						'status'          => 'active',
-						'payment_method'  => $payment_gateway,
-						'membership_type' => $membership_type,
-						'auto_activated'  => true,
-					)
+					sprintf( ' [Member ID #%s] Subscription activated successfully.', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'member_id'       => $member_id,
+							'subscription_id' => $response['subscription_id'] ?? 'N/A',
+							'status'          => 'active',
+							'payment_method'  => $payment_gateway,
+							'membership_type' => $membership_type,
+							'auto_activated'  => true,
+						),
+						JSON_PRETTY_PRINT
+					) . "\n ",
+					'info'
 				);
 			}
 		}
