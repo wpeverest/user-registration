@@ -92,11 +92,14 @@ class PaymentGatewaysWebhookActions {
 
 		PaymentGatewayLogging::log_webhook_received(
 			'paypal',
-			'PayPal redirect received in PaymentGatewaysWebhookActions',
-			array(
-				'has_payer_id'        => ! empty( $payer_id ),
-				'has_token'           => isset( $_GET['token'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			'PayPal redirect received in PaymentGatewaysWebhookActions'
+			. "\n" . wp_json_encode(
+				array(
+					'has_payer_id'    => ! empty( $payer_id ),
+					'has_token'       => isset( $_GET['token'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				'has_subscription_id' => isset( $_GET['subscription_id'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
 

@@ -100,17 +100,23 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_transaction_start(
 			'paypal',
-			'Building PayPal REST payment URL',
-			array(
-				'member_id'       => $member_id,
-				'membership_id'   => $membership,
-				'member_email'    => $member_email,
-				'subscription_id' => $subscription_id,
-				'membership_type' => $context['membership_type'],
-				'mode'            => $context['paypal_options']['mode'],
-				'is_upgrading'    => $context['is_upgrading'],
-				'is_renewing'     => $context['is_renewing'],
-				'has_team'        => $context['has_team'],
+			sprintf(
+				'[Member ID #%s] Building PayPal REST payment URL.',
+				$member_id
+			) . "\n" . wp_json_encode(
+				array(
+					'event_type'      => 'transaction_start',
+					'member_id'       => $member_id,
+					'membership_id'   => $membership,
+					'member_email'    => $member_email,
+					'subscription_id' => $subscription_id,
+					'membership_type' => $context['membership_type'],
+					'mode'            => $context['paypal_options']['mode'],
+					'is_upgrading'    => $context['is_upgrading'],
+					'is_renewing'     => $context['is_renewing'],
+					'has_team'        => $context['has_team'],
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
 
@@ -427,10 +433,16 @@ class NewPaypalService {
 				if ( $team_seats <= 0 ) {
 					PaymentGatewayLogging::log_error(
 						'paypal',
-						'Invalid team seats for payment',
-						array(
-							'error_code' => 'INVALID_TEAM_SEATS',
-							'member_id'  => $member_id,
+						sprintf(
+							'[Member ID #%s] Invalid team seats for payment.',
+							$member_id
+						) . "\n" . wp_json_encode(
+							array(
+								'event_type' => 'error',
+								'error_code' => 'INVALID_TEAM_SEATS',
+								'member_id'  => $member_id,
+							),
+							JSON_PRETTY_PRINT
 						)
 					);
 
@@ -454,10 +466,16 @@ class NewPaypalService {
 					if ( empty( $tier ) ) {
 						PaymentGatewayLogging::log_error(
 							'paypal',
-							'Invalid team pricing tier',
-							array(
-								'error_code' => 'INVALID_TIER',
-								'member_id'  => $member_id,
+							sprintf(
+								'[Member ID #%s] Invalid team pricing tier.',
+								$member_id
+							) . "\n" . wp_json_encode(
+								array(
+									'event_type' => 'error',
+									'error_code' => 'INVALID_TIER',
+									'member_id'  => $member_id,
+								),
+								JSON_PRETTY_PRINT
 							)
 						);
 
@@ -553,11 +571,17 @@ class NewPaypalService {
 		if ( is_wp_error( $response ) ) {
 			PaymentGatewayLogging::log_error(
 				'paypal',
-				'PayPal REST order creation failed',
-				array(
-					'error_code' => $response->get_error_code(),
-					'message'    => $response->get_error_message(),
-					'member_id'  => $context['member_id'],
+				sprintf(
+					'[Member ID #%s] PayPal REST order creation failed.',
+					$context['member_id']
+				) . "\n" . wp_json_encode(
+					array(
+						'event_type' => 'error',
+						'error_code' => $response->get_error_code(),
+						'message'    => $response->get_error_message(),
+						'member_id'  => $context['member_id'],
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			return $response;
@@ -569,14 +593,20 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_transaction_success(
 			'paypal',
-			'PayPal REST one-time order created successfully',
-			array(
-				'member_id'       => $context['member_id'],
-				'membership_id'   => $context['membership'],
-				'subscription_id' => $context['subscription_id'],
-				'paypal_order_id' => isset( $response['id'] ) ? $response['id'] : '',
-				'amount'          => $context['final_amount'],
-				'currency'        => $context['currency'],
+			sprintf(
+				'[Member ID #%s] PayPal REST one-time order created successfully.',
+				$context['member_id']
+			) . "\n" . wp_json_encode(
+				array(
+					'event_type'      => 'order_created',
+					'member_id'       => $context['member_id'],
+					'membership_id'   => $context['membership'],
+					'subscription_id' => $context['subscription_id'],
+					'paypal_order_id' => isset( $response['id'] ) ? $response['id'] : '',
+					'amount'          => $context['final_amount'],
+					'currency'        => $context['currency'],
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
 
@@ -640,11 +670,16 @@ class NewPaypalService {
 		if ( is_wp_error( $response ) ) {
 			PaymentGatewayLogging::log_error(
 				'paypal',
-				'PayPal subscription creation failed',
-				array(
-					'error_code' => $response->get_error_code(),
-					'message'    => $response->get_error_message(),
-					'member_id'  => $context['member_id'],
+				sprintf(
+					'[Member ID #%s] PayPal subscription creation failed.',
+					$context['member_id']
+				) . "\n" . wp_json_encode(
+					array(
+						'error_code' => $response->get_error_code(),
+						'message'    => $response->get_error_message(),
+						'member_id'  => $context['member_id'],
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			return $response;
@@ -656,13 +691,18 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_transaction_success(
 			'paypal',
-			'PayPal REST subscription created successfully',
-			array(
-				'member_id'              => $context['member_id'],
-				'membership_id'          => $context['membership'],
-				'subscription_id'        => $context['subscription_id'],
-				'paypal_subscription_id' => isset( $response['id'] ) ? $response['id'] : '',
-				'team_quantity'          => $context['team_quantity'],
+			sprintf(
+				'[Member ID #%s] PayPal REST subscription created successfully.',
+				$context['member_id']
+			) . "\n" . wp_json_encode(
+				array(
+					'member_id'              => $context['member_id'],
+					'membership_id'          => $context['membership'],
+					'subscription_id'        => $context['subscription_id'],
+					'paypal_subscription_id' => isset( $response['id'] ) ? $response['id'] : '',
+					'team_quantity'          => $context['team_quantity'],
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
 
@@ -704,11 +744,16 @@ class NewPaypalService {
 		if ( is_wp_error( $response ) ) {
 			PaymentGatewayLogging::log_error(
 				'paypal',
-				'PayPal subscription revise failed',
-				array(
-					'message'                => $response->get_error_message(),
-					'member_id'              => $context['member_id'],
-					'paypal_subscription_id' => $paypal_subscription_id,
+				sprintf(
+					'[Member ID #%s] PayPal subscription revise failed.',
+					$context['member_id']
+				) . "\n" . wp_json_encode(
+					array(
+						'message'                => $response->get_error_message(),
+						'member_id'              => $context['member_id'],
+						'paypal_subscription_id' => $paypal_subscription_id,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			return $response;
@@ -716,13 +761,18 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_transaction_success(
 			'paypal',
-			'PayPal subscription revised successfully',
-			array(
-				'member_id'              => $context['member_id'],
-				'membership_id'          => $context['membership'],
-				'subscription_id'        => $context['subscription_id'],
-				'paypal_subscription_id' => $paypal_subscription_id,
-				'new_plan_id'            => $new_plan_id,
+			sprintf(
+				'[Member ID #%s] PayPal subscription revised successfully.',
+				$context['member_id']
+			) . "\n" . wp_json_encode(
+				array(
+					'member_id'              => $context['member_id'],
+					'membership_id'          => $context['membership'],
+					'subscription_id'        => $context['subscription_id'],
+					'paypal_subscription_id' => $paypal_subscription_id,
+					'new_plan_id'            => $new_plan_id,
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
 
@@ -866,10 +916,15 @@ class NewPaypalService {
 		if ( empty( $supplied_hash ) || ! hash_equals( $supplied_hash, $expected_hash ) ) {
 			PaymentGatewayLogging::log_error(
 				'paypal',
-				'PayPal redirect hash validation failed',
-				array(
-					'membership_id' => $membership_id,
-					'member_id'     => $member_id,
+				sprintf(
+					'[Member ID #%s] PayPal redirect hash validation failed.',
+					$member_id
+				) . "\n" . wp_json_encode(
+					array(
+						'membership_id' => $membership_id,
+						'member_id'     => $member_id,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			return;
@@ -881,10 +936,15 @@ class NewPaypalService {
 		if ( empty( $member_order ) ) {
 			PaymentGatewayLogging::log_error(
 				'paypal',
-				'Member order not found during PayPal redirect',
-				array(
-					'membership_id' => $membership_id,
-					'member_id'     => $member_id,
+				sprintf(
+					'[Member ID #%s] Member order not found during PayPal redirect.',
+					$member_id
+				) . "\n" . wp_json_encode(
+					array(
+						'membership_id' => $membership_id,
+						'member_id'     => $member_id,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			return;
@@ -903,13 +963,18 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_webhook_received(
 			'paypal',
-			'PayPal redirect callback received',
-			array(
-				'webhook_type'    => 'redirect_callback',
-				'payer_id'        => $payer_id,
-				'membership_id'   => $membership_id,
-				'member_id'       => $member_id,
-				'membership_type' => $membership_type,
+			sprintf(
+				'[Member ID #%s] PayPal redirect callback received.',
+				$member_id
+			) . "\n" . wp_json_encode(
+				array(
+					'webhook_type'    => 'redirect_callback',
+					'payer_id'        => $payer_id,
+					'membership_id'   => $membership_id,
+					'member_id'       => $member_id,
+					'membership_type' => $membership_type,
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
 
@@ -918,9 +983,6 @@ class NewPaypalService {
 		$member_subscription      = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
 		$is_renewing              = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'], true );
 		$is_rest_one_time_payment = ( 'paid' === $member_order['order_type'] || 'one-time' === $membership_type );
-
-		error_log( print_r( $_GET, true ) );
-		error_log( print_r( $order_token, true ) );
 
 		// if buyer already returned and internal order is completed, just redirect .
 		// if ( 'completed' === ( isset( $member_order['status'] ) ? $member_order['status'] : '' ) ) {
@@ -934,12 +996,16 @@ class NewPaypalService {
 			if ( is_wp_error( $capture_response ) ) {
 				PaymentGatewayLogging::log_error(
 					'paypal',
-					'PayPal order capture failed after redirect',
-					array(
-						'paypal_order_id' => $order_token,
-						'member_id'       => $member_id,
-						'message'         => $capture_response->get_error_message(),
-						'error_data'      => $capture_response->get_error_data(),
+					sprintf(
+						'[Member ID #%s] PayPal order capture failed after redirect.',
+						$member_id
+					) . "\n" . wp_json_encode(
+						array(
+							'paypal_order_id' => $order_token,
+							'member_id'       => $member_id,
+							'message'         => $capture_response->get_error_message(),
+						),
+						JSON_PRETTY_PRINT
 					)
 				);
 				return;
@@ -979,11 +1045,16 @@ class NewPaypalService {
 			if ( is_wp_error( $subscription_details ) ) {
 				PaymentGatewayLogging::log_error(
 					'paypal',
-					'Failed to confirm PayPal subscription after redirect',
-					array(
-						'paypal_subscription_id' => $paypal_subscription_id,
-						'member_id'              => $member_id,
-						'message'                => $subscription_details->get_error_message(),
+					sprintf(
+						'[Member ID #%s] Failed to confirm PayPal subscription after redirect.',
+						$member_id
+					) . "\n" . wp_json_encode(
+						array(
+							'paypal_subscription_id' => $paypal_subscription_id,
+							'member_id'              => $member_id,
+							'message'                => $subscription_details->get_error_message(),
+						),
+						JSON_PRETTY_PRINT
 					)
 				);
 				return;
@@ -1026,12 +1097,17 @@ class NewPaypalService {
 		if ( $is_upgrading && ! empty( $member_subscription['ID'] ) ) {
 			PaymentGatewayLogging::log_general(
 				'paypal',
-				'Processing membership upgrade after PayPal redirect',
-				'notice',
-				array(
-					'member_id'       => $member_id,
-					'subscription_id' => $member_subscription['ID'],
-				)
+				sprintf(
+					'[Member ID #%s] Processing membership upgrade after PayPal redirect.',
+					$member_id
+				) . "\n" . wp_json_encode(
+					array(
+						'member_id'       => $member_id,
+						'subscription_id' => $member_subscription['ID'],
+					),
+					JSON_PRETTY_PRINT
+				),
+				'notice'
 			);
 
 			$this->handle_upgrade_for_paypal( $member_id, $member_subscription['ID'] );
@@ -1077,10 +1153,15 @@ class NewPaypalService {
 		if ( ! $mail_send ) {
 			PaymentGatewayLogging::log_transaction_failure(
 				'paypal',
-				'Payment successful email failed',
-				array(
-					'member_id'       => $member_id,
-					'subscription_id' => isset( $member_subscription['ID'] ) ? $member_subscription['ID'] : '',
+				sprintf(
+					'[Member ID #%s] Payment successful email failed.',
+					$member_id
+				) . "\n" . wp_json_encode(
+					array(
+						'member_id'       => $member_id,
+						'subscription_id' => isset( $member_subscription['ID'] ) ? $member_subscription['ID'] : '',
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			return;
@@ -1088,10 +1169,15 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_transaction_success(
 			'paypal',
-			'Payment successful email sent',
-			array(
-				'member_id'       => $member_id,
-				'subscription_id' => isset( $member_subscription['ID'] ) ? $member_subscription['ID'] : '',
+			sprintf(
+				'[Member ID #%s] Payment successful email sent.',
+				$member_id
+			) . "\n" . wp_json_encode(
+				array(
+					'member_id'       => $member_id,
+					'subscription_id' => isset( $member_subscription['ID'] ) ? $member_subscription['ID'] : '',
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
 	}
@@ -1133,13 +1219,18 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_general(
 			'paypal',
-			'Handling membership upgrade in new PayPal REST service',
-			'notice',
-			array(
-				'member_id'           => $member_id,
-				'old_subscription_id' => isset( $get_user_old_subscription['ID'] ) ? $get_user_old_subscription['ID'] : 'unknown',
-				'new_subscription_id' => $subscription_id,
-			)
+			sprintf(
+				'[Member ID #%s] Handling membership upgrade in new PayPal REST service.',
+				$member_id
+			) . "\n" . wp_json_encode(
+				array(
+					'member_id'           => $member_id,
+					'old_subscription_id' => isset( $get_user_old_subscription['ID'] ) ? $get_user_old_subscription['ID'] : 'unknown',
+					'new_subscription_id' => $subscription_id,
+				),
+				JSON_PRETTY_PRINT
+			),
+			'notice'
 		);
 
 		if ( ! empty( $new_subscription_data ) ) {
@@ -1149,11 +1240,16 @@ class NewPaypalService {
 				if ( empty( $cancel_subscription['status'] ) ) {
 					PaymentGatewayLogging::log_error(
 						'paypal',
-						'Failed to cancel previous subscription during upgrade',
-						array(
-							'member_id'           => $member_id,
-							'old_subscription_id' => isset( $get_user_old_subscription['subscription_id'] ) ? $get_user_old_subscription['subscription_id'] : '',
-							'message'             => isset( $cancel_subscription['message'] ) ? $cancel_subscription['message'] : '',
+						sprintf(
+							'[Member ID #%s] Failed to cancel previous subscription during upgrade.',
+							$member_id
+						) . "\n" . wp_json_encode(
+							array(
+								'member_id'           => $member_id,
+								'old_subscription_id' => isset( $get_user_old_subscription['subscription_id'] ) ? $get_user_old_subscription['subscription_id'] : '',
+								'message'             => isset( $cancel_subscription['message'] ) ? $cancel_subscription['message'] : '',
+							),
+							JSON_PRETTY_PRINT
 						)
 					);
 				}
@@ -1178,10 +1274,15 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_transaction_success(
 			'paypal',
-			'Membership upgrade completed successfully',
-			array(
-				'member_id'           => $member_id,
-				'new_subscription_id' => $subscription_id,
+			sprintf(
+				'[Member ID #%s] Membership upgrade completed successfully.',
+				$member_id
+			) . "\n" . wp_json_encode(
+				array(
+					'member_id'           => $member_id,
+					'new_subscription_id' => $subscription_id,
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
 
@@ -1214,10 +1315,15 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_webhook_received(
 			'paypal',
-			'PayPal REST webhook received',
-			array(
-				'webhook_type' => $event_type,
-				'resource_id'  => isset( $resource['id'] ) ? $resource['id'] : '',
+			sprintf(
+				'PayPal REST webhook received for event %s.',
+				$event_type
+			) . "\n" . wp_json_encode(
+				array(
+					'webhook_type' => $event_type,
+					'resource_id'  => isset( $resource['id'] ) ? $resource['id'] : '',
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
 
@@ -1237,11 +1343,16 @@ class NewPaypalService {
 			default:
 				PaymentGatewayLogging::log_general(
 					'paypal',
-					'Unhandled PayPal webhook event type',
-					'info',
-					array(
-						'event_type' => $event_type,
-					)
+					sprintf(
+						'Unhandled PayPal webhook event type: %s.',
+						$event_type
+					) . "\n" . wp_json_encode(
+						array(
+							'event_type' => $event_type,
+						),
+						JSON_PRETTY_PRINT
+					),
+					'info'
 				);
 				return true;
 		}
@@ -1300,11 +1411,16 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_transaction_success(
 			'paypal',
-			'Order webhook processed successfully',
-			array(
-				'event_type'     => $event_type,
-				'member_id'      => $member_id,
-				'transaction_id' => $transaction_id,
+			sprintf(
+				'[Member ID #%s] Order webhook processed successfully.',
+				$member_id
+			) . "\n" . wp_json_encode(
+				array(
+					'event_type'     => $event_type,
+					'member_id'      => $member_id,
+					'transaction_id' => $transaction_id,
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
 
@@ -1370,15 +1486,20 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_general(
 			'paypal',
-			'Subscription webhook processed',
-			'success',
-			array(
-				'event_type'             => $event_type,
-				'member_id'              => $member_id,
-				'subscription_row_id'    => $subscription_row_id,
-				'paypal_subscription_id' => $paypal_subscription_id,
-				'new_status'             => $new_status,
-			)
+			sprintf(
+				'[Member ID #%s] Subscription webhook processed.',
+				$member_id
+			) . "\n" . wp_json_encode(
+				array(
+					'event_type'             => $event_type,
+					'member_id'              => $member_id,
+					'subscription_row_id'    => $subscription_row_id,
+					'paypal_subscription_id' => $paypal_subscription_id,
+					'new_status'             => $new_status,
+				),
+				JSON_PRETTY_PRINT
+			),
+			'success'
 		);
 
 		return true;
@@ -1475,10 +1596,16 @@ class NewPaypalService {
 		if ( is_wp_error( $response ) ) {
 			PaymentGatewayLogging::log_transaction_failure(
 				'paypal',
-				'Subscription cancellation failed from PayPal.',
-				array(
-					'message'         => $response->get_error_message(),
-					'subscription_id' => $subscription['subscription_id'],
+				sprintf(
+					'Subscription cancellation failed from PayPal for subscription %s.',
+					$subscription['subscription_id']
+				) . "\n" . wp_json_encode(
+					array(
+						'event_type'      => 'cancellation_failed',
+						'message'         => $response->get_error_message(),
+						'subscription_id' => $subscription['subscription_id'],
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -1490,11 +1617,17 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_general(
 			'paypal',
-			'Subscription successfully cancelled from PayPal',
-			'success',
-			array(
-				'subscription_id' => $subscription['subscription_id'],
-			)
+			sprintf(
+				'Subscription successfully cancelled from PayPal for subscription ***%s***.',
+				$subscription['subscription_id']
+			) . "\n" . wp_json_encode(
+				array(
+					'event_type'      => 'cancellation_success',
+					'subscription_id' => $subscription['subscription_id'],
+				),
+				JSON_PRETTY_PRINT
+			),
+			'success'
 		);
 
 		return array(
@@ -1523,10 +1656,16 @@ class NewPaypalService {
 		if ( is_wp_error( $response ) ) {
 			PaymentGatewayLogging::log_transaction_failure(
 				'paypal',
-				'Subscription reactivation failed from PayPal.',
-				array(
-					'message'         => $response->get_error_message(),
-					'subscription_id' => $subscription_id,
+				sprintf(
+					'Subscription reactivation failed from PayPal for subscription %s.',
+					$subscription_id
+				) . "\n" . wp_json_encode(
+					array(
+						'event_type'      => 'reactivation_failed',
+						'message'         => $response->get_error_message(),
+						'subscription_id' => $subscription_id,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -1538,7 +1677,16 @@ class NewPaypalService {
 
 		PaymentGatewayLogging::log_subscription_reactivation(
 			'paypal',
-			'Subscription successfully reactivated from PayPal.'
+			sprintf(
+				'Subscription successfully reactivated from PayPal for subscription ***%s***.',
+				$subscription_id
+			) . "\n" . wp_json_encode(
+				array(
+					'event_type'      => 'reactivation_success',
+					'subscription_id' => $subscription_id,
+				),
+				JSON_PRETTY_PRINT
+			)
 		);
 
 		return array(
@@ -1621,11 +1769,17 @@ class NewPaypalService {
 		// Returning false prevents accidental IPN usage in new flow.
 		PaymentGatewayLogging::log_general(
 			'paypal',
-			'validate_ipn called on NewPaypalService; REST flow should use webhooks instead',
-			'info',
-			array(
-				'payment_mode' => $payment_mode,
-			)
+			sprintf(
+				'validate_ipn called on NewPaypalService; REST flow should use webhooks instead. Payment mode: %s.',
+				$payment_mode
+			) . "\n" . wp_json_encode(
+				array(
+					'event_type'   => 'compatibility_notice',
+					'payment_mode' => $payment_mode,
+				),
+				JSON_PRETTY_PRINT
+			),
+			'info'
 		);
 
 		return false;

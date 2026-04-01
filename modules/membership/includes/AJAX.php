@@ -1170,32 +1170,37 @@ class AJAX {
 		// Log session start with divider
 		if ( class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
 			// Add session divider
+
 			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
 				$payment_gateway,
-				'========== CANCELLATION PAYMENT SESSION ==========',
-				'notice',
-				array(
-					'timestamp'       => current_time( 'mysql' ),
-					'membership_type' => $membership_type,
-					'username'        => $user ? $user->user_login : 'unknown',
-				)
+				'=============== CANCELLATION PAYMENT SESSION ===============' . "\n" . wp_json_encode(
+					array(
+						'timestamp'       => current_time( 'mysql' ),
+						'membership_type' => $membership_type,
+						'username'        => $user ? $user->user_login : 'unknown',
+					),
+					JSON_PRETTY_PRINT
+				),
+				'notice'
 			);
 
 			// Log cancellation initiation
 			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
 				$payment_gateway,
-				'Membership cancellation initiated',
-				'info',
-				array(
-					'event_type'      => 'cancellation_started',
-					'member_id'       => $user_id,
-					'username'        => $user ? $user->user_login : 'unknown',
-					'email'           => $user ? $user->user_email : 'unknown',
-					'subscription_id' => $subscription_id,
-					'membership_id'   => $user_subscription['item_id'] ?? 'N/A',
-					'payment_method'  => $payment_gateway,
-					'membership_type' => $membership_type,
-				)
+				'Membership cancellation initiated' . "\n" . wp_json_encode(
+					array(
+						'event_type'      => 'cancellation_started',
+						'member_id'       => $user_id,
+						'username'        => $user ? $user->user_login : 'unknown',
+						'email'           => $user ? $user->user_email : 'unknown',
+						'subscription_id' => $subscription_id,
+						'membership_id'   => $user_subscription['item_id'] ?? 'N/A',
+						'payment_method'  => $payment_gateway,
+						'membership_type' => $membership_type,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
 			);
 		}
 
@@ -2018,29 +2023,19 @@ class AJAX {
 				}
 			} else {
 				// Free upgrade completes immediately
+
 				PaymentGatewayLogging::log_transaction_success(
 					'free',
-					'Free membership upgrade completed',
-					array(
-						'event_type'        => 'upgrade_completed',
-						'member_id'         => $member_id,
-						'new_membership_id' => $data['selected_membership_id'],
-						'membership_type'   => $membership_type,
-					)
+					sprintf( ' [Member ID #%s] Free membership upgrade completed.', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'event_type'        => 'upgrade_completed',
+							'member_id'         => $member_id,
+							'new_membership_id' => $data['selected_membership_id'],
+							'membership_type'   => $membership_type,
+						),
+						JSON_PRETTY_PRINT
+					) . "\n "
 				);
-
-					PaymentGatewayLogging::log_transaction_success(
-						'free',
-						sprintf( ' [Member ID #%s] Free membership upgrade completed.', $member_id ) . "\n" . wp_json_encode(
-							array(
-								'event_type'        => 'upgrade_completed',
-								'member_id'         => $member_id,
-								'new_membership_id' => $data['selected_membership_id'],
-								'membership_type'   => $membership_type,
-							),
-							JSON_PRETTY_PRINT
-						) . "\n "
-					);
 			}
 			$message = __( 'Membership upgraded successfully.', 'user-registration-membership' );
 
@@ -2358,15 +2353,18 @@ class AJAX {
 				}
 			} else {
 				// Free membership updates immediately
+
 				PaymentGatewayLogging::log_transaction_success(
 					'free',
-					'Free membership addition completed',
-					array(
-						'event_type'        => 'completed',
-						'member_id'         => $member_id,
-						'new_membership_id' => $data['selected_membership_id'],
-						'membership_type'   => $membership_type,
-					)
+					sprintf( ' [Member ID #%s] Free membership addition completed.', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'event_type'        => 'completed',
+							'member_id'         => $member_id,
+							'new_membership_id' => $data['selected_membership_id'],
+							'membership_type'   => $membership_type,
+						),
+						JSON_PRETTY_PRINT
+					) . "\n "
 				);
 			}
 
