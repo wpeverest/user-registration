@@ -120,7 +120,28 @@ class NewPaypalService {
 			)
 		);
 
-		if ( $this->should_fallback_to_legacy_paypal( $context ) ) {
+		$use_legacy = $this->should_fallback_to_legacy_paypal( $context );
+
+		$logger->info(
+			sprintf( '[Member #%d] Deciding PayPal flow.', $member_id ) . "\n" .
+			wp_json_encode(
+				array(
+					'use_legacy'        => $use_legacy,
+					'is_new_install'    => ur_string_to_bool( get_option( 'urm_is_new_installation' ) ),
+					'is_subscription'   => $payment_context['is_subscription'],
+					'has_client_id'     => ! empty( $payment_context['paypal_options']['client_id'] ),
+					'has_client_secret' => ! empty( $payment_context['paypal_options']['secret_key'] ),
+				),
+				JSON_PRETTY_PRINT
+			),
+			array(
+				'source'    => 'paypal',
+				'member_id' => $member_id,
+				'function'  => __FUNCTION__,
+			)
+		);
+
+		if ( $use_legacy ) {
 			PaymentGatewayLogging::log_general(
 				'paypal',
 				'Falling back to legacy PayPal Standard flow',
