@@ -730,6 +730,7 @@ textarea.ur-input-border-red {
 		display: flex;
 		margin-top: 10px;
 		padding: 0 10px;
+		width: max-content;
 
 		.ur-submit-button {
 			margin-left: auto;
@@ -1640,7 +1641,7 @@ span.ur-shortcode-form-embed-dot {
 // Spinner moved inside login and register button.
 .user-registration-Button,
 .ur-submit-button {
-	width: 100%;
+	// width: 100%;
 	background: var(--ur-primary-color, $primary_color);
 	border-radius: $border_radius_4;
 	border: 1px solid var(--ur-primary-color, $primary_color);
