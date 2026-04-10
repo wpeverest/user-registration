@@ -1541,22 +1541,21 @@ body {
 											padding: 0;
 											width: 33px;
 											margin: 0 auto;
+											min-height: 30px;
 
 											span {
 												font-size: 18px;
+												line-height: 1 !important;
 											}
 
 											&:hover {
 												border: $border_width solid
 													$primary_color;
 												background: $blue-50;
-												line-height: 20px;
+												// line-height: 20px;
 
 												span {
 													color: $primary_color;
-													.dashicons {
-														line-height: 1;
-													}
 												}
 											}
 											// .dashicons-visibility {

@@ -2103,7 +2103,8 @@ body {
 	}
 
 	&.user-registration-page,
-	&.user-registration-membership_page_user-registration-login-forms {
+	&.user-registration-membership_page_user-registration-login-forms,
+	.wp-block-user-registration-login-form {
 		.user-registration {
 			&.ur-frontend-form {
 				&:has(.ur-grid-2),
@@ -2373,6 +2374,7 @@ body {
 								.ur-submit-button {
 									margin-right: 0;
 									color: $white;
+									width: 100%;
 								}
 							}
 						}
