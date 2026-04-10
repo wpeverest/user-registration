@@ -6082,6 +6082,11 @@ body.user-registration {
 
 												input[type="radio"] {
 													height: 1rem;
+
+													background: none;
+													&:focus {
+														box-shadow: none !important;
+													}
 												}
 
 												label {
