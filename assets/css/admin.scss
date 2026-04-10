@@ -2096,6 +2096,7 @@ body {
 				height: 32px;
 				text-align: center;
 				font-family: inherit;
+				border-radius: 3px;
 
 				&::before {
 					width: 16px;
@@ -3781,6 +3782,9 @@ a.button.ur-smart-tags-list-button {
 					color: $grey-400;
 					border-radius: $border_radius_3;
 
+					min-height: 30px;
+					line-height: 2;
+
 					&:has(span) {
 						width: 33px;
 						height: 33px;
@@ -3835,6 +3839,11 @@ a.button.ur-smart-tags-list-button {
 				.button-primary {
 					background: $primary_color;
 					font-size: 14px;
+
+					border-radius: 3px;
+					min-height: 32px;
+					margin-bottom: 0px;
+					line-height: 2;
 
 					&:hover {
 						background: $primary_dark;
@@ -3934,6 +3943,8 @@ a.button.ur-smart-tags-list-button {
 				font-size: 14px;
 				color: $grey-400;
 				border-radius: $border_radius_3;
+				min-height: 30px;
+				line-height: 2;
 
 				&:has(span) {
 					width: 33px;
@@ -3979,6 +3990,9 @@ a.button.ur-smart-tags-list-button {
 			.button-primary {
 				background: $primary_color;
 				font-size: 14px;
+				min-height: 32px;
+				margin-bottom: 0px;
+				line-height: 2;
 
 				&:hover {
 					background: $primary_dark;
@@ -6693,6 +6707,9 @@ body {
 	font-size: 14px !important;
 	color: #383838 !important;
 	border-radius: 3px !important;
+	min-height: 32px !important;
+	line-height: 2 !important;
+	font-weight: 400 !important;
 }
 
 .embed-form-swl-container {
@@ -9475,6 +9492,7 @@ body.user-registration-page {
 							input[type="radio"] {
 								margin: 0;
 								margin-top: 1px;
+								background: none;
 
 								&::before {
 									width: 8px;

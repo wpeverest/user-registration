@@ -1550,11 +1550,18 @@ body {
 												border: $border_width solid
 													$primary_color;
 												background: $blue-50;
+												line-height: 20px;
 
 												span {
 													color: $primary_color;
+													.dashicons {
+														line-height: 1;
+													}
 												}
 											}
+											// .dashicons-visibility {
+											// 	line-height: 1;
+											// }
 										}
 									}
 
@@ -1844,6 +1851,7 @@ body {
 
 							&.user_registration-deactivate-license-key {
 								background: #f25656 !important;
+								border-radius: 3px;
 
 								&:focus {
 									outline: none;

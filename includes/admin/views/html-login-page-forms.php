@@ -18,9 +18,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="ur-page-title__wrapper">
 		<div class="ur-page-title__wrapper--left">
 			<a class="ur-text-muted ur-border-right ur-d-flex ur-mr-2 ur-pl-2 ur-pr-2"
-			   href="<?php echo esc_attr( admin_url( 'admin.php?page=user-registration' ) ); ?>">
+				href="<?php echo esc_attr( admin_url( 'admin.php?page=user-registration' ) ); ?>">
 				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-					 stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+					stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
 					<line x1="19" y1="12" x2="5" y2="12"></line>
 					<polyline points="12 19 5 12 12 5"></polyline>
 				</svg>
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="ur-page-title__wrapper--right">
 			<div class="major-publishing-actions wp-clearfix">
 				<div class="publishing-action">
-					<?php if($login_page_id): ?>
+					<?php if ( $login_page_id ) : ?>
 						<input type="text" onfocus="this.select();" readonly="readonly"
 						value='[user_registration_login]'
 						class="code" size="35">
@@ -46,9 +46,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</svg>
 						</button>
 
-						<button  id="ur-view-live-button" class="button button-secondary button-large"><a title="<?php echo esc_attr( sprintf( __( 'View Live in %s page', 'user-registration' ), $login_page_title ) ); ?>" href="<?php echo esc_url( add_query_arg( 'ur_login_preview', 'true', $login_page_url) ); ?>" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'View Live', 'user-registration' ); ?></a></button>
-					<?php else: ?>
-						<button name="create_login_page" data-form_id="<?php esc_attr_e( $login_page_id ) ?>" class="button button-large ur-embed-form-button ur-create-login-page-button" type="button" value="<?php esc_attr_e( 'Create Login Page', 'user-registration' ); ?>" title="<?php esc_attr_e( 'Create Login Page', 'user-registration' ); ?>">+ <?php esc_html_e( 'Create Login Page', 'user-registration' ); ?></button>
+						<button  id="ur-view-live-button" class="button button-secondary button-large"><a title="<?php echo esc_attr( sprintf( __( 'View Live in %s page', 'user-registration' ), $login_page_title ) ); ?>" href="<?php echo esc_url( add_query_arg( 'ur_login_preview', 'true', $login_page_url ) ); ?>" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'View Live', 'user-registration' ); ?></a></button>
+					<?php else : ?>
+						<button name="create_login_page" data-form_id="<?php esc_attr_e( $login_page_id ); ?>" class="button button-large ur-embed-form-button ur-create-login-page-button" type="button" value="<?php esc_attr_e( 'Create Login Page', 'user-registration' ); ?>" title="<?php esc_attr_e( 'Create Login Page', 'user-registration' ); ?>">+ <?php esc_html_e( 'Create Login Page', 'user-registration' ); ?></button>
 					<?php endif; ?>
 						<button type="button" name="save_login_form" id="save_form_footer"
 							class="button button-primary button-large menu-form ur_save_login_form_action_button"> <?php echo __( 'Update Form', 'user-registration' ); ?> </button>
@@ -70,7 +70,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<nav class="nav-tab-wrapper ur-tabs">
 									<ul class="ur-tab-lists">
 										<li><a href="#ur-tab-field-options"
-											   class="nav-tab"><?php esc_html_e( 'Field Options', 'user-registration' ); ?></a>
+												class="nav-tab"><?php esc_html_e( 'Field Options', 'user-registration' ); ?></a>
 										</li>
 
 										<?php
@@ -81,7 +81,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 										?>
 
 										<li><a href="#ur-tab-login-form-settings"
-											   class="nav-tab"><?php esc_html_e( 'Form Settings', 'user-registration' ); ?></a>
+												class="nav-tab"><?php esc_html_e( 'Form Settings', 'user-registration' ); ?></a>
 										</li>
 									</ul>
 									<div style="clear:both"></div>
@@ -104,19 +104,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 										</div>
 										<div id="ur-tab-login-form-settings" class="ur-tab-content">
 											<form method="post" id="ur-field-settings" onsubmit="return false;"
-												  style='display:none'>
+													style='display:none'>
 												<div id="ur-field-all-settings">
 													<?php
-													if ( ! empty( $login_form_settings['sections'] ) ):
-														foreach ( $login_form_settings['sections'] as $section ):
-														?>
-														<div id="<?php echo strtolower($section['title']) ?>-settings">
-															<h3><?php echo esc_html__( $section['title'] , 'user-registration' ) ?></h3>
+													if ( ! empty( $login_form_settings['sections'] ) ) :
+														foreach ( $login_form_settings['sections'] as $section ) :
+															?>
+														<div id="<?php echo strtolower( $section['title'] ); ?>-settings">
+															<h3><?php echo esc_html__( $section['title'], 'user-registration' ); ?></h3>
 															<?php
 																render_login_option_settings( $section );
 															?>
 														</div>
-													<?php
+															<?php
 													endforeach;
 													endif;
 													?>
@@ -128,7 +128,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<button id="ur-collapse" class="close">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 										<path fill="#6B6B6B"
-											  d="M16.5 22a1.003 1.003 0 0 1-.71-.29l-9-9a1 1 0 0 1 0-1.42l9-9a1.004 1.004 0 1 1 1.42 1.42L8.91 12l8.3 8.29A.999.999 0 0 1 16.5 22Z"/>
+												d="M16.5 22a1.003 1.003 0 0 1-.71-.29l-9-9a1 1 0 0 1 0-1.42l9-9a1.004 1.004 0 1 1 1.42 1.42L8.91 12l8.3 8.29A.999.999 0 0 1 16.5 22Z"/>
 									</svg>
 								</button>
 							</div>
