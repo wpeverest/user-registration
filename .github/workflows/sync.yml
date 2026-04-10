@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - master
+            - UR-4328-fix/ui-issues-across-different-menus-memberships-content-rules-forms-and-settings
         workflow_dispatch:
 jobs:
     sync:
