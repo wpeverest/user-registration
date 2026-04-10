@@ -214,3 +214,23 @@
 		margin: 6px 3px 4px;
 	}
 }
+
+.user-registration-settings-wrapper {
+	.user-registration-settings-container {
+		.user-registration-options-container {
+			.user-registration-card {
+				.urm-btn-comp-v7,
+				.ur-reset-content-button,
+				.add_media,
+				.user_registration_send_email_test {
+					min-height: 30px;
+					border-radius: 3px;
+					font-weight: 400px;
+					font-size: 13px;
+					line-height: 2.15;
+					padding: 0 10px;
+				}
+			}
+		}
+	}
+}

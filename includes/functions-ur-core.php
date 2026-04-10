@@ -6095,7 +6095,7 @@ if ( ! function_exists( 'ur_email_preview_link' ) ) {
 			home_url()
 		);
 
-		return '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '" class="button user-registration-email-preview " style="min-width:70px;">' . esc_html( $label ) . '</a>';
+		return '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '" class="button user-registration-email-preview urm-btn-comp-v7 " style="min-width:70px; ">' . esc_html( $label ) . '</a>';
 	}
 }
 

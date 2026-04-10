@@ -3783,7 +3783,7 @@ a.button.ur-smart-tags-list-button {
 					border-radius: $border_radius_3;
 
 					min-height: 30px;
-					line-height: 2;
+					line-height: 2.3;
 
 					&:has(span) {
 						width: 33px;
@@ -3843,7 +3843,7 @@ a.button.ur-smart-tags-list-button {
 					border-radius: 3px;
 					min-height: 32px;
 					margin-bottom: 0px;
-					line-height: 2;
+					line-height: 2.3;
 
 					&:hover {
 						background: $primary_dark;
@@ -3944,7 +3944,7 @@ a.button.ur-smart-tags-list-button {
 				color: $grey-400;
 				border-radius: $border_radius_3;
 				min-height: 30px;
-				line-height: 2;
+				line-height: 2.3;
 
 				&:has(span) {
 					width: 33px;
@@ -3992,7 +3992,7 @@ a.button.ur-smart-tags-list-button {
 				font-size: 14px;
 				min-height: 32px;
 				margin-bottom: 0px;
-				line-height: 2;
+				line-height: 2.3;
 
 				&:hover {
 					background: $primary_dark;
@@ -6708,7 +6708,7 @@ body {
 	color: #383838 !important;
 	border-radius: 3px !important;
 	min-height: 32px !important;
-	line-height: 2 !important;
+	line-height: 2.3 !important;
 	font-weight: 400 !important;
 }
 
