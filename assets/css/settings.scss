@@ -1851,6 +1851,9 @@ body {
 							&.user_registration-deactivate-license-key {
 								background: #f25656 !important;
 								border-radius: 3px;
+								font-size: 13px;
+								line-height: 2.15;
+								min-height: 30px;
 
 								&:focus {
 									outline: none;

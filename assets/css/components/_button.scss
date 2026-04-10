@@ -67,8 +67,8 @@
 		box-shadow: 0 1px 0 $primary_color;
 		text-shadow: none;
 
-		min-height: 30px;
-		line-height: 20px;
+		min-height: 30px !important;
+		line-height: 2.15 !important;
 		font-size: 13px;
 		font-weight: 400;
 		border-radius: 3px;
@@ -97,8 +97,8 @@
 		border-color: $color_gray_four;
 		box-shadow: 0 1px 0 $color_gray_four;
 
-		min-height: 30px;
-		line-height: 20px;
+		min-height: 30px !important;
+		line-height: 20px !important;
 		font-size: 13px;
 		font-weight: 400;
 		border-radius: 3px;
@@ -218,16 +218,17 @@
 .user-registration-settings-wrapper {
 	.user-registration-settings-container {
 		.user-registration-options-container {
-			.user-registration-card {
+			.user-registration-card,
+			.urcma-account-management-box {
 				.urm-btn-comp-v7,
 				.ur-reset-content-button,
 				.add_media,
 				.user_registration_send_email_test {
-					min-height: 30px;
+					min-height: 30px !important;
 					border-radius: 3px;
 					font-weight: 400px;
 					font-size: 13px;
-					line-height: 2.15;
+					line-height: 2.15 !important;
 					padding: 0 10px;
 				}
 			}
