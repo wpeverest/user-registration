@@ -921,7 +921,7 @@ class StripeService {
 				array(
 					'error_code' => 'EMAIL_SEND_FAILED',
 					'member_id'  => $member_id,
-					'order_id'   => $ID,
+					'order_id'   => $id,
 				)
 			);
 		}
