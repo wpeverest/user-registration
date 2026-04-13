@@ -649,7 +649,7 @@ class UR_Form_Validation extends UR_Validation {
 					);
 					return false;
 				}
-				return property_exists( $fields, 'advance_setting' ) && property_exists( $fields->advance_setting, 'field_visibility' ) && 'reg_form' === $fields->advance_setting->field_visibility;
+				return property_exists( $fields, 'advance_setting' ) && is_object( $fields->advance_setting ) && property_exists( $fields->advance_setting, 'field_visibility' ) && 'reg_form' === $fields->advance_setting->field_visibility;
 			}
 		);
 
