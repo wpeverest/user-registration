@@ -321,4 +321,41 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 
 		return $result ? $result : false;
 	}
+
+	/**
+	 * Return all subscriptions with an active, trial, or pending status.
+	 *
+	 * Used by the fixed-period membership service to find subscriptions that
+	 * may need expiration processing without scanning the entire table.
+	 *
+	 * @return array Array of subscription rows.
+	 */
+	public function get_active_subscriptions() {
+		$sql = $this->wpdb()->prepare(
+			"SELECT wu.user_email,
+			wu.user_login AS username,
+			wu.ID         AS member_id,
+			wp.post_title AS membership_plan_name,
+			wums.item_id  AS membership,
+			wums.ID       AS subscription_id,
+			wums.user_id,
+			wums.status,
+			wums.next_billing_date,
+			wums.expiry_date,
+			wums.billing_cycle,
+			wums.billing_amount,
+			wums.start_date
+		FROM {$this->table} wums
+		LEFT JOIN {$this->users_table} wu ON wums.user_id = wu.ID
+		LEFT JOIN {$this->posts_table} wp ON wums.item_id = wp.ID
+		WHERE wums.status IN (%s, %s, %s)",
+			'active',
+			'trial',
+			'pending'
+		);
+
+		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
+
+		return $result ? $result : array();
+	}
 }

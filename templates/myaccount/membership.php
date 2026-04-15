@@ -67,6 +67,17 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 							$membership_type = $membership['post_content']['type'];
 						}
 						$can_renew     = ! $is_renewing && isset( $membership['post_content']['type'] ) && 'automatic' !== $data['renewal_behaviour'] && 'subscription' == $membership_type;
+
+						// Fixed-period paid memberships with annual renewal enabled (pro + module required).
+						if ( UR_PRO_ACTIVE
+							&& ur_check_module_activation( 'fixed-period-membership' )
+							&& class_exists( '\WPEverest\URM\FixedPeriodMemebership\FixedPeriodSubscriptionService' )
+							&& 'paid' === $membership_type
+							&& ur_string_to_bool( get_user_meta( $membership['user_id'], 'expiration_date_renewal', true ) )
+							&& ! empty( $membership['expiry_date'] ) ) {
+							$can_renew = true;
+						}
+
 						$date_to_renew = '';
 
 						if ( 'subscription' == $membership_type ) {
@@ -174,7 +185,20 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 									if ( isset( $membership['status'] ) && in_array( $membership['status'], array( 'canceled', 'expired' ) ) ) {
 										echo esc_html__( 'N/A', 'user-registration' );
 									} else {
-										echo ! empty( $membership['next_billing_date'] ) && strtotime( $membership['next_billing_date'] ) > 0 ? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $membership['next_billing_date'] ) ) ) : __( 'N/A', 'user-registration' );
+										$next_billing = $membership['next_billing_date'] ?? '';
+
+										// For fixed-period paid memberships with annual renewal, use expiration_date user meta.
+										if ( 'paid' === $membership_type
+											&& ur_string_to_bool( get_user_meta( $membership['user_id'], 'expiration_date_renewal', true ) ) ) {
+											$fixed_expiry = get_user_meta( $membership['user_id'], 'expiration_date', true );
+											if ( ! empty( $fixed_expiry ) ) {
+												$next_billing = $fixed_expiry;
+											}
+										}
+
+										echo ! empty( $next_billing ) && strtotime( $next_billing ) > 0
+											? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $next_billing ) ) )
+											: esc_html__( 'N/A', 'user-registration' );
 									}
 									?>
 								</td>

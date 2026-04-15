@@ -359,8 +359,16 @@ class SubscriptionService {
 		$billing_cycle = ( 'subscription' === $membership_metas['type'] ) ? ( ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) ) : 'N/A';
 		$trial_period  = ( 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] ) ? ( $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] . ( $membership_metas['trial_data']['value'] > 1 ? 's' : '' ) ) : 'N/A';
 
-		$next_billing_date = 'subscription' === $membership_metas['type'] && ! empty( $subscription['next_billing_date'] ) ? date( 'Y, F d', strtotime( $subscription['next_billing_date'] ) ) : 'N/A';
-		$expiry_date       = 'subscription' === $membership_metas['type'] && ! empty( $subscription['expiry_date'] ) ? date( 'Y, F d', strtotime( $subscription['expiry_date'] ) ) : 'N/A';
+		$is_fixed_period_paid = 'paid' === $membership_metas['type'] && ! empty( $membership_metas['enable_fixed_period_duration'] );
+		$is_valid_date        = function( $date ) {
+			return ! empty( $date ) && '0000-00-00 00:00:00' !== $date && '0000-00-00' !== $date;
+		};
+		$next_billing_date = ( 'subscription' === $membership_metas['type'] || $is_fixed_period_paid ) && $is_valid_date( $subscription['next_billing_date'] ?? '' )
+			? date( 'Y, F d', strtotime( $subscription['next_billing_date'] ) )
+			: ( $is_fixed_period_paid && $is_valid_date( $data['next_billing_date'] ?? '' ) ? date( 'Y, F d', strtotime( $data['next_billing_date'] ) ) : 'N/A' );
+		$expiry_date       = ( 'subscription' === $membership_metas['type'] || $is_fixed_period_paid ) && $is_valid_date( $subscription['expiry_date'] ?? '' )
+			? date( 'Y, F d', strtotime( $subscription['expiry_date'] ) )
+			: ( $is_fixed_period_paid && $is_valid_date( $data['expiry_date'] ?? '' ) ? date( 'Y, F d', strtotime( $data['expiry_date'] ) ) : 'N/A' );
 		$trial_start_date  = 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] && ! empty( $subscription['trial_start_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_start_date'] ) ) : 'N/A';
 		$trial_end_date    = 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] && ! empty( $subscription['trial_end_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_end_date'] ) ) : 'N/A';
 		$membership_type   = ucwords( $membership_metas['type'] ) == 'Paid' ? __( 'One-Time Payment', 'user-registration' ) : ucwords( $membership_metas['type'] );
@@ -421,7 +429,8 @@ class SubscriptionService {
 			),
 			'membership_plan_coupon'            => esc_html( $order['coupon'] ?? '' ),
 			'membership_plan_total'             => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $total, 2 ) : number_format( $total, 2 ) . $symbol,
-			'membership_renewal_link'           => "<a href=$membership_tab_url>" . __( 'Renew Now', 'user-registration' ) . '</a>',
+			'renewal_link'                      => $membership_tab_url,
+			'membership_renewal_link'           => '<a href="' . $membership_tab_url . '">' . __( 'Renew Now', 'user-registration' ) . '</a>',
 			'membership_plan_transaction_id'    => ! empty( $data['transaction_id'] ) ? $data['transaction_id'] : '',
 		);
 
