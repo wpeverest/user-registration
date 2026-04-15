@@ -1698,7 +1698,7 @@ body {
 
 			.ur-builder-wrapper-footer {
 				.button.button-style-customizer {
-					bottom: 124px;
+					bottom: 124px !important;
 				}
 			}
 		}
@@ -3783,7 +3783,7 @@ a.button.ur-smart-tags-list-button {
 					border-radius: $border_radius_3;
 
 					min-height: 30px;
-					line-height: 2.3;
+					line-height: 2.3 !important;
 
 					&:has(span) {
 						width: 33px;
@@ -3944,7 +3944,7 @@ a.button.ur-smart-tags-list-button {
 				color: $grey-400;
 				border-radius: $border_radius_3;
 				min-height: 30px;
-				line-height: 2.3;
+				line-height: 2.3 !important;
 
 				&:has(span) {
 					width: 33px;
@@ -3992,7 +3992,7 @@ a.button.ur-smart-tags-list-button {
 				font-size: 14px;
 				min-height: 32px;
 				margin-bottom: 0px;
-				line-height: 2.3;
+				line-height: 2.3 !important;
 
 				&:hover {
 					background: $primary_dark;
@@ -10134,6 +10134,10 @@ body.user-registration-page {
 				}
 
 				input[type="radio"] {
+					&:focus {
+						box-shadow: none !important;
+					}
+
 					&:checked::before {
 						background: $primary_color;
 					}
@@ -10201,4 +10205,11 @@ body.user-registration-page {
 	&--warning {
 		border-left-color: #ffc700;
 	}
+}
+
+.user-registration-part-delete {
+	min-height: 30px !important;
+	font-size: 14px;
+	line-height: 2 !important;
+	border-radius: 3px !important;
 }
