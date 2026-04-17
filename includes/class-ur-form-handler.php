@@ -672,7 +672,6 @@ class UR_Form_Handler {
 
 			$result = UR_Shortcode_My_Account::retrieve_password();
 
-			// If successful, redirect to my account with query arg set.
 			if ( true === $result ) {
 				wp_redirect(
 					add_query_arg(
@@ -688,8 +687,31 @@ class UR_Form_Handler {
 					)
 				);
 				exit;
-			}else{
-				wp_redirect( add_query_arg( 'ur-lp-error', $result ) );
+			} else {
+				$allowed_error_types = array(
+					'empty',
+					'blocked',
+					'invalid',
+					'not_allowed',
+					'email_failed',
+				);
+
+				$error_type = isset( $result['error_type'] ) ? sanitize_key( $result['error_type'] ) : 'invalid';
+				$error_type = in_array( $error_type, $allowed_error_types, true ) ? $error_type : 'invalid';
+
+				$error_message = isset( $result['message'] ) ? sanitize_text_field( $result['message'] ) : '';
+
+				wp_redirect(
+					esc_url_raw(
+						add_query_arg(
+							array(
+								'ur-lp-error' => $error_type,
+								'message'     => rawurlencode( $error_message ),
+							),
+							$lost_password_url
+						)
+					)
+				);
 				exit;
 			}
 		}

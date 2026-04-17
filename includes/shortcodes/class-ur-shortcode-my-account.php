@@ -385,17 +385,29 @@ class UR_Shortcode_My_Account {
 				echo '<p>' . esc_html__( 'Password reset link is invalid or expired.', 'user-registration' ) . '</p>';
 				return;
 			}
-		}elseif ( ! empty( $_GET['ur-lp-error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$error_message = '';
+		}elseif ( isset( $_GET['ur-lp-error'] ) && is_scalar( $_GET['ur-lp-error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$allowed_error_types = array(
+				'empty',
+				'blocked',
+				'invalid',
+				'not_allowed',
+				'email_failed',
+			);
 
-			if ( ! empty( $_GET['ur-lp-error']['message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$error_message = sanitize_text_field(
-					rawurldecode( wp_unslash( $_GET['ur-lp-error']['message'] ) )
-				);
-			}
+			$error_type = sanitize_key( wp_unslash( $_GET['ur-lp-error'] ) );
 
-			if ( ! empty( $error_message ) ) {
-				ur_add_notice( $error_message, 'error' );
+			if ( in_array( $error_type, $allowed_error_types, true ) ) {
+				$error_message = '';
+
+				if ( isset( $_GET['ur-lp-error-message'] ) && is_scalar( $_GET['ur-lp-error-message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					$error_message = sanitize_text_field(
+						rawurldecode( wp_unslash( $_GET['ur-lp-error-message'] ) )
+					);
+				}
+
+				if ( ! empty( $error_message ) ) {
+					ur_add_notice( $error_message, 'error' );
+				}
 			}
 		}
 
