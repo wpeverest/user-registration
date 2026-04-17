@@ -688,6 +688,14 @@ class UR_Form_Handler {
 				);
 				exit;
 			} else {
+
+				$lost_password_page_id = get_option( 'user_registration_lost_password_page_id', false );
+
+				if ( $lost_password_page_id && ! empty( get_post( $lost_password_page_id ) ) ) {
+					$lost_password_url = get_permalink( $lost_password_page_id );
+				} else {
+					$lost_password_url = home_url( '/' );
+				}
 				$allowed_error_types = array(
 					'empty',
 					'blocked',

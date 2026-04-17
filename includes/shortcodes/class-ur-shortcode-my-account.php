@@ -399,9 +399,9 @@ class UR_Shortcode_My_Account {
 			if ( in_array( $error_type, $allowed_error_types, true ) ) {
 				$error_message = '';
 
-				if ( isset( $_GET['ur-lp-error-message'] ) && is_scalar( $_GET['ur-lp-error-message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( isset( $_GET['message'] ) && is_scalar( $_GET['message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$error_message = sanitize_text_field(
-						rawurldecode( wp_unslash( $_GET['ur-lp-error-message'] ) )
+						rawurldecode( wp_unslash( $_GET['message'] ) )
 					);
 				}
 
