@@ -347,7 +347,7 @@ class UR_Shortcode_My_Account {
 		if ( ! empty( $_GET['reset-link-sent'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return ur_get_template( 'myaccount/lost-password-confirmation.php' );
 
-		} elseif ( ! empty( $_GET['show-reset-form'] ) ) {
+		} elseif ( ! empty( $_GET['show-reset-form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
 				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
 					$user                  = get_user_by( 'login', $rp_login );
@@ -356,13 +356,13 @@ class UR_Shortcode_My_Account {
 				$user = self::check_password_reset_key( $rp_key, $rp_login );
 
 				if ( ! empty( $user ) ) {
-						$form_id                   = ur_get_form_id_by_userid( $user->ID );
-						$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
-						$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+					$form_id                   = ur_get_form_id_by_userid( $user->ID );
+					$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
+					$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 						$form_data_array           = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
-						do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
-						wp_enqueue_script( 'ur-form-validator' );
+					do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
+					wp_enqueue_script( 'ur-form-validator' );
 
 					if ( $enable_strong_password ) {
 						wp_enqueue_script( 'ur-password-strength-meter' );
@@ -377,9 +377,25 @@ class UR_Shortcode_My_Account {
 							'minimum_password_strength' => $minimum_password_strength,
 						)
 					);
+				} else {
+					echo '<p>' . esc_html__( 'Password reset link is invalid or expired.', 'user-registration' ) . '</p>';
+					return;
 				}
 			} else {
-				return '<p>Password reset link is invalid or expired.</p>';
+				echo '<p>' . esc_html__( 'Password reset link is invalid or expired.', 'user-registration' ) . '</p>';
+				return;
+			}
+		}elseif ( ! empty( $_GET['ur-lp-error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$error_message = '';
+
+			if ( ! empty( $_GET['ur-lp-error']['message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$error_message = sanitize_text_field(
+					rawurldecode( wp_unslash( $_GET['ur-lp-error']['message'] ) )
+				);
+			}
+
+			if ( ! empty( $error_message ) ) {
+				ur_add_notice( $error_message, 'error' );
 			}
 		}
 
@@ -419,15 +435,17 @@ class UR_Shortcode_My_Account {
 
 		$login = isset( $_POST['user_login'] ) ? trim( wp_unslash( $_POST['user_login'] ) ) : null; // phpcs:ignore
 
+		unset( $_POST['user_login'] );
+
 		if ( empty( $login ) ) {
-			ur_add_notice(
-				apply_filters(
+			$result = array(
+				'error_type' => 'empty_username',
+				'message' => apply_filters(
 					'user_registration_empty_login_error_message',
 					__( 'Enter a username or email address.', 'user-registration' )
 				),
-				'error'
 			);
-			return false;
+			return $result;
 		} else {
 			// Check on username first, as customers can use emails as usernames.
 			$user_data = get_user_by( 'login', $login );
@@ -442,8 +460,11 @@ class UR_Shortcode_My_Account {
 		do_action( 'lostpassword_post', $errors, $user_data );
 
 		if ( $errors->get_error_code() ) {
-			ur_add_notice( $errors->get_error_message(), 'error' );
-			return false;
+			$result = array(
+				'error_type' => 'validation_error',
+				'message' => $errors->get_error_message(),
+			);
+			return $result;
 		}
 		/**
 		 * Show same error message for invalid username or email as login form.
@@ -460,8 +481,11 @@ class UR_Shortcode_My_Account {
 		$error_message = apply_filters( 'user_registration_invalid_username_or_email_error_message', $invalid_username_or_email_error_message );
 
 		if ( ! $user_data || ( is_multisite() && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) ) {
-			ur_add_notice( $error_message, 'error' );
-			return false;
+			$result = array(
+				'error_type' => 'invalid_username_or_email',
+				'message' => $error_message,
+			);
+			return $result;
 		}
 
 		// Redefining user_login ensures we return the right case in the email.
@@ -470,12 +494,18 @@ class UR_Shortcode_My_Account {
 		$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
 
 		if ( ! $allow ) {
-			ur_add_notice( __( 'Password reset is not allowed for this user', 'user-registration' ), 'error' );
-			return false;
+			$result = array(
+				'error_type' => 'password_reset_not_allowed',
+				'message' => apply_filters( 'user_registration_password_reset_not_allowed_error_message', __( 'Password reset is not allowed for this user.', 'user-registration' ) ),
+			);
+			return $result;
 
 		} elseif ( is_wp_error( $allow ) ) {
-			ur_add_notice( $allow->get_error_message(), 'error' );
-			return false;
+			$result = array(
+				'error_type' => 'validation_error',
+				'message' => $allow->get_error_message(),
+			);
+			return $result;
 		}
 
 		// Get password reset key (function introduced in WordPress 4.4).
@@ -483,8 +513,11 @@ class UR_Shortcode_My_Account {
 
 		// Send email notification.
 		if ( UR_Emailer::lost_password_email( $user_login, $user_data, $key ) == false ) {
-			ur_add_notice( __( 'The email could not be sent. Contact your site administrator. ', 'user-registration' ), 'error' );
-			return false;
+			$result = array(
+				'error_type' => 'email_sending_failed',
+				'message' => apply_filters( 'user_registration_lost_password_email_sending_failed_error_message', __( 'There was a problem while sending the email. Please try again later.', 'user-registration' ) ),
+			);
+			return $result;
 		}
 
 		return true;
@@ -595,13 +628,25 @@ class UR_Shortcode_My_Account {
 	 */
 	public static function set_reset_password_cookie( $value = '' ) {
 		$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
-		$rp_path   = isset( $_SERVER['REQUEST_URI'] ) ? current( explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) : ''; // phpcs:ignore
 
-		$reset_password_page_id = get_option( 'user_registration_reset_password_page_id', false );
+		$rp_path = wp_parse_url( home_url( '/' ), PHP_URL_PATH );
+		$rp_path = $rp_path ? trailingslashit( $rp_path ) : '/';
 
-		if ( $reset_password_page_id ) {
-			$reset_url = get_permalink( $reset_password_page_id );
-			$rp_path   = wp_parse_url( $reset_url, PHP_URL_PATH );
+		$lost_password_page_id = get_option( 'user_registration_lost_password_page_id', false );
+
+		if ( $lost_password_page_id && get_post( $lost_password_page_id ) ) {
+			$path = wp_parse_url( get_permalink( $lost_password_page_id ), PHP_URL_PATH );
+			if ( ! empty( $path ) ) {
+				$rp_path = trailingslashit( $path );
+			}
+		} else {
+			$reset_password_page_id = get_option( 'user_registration_reset_password_page_id', false );
+			if ( $reset_password_page_id && get_post( $reset_password_page_id ) ) {
+				$path = wp_parse_url( get_permalink( $reset_password_page_id ), PHP_URL_PATH );
+				if ( ! empty( $path ) ) {
+					$rp_path = trailingslashit( $path );
+				}
+			}
 		}
 
 		if ( $value ) {

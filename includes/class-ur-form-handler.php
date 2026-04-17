@@ -30,7 +30,7 @@ class UR_Form_Handler {
 		add_action( 'template_redirect', array( __CLASS__, 'save_change_password' ) );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_login' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_registration' ), 20 );
-		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
+		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 1 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
 		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
 		add_action( 'user_registration_save_profile_details', array( __CLASS__, 'ur_update_user_ip_after_profile_update' ), 10, 2 );
@@ -670,10 +670,10 @@ class UR_Form_Handler {
 				}
 			}
 
-			$success = UR_Shortcode_My_Account::retrieve_password();
+			$result = UR_Shortcode_My_Account::retrieve_password();
 
 			// If successful, redirect to my account with query arg set.
-			if ( $success ) {
+			if ( true === $result ) {
 				wp_redirect(
 					add_query_arg(
 						'reset-link-sent',
@@ -687,6 +687,9 @@ class UR_Form_Handler {
 						)
 					)
 				);
+				exit;
+			}else{
+				wp_redirect( add_query_arg( 'ur-lp-error', $result ) );
 				exit;
 			}
 		}
