@@ -1052,7 +1052,7 @@ class AJAX {
 				if ( ! $logged_in ) {
 					wp_send_json_error(
 						array(
-							'message' => isset( $update_stripe_order['message'] ) ? $update_stripe_order['message'] : __( 'Something went wrong when updating users payment status' ),
+							'message' => isset( $update_stripe_order['message'] ) ? $update_stripe_order['message'] : __( 'Something went wrong when updating users payment status', 'user-registration' ),
 						),
 						500
 					);
@@ -1099,7 +1099,7 @@ class AJAX {
 		}
 		wp_send_json_error(
 			array(
-				'message' => isset( $update_stripe_order['message'] ) ? $update_stripe_order['message'] : __( 'Something went wrong when updating users payment status' ),
+				'message' => isset( $update_stripe_order['message'] ) ? $update_stripe_order['message'] : __( 'Something went wrong when updating users payment status', 'user-registration' ),
 			),
 			500
 		);
@@ -1285,7 +1285,7 @@ class AJAX {
 
 			wp_send_json_error(
 				array(
-					'message' => __( 'Something went wrong when updating users payment status' ),
+					'message' => __( 'Something went wrong when updating users payment status', 'user-registration' ),
 				)
 			);
 		}
@@ -2020,7 +2020,7 @@ class AJAX {
 					)
 				);
 			}
-			$message = __( 'Membership upgraded successfully.', 'user-registration-membership' );
+			$message = __( 'Membership upgraded successfully.', 'user-registration' );
 
 			// Prepare data to register subscription upgrade event.
 			$members_subscription_repository = new MembersSubscriptionRepository();
@@ -2338,7 +2338,7 @@ class AJAX {
 				);
 			}
 
-			$message = __( 'Membership purchased successfully.', 'user-registration-membership' );
+			$message = __( 'Membership purchased successfully.', 'user-registration' );
 			wp_send_json_success(
 				array(
 					'is_purchasing_multiple'   => true,
@@ -2521,7 +2521,7 @@ class AJAX {
 
 		$response = $renew_membership['response'];
 		if ( $response['status'] ) {
-			$message = __( 'Membership renewed successfully.', 'user-registration-membership' );
+			$message = __( 'Membership renewed successfully.', 'user-registration' );
 
 			// Prepare data to register subscription renew event.
 			$members_subscription_repository = new MembersSubscriptionRepository();
@@ -2732,7 +2732,7 @@ class AJAX {
 		if ( is_wp_error( $lists ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'API list not found' ),
+					'message' => __( 'API list not found', 'user-registration' ),
 				)
 			);
 		}
