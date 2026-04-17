@@ -292,13 +292,13 @@ class OrdersListTable extends \UR_List_Table {
 		return array(
 			'id'     => sprintf(
 				/* translators: %d: Item id */
-				__( 'ID: %d', 'user-registration-file-downloads' ),
+				__( 'ID: %d', 'user-registration' ),
 				$order_id ?: $user_id
 			),
 			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( admin_url( 'admin.php?page=member-payment-history&action=edit&id=' . $edit_id . '&type=' . $edit_type ) ),
-				esc_html__( 'Edit', 'user-registration-file-downloads' )
+				esc_html__( 'Edit', 'user-registration' )
 			),
 			'delete' => '<a data-user-id=' . esc_attr( $user_id ) . ' data-order-id = ' . esc_attr( $order_id ) . ' class="single-delete-order" style="cursor:pointer" >' . esc_html__( 'Trash', 'user-registration' ) . '</a>',
 		);
