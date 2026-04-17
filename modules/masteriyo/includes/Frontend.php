@@ -57,7 +57,7 @@ class Frontend {
 		$membership_id = isset( $_POST['membership_id'] ) ? absint( $_POST['membership_id'] ) : 0;
 
 		if ( ! $membership_id ) {
-			wp_send_json_error( __( 'Invalid membership ID', 'masteriyo' ) );
+			wp_send_json_error( __( 'Invalid membership ID', 'user-registration' ) );
 		}
 
 		$user_membership_ids = array();
@@ -109,7 +109,7 @@ class Frontend {
 			}
 		}
 
-		wp_send_json_error( __( 'Invalid membership ID', 'masteriyo' ) );
+		wp_send_json_error( __( 'Invalid membership ID', 'user-registration' ) );
 	}
 
 
