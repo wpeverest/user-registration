@@ -209,10 +209,23 @@ class PaypalService {
 			$item_name            .= ' - ' . $currency_symbol . $final_amount . ' for ' . $subscription_value . ' ' . $subscription_duration;
 		}
 
+		$notify_url = apply_filters(
+			'user_registration_paypal_membership_notify_url',
+			add_query_arg( 'ur-membership-listener', 'IPN', home_url( 'index.php' ) )
+		);
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'PayPal notify_url configured',
+			'info',
+			array(
+				'notify_url' => $notify_url,
+				'member_id'  => $member_id,
+			)
+		);
 		$paypal_args = array(
 			'business'      => sanitize_email( $paypal_options['email'] ),
 			'cancel_return' => $paypal_options['cancel_url'],
-			'notify_url'    => add_query_arg( 'ur-membership-listener', 'IPN', home_url( 'index.php' ) ),
+			'notify_url'    => $notify_url,
 			'cbt'           => $membership_data['post_title'],
 			'charset'       => get_bloginfo( 'charset' ),
 			'cmd'           => $transaction,
@@ -230,8 +243,6 @@ class PaypalService {
 			'item_name'     => $item_name,
 			'email'         => sanitize_email( $member_email ),
 		);
-
-		error_log( print_r( $paypal_args, true ) );
 		if ( '_xclick-subscriptions' === $transaction ) {
 			if ( ! empty( $data['team_id'] ) && ! empty( $data['team_data'] ) ) {
 				$paypal_args['t3'] = ! empty( $data ['team_data']['team_duration_period'] ) ? strtoupper( substr( $data['team_data']['team_duration_period'], 0, 1 ) ) : '';
