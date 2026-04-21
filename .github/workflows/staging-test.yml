@@ -142,17 +142,42 @@ jobs:
           name: UR-Report
           path: python-code/results/
 
-      #  Publish Report
-      - name: Publish Report
-        if: success() || failure()
+      - name: Publish Report to Server
+        if: always()
         run: |
+          PR_ID=${{ github.event.pull_request.number }}
+          RUN_ID=${{ github.run_number }}
+
+          REMOTE_PATH="/var/www/anup-urautomation.wp1.site/reports/pr-${PR_ID}/run-${RUN_ID}"
+
+          echo "Creating remote directory..."
           sshpass -p "${{ secrets.QA_AUTOMATION_SERVER_PASS }}" ssh -o StrictHostKeyChecking=no \
           ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}@${{ secrets.QA_AUTOMATION_SERVER_IP }} \
-          'rm -rf /var/www/anup-urautomation.wp1.site/reports/*'
+          "mkdir -p $REMOTE_PATH"
 
+          echo "Uploading reports..."
           sshpass -p "${{ secrets.QA_AUTOMATION_SERVER_PASS }}" scp -r -o StrictHostKeyChecking=no \
           python-code/results/* \
-          ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}@${{ secrets.QA_AUTOMATION_SERVER_IP }}:/var/www/anup-urautomation.wp1.site/reports/
+          ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}@${{ secrets.QA_AUTOMATION_SERVER_IP }}:$REMOTE_PATH
 
           echo "Report URL:"
-          echo "https://anup-urautomation.wp1.site/reports/report.html"
+          echo "https://anup-urautomation.wp1.site/reports/pr-${PR_ID}/run-${RUN_ID}/report.html"
+
+
+      - name: Comment PR with Execution Report
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.issue.number;
+            const run = context.runNumber;
+
+            const reportUrl = `https://anup-urautomation.wp1.site/reports/pr-${pr}/run-${run}/report.html`;
+
+            const body = `**Latest Report:** ${reportUrl}`;
+            github.rest.issues.createComment({
+              issue_number: pr,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
