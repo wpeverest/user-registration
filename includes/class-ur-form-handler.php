@@ -958,7 +958,6 @@ class UR_Form_Handler {
 				'order'         => 'DESC',
 				'no_found_rows' => true,
 				'nopaging'      => true,
-				'lang'          => '',
 			);
 
 			$args = wp_parse_args( $args, $defaults );

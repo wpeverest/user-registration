@@ -2085,7 +2085,6 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
 			'orderby'        => 'ID',
 			'order'          => 'ASC',
 			'no_found_rows'  => true,
-			'lang'           => '',
 		);
 
 		$posts = get_posts( $fallback_args );

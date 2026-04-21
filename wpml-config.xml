@@ -1,70 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <wpml-config>
-	<admin-texts>
-		<key name="user_registration_successful_form_submission_message_manual_registation" />
-		<key name="user_registration_successful_form_submission_message_email_confirmation" />
-		<key name="user_registration_successful_form_submission_message_admin_approval" />
-		<key name="user_registration_form_submission_error_message_required_fields" />
-		<key name="user_registration_form_submission_error_message_email" />
-		<key name="user_registration_form_submission_error_message_website_URL" />
-		<key name="user_registration_form_submission_error_message_number" />
-		<key name="user_registration_form_submission_error_message_confirm_email" />
-		<key name="user_registration_form_submission_error_message_confirm_password" />
-		<key name="user_registration_form_submission_error_message_phone_number" />
-		<key name="user_registration_form_submission_error_message_recaptcha" />
+    <custom-types>
+        <custom-type translate="0">user_registration</custom-type>
+        <custom-type translate="0">ur_membership</custom-type>
+        <custom-type translate="0">ur_membership_groups</custom-type>
+        <custom-type translate="0">ur_pro_popup</custom-type>
+        <custom-type translate="0">ur_membership_team</custom-type>
+        <custom-type translate="0">ur_frontend_listings</custom-type>
+        <custom-type translate="0">ur_coupons</custom-type>
+        <custom-type translate="0">urfd_file</custom-type>
+        <custom-type translate="0">urcr_access_rule</custom-type>
+    </custom-types>
 
-		<key name="user_registration_admin_email_subject" />
-		<key name="user_registration_admin_email" />
-		<key name="user_registration_awaiting_admin_approval_email_subject" />
-		<key name="user_registration_awaiting_admin_approval_email" />
-		<key name="user_registration_approval_link_email" />
-		<key name="user_registration_email_confirmation_subject" />
-		<key name="user_registration_email_confirmation" />
-		<key name="user_registration_registration_denied_email_subject" />
-		<key name="user_registration_registration_denied_email" />
-		<key name="user_registration_successfully_registered_email_subject" />
-		<key name="user_registration_successfully_registered_email" />
-		<key name="user_registration_successful_email_verified_message" />
-		<key name="user_registration_registration_pending_email_subject" />
-		<key name="user_registration_registration_pending_email" />
-		<key name="user_registration_registration_approved_email_subject" />
-		<key name="user_registration_registration_approved_email" />
-		<key name="user_registration_reset_password_email_subject" />
-		<key name="user_registration_reset_password_email" />
-		<key name="user_registration_profile_details_changed_email_subject" />
-		<key name="user_registration_profile_details_changed_email" />
-		<key name="user_registration_profile_details_updated_email_subject" />
-		<key name="user_registration_profile_details_Updated_email" />
-		<key name="user_registration_pro_email_email_verified_admin_email_subject" />
-		<key name="user_registration_pro_email_verified_admin_email" />
+    <admin-texts>
+        <key name="user_registration_successful_form_submission_message_manual_registation" />
+        <key name="user_registration_successful_form_submission_message_email_confirmation" />
+        <key name="user_registration_successful_form_submission_message_admin_approval" />
+        <key name="user_registration_form_submission_error_message_required_fields" />
+        <key name="user_registration_form_submission_error_message_email" />
+        <key name="user_registration_form_submission_error_message_website_URL" />
+        <key name="user_registration_form_submission_error_message_number" />
+        <key name="user_registration_form_submission_error_message_confirm_email" />
+        <key name="user_registration_form_submission_error_message_confirm_password" />
+        <key name="user_registration_form_submission_error_message_phone_number" />
+        <key name="user_registration_form_submission_error_message_recaptcha" />
 
-		<key name="user_registration_general_setting_registration_label" />
-		<key name="user_registration_general_setting_registration_url_options"/>
+        <key name="user_registration_admin_email_subject" />
+        <key name="user_registration_admin_email" />
+        <key name="user_registration_awaiting_admin_approval_email_subject" />
+        <key name="user_registration_awaiting_admin_approval_email" />
+        <key name="user_registration_approval_link_email" />
+        <key name="user_registration_email_confirmation_subject" />
+        <key name="user_registration_email_confirmation" />
+        <key name="user_registration_registration_denied_email_subject" />
+        <key name="user_registration_registration_denied_email" />
+        <key name="user_registration_successfully_registered_email_subject" />
+        <key name="user_registration_successfully_registered_email" />
+        <key name="user_registration_successful_email_verified_message" />
+        <key name="user_registration_registration_pending_email_subject" />
+        <key name="user_registration_registration_pending_email" />
+        <key name="user_registration_registration_approved_email_subject" />
+        <key name="user_registration_registration_approved_email" />
+        <key name="user_registration_reset_password_email_subject" />
+        <key name="user_registration_reset_password_email" />
+        <key name="user_registration_profile_details_changed_email_subject" />
+        <key name="user_registration_profile_details_changed_email" />
+        <key name="user_registration_profile_details_updated_email_subject" />
+        <key name="user_registration_profile_details_Updated_email" />
+        <key name="user_registration_pro_email_email_verified_admin_email_subject" />
+        <key name="user_registration_pro_email_verified_admin_email" />
 
-		<key name="user_registration_label_username_or_email" />
-		<key name="user_registration_label_password" />
-		<key name="user_registration_label_remember_me" />
-		<key name="user_registration_label_login" />
-		<key name="user_registration_label_lost_your_password" />
-		<key name="user_registration_placeholder_username_or_email" />
-		<key name="user_registration_placeholder_password" />
-		<key name="user_registration_message_username_required" />
-		<key name="user_registration_message_empty_password" />
-		<key name="user_registration_message_invalid_username" />
-		<key name="user_registration_message_unknown_email" />
-		<key name="user_registration_message_pending_approval" />
-		<key name="user_registration_message_denied_account" />
+        <key name="user_registration_general_setting_registration_label" />
+        <key name="user_registration_general_setting_registration_url_options"/>
 
+        <key name="user_registration_label_username_or_email" />
+        <key name="user_registration_label_password" />
+        <key name="user_registration_label_remember_me" />
+        <key name="user_registration_label_login" />
+        <key name="user_registration_label_lost_your_password" />
+        <key name="user_registration_placeholder_username_or_email" />
+        <key name="user_registration_placeholder_password" />
+        <key name="user_registration_message_username_required" />
+        <key name="user_registration_message_empty_password" />
+        <key name="user_registration_message_invalid_username" />
+        <key name="user_registration_message_unknown_email" />
+        <key name="user_registration_message_pending_approval" />
+        <key name="user_registration_message_denied_account" />
 
-		<key name="user_registration_invalid_email_error_message" />
-		<key name="user_registration_invalid_url_error_message" />
-		<key name="user_registration_invalid_date_error_message" />
-		<key name="user_registration_empty_field_error_message" />
-		<key name="user_registration_non_boolean_value_error_message" />
-		<key name="user_registration_non_numeric_data_error_message" />
-		<key name="user_registration_single_field_label" />
-		<key name="user_registration_pro_auto_password_generation_message" />
-		<key name="user_registration_pro_email_verified_admin_approval_await_message" />
-		<key name="user_registration_form_submission_error_message_disallow_username_character" />
-		<key name="user_registration_form_setting_form_submit_label" />
-	</admin-texts>
+        <key name="user_registration_invalid_email_error_message" />
+        <key name="user_registration_invalid_url_error_message" />
+        <key name="user_registration_invalid_date_error_message" />
+        <key name="user_registration_empty_field_error_message" />
+        <key name="user_registration_non_boolean_value_error_message" />
+        <key name="user_registration_non_numeric_data_error_message" />
+        <key name="user_registration_single_field_label" />
+        <key name="user_registration_pro_auto_password_generation_message" />
+        <key name="user_registration_pro_email_verified_admin_approval_await_message" />
+        <key name="user_registration_form_submission_error_message_disallow_username_character" />
+        <key name="user_registration_form_setting_form_submit_label" />
+    </admin-texts>
 </wpml-config>
