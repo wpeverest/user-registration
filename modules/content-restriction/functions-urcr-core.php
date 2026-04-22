@@ -113,7 +113,6 @@ function urcr_get_excluded_page_ids() {
 	 * @param array $excluded_page_ids Array of page IDs to exclude.
 	 *
 	 * @since 4.0.0
-	 *
 	 */
 	return apply_filters( 'urcr_excluded_page_ids', $excluded_page_ids );
 }
@@ -181,7 +180,7 @@ function urcr_is_action_specified( $access_rule = array() ) {
 /**
  * See if the post is in the provided targets list.
  *
- * @param array $targets Targets list.
+ * @param array       $targets Targets list.
  * @param object|null $target_post Post to check against.
  *
  * @return bool
@@ -311,7 +310,7 @@ function urcr_is_current_target( $targets = array() ) {
 /**
  * See if the required conditions are met by the given logic map to be resolved as true.
  *
- * @param array $logic_map Logic Map.
+ * @param array       $logic_map Logic Map.
  * @param object|null $target_post Post to check against.
  *
  * @return bool
@@ -580,7 +579,7 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 													! empty( $membership['post_id'] ) &&
 													(int) $membership['post_id'] === (int) $team_membership_id &&
 													! empty( $membership['status'] ) &&
-													'active' === $membership['status'] &&
+													in_array( $membership['status'], array( 'active', 'trial' ), true ) &&
 													in_array( $membership['post_id'], $sources, true )
 												) {
 													return true;
@@ -594,7 +593,7 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 
 						if ( ! empty( $user_membership ) && is_array( $user_membership ) ) {
 							foreach ( $user_membership as $membership ) {
-								if ( ! empty( $membership['status'] ) && 'active' === $membership['status'] ) {
+								if ( ! empty( $membership['status'] ) && in_array( $membership['status'], array( 'active', 'trial' ), true ) ) {
 									if ( ! empty( $membership['post_id'] ) && in_array( $membership['post_id'], $sources, true ) ) {
 										return true;
 									}
@@ -649,7 +648,7 @@ function urcr_set_elementor_content_restricted() {
 /**
  * Apply content restriction to the current content.
  *
- * @param array $actions Sequence of actions to run.
+ * @param array       $actions Sequence of actions to run.
  * @param object|null $target_post Post to check against.
  *
  * @return bool
@@ -744,7 +743,14 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 
 			$target_post->post_content = $styled_content;
 
-			if( class_exists( 'Elementor\Plugin' ) ) {
+			add_filter( 'comments_open', '__return_false', PHP_INT_MAX );
+			add_filter( 'pings_open', '__return_false', PHP_INT_MAX );
+			add_filter( 'get_comments_number', '__return_zero', PHP_INT_MAX );
+			add_filter( 'the_post_navigation', '__return_empty_string', PHP_INT_MAX );
+			add_filter( 'get_next_post', '__return_null', PHP_INT_MAX );
+			add_filter( 'get_previous_post', '__return_null', PHP_INT_MAX );
+			
+			if ( class_exists( 'Elementor\Plugin' ) ) {
 				add_filter(
 					'elementor/frontend/the_content',
 					function () use ( $styled_content ) {
@@ -758,7 +764,7 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 					}
 				);
 
-				if( $is_whole_site_restriction ) {
+				if ( $is_whole_site_restriction ) {
 					$target_post->post_content = '';
 				}
 			}
@@ -848,7 +854,7 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
  * Get other templates (e.g. my account) passing attributes and including the file.
  *
  * @param string $template_name Template Name.
- * @param array $args Extra arguments(default: array()).
+ * @param array  $args Extra arguments(default: array()).
  * @param string $template_path Path of template provided (default: '').
  * @param string $default_path Default path of template provided(default: '').
  */
@@ -1123,7 +1129,7 @@ function urcr_build_migration_conditions( $allow_to_value ) {
  * Create a migrated rule post.
  *
  * @param string $title Rule title.
- * @param array $rule_data Rule data array.
+ * @param array  $rule_data Rule data array.
  *
  * @return int|false Rule ID on success, false on failure.
  */
@@ -1196,7 +1202,7 @@ function urcr_migrate_global_restriction_settings() {
 
 	if ( $rule_id ) {
 		update_option( 'urcr_global_restriction_migrated', true );
-		//To track it is global.
+		// To track it is global.
 		update_post_meta( $rule_id, 'urcr_is_global', true );
 		update_option( 'urcr_is_global', $rule_id );
 		delete_option( 'user_registration_content_restriction_whole_site_access' );

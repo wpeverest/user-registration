@@ -3,6 +3,21 @@
 		<span class="notice_message"></span>
 		<span class="close_notice">&times;</span>
 	</div>
+
+	<?php
+		// Determine redirect URL for membership registration (e.g., form setting / thank you page).
+		if ( function_exists( 'ur_get_form_redirect_url' ) ) {
+			$membership_redirect_url = ur_get_form_redirect_url( $form_id );
+		} else {
+			$membership_redirect_url = '';
+		}
+		// Avoid deprecated notice: ensure this is always a string before passing to esc_url().
+		if ( null === $membership_redirect_url ) {
+			$membership_redirect_url = '';
+		}
+	?>
+	<input type="hidden" id="urm-redirect-url" name="ur-redirect-url"
+		   value="<?php echo esc_url( $membership_redirect_url ); ?>"/>
 </div>
 <!--user registration section-->
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
@@ -184,7 +199,11 @@
 							value="<?php echo esc_attr( $membership['ID'] ); ?>"
 							data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
 							data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
-							data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
+							data-urm-membership-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
+							data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['calculated_amount'] ); ?>"
+							<?php
+							echo isset( $_GET['action'] ) && 'upgrade' === $_GET['action'] && $membership['amount'] > $membership['calculated_amount'] ? 'data-urm-upgrade-type="' . esc_attr__( 'Prorated', 'user-registration' ) . '"' : '';
+							?>
 							data-urm-default-pg="<?php echo $urm_default_pg; ?>"
 							data-urm-local-currency-details = "<?php echo esc_attr( json_encode( $enabled_zones ) ); ?>"
 							data-urm-converted-amount = "<?php echo esc_attr( $converted_amount ); ?>"
@@ -234,7 +253,7 @@
 										value="<?php echo esc_attr( $membership['ID'] ); ?>"
 										data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
 										data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
-										data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
+										data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['calculated_amount'] ); ?>"
 										data-has-coupon-link="<?php echo esc_attr( in_array( $membership['ID'], $membership_ids_link_with_coupons ) ? 'yes' : 'no' ); ?>"
 										data-urm-default-pg="<?php echo $urm_default_pg; ?>"
 									<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
@@ -538,6 +557,30 @@
 			</div>
 			<span id="payment-gateway-notice" class="notice_red"></span>
 		</div>
+		<?php
+		$show_bank_details_on_form = false;
+		if ( isset( $attributes['user_registration_show_bank_details_on_form'] ) ) {
+			$show_bank_details_on_form = ur_string_to_bool( $attributes['user_registration_show_bank_details_on_form'] );
+		} elseif ( ! empty( $attributes['form_id'] ) && function_exists( 'ur_get_form_field_data' ) ) {
+			$form_id_raw   = $attributes['form_id'];
+			$form_id_int   = is_array( $form_id_raw ) ? ( ! empty( $form_id_raw ) ? absint( reset( $form_id_raw ) ) : 0 ) : absint( $form_id_raw );
+			$form_fields   = $form_id_int > 0 ? ur_get_form_field_data( $form_id_int ) : array();
+			foreach ( (array) $form_fields as $field ) {
+				if ( isset( $field->field_key, $field->general_setting->user_registration_show_bank_details_on_form ) && 'membership' === $field->field_key ) {
+					$show_bank_details_on_form = ur_string_to_bool( $field->general_setting->user_registration_show_bank_details_on_form );
+					break;
+				}
+			}
+		}
+
+		$bank_details = get_option( 'user_registration_global_bank_details', '' );
+		if ( ! empty( $bank_details ) && $show_bank_details_on_form ) :
+			?>
+			<div id="ur-bank-details-container" class="ur-bank-details" style="display:none;">
+				<p class="ur-bank-details-title"><?php esc_html_e( 'Bank Details :', 'user-registration' ); ?></p>
+				<?php echo wp_kses_post( $bank_details ); ?>
+			</div>
+		<?php endif; ?>
 	</div>
 	<div class="ur_membership_frontend_input_container">
 		<div class="stripe-container urm-d-none">
@@ -571,4 +614,25 @@
 	?>
 
 </div>
-<!--user order successful section-->
+
+<script type="text/javascript">
+	(function( $ ) {
+		function urToggleBankDetails() {
+			var selectedMethod = $( 'input[name="urm_payment_method"]:checked' ).val();
+			var $container     = $( '#ur-bank-details-container' );
+
+			if ( ! $container.length ) {
+				return;
+			}
+
+			if ( selectedMethod === 'bank' ) {
+				$container.show();
+			} else {
+				$container.hide();
+			}
+		}
+
+		$( document ).on( 'change', 'input[name="urm_payment_method"]', urToggleBankDetails );
+		$( document ).ready( urToggleBankDetails );
+	})( jQuery );
+</script>
