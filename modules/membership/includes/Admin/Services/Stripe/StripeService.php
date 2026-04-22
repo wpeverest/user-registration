@@ -564,7 +564,7 @@ class StripeService {
 				);
 
 				$response['client_secret'] = $intent->client_secret;
-
+				$this->orders_repository->update( $response_data['order_id'], array('transaction_id' => $intent->id));
 				PaymentGatewayLogging::log_transaction_success(
 					'stripe',
 					'Payment intent created successfully',
@@ -603,13 +603,30 @@ class StripeService {
 	}
 
 	/**
+	 * Return a failed order response, optionally logging an error.
+	 *
+	 * @param array       $response    Base response array.
+	 * @param string      $message     User-facing error message.
+	 * @param string|null $log_message Optional. Message for PaymentGatewayLogging::log_error.
+	 * @param array       $log_context Optional. Context for log
+	 * @return array
+	 */
+	private function update_order_error( array $response, $message, $log_message = null, $log_context = array() ) {
+		$response['status']  = false;
+		$response['message'] = $message;
+		if ( $log_message !== null && $log_message !== '' ) {
+			PaymentGatewayLogging::log_error( 'stripe', $log_message, $log_context );
+		}
+		return $response;
+	}
+
+	/**
 	 * Update order after Stripe payment confirmation.
 	 *
 	 * @param array $data Data from frontend.
 	 * @return array
 	 */
 	public function update_order( $data ) {
-		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? $data['payment_result']['id'] ?? '';
 		$payment_status         = sanitize_text_field( $data['payment_status'] );
 		$member_id              = isset( $_POST['member_id'] ) ? absint( wp_unslash( $_POST['member_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$membership_process     = urm_get_membership_process( $member_id );
@@ -621,7 +638,7 @@ class StripeService {
 		$team_id                = isset( $_POST['team_id'] ) && '' !== $_POST['team_id'] ? absint( wp_unslash( $_POST['team_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$order_id               = $data['order_id'] ?? '';
 
-		if ( empty( $transaction_id ) ) {
+		if ( empty( $transaction_id ) || preg_match('/^sub_/', $transaction_id) ) {
 			$transaction_id = $data['payment_result']['latest_invoice']['payment_intent']['id'] ?? '';
 		}
 
@@ -647,10 +664,7 @@ class StripeService {
 		$stripe_settings = self::get_stripe_settings();
 
 		if ( empty( $stripe_settings['secret_key'] ) ) {
-			$response['status']  = false;
-			$response['message'] = __( 'Stripe secret key is not configured.', 'user-registration' );
-
-			return $response;
+			return $this->update_order_error( $response, __( 'Stripe secret key is not configured.', 'user-registration' ) );
 		}
 
 		\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
@@ -669,71 +683,64 @@ class StripeService {
 				return $response;
 			}
 
-			PaymentGatewayLogging::log_error(
-				'stripe',
+			return $this->update_order_error(
+				$response,
+				__( 'Payment verification failed: missing payment identifier.', 'user-registration' ),
 				'Payment confirmation rejected: missing PaymentIntent ID',
-				array(
-					'error_code' => 'MISSING_PAYMENT_INTENT',
-					'member_id'  => $member_id,
-				)
+				array( 'error_code' => 'MISSING_PAYMENT_INTENT', 'member_id' => $member_id )
 			);
-			$response['status']  = false;
-			$response['message'] = __( 'Payment verification failed: missing payment identifier.', 'user-registration' );
+		}
+
+		$latest_order = $this->orders_repository->get_order_by_transaction_id( $pi_id );
+
+		$latest_order = is_array( $latest_order ) ? $latest_order : ( $latest_order ? (array) $latest_order : array() );
+
+		if ( empty( $latest_order ) || (int) $member_id !== (int) $latest_order['user_id'] ) {
+			return $this->update_order_error(
+				$response,
+				__( 'Order not found for this member.', 'user-registration' ),
+				'Order not found for member',
+				array( 'error_code' => 'ORDER_NOT_FOUND', 'member_id' => $member_id )
+			);
+		}
+
+		if ( ! empty( $latest_order ) && 'stripe' !== $latest_order['payment_method'] ) {
+			return $this->update_order_error(
+				$response,
+				__( 'Payment method mismatch: order payment method is not stripe' ),
+				'Payment method mismatch: order payment method is not stripe',
+				array( 'error_code' => 'PAYMENT_METHOD_MISMATCH', 'member_id' => $member_id,
+				'order_id'       => $latest_order['ID'],
+					'payment_method' => $latest_order['payment_method'], )
+			);
+
 			return $response;
 		}
 
-		$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
+		try {
+			$intent = \Stripe\PaymentIntent::retrieve( $latest_order['transaction_id'] );
+		} catch ( \Stripe\Exception\ApiErrorException $ex ) {
+			return $this->update_order_error(
+				$response,
+				__( 'Payment verification failed.', 'user-registration' ),
+				'Stripe API error occurred while retrieving PaymentIntent',
+				array(
+					'error_code'        => 'STRIPE_API_ERROR',
+					'error_message'     => $ex->getMessage(),
+					'member_id'         => $member_id,
+					'payment_intent_id' => $pi_id,
+				)
+			);
+		}
 
 		if ( $intent->status !== 'succeeded' ) {
-			$response['status']  = false;
-			$response['message'] = __( 'Payment not completed.', 'user-registration' );
-			return $response;
+			return $this->update_order_error( $response, __( 'Payment not completed.', 'user-registration' ) );
 		}
 
 		$payment_status = $intent->status;
 
-		$latest_order = $this->orders_repository->get_order_by_transaction_id( $intent->id );
-		if ( empty( $latest_order ) ) {
-			$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
-		}
-		$latest_order = is_array( $latest_order ) ? $latest_order : ( $latest_order ? (array) $latest_order : array() );
-
-		if ( ! empty( $latest_order ) && 'stripe' !== $latest_order['payment_method'] ) {
-			PaymentGatewayLogging::log_error(
-				'stripe',
-				'Payment method mismatch: order payment method is not stripe',
-				array(
-					'error_code'     => 'PAYMENT_METHOD_MISMATCH',
-					'member_id'      => $member_id,
-					'order_id'       => $latest_order['ID'],
-					'payment_method' => $latest_order['payment_method'],
-				)
-			);
-			$response['status']  = false;
-			$response['message'] = __( 'Invalid payment method for this order.', 'user-registration' );
-			return $response;
-		}
-
-		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id, $order_id ) ) {
-			$response['status']  = false;
-			$response['message'] = __( 'Duplicate transaction id.', 'user-registration' );
-
-			return $response;
-		}
-
-		if ( empty( $latest_order ) ) {
-			PaymentGatewayLogging::log_error(
-				'stripe',
-				'Order not found for member',
-				array(
-					'error_code' => 'ORDER_NOT_FOUND',
-					'member_id'  => $member_id,
-				)
-			);
-			$response['status']  = false;
-			$response['message'] = __( 'Order not found for  ' . $member_id, 'user-registration' );
-
-			return $response;
+		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id , $order_id ) ) {
+			return $this->update_order_error( $response, __( 'Duplicate transaction id.', 'user-registration' ) );
 		}
 
 		$membership       = $this->membership_repository->get_single_membership_by_ID( $latest_order['item_id'] );
@@ -741,16 +748,12 @@ class StripeService {
 		if ( $team_id ) {
 			$team_data = get_post_meta( $team_id, 'urm_team_data', true );
 			if ( ! $team_data ) {
-				PaymentGatewayLogging::log_error(
-					'stripe',
+				return $this->update_order_error(
+					$response,
+					__( 'Invalid team data.', 'user-registration' ),
 					'Invalid team data',
-					array(
-						'error_code' => 'INVALID_TEAM_DATA',
-						'member_id'  => $member_id,
-					)
+					array( 'error_code' => 'INVALID_TEAM_DATA', 'member_id' => $member_id )
 				);
-
-				return $response;
 			}
 			$membership_type = $team_data['team_plan_type'] ?? 'unknown';
 		} else {
