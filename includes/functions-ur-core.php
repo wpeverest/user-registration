@@ -7140,6 +7140,9 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 								}
 
 								$field['value'] = ! empty( $attachment_ids ) ? implode( ',', $attachment_ids ) : '';
+
+								$user_id = get_current_user_id();
+
 								if ( current_user_can( 'edit_user', $user_id ) ) {
 									update_user_meta( $user_id, 'user_registration_' . $single_item->general_setting->field_name, $field['value'] );
 								}
