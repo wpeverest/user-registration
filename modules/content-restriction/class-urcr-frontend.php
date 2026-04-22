@@ -698,7 +698,7 @@ class URCR_Frontend {
 	 * @return bool
 	 */
 	public function ur_user_can_view_woocommerce_product( $product_id ) {
-		$can_view                    = true;
+		$can_view = true;
 
 		if ( is_super_admin() ) {
 			return $can_view;
@@ -733,7 +733,7 @@ class URCR_Frontend {
 	 * @return bool
 	 */
 	public function ur_user_can_purchase_woocommerce_product( $product_id ) {
-		$can_purchase                = true;
+		$can_purchase = true;
 
 		if ( is_super_admin() ) {
 			return $can_purchase;
@@ -1059,7 +1059,7 @@ class URCR_Frontend {
 
 		if ( ! $is_restriction_applied && UR_PRO_ACTIVE && ur_check_module_activation( 'content-drip' ) ) {
 
-			//apply content dripping.
+			// apply content dripping.
 			$frontend = new WPEverest\URM\ContentDrip\Frontend();
 			return $frontend->apply_content_drip();
 		}
@@ -1385,6 +1385,13 @@ class URCR_Frontend {
 		if ( is_object( $post ) && isset( $post->ID ) ) {
 			$post->post_content = $styled_content;
 
+			add_filter( 'comments_open', '__return_false', PHP_INT_MAX );
+			add_filter( 'pings_open', '__return_false', PHP_INT_MAX );
+			add_filter( 'get_comments_number', '__return_zero', PHP_INT_MAX );
+			add_filter( 'the_post_navigation', '__return_empty_string', PHP_INT_MAX );
+			add_filter( 'get_next_post', '__return_null', PHP_INT_MAX );
+			add_filter( 'get_previous_post', '__return_null', PHP_INT_MAX );
+
 			// Add filter for elementor content.
 			add_filter(
 				'elementor/frontend/the_content',
@@ -1468,6 +1475,13 @@ class URCR_Frontend {
 		}
 
 		$post->post_content = $message_content;
+
+		add_filter( 'comments_open', '__return_false', PHP_INT_MAX );
+		add_filter( 'pings_open', '__return_false', PHP_INT_MAX );
+		add_filter( 'get_comments_number', '__return_zero', PHP_INT_MAX );
+		add_filter( 'the_post_navigation', '__return_empty_string', PHP_INT_MAX );
+		add_filter( 'get_next_post', '__return_null', PHP_INT_MAX );
+		add_filter( 'get_previous_post', '__return_null', PHP_INT_MAX );
 
 		// Add filter for elementor content.
 		add_filter( 'elementor/frontend/the_content', array( $this, 'elementor_restrict' ) );
