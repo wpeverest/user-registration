@@ -579,6 +579,8 @@ html {
 					display: flex;
 					align-items: center;
 					gap: $spacing_20px;
+					flex-wrap: wrap;
+					row-gap: 0;
 
 					@media screen and (max-width: 600px) {
 						flex-direction: column;
@@ -593,13 +595,13 @@ html {
 				.ur_membership_input_label {
 					border-radius: $border_radius_4;
 					border: $border_width solid $border-color;
-					padding: $spacing_14px !important;
+					padding: $spacing_14px $spacing_14px !important;
 					height: 48px;
 					margin-bottom: $spacing_20px !important;
 					justify-content: center;
-					flex: 1;
 					align-items: center;
 					transition: all 0.3s ease;
+					flex-basis: 30%;
 
 					&:hover {
 						border-color: var(--ur-primary-color, $primary_color);
@@ -1987,6 +1989,42 @@ html {
 				height: 30px;
 				fill: $grey-0;
 			}
+		}
+	}
+}
+
+.ur_membership_frontend_input_container {
+	.ur-bank-details {
+		width: auto;
+		padding: 20px;
+		align-items: center;
+		background-color: #f8f8fa;
+		border: 1px solid #edf2f7;
+		border-radius: 6px;
+		text-align: left;
+		font-size: 16px;
+		font-weight: 400;
+		color: #383838;
+		line-height: 30px;
+		gap: 12px;
+
+		.ur-bank-details-title {
+			font-size: 16px;
+			font-weight: 500;
+			margin-bottom: 12px;
+			color: #1f1f1f;
+			border-bottom: 1px solid #e1e1e1;
+			padding-bottom: 10px;
+		}
+
+		p {
+			font-size: 16px;
+			line-height: 24px;
+			margin: 0;
+			color: #000000;
+			font-weight: 400;
+			letter-spacing: 0.15px;
+			text-wrap: unset;
 		}
 	}
 }

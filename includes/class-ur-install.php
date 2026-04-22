@@ -340,6 +340,9 @@ class UR_Install {
 			),
 			'5.0'   => array(
 				'urm_update_50_option_migrate',
+			),
+			'5.1.5' => array(
+				'ur_update_515_redirect_thank_you_page_migrate',
 			)
 		);
 
