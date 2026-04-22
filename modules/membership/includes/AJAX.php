@@ -288,6 +288,7 @@ class AJAX {
 				array(
 					'member_id'      => absint( $member_id ),
 					'transaction_id' => esc_html( $transaction_id ),
+					'order_id'       => esc_html( $data['order_id'] ),
 					'message'        => esc_html__( 'New member has been successfully created.', 'user-registration' ),
 				)
 			);
