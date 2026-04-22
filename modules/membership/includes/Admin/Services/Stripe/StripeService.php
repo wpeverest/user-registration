@@ -713,6 +713,22 @@ class StripeService {
 				'order_id'       => $latest_order['ID'],
 					'payment_method' => $latest_order['payment_method'], )
 			);
+			$response['status']  = false;
+			$response['message'] = __( 'Invalid payment method for this order.', 'user-registration' );
+			return $response;
+		}
+
+		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id, $order_id ) ) {
+
+			$duplicate_order = $this->orders_repository->get_order_by_transaction_id( $transaction_id );
+			if ( ! empty( $duplicate_order ) && absint( $duplicate_order['user_id'] ) === $member_id ) {
+				$response['status']  = true;
+				$response['message'] = __( 'Payment already verified.', 'user-registration' );
+				return $response;
+			}
+
+			$response['status']  = false;
+			$response['message'] = __( 'Duplicate transaction id.', 'user-registration' );
 
 			return $response;
 		}
@@ -1722,7 +1738,10 @@ class StripeService {
 				'membership_type'     => $membership_type,
 			)
 		);
-		delete_user_meta( $member_id, 'urm_user_just_created' );
+
+		if ( $is_renewing ) {
+			delete_user_meta( $member_id, 'urm_user_just_created' );
+		}
 	}
 
 	/**
