@@ -206,7 +206,6 @@
 					}
 				}, timeout);
 			}
-
 			var has_thank_you_params =
 				thank_you_data &&
 				typeof thank_you_data === "object" &&

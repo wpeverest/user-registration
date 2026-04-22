@@ -258,7 +258,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Feature  - Payment fetch cron added for better subscription sync with Stripe.
 
 * Enhance  - Better search for addons page.
-* Enhance  - Better UI/UX for the Membership field. 
+* Enhance  - Better UI/UX for the Membership field.
 * Enhance  - Addition of Members Directory to the content rules.
 * Enhance  - Addition of navigational UI to better find plugin features.
 * Enhance  - Improved price transparency for prorated membership upgrades.
