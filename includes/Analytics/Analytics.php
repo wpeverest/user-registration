@@ -64,9 +64,9 @@ class Analytics {
 		 */
 		$controllers = apply_filters(
 			'user_registration_analytics_controllers',
-			[
+			array(
 				AnalyticsController::class,
-			]
+			)
 		);
 		foreach ( $controllers as $controller ) {
 			$instance = new $controller();

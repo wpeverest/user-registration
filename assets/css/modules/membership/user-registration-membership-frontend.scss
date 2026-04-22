@@ -579,6 +579,8 @@ html {
 					display: flex;
 					align-items: center;
 					gap: $spacing_20px;
+					flex-wrap: wrap;
+					row-gap: 0;
 
 					@media screen and (max-width: 600px) {
 						flex-direction: column;
@@ -593,13 +595,13 @@ html {
 				.ur_membership_input_label {
 					border-radius: $border_radius_4;
 					border: $border_width solid $border-color;
-					padding: $spacing_14px !important;
+					padding: $spacing_14px $spacing_14px !important;
 					height: 48px;
 					margin-bottom: $spacing_20px !important;
 					justify-content: center;
-					flex: 1;
 					align-items: center;
 					transition: all 0.3s ease;
+					flex-basis: 30%;
 
 					&:hover {
 						border-color: var(--ur-primary-color, $primary_color);

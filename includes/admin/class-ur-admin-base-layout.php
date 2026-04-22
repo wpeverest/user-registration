@@ -130,8 +130,6 @@ class UR_Base_Layout {
 					endif;
 					?>
 				<?php
-				$table->views();
-				echo '</br>';
 				if ( is_object( $table ) && method_exists( $table, 'display' ) ) {
 					$table->display();
 				}
