@@ -443,6 +443,7 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 													}
 												} elseif ( 'country' === $field_key ) {
 													$value   = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+													$value   = is_array( $value ) ? '' : (string) $value;
 													$is_json = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
 													if ( $is_json ) {
 														$country_data = json_decode( $value, true );

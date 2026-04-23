@@ -87,6 +87,7 @@ class AJAX {
 			'create_subscription'          => false,
 			'update_subscription'          => false,
 			'validate_payment_currency'    => false,
+			'validate_stripe_card_mode'    => true,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -145,6 +146,26 @@ class AJAX {
 					'message' => __( 'Payment method is required.', 'user-registration' ),
 				)
 			);
+		}
+
+		if ( 'stripe' === $data['payment_method'] ) {
+			if ( ! empty( $data['stripe_pm_error'] ) ) {
+				wp_delete_user( absint( $member_id ) );
+				wp_send_json_error(
+					array(
+						'message' => sanitize_text_field( $data['stripe_pm_error'] ),
+					)
+				);
+			}
+
+			if ( ! empty( $data['payment_method_id'] ) ) {
+				$stripe_service = new StripeService();
+				$mode_result    = $stripe_service->validate_card_mode( sanitize_text_field( $data['payment_method_id'] ) );
+				if ( ! $mode_result['valid'] ) {
+					wp_delete_user( absint( $member_id ) );
+					wp_send_json_error( array( 'message' => $mode_result['message'] ) );
+				}
+			}
 		}
 
 		// Get membership type for logging
@@ -276,6 +297,7 @@ class AJAX {
 				array(
 					'member_id'      => absint( $member_id ),
 					'transaction_id' => esc_html( $transaction_id ),
+					'order_id'       => esc_html( $data['order_id'] ),
 					'message'        => esc_html__( 'New member has been successfully created.', 'user-registration' ),
 				)
 			);
@@ -988,6 +1010,32 @@ class AJAX {
 			),
 			$response['code']
 		);
+	}
+
+	/**
+	 * Validate Stripe card mode before user registration.
+	 * Checks whether the submitted payment method's livemode matches the
+	 * configured Stripe mode, preventing test cards in live mode and vice versa.
+	 *
+	 * @return void
+	 */
+	public static function validate_stripe_card_mode() {
+		ur_membership_verify_nonce( 'ur_members_frontend' );
+
+		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method_id'] ) ) : '';
+
+		if ( empty( $payment_method_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Payment method ID is required.', 'user-registration' ) ) );
+		}
+
+		$stripe_service = new StripeService();
+		$result         = $stripe_service->validate_card_mode( $payment_method_id );
+
+		if ( $result['valid'] ) {
+			wp_send_json_success();
+		} else {
+			wp_send_json_error( array( 'message' => $result['message'] ) );
+		}
 	}
 
 	public static function confirm_payment() {

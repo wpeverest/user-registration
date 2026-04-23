@@ -1,7 +1,7 @@
 <?php
 
 $bank_data         = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post( $_GET['info'] ) : '';
-$show_bank_data 			= ( 'Free' === $bank_data || empty($bank_data)) ? false : true;
+$show_bank_data    = ( 'Free' === $bank_data || empty( $bank_data ) ) ? false : true;
 $transaction_id    = ( isset( $_GET['transaction_id'] ) && ! empty( $_GET['transaction_id'] ) ) ? wp_kses_post( $_GET['transaction_id'] ) : '';
 $username          = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) ) ? wp_kses_post( $_GET['username'] ) : '';
 $main_content      = ! empty( $attributes['header'] ) ? wp_kses_post( $attributes['header'] ) : sprintf(
@@ -67,9 +67,9 @@ $redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
 				?>
 			</p>
 
-			<?php if ( $show_bank_data && $show_bank_details  ) : ?>
+			<?php if ( $show_bank_data && $show_bank_details ) : ?>
 				<div class="ur-bank-details">
-					<p class="ur-bank-details-title" ><?php echo __( 'Bank Details :') ?></p>
+					<p class="ur-bank-details-title" ><?php echo __( 'Bank Details :' ); ?></p>
 					<?php echo $bank_data; ?>
 				</div>
 			<?php endif; ?>
