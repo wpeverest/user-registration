@@ -21,24 +21,29 @@ add_action( 'template_redirect', 'ur_template_redirect' );
  */
 function ur_template_redirect() {
 	global $wp;
-	if ( isset( $wp->query_vars['user-logout'] )
-		|| ( isset( $wp->query_vars['name'] ) && 'user-logout' === $wp->query_vars['name'] )
-			&& ! empty( $_REQUEST['_wpnonce'] )
-		   && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
-		// Logout.
-		$redirect_url = str_replace( '/user-logout', '', $wp->request );
-		/**
-		 * Filter the redirect after logout url.
-		 *
-		 * @param string $redirect_url The redirect url.
-		 */
 
-		// Check if external url is present in URL.
-		if ( isset( $_GET['redirect_to_on_logout'] ) ) {
-			wp_logout();
-			wp_safe_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to_on_logout'] ) ) );
+	if ( ( isset( $wp->query_vars['user-logout'] )
+		|| ( isset( $wp->query_vars['name'] ) && 'user-logout' === $wp->query_vars['name'] ) )
+			&& ! empty( $_REQUEST['_wpnonce'] )
+			&& wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
+
+		$redirect_url = str_replace( '/user-logout', '', $wp->request );
+
+		if ( isset( $_GET['redirect_to_on_logout'] ) && isset( $_GET['redirect_sig'] ) ) {
+			$requested_redirect = esc_url_raw( wp_unslash( $_GET['redirect_to_on_logout'] ) );
+			$provided_sig       = sanitize_text_field( wp_unslash( $_GET['redirect_sig'] ) );
+
+			if ( ur_verify_redirect_signature( $requested_redirect, $provided_sig ) ) {
+				wp_logout();
+				wp_redirect( $requested_redirect ); //PHPCS:ignore;
+			} else {
+				// Signature invalid or missing — attacker-crafted URL, reject it.
+				wp_logout();
+				wp_safe_redirect( home_url() );
+			}
 			exit;
 		}
+
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
 		wp_logout();
 		wp_safe_redirect( ur_get_page_permalink( $redirect_url ) );
@@ -51,10 +56,66 @@ function ur_template_redirect() {
 		 * @param string $redirect_url The redirect url.
 		 */
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
-		// Redirect to the correct logout endpoint.
-		wp_safe_redirect( urldecode( $redirect_url ) );
+		wp_safe_redirect( $redirect_url );
 		exit;
 	}
+}
+
+/**
+ * Generate a signed logout redirect URL.
+ *
+ * Use this in your code wherever you build the logout link.
+ * The signature is an HMAC-SHA256 of the redirect URL using
+ * WordPress's AUTH_KEY as the secret — never exposed to the client.
+ *
+ * Example:
+ *   $logout_url = ur_generate_signed_logout_url( 'https://patrowl.io/dashboard' );
+ *   // Produces:
+ *   // https://example.com/?user-logout=1
+ *   //   &redirect_to_on_logout=https%3A%2F%2Fpatrowl.io%2Fdashboard
+ *   //   &redirect_sig=<hmac>
+ *   //   &_wpnonce=<nonce>
+ *
+ * @param string $redirect_url The external (or internal) URL to redirect to after logout.
+ * @return string Signed logout URL.
+ */
+function ur_generate_signed_logout_url( $redirect_url ) {
+	$sig = ur_generate_redirect_signature( $redirect_url );
+
+	return add_query_arg(
+		array(
+			'user-logout'           => '1',
+			'redirect_to_on_logout' => rawurlencode( $redirect_url ),
+			'redirect_sig'          => $sig,
+			'_wpnonce'              => wp_create_nonce( 'user-logout' ),
+		),
+		ur_get_page_permalink( 'myaccount' )
+	);
+}
+
+/**
+ * Generate an HMAC-SHA256 signature for a redirect URL.
+ *
+ * @param string $redirect_url The URL to sign.
+ * @return string Hex-encoded HMAC signature.
+ */
+function ur_generate_redirect_signature( $redirect_url ) {
+	return hash_hmac( 'sha256', $redirect_url, wp_salt( 'auth' ) );
+}
+
+/**
+ * Verify that a redirect URL matches its provided signature.
+ *
+ * Uses hash_equals() for timing-safe comparison to prevent
+ * timing side-channel attacks.
+ *
+ * @param string $redirect_url The URL to verify.
+ * @param string $provided_sig The signature provided in the request.
+ * @return bool True if signature is valid, false otherwise.
+ */
+function ur_verify_redirect_signature( $redirect_url, $provided_sig ) {
+	$expected_sig = ur_generate_redirect_signature( $redirect_url );
+	return hash_equals( $expected_sig, $provided_sig );
 }
 
 if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
@@ -1584,8 +1645,7 @@ function ur_check_external_url( $url ) {
 	if ( in_array( $url, $all_page_slug, true ) ) {
 		$redirect_url = site_url( $url );
 	} else {
-		$redirect_url = ur_get_page_permalink( 'myaccount' );
-		$redirect_url = add_query_arg( 'redirect_to_on_logout', $url, $redirect_url );
+		$redirect_url = ur_generate_signed_logout_url( $url );
 	}
 
 	return $redirect_url;
