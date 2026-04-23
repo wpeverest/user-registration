@@ -68,16 +68,19 @@ class PaypalService {
 
 		PaymentGatewayLogging::log_transaction_start(
 			'paypal',
-			'Building PayPal payment URL',
-			array(
-				'member_id'       => $member_id,
-				'membership_id'   => $membership,
-				'member_email'    => $member_email,
-				'subscription_id' => $subscription_id,
-				'is_upgrading'    => $is_upgrading,
-				'membership_type' => $membership_type,
+			sprintf( ' [Member ID #%s] Building PayPal payment URL.', $member_id ) . "\n" . wp_json_encode(
+				array(
+					'member_id'       => $member_id,
+					'membership_id'   => $membership,
+					'member_email'    => $member_email,
+					'subscription_id' => $subscription_id,
+					'is_upgrading'    => $is_upgrading,
+					'membership_type' => $membership_type,
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
+
 		$membership_amount = 0;
 		if ( ! empty( $data['team_id'] ) && ! empty( $data['team_data'] ) ) {
 			$team_data  = $data['team_data'];
@@ -186,7 +189,7 @@ class PaypalService {
 			)
 		);
 
-		if ( ! empty( $response_data['tax_rate' ] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
+		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
 			$tax_rate     = floatval( $response_data['tax_rate'] );
 			$tax_amount   = $final_amount * $tax_rate / 100;
 			$final_amount = $final_amount + $tax_amount;
@@ -280,18 +283,20 @@ class PaypalService {
 
 		PaymentGatewayLogging::log_transaction_success(
 			'paypal',
-			'PayPal payment URL built successfully',
-			array(
-				'final_amount'     => $final_amount,
-				'transaction_type' => $transaction,
-				'item_name'        => $item_name,
-				'currency'         => get_option( 'user_registration_payment_currency', 'USD' ),
-				'member_id'        => $member_id,
-				'membership_id'    => $membership,
-				'subscription_id'  => $subscription_id,
-				'payment_mode'     => $paypal_options['mode'],
-				'membership_type'  => $membership_type,
-			)
+			sprintf( ' [Member ID #%s] PayPal payment URL built successfully.', $member_id ) . "\n" . wp_json_encode(
+				array(
+					'final_amount'     => $final_amount,
+					'transaction_type' => $transaction,
+					'item_name'        => $item_name,
+					'currency'         => get_option( 'user_registration_payment_currency', 'USD' ),
+					'member_id'        => $member_id,
+					'membership_id'    => $membership,
+					'subscription_id'  => $subscription_id,
+					'payment_mode'     => $paypal_options['mode'],
+					'membership_type'  => $membership_type,
+				),
+				JSON_PRETTY_PRINT
+			) . "\n "
 		);
 
 		return $final_url;
@@ -342,7 +347,7 @@ class PaypalService {
 		$is_renewing         = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'] );
 
 		if ( 'completed' === $member_order['status'] ) {
-			 ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
+			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 		}
 
 		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
@@ -443,11 +448,11 @@ class PaypalService {
 		}
 
 		$login_option = ur_get_user_login_option( $member_id );
-		$data = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
+		$data         = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
 
 		if ( 'auto_login' === $login_option ) {
 			$member_service = new MembersService();
-			$password        = isset( $data['password'] ) ? $data['password'] : '';
+			$password       = isset( $data['password'] ) ? $data['password'] : '';
 			$member_service->login_member( $member_id, true, $password );
 		}
 		delete_user_meta( $member_id, 'urm_user_just_created' );
