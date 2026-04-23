@@ -128,6 +128,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
 			add_action( 'init', array( $this, 'init' ), 0 );
 			add_action( 'init', array( 'UR_Shortcodes', 'init' ) );
+			add_action( 'plugins_loaded', array( $this, 'init_wpml_compat' ), 20 );
 
 			add_filter( 'plugin_action_links_' . UR_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
 			add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
@@ -150,6 +151,15 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 						'source' => 'fatal-errors',
 					)
 				);
+			}
+		}
+
+		/**
+		 * Instantiate WPML compatibility class when WPML is active.
+		 */
+		public function init_wpml_compat() {
+			if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+				new UR_WPML();
 			}
 		}
 
@@ -288,6 +298,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-privacy.php';
 			include_once UR_ABSPATH . 'includes/class-ur-form-block.php';
 			include_once UR_ABSPATH . 'includes/class-ur-cache-helper.php';
+			include_once UR_ABSPATH . 'includes/class-ur-wpml.php';
+
 			/**
 			 * Block classes.
 			 */
