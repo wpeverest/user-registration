@@ -285,21 +285,14 @@ var backupOriginalGlobals = function() {
 	}
 };
 
-// Enhanced conflict detection that runs continuously
-var enhancedConflictDetection = function() {
-	// This function is no longer needed - we use complete isolation instead
-};
-
-
-
 // Function to load fresh reCAPTCHA when all backups are hCaptcha
+var freshRecaptchaLoading = false;
 var loadFreshRecaptcha = function() {
-	if (typeof window.ur_fresh_grecaptcha === 'undefined') {
-		// Load reCAPTCHA immediately (no delay) to ensure it loads first
+	if (typeof window.ur_fresh_grecaptcha === 'undefined' && !freshRecaptchaLoading) {
+		freshRecaptchaLoading = true;
 		var script = document.createElement('script');
 		script.src = 'https://www.google.com/recaptcha/api.js?render=explicit&callback=onloadURFreshRecaptcha';
 		script.onload = function() {
-			// Check if we got real reCAPTCHA after a delay
 			setTimeout(function() {
 				if (window.grecaptcha && window.grecaptcha !== window.hcaptcha) {
 					window.ur_fresh_grecaptcha = window.grecaptcha;
@@ -307,6 +300,7 @@ var loadFreshRecaptcha = function() {
 			}, 1000);
 		};
 		script.onerror = function() {
+			freshRecaptchaLoading = false;
 		};
 		document.head.appendChild(script);
 	}
@@ -324,18 +318,7 @@ window.onloadURFreshRecaptcha = function() {
 // Initialize conflict detection
 backupOriginalGlobals();
 
-// Run conflict detection more frequently
-setInterval(enhancedConflictDetection, 500);
-
-// Add an even more aggressive approach - monitor for immediate overwriting
-var aggressiveConflictDetection = function() {
-	// This function is no longer needed - we use complete isolation instead
-};
-
-// Run aggressive detection very frequently
-setInterval(aggressiveConflictDetection, 100);
-
-// Add a more aggressive approach - monitor for script loading
+// Monitor for script loading to capture globals and detect hCaptcha/reCAPTCHA conflicts
 var monitorScriptLoading = function() {
 	// Check if reCAPTCHA script is loaded
 	if (typeof window.grecaptcha !== 'undefined' && !originalGrecaptcha) {
@@ -383,8 +366,15 @@ var monitorScriptLoading = function() {
 	}
 };
 
-// Monitor script loading more frequently
-setInterval(monitorScriptLoading, 100);
+// Monitor script loading until both captcha globals are captured (max ~5s)
+var monitorScriptLoadingInterval = setInterval(function() {
+	monitorScriptLoading();
+	// Stop once hCaptcha is confirmed loaded (its presence triggered any needed conflict resolution)
+	if (typeof window.hcaptcha !== 'undefined' && originalHcaptcha) {
+		clearInterval(monitorScriptLoadingInterval);
+	}
+}, 100);
+setTimeout(function() { clearInterval(monitorScriptLoadingInterval); }, 5000);
 
 var immediateCapture = function() {
 	if (typeof window.grecaptcha !== 'undefined' && !originalGrecaptcha) {
@@ -426,8 +416,6 @@ setTimeout(protectGrecaptcha, 2000);
 
 	var user_registration_recaptcha_init = function () {
 		$(function () {
-			// Detect and resolve conflicts before initializing
-			enhancedConflictDetection();
 			request_recaptcha_token();
 		});
 	};
