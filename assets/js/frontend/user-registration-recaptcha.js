@@ -436,17 +436,24 @@ setTimeout(protectGrecaptcha, 2000);
 		$(document).on(
 			"user_registration_frontend_before_form_submit",
 			function (event, data, $registration_form, $error_message) {
-				if ("undefined" !== typeof ur_recaptcha_code) {
+				var active_recaptcha_code =
+					("undefined" !== typeof ur_recaptcha_code && ur_recaptcha_code.site_key) ? ur_recaptcha_code :
+					("undefined" !== typeof ur_cloudflare_recaptcha_code && ur_cloudflare_recaptcha_code.site_key) ? ur_cloudflare_recaptcha_code :
+					("undefined" !== typeof ur_hcaptcha_recaptcha_code && ur_hcaptcha_recaptcha_code.site_key) ? ur_hcaptcha_recaptcha_code :
+					("undefined" !== typeof ur_v3_recaptcha_code && ur_v3_recaptcha_code.site_key) ? ur_v3_recaptcha_code :
+					null;
+
+				if (active_recaptcha_code !== null) {
 					if (
 						"1" == $registration_form.data("captcha-enabled") &&
-						ur_recaptcha_code.site_key.length
+						active_recaptcha_code.site_key.length
 					) {
-						if (ur_recaptcha_code.version == "v3") {
+						if (active_recaptcha_code.version == "v3") {
 							var captchaResponse = $registration_form
 								.find('[name="g-recaptcha-response"]')
 								.val();
 							request_recaptcha_token();
-						} else if (ur_recaptcha_code.version == "hCaptcha") {
+						} else if (active_recaptcha_code.version == "hCaptcha") {
 							var captchaResponse = $registration_form
 								.find('[name="h-captcha-response"]')
 								.val();
@@ -455,7 +462,7 @@ setTimeout(protectGrecaptcha, 2000);
 							if (hcaptchaObj && hcaptchaObj.reset) {
 								hcaptchaObj.reset(hcaptcha_user_registration);
 							}
-						} else if (ur_recaptcha_code.version == "cloudflare") {
+						} else if (active_recaptcha_code.version == "cloudflare") {
 							var captchaResponse = $registration_form
 								.find('[name="cf-turnstile-response"]')
 								.val();
@@ -478,7 +485,7 @@ setTimeout(protectGrecaptcha, 2000);
 							) {
 									grecaptchaObj.reset(i);
 								}
-								if (ur_recaptcha_code.is_invisible && grecaptchaObj.execute) {
+								if (active_recaptcha_code.is_invisible && grecaptchaObj.execute) {
 									grecaptchaObj.execute();
 							}
 							}
