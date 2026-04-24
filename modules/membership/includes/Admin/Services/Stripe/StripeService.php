@@ -484,14 +484,16 @@ class StripeService {
 
 		PaymentGatewayLogging::log_transaction_start(
 			'stripe',
-			'Processing Stripe payment',
-			array(
-				'member_id'       => $member_id,
-				'amount'          => $amount,
-				'currency'        => $currency,
-				'membership_type' => $membership_type,
-				'email'           => $user_email,
-			)
+			sprintf( ' [Member ID #%s] Processing Stripe payment', $member_id ) . "\n" . wp_json_encode(
+				array(
+					'member_id'       => $member_id,
+					'amount'          => $amount,
+					'currency'        => $currency,
+					'membership_type' => $membership_type,
+					'email'           => $user_email,
+				),
+				JSON_PRETTY_PRINT
+			),
 		);
 
 		$response = array(
@@ -559,12 +561,14 @@ class StripeService {
 		try {
 			PaymentGatewayLogging::log_api_request(
 				'stripe',
-				'Creating Stripe customer',
-				array(
-					'endpoint'  => 'Customer::create',
-					'email'     => $user_email,
-					'member_id' => $member_id,
-				)
+				sprintf( ' [Member ID #%s] Creating Stripe customer', $member_id ) . "\n" . wp_json_encode(
+					array(
+						'endpoint'  => 'Customer::create',
+						'email'     => $user_email,
+						'member_id' => $member_id,
+					),
+					JSON_PRETTY_PRINT
+				),
 			);
 
 			$customer = \Stripe\Customer::create(
@@ -578,11 +582,13 @@ class StripeService {
 
 			PaymentGatewayLogging::log_api_response(
 				'stripe',
-				'Stripe customer created successfully',
-				array(
-					'customer_id' => $customer->id,
-					'member_id'   => $member_id,
-				)
+				sprintf( ' [Member ID #%s] Stripe customer created successfully.', $member_id ) . "\n" . wp_json_encode(
+					array(
+						'customer_id' => $customer->id,
+						'member_id'   => $member_id,
+					),
+					JSON_PRETTY_PRINT
+				),
 			);
 
 			if ( ! empty( $customer ) ) {
@@ -591,13 +597,15 @@ class StripeService {
 			if ( 'paid' === $membership_type ) {
 				PaymentGatewayLogging::log_api_request(
 					'stripe',
-					'Creating payment intent',
-					array(
-						'endpoint'    => 'PaymentIntent::create',
-						'amount'      => $amount,
-						'currency'    => $currency,
-						'customer_id' => $customer->id,
-					)
+					sprintf( ' [Member ID #%s] Creating payment intent.', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'endpoint'    => 'PaymentIntent::create',
+							'amount'      => $amount,
+							'currency'    => $currency,
+							'customer_id' => $customer->id,
+						),
+						JSON_PRETTY_PRINT
+					),
 				);
 
 				$intent = \Stripe\PaymentIntent::create(
@@ -613,14 +621,16 @@ class StripeService {
 				$this->orders_repository->update( $response_data['order_id'], array('transaction_id' => $intent->id));
 				PaymentGatewayLogging::log_transaction_success(
 					'stripe',
-					'Payment intent created successfully',
-					array(
-						'payment_intent_id' => $intent->id,
-						'amount'            => $amount / 100,
-						'currency'          => $currency,
-						'member_id'         => $member_id,
-						'membership_type'   => $membership_type,
-					)
+					sprintf( ' [Member ID #%s] Payment intent created successfully.', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'payment_intent_id' => $intent->id,
+							'amount'            => $amount / 100,
+							'currency'          => $currency,
+							'member_id'         => $member_id,
+							'membership_type'   => $membership_type,
+						),
+						JSON_PRETTY_PRINT
+					),
 				);
 			}
 
@@ -692,15 +702,17 @@ class StripeService {
 
 		PaymentGatewayLogging::log_webhook_received(
 			'stripe',
-			'Stripe payment confirmation callback received',
-			array(
-				'webhook_type'           => 'payment_confirmation',
-				'transaction_id'         => $transaction_id,
-				'payment_status'         => $payment_status,
-				'member_id'              => $member_id,
-				'is_upgrade'             => $is_upgrading,
-				'is_purchasing_multiple' => $is_purchasing_multiple,
-			)
+			sprintf( ' [Member ID #%s] Stripe payment confirmation callback received.', $member_id ) . "\n" . wp_json_encode(
+				array(
+					'webhook_type'           => 'payment_confirmation',
+					'transaction_id'         => $transaction_id,
+					'payment_status'         => $payment_status,
+					'member_id'              => $member_id,
+					'is_upgrade'             => $is_upgrading,
+					'is_purchasing_multiple' => $is_purchasing_multiple,
+				),
+				JSON_PRETTY_PRINT
+			),
 		);
 
 		$response = array(
