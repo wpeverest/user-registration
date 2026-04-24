@@ -255,6 +255,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
  = 5.1.6   - 27/04/2026 =
 
 * Enhance  - Logger structure.
+
 * Fix      - Stripe payment bypass.
 * Fix      - Hide comments for restricted posts.
 * Fix      - User created even when payments fails.
@@ -265,6 +266,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - HCaptcha loads reCAPTCHA and endless intervals.
 * Fix      - Duplicate transaction id issue when using 3D secure card in stripe.
 * Fix      - Export Members causes fatal memory exhaustion on large user datasets.
+* Fix      - Payment history, admin page and admin approval bypass related security issue.
 * Fix      - File upload data synced to admin profile during user approval or media access.
 * Fix      - Handle array value from get_user_meta for country field in edit profile template.
 * Fix      - Cloudflare turnstile error appears on second form submission after validation failure.
