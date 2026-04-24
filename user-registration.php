@@ -128,7 +128,6 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
 			add_action( 'init', array( $this, 'init' ), 0 );
 			add_action( 'init', array( 'UR_Shortcodes', 'init' ) );
-			add_action( 'plugins_loaded', array( $this, 'init_wpml_compat' ), 20 );
 
 			add_filter( 'plugin_action_links_' . UR_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
 			add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );

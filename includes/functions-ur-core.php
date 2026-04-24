@@ -9980,11 +9980,11 @@ if ( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 		if ( ! class_exists( 'SitePress' ) ) {
 			return $url;
 		}
-		$site_press = new SitePress();
 		remove_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10 );
 
 		$translated_endpoint = ur_get_endpoint_translation( $endpoint );
-		$url                 = ur_get_endpoint_url( $translated_endpoint, $value, $site_press->convert_url( $permalink ) );
+		$converted_permalink = apply_filters( 'wpml_permalink', $permalink );
+		$url                 = ur_get_endpoint_url( $translated_endpoint, $value, $converted_permalink );
 		add_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10, 4 );
 
 		return $url;
