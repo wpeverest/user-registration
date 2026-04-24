@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - refactor/logger-strucuture
+            - v5.1.6
         workflow_dispatch:
 jobs:
     sync:
