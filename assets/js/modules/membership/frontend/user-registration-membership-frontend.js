@@ -3660,7 +3660,7 @@
 
 	var dialog = $("#URCR-Restriction-Modal");
 
-	if (dialog.length || typeof MutationObserver !== "undefined") {
+	if (dialog.length && typeof MutationObserver !== "undefined") {
 		if (
 			$(document).find(
 				"#URCR-Restriction-Modal .user-registration.ur-frontend-form > form"

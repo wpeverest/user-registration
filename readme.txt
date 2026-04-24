@@ -4,7 +4,7 @@ Tags: membership, subscription, content restriction, user profile, user registra
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 6.9.1
-Stable tag: 5.1.5
+Stable tag: 5.1.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -251,6 +251,27 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 9. Subscription Management
 
 == Changelog ==
+
+ = 5.1.6   - 27/04/2026 =
+
+* Enhance  - Logger structure.
+
+* Fix      - Stripe payment bypass.
+* Fix      - Hide comments for restricted posts.
+* Fix      - User created even when payments fails.
+* Fix      - Open redirect security issue on logout.
+* Fix      - Fatal error while updating profile details.
+* Fix      - Registration submitted without card details.
+* Fix      - Country not displaying in WordPress users menu.
+* Fix      - HCaptcha loads reCAPTCHA and endless intervals.
+* Fix      - Duplicate transaction id issue when using 3D secure card in stripe.
+* Fix      - Export Members causes fatal memory exhaustion on large user datasets.
+* Fix      - Payment history, admin page and admin approval bypass related security issue.
+* Fix      - File upload data synced to admin profile during user approval or media access.
+* Fix      - Handle array value from get_user_meta for country field in edit profile template.
+* Fix      - Cloudflare turnstile error appears on second form submission after validation failure.
+* Fix      - Stripe card mode validation to prevent test or live card mismatch during registration.
+* Fix      - Payment stuck on 'Invalid Request' and network error after successful Stripe subscription.
 
 = 5.1.5    - 18/3/2026 =
 
