@@ -749,7 +749,21 @@ class StripeService {
 			);
 		}
 
-		$latest_order = $this->orders_repository->get_order_by_transaction_id( $pi_id );
+		try {
+			$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
+		} catch ( \Stripe\Exception\ApiErrorException $ex ) {
+			return $this->update_order_error(
+				$response,
+				__( 'Payment verification failed.', 'user-registration' ),
+				'Stripe API error occurred while retrieving PaymentIntent',
+				array(
+					'error_code'        => 'STRIPE_API_ERROR',
+					'error_message'     => $ex->getMessage(),
+					'member_id'         => $member_id,
+					'payment_intent_id' => $pi_id,
+				)
+			);
+		}
 
 		if ( ! $intent->livemode && 'live' === $stripe_settings['mode'] ) {
 			$response['status']  = false;
@@ -763,7 +777,7 @@ class StripeService {
 			return $response;
 		}
 
-		if ( $intent->status !== 'succeeded' ) {
+		if ( 'succeeded' !== $intent->status ) {
 			$response['status']  = false;
 			$response['message'] = __( 'Payment not completed.', 'user-registration' );
 			return $response;
@@ -813,32 +827,6 @@ class StripeService {
 			$response['message'] = __( 'Duplicate transaction id.', 'user-registration' );
 
 			return $response;
-		}
-
-		try {
-			$intent = \Stripe\PaymentIntent::retrieve( $latest_order['transaction_id'] );
-		} catch ( \Stripe\Exception\ApiErrorException $ex ) {
-			return $this->update_order_error(
-				$response,
-				__( 'Payment verification failed.', 'user-registration' ),
-				'Stripe API error occurred while retrieving PaymentIntent',
-				array(
-					'error_code'        => 'STRIPE_API_ERROR',
-					'error_message'     => $ex->getMessage(),
-					'member_id'         => $member_id,
-					'payment_intent_id' => $pi_id,
-				)
-			);
-		}
-
-		if ( $intent->status !== 'succeeded' ) {
-			return $this->update_order_error( $response, __( 'Payment not completed.', 'user-registration' ) );
-		}
-
-		$payment_status = $intent->status;
-
-		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id , $order_id ) ) {
-			return $this->update_order_error( $response, __( 'Duplicate transaction id.', 'user-registration' ) );
 		}
 
 		$membership       = $this->membership_repository->get_single_membership_by_ID( $latest_order['item_id'] );
