@@ -285,21 +285,14 @@ var backupOriginalGlobals = function() {
 	}
 };
 
-// Enhanced conflict detection that runs continuously
-var enhancedConflictDetection = function() {
-	// This function is no longer needed - we use complete isolation instead
-};
-
-
-
 // Function to load fresh reCAPTCHA when all backups are hCaptcha
+var freshRecaptchaLoading = false;
 var loadFreshRecaptcha = function() {
-	if (typeof window.ur_fresh_grecaptcha === 'undefined') {
-		// Load reCAPTCHA immediately (no delay) to ensure it loads first
+	if (typeof window.ur_fresh_grecaptcha === 'undefined' && !freshRecaptchaLoading) {
+		freshRecaptchaLoading = true;
 		var script = document.createElement('script');
 		script.src = 'https://www.google.com/recaptcha/api.js?render=explicit&callback=onloadURFreshRecaptcha';
 		script.onload = function() {
-			// Check if we got real reCAPTCHA after a delay
 			setTimeout(function() {
 				if (window.grecaptcha && window.grecaptcha !== window.hcaptcha) {
 					window.ur_fresh_grecaptcha = window.grecaptcha;
@@ -307,6 +300,7 @@ var loadFreshRecaptcha = function() {
 			}, 1000);
 		};
 		script.onerror = function() {
+			freshRecaptchaLoading = false;
 		};
 		document.head.appendChild(script);
 	}
@@ -324,18 +318,7 @@ window.onloadURFreshRecaptcha = function() {
 // Initialize conflict detection
 backupOriginalGlobals();
 
-// Run conflict detection more frequently
-setInterval(enhancedConflictDetection, 500);
-
-// Add an even more aggressive approach - monitor for immediate overwriting
-var aggressiveConflictDetection = function() {
-	// This function is no longer needed - we use complete isolation instead
-};
-
-// Run aggressive detection very frequently
-setInterval(aggressiveConflictDetection, 100);
-
-// Add a more aggressive approach - monitor for script loading
+// Monitor for script loading to capture globals and detect hCaptcha/reCAPTCHA conflicts
 var monitorScriptLoading = function() {
 	// Check if reCAPTCHA script is loaded
 	if (typeof window.grecaptcha !== 'undefined' && !originalGrecaptcha) {
@@ -383,8 +366,15 @@ var monitorScriptLoading = function() {
 	}
 };
 
-// Monitor script loading more frequently
-setInterval(monitorScriptLoading, 100);
+// Monitor script loading until both captcha globals are captured (max ~5s)
+var monitorScriptLoadingInterval = setInterval(function() {
+	monitorScriptLoading();
+	// Stop once hCaptcha is confirmed loaded (its presence triggered any needed conflict resolution)
+	if (typeof window.hcaptcha !== 'undefined' && originalHcaptcha) {
+		clearInterval(monitorScriptLoadingInterval);
+	}
+}, 100);
+setTimeout(function() { clearInterval(monitorScriptLoadingInterval); }, 5000);
 
 var immediateCapture = function() {
 	if (typeof window.grecaptcha !== 'undefined' && !originalGrecaptcha) {
@@ -426,8 +416,6 @@ setTimeout(protectGrecaptcha, 2000);
 
 	var user_registration_recaptcha_init = function () {
 		$(function () {
-			// Detect and resolve conflicts before initializing
-			enhancedConflictDetection();
 			request_recaptcha_token();
 		});
 	};
@@ -448,17 +436,24 @@ setTimeout(protectGrecaptcha, 2000);
 		$(document).on(
 			"user_registration_frontend_before_form_submit",
 			function (event, data, $registration_form, $error_message) {
-				if ("undefined" !== typeof ur_recaptcha_code) {
+				var active_recaptcha_code =
+					("undefined" !== typeof ur_recaptcha_code && ur_recaptcha_code.site_key) ? ur_recaptcha_code :
+					("undefined" !== typeof ur_cloudflare_recaptcha_code && ur_cloudflare_recaptcha_code.site_key) ? ur_cloudflare_recaptcha_code :
+					("undefined" !== typeof ur_hcaptcha_recaptcha_code && ur_hcaptcha_recaptcha_code.site_key) ? ur_hcaptcha_recaptcha_code :
+					("undefined" !== typeof ur_v3_recaptcha_code && ur_v3_recaptcha_code.site_key) ? ur_v3_recaptcha_code :
+					null;
+
+				if (active_recaptcha_code !== null) {
 					if (
 						"1" == $registration_form.data("captcha-enabled") &&
-						ur_recaptcha_code.site_key.length
+						active_recaptcha_code.site_key.length
 					) {
-						if (ur_recaptcha_code.version == "v3") {
+						if (active_recaptcha_code.version == "v3") {
 							var captchaResponse = $registration_form
 								.find('[name="g-recaptcha-response"]')
 								.val();
 							request_recaptcha_token();
-						} else if (ur_recaptcha_code.version == "hCaptcha") {
+						} else if (active_recaptcha_code.version == "hCaptcha") {
 							var captchaResponse = $registration_form
 								.find('[name="h-captcha-response"]')
 								.val();
@@ -467,7 +462,7 @@ setTimeout(protectGrecaptcha, 2000);
 							if (hcaptchaObj && hcaptchaObj.reset) {
 								hcaptchaObj.reset(hcaptcha_user_registration);
 							}
-						} else if (ur_recaptcha_code.version == "cloudflare") {
+						} else if (active_recaptcha_code.version == "cloudflare") {
 							var captchaResponse = $registration_form
 								.find('[name="cf-turnstile-response"]')
 								.val();
@@ -490,7 +485,7 @@ setTimeout(protectGrecaptcha, 2000);
 							) {
 									grecaptchaObj.reset(i);
 								}
-								if (ur_recaptcha_code.is_invisible && grecaptchaObj.execute) {
+								if (active_recaptcha_code.is_invisible && grecaptchaObj.execute) {
 									grecaptchaObj.execute();
 							}
 							}
