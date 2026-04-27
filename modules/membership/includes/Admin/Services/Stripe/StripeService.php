@@ -122,13 +122,16 @@ class StripeService {
 		try {
 			$payment_method = \Stripe\PaymentMethod::retrieve( $payment_method_id );
 			$ur_log         = new PaymentGatewayLogging();
-			$ur_log->log_error(
+			$ur_log->log(
 				'stripe',
-				'Payment method retrieved',
-				array(
-					'payment_method' => $payment_method,
+				'Payment method retrieved.' . "\n" . wp_json_encode(
+					array(
+						'payment_method' => $payment_method,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
+
 			if ( ! $payment_method->livemode && 'live' === $mode ) {
 				return array(
 					'valid'   => false,
@@ -1026,7 +1029,7 @@ class StripeService {
 				array(
 					'error_code' => 'EMAIL_SEND_FAILED',
 					'member_id'  => $member_id,
-					'order_id'   => $id,
+					'order_id'   => $ID,
 				)
 			);
 		}
