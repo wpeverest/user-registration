@@ -156,9 +156,7 @@
 				);
 				$form.append(wrapper);
 				$(window).scrollTop(
-					$registration_form
-						.find(".ur-button-container")
-						.offset().top
+					$registration_form.find(".ur-button-container").offset().top
 				);
 				$(".notice-container").removeClass("active");
 			} else {
@@ -464,10 +462,10 @@
 						var is_empty = is_upgrade
 							? $(".membership-upgrade-container").find(
 									".stripe-input-container .StripeElement--empty"
-							  ).length
+								).length
 							: $(".ur-frontend-form").find(
 									".stripe-input-container .StripeElement--empty"
-							  ).length;
+								).length;
 
 						if (is_empty) {
 							no_errors = false;
@@ -2544,7 +2542,7 @@
 						urm_pg_container_scoped = $form_context.length
 							? $form_context.find(
 									".ur_payment_gateway_container"
-							  )
+								)
 							: urm_pg_container,
 						urm_pg_inputs = urm_pg_container.find("input"),
 						urm_hidden_pg_containers = $(
@@ -2707,7 +2705,7 @@
 							? selected_pg
 							: $(
 									'input[name="urm_payment_method"]:checked'
-							  ).val();
+								).val();
 
 					//validation end
 					var action = searchParams.get("action"),
@@ -2960,25 +2958,32 @@
 				"user_registration_frontend_validate_before_form_submit",
 				function (e, $form) {
 					var stripe_selected = false;
-					$('input[name="urm_payment_method"]:visible').each(function () {
-						if ($(this).val() === "stripe" && $(this).is(":checked")) {
-							stripe_selected = true;
+					$('input[name="urm_payment_method"]:visible').each(
+						function () {
+							if (
+								$(this).val() === "stripe" &&
+								$(this).is(":checked")
+							) {
+								stripe_selected = true;
+							}
 						}
-					});
-					console.log('[URM Stripe Debug] stripe_selected:', stripe_selected, '| stripe_mode_validated:', stripe_mode_validated, '| elements.card:', !!elements.card, '| elements.stripe:', !!elements.stripe);
+					);
+					// console.log('[URM Stripe Debug] stripe_selected:', stripe_selected, '| stripe_mode_validated:', stripe_mode_validated, '| elements.card:', !!elements.card, '| elements.stripe:', !!elements.stripe);
 					if (!stripe_selected) return;
 
 					if (stripe_mode_validated) return;
 
-					var stripeEmpty = $(".ur-frontend-form").find(".stripe-input-container .StripeElement--empty").length;
-					console.log('[URM Stripe Debug] elements.card:', !!elements.card, '| StripeElement--empty found:', stripeEmpty);
+					var stripeEmpty = $(".ur-frontend-form").find(
+						".stripe-input-container .StripeElement--empty"
+					).length;
+					// console.log('[URM Stripe Debug] elements.card:', !!elements.card, '| StripeElement--empty found:', stripeEmpty);
 					if (
 						!elements ||
 						!elements.stripe ||
 						!elements.card ||
 						stripeEmpty
 					) {
-						console.log('[URM Stripe Debug] Early return — skipping pre-validation');
+						// console.log('[URM Stripe Debug] Early return — skipping pre-validation');
 						return;
 					}
 
@@ -2987,10 +2992,15 @@
 					);
 
 					elements.stripe
-						.createPaymentMethod({ type: "card", card: elements.card })
+						.createPaymentMethod({
+							type: "card",
+							card: elements.card
+						})
 						.then(function (pmResult) {
 							if (pmResult.error) {
-								stripe_settings.show_stripe_error(pmResult.error.message);
+								stripe_settings.show_stripe_error(
+									pmResult.error.message
+								);
 								return;
 							}
 
@@ -3006,7 +3016,8 @@
 										$membership_registration_form
 											.find("#stripe-errors")
 											.remove();
-										validated_stripe_pm_id = pmResult.paymentMethod.id;
+										validated_stripe_pm_id =
+											pmResult.paymentMethod.id;
 										stripe_mode_validated = true;
 										if ($form && $form.length) {
 											$form
@@ -3016,9 +3027,11 @@
 										}
 									} else {
 										stripe_settings.show_stripe_error(
-											response.data && response.data.message
+											response.data &&
+												response.data.message
 												? response.data.message
-												: urmf_data.labels.i18n_stripe_mode_error
+												: urmf_data.labels
+														.i18n_stripe_mode_error
 										);
 									}
 								}
