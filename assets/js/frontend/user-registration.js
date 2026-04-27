@@ -2800,13 +2800,18 @@
 							);
 							var disallowedListArray = [];
 							if (
+								wp.passwordStrength &&
 								"function" ===
 								typeof wp.passwordStrength
 									.userInputDisallowedList
 							) {
 								disallowedListArray =
 									wp.passwordStrength.userInputDisallowedList();
-							} else {
+							} else if (
+								wp.passwordStrength &&
+								"function" ===
+								typeof wp.passwordStrength.userInputBlacklist
+							) {
 								disallowedListArray =
 									wp.passwordStrength.userInputBlacklist();
 							}
