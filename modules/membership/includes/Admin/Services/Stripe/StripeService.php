@@ -235,11 +235,13 @@ class StripeService {
 		} catch ( ApiErrorException $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Webhook creation failed',
-				array(
-					'error_code'    => 'WEBHOOK_CREATE_FAILED',
-					'error_message' => $e->getMessage(),
-					'mode'          => $mode,
+				'Webhook creation failed' . "\n" . wp_json_encode(
+					array(
+						'error_code'    => 'WEBHOOK_CREATE_FAILED',
+						'error_message' => $e->getMessage(),
+						'mode'          => $mode,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			return array(
@@ -638,12 +640,14 @@ class StripeService {
 		} catch ( ApiErrorException $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Stripe API error occurred',
-				array(
-					'error_code'    => 'STRIPE_API_ERROR',
-					'error_message' => $e->getMessage(),
-					'member_id'     => $member_id,
-				)
+				'Stripe API error occurred' . "\n" . wp_json_encode(
+					array(
+						'error_code'    => 'STRIPE_API_ERROR',
+						'error_message' => $e->getMessage(),
+						'member_id'     => $member_id,
+					),
+					JSON_PRETTY_PRINT
+				),
 			);
 
 			if ( empty( $payment_data['upgrade'] ) ) {
