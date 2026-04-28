@@ -927,6 +927,17 @@ class NewPaypalService {
 		$member_id     = absint( isset( $url_params['member_id'] ) ? $url_params['member_id'] : 0 );
 
 		if ( empty( $membership_id ) || empty( $member_id ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'PayPal redirect aborted: missing membership_id or member_id in return params.' . "\n" . wp_json_encode(
+					array(
+						'membership_id' => $membership_id,
+						'member_id'     => $member_id,
+						'raw_params'    => $params,
+					),
+					JSON_PRETTY_PRINT
+				)
+			);
 			return;
 		}
 
@@ -973,6 +984,19 @@ class NewPaypalService {
 
 		$membership = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 		if ( empty( $membership ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				sprintf(
+					'[Member ID #%s] PayPal redirect aborted: membership not found.',
+					$member_id
+				) . "\n" . wp_json_encode(
+					array(
+						'membership_id' => $membership_id,
+						'member_id'     => $member_id,
+					),
+					JSON_PRETTY_PRINT
+				)
+			);
 			return;
 		}
 
