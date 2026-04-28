@@ -3194,20 +3194,28 @@
 				$stateWrapper.append('<span class="ur-front-spinner"></span>');
 			},
 			success: function (response) {
-				var $stateElement;
+				var html = "";
 
-				if (response.success && response.data.has_state && '' !== response.data.state) {
-					var $select = $('<select class="ur-field-address-state select ur-frontend-field"></select>');
-					$select.attr('name', fieldId + '_state');
-					$select.append($($.parseHTML(response.data.state, null, false)).filter('option'));
-					$stateElement = $select;
+				if (
+					response.success &&
+					response.data.has_state &&
+					"" !== response.data.state
+				) {
+					html +=
+						'<select class="ur-field-address-state select ur-frontend-field" name="' +
+						fieldId +
+						'_state">';
+					html += response.data.state;
+					html += "</select>";
 				} else {
-					var $input = $('<input type="text" class="ur-field-address-state input-text ur-frontend-field"/>');
-					$input.attr('name', fieldId + '_state');
-					$stateElement = $input;
+					html +=
+						'<input type="text" class="ur-field-address-state input-text ur-frontend-field" name="' +
+						fieldId +
+						'_state"/>';
 				}
 
-				$( document ).find( '.ur-front-spinner' ).remove();
+				$(document).find(".ur-front-spinner").remove();
+				var $stateElement = $(html);
 
 				$stateWrapper.append($stateElement);
 			}
