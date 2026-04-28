@@ -743,6 +743,7 @@ class UR_Smart_Tags {
 					case 'membership_plan_next_billing_date':
 					case 'membership_plan_expiry_date':
 					case 'membership_plan_status':
+					case 'renewal_link':
 					case 'membership_renewal_link':
 					case 'membership_cancellation_date':
 						if ( isset( $values[ $other_tag ] ) ) {

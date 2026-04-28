@@ -394,6 +394,21 @@
 				post_meta_data.amount = form
 					.find("#ur-membership-amount")
 					.val();
+				if (post_meta_data.type === "paid") {
+					post_meta_data.enable_fixed_period_duration = form
+						.find("#urm_enable_fixed_period_duration")
+						.is(":checked");
+
+					post_meta_data.fixed_period = {
+						period_type: form
+							.find("input[name=\"urm_fixed_period_duration_type\"]:checked")
+							.val(),
+						expiration_date: form.find("#urm_fixed_expiration_date").val(),
+						expiration_date_renewal: form
+							.find("#urm_fixed_expiration_date_renewal")
+							.is(":checked")
+					};
+				}
 				var is_paypal_selected = form
 						.find("#ur-membership-pg-paypal:checked")
 						.val(),
@@ -1544,6 +1559,10 @@
 			team_pricing_container.removeClass("ur-d-flex");
 			team_pricing_container.addClass("ur-d-none");
 			payment_notice.addClass("ur-d-none");
+
+			var membership_fixed_period_container = $(".ur-membership-fixed-period-main-container");
+			membership_fixed_period_container.addClass("ur-d-none");
+
 			sub_container.show();
 			if ("free" !== val) {
 				if ("paid" === val) {
@@ -1551,6 +1570,7 @@
 					if (!paidConfigured) {
 						payment_notice.removeClass("ur-d-none");
 					}
+					membership_fixed_period_container.removeClass("ur-d-none");
 				} else {
 					sub_container.removeClass("ur-d-none");
 					membership_duration_period.removeClass("ur-d-none");
@@ -1574,6 +1594,15 @@
 			}
 		}
 	);
+
+	$(document).on("click", "#urm_enable_fixed_period_duration", function () {
+		var membership_fixed_period_settings_container = $(".ur-membership-fixed-period-settings-container");
+		if ($(this).is(":checked")) {
+			membership_fixed_period_settings_container.removeClass("ur-d-none");
+		} else {
+			membership_fixed_period_settings_container.addClass("ur-d-none");
+		}
+	});
 
 	$(document).on("click", "#ur-membership-upgrade-action", function () {
 		$("#upgrade-settings-container").toggle();

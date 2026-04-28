@@ -530,9 +530,11 @@ class EmailService {
 		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
 		$settings             = new UR_Settings_Membership_Expiring_Soon_User_Email();
 		$subscription_service = new SubscriptionService();
-		$tags                 = $subscription_service->get_membership_plan_details( $data );
+		$values               = array( 'membership_tags' => $subscription_service->get_membership_plan_details( $data ) );
+		$values               = $data + $values;
 
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_expiring_soon_user_email_message', $settings->user_registration_get_membership_expiring_soon_user_email() ), $tags, $form_id );
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_expiring_soon_user_email_message', $settings->user_registration_get_membership_expiring_soon_user_email() ), $values, $form_id );
+		$subject = \UR_Emailer::parse_smart_tags( $subject, $values );
 
 		$message = apply_filters( 'ur_membership_expiring_soon_email_custom_template', $message, $subject );
 
@@ -562,9 +564,11 @@ class EmailService {
 		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
 		$settings             = new UR_Settings_Membership_Ended_User_Email();
 		$subscription_service = new SubscriptionService();
-		$tags                 = $subscription_service->get_membership_plan_details( $data );
+		$values               = array( 'membership_tags' => $subscription_service->get_membership_plan_details( $data ) );
+		$values               = $data + $values;
 
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_ended_user_email_message', $settings->user_registration_get_membership_ended_user_email() ), $tags, $form_id );
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_ended_user_email_message', $settings->user_registration_get_membership_ended_user_email() ), $values, $form_id );
+		$subject = \UR_Emailer::parse_smart_tags( $subject, $values );
 
 		$message = apply_filters( 'ur_membership_membership_ended_email_custom_template', $message, $subject );
 
