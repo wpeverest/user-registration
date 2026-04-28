@@ -33,6 +33,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 		}
 		/**
 		 * Register hooks for submenus and section UI.
+		 *
 		 * @return void
 		 */
 		public function handle_hooks() {
@@ -180,7 +181,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 			$paypal_enabled = get_option( 'user_registration_paypal_enabled', '' );
 
 			if ( false === get_option( 'urm_global_paypal_settings_migrated_', false ) ) {
-				//runs for backward compatibility, could be removed in future versions.
+				// runs for backward compatibility, could be removed in future versions.
 				if ( 'test' === $paypal_mode ) {
 					$test_admin_email   = get_option( 'user_registration_global_paypal_email_address', '' );
 					$test_client_id     = get_option( 'user_registration_global_paypal_client_id', '' );
@@ -457,5 +458,5 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 	}
 }
 
-//Backward Compatibility.
+// Backward Compatibility.
 return method_exists( 'UR_Settings_Payment', 'get_instance' ) ? UR_Settings_Payment::get_instance() : new UR_Settings_Payment();
