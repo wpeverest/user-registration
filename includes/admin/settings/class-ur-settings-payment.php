@@ -33,6 +33,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 		}
 		/**
 		 * Register hooks for submenus and section UI.
+		 *
 		 * @return void
 		 */
 		public function handle_hooks() {
@@ -91,6 +92,10 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 			$paypal_settings        = $this->get_paypal_settings();
 			$stripe_settings        = $this->get_stripe_settings();
 			$bank_transfer_settings = $this->get_bank_transfer_settings();
+			if ( ! UR_PRO_ACTIVE ) {
+				$authorize_net_free_settings = $this->get_free_authorize_net_transfer_settings();
+				$mollie_free_settings        = $this->get_free_mollie_transfer_settings();
+			}
 			if ( 'payment-method' === $current_section ) {
 				add_filter( 'user_registration_settings_hide_save_button', '__return_true' );
 				$settings = array(
@@ -101,6 +106,10 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 						'bank_transfer_options' => $bank_transfer_settings,
 					),
 				);
+				if ( ! UR_PRO_ACTIVE ) {
+					$settings['sections']['mollie_free_options']        = $mollie_free_settings;
+					$settings['sections']['authorize_net_free_options'] = $authorize_net_free_settings;
+				}
 				/* Backward compatibility */
 				$settings = apply_filters( 'user_registration_payment_settings', $settings );
 			} elseif ( 'store' === $current_section ) {
@@ -172,7 +181,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 			$paypal_enabled = get_option( 'user_registration_paypal_enabled', '' );
 
 			if ( false === get_option( 'urm_global_paypal_settings_migrated_', false ) ) {
-				//runs for backward compatibility, could be removed in future versions.
+				// runs for backward compatibility, could be removed in future versions.
 				if ( 'test' === $paypal_mode ) {
 					$test_admin_email   = get_option( 'user_registration_global_paypal_email_address', '' );
 					$test_client_id     = get_option( 'user_registration_global_paypal_client_id', '' );
@@ -371,6 +380,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 				),
 			);
 		}
+
 		public function get_bank_transfer_settings() {
 			$bank_transfer_enabled = get_option( 'user_registration_bank_enabled', '' );
 
@@ -411,8 +421,36 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 				),
 			);
 		}
+
+		public function get_free_mollie_transfer_settings() {
+
+			return array(
+				'id'           => 'free-mollie',
+				'title'        => __( 'Mollie', 'user-registration' ),
+				'type'         => 'accordian',
+				'show_status'  => true,
+				'class'        => 'urm-mollie-settings',
+				'desc'         => '',
+				'is_connected' => get_option( 'urm_mollie_connection_status', false ),
+				'settings'     => array(),
+			);
+		}
+
+		public function get_free_authorize_net_transfer_settings() {
+
+			return array(
+				'id'           => 'free-authorize-net',
+				'title'        => __( 'Authorize.net', 'user-registration' ),
+				'type'         => 'accordian',
+				'show_status'  => true,
+				'class'        => 'urm-mollie-settings',
+				'desc'         => '',
+				'is_connected' => get_option( 'urm_authorize_net_connection_status', false ),
+				'settings'     => array(),
+			);
+		}
 	}
 }
 
-//Backward Compatibility.
+// Backward Compatibility.
 return method_exists( 'UR_Settings_Payment', 'get_instance' ) ? UR_Settings_Payment::get_instance() : new UR_Settings_Payment();

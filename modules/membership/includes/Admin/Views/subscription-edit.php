@@ -73,20 +73,20 @@ $subscription_order = $orders_repository->get_order_by_subscription( $subscripti
 $order_id           = ! empty( $subscription_order ) && isset( $subscription_order['ID'] ) ? $subscription_order['ID'] : '';
 
 $order_meta_data = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
-$tax_data 		 = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
+$tax_data        = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data['meta_value'], true ) : array();
 
-$local_currency   = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
+$local_currency = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
 
 $currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
-$symbol = ur_get_currency_symbol( $currency );
+$symbol   = ur_get_currency_symbol( $currency );
 
 $local_currency_converted_amount = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency_converted_amount' );
 
 $product_amount = ! empty( $local_currency_converted_amount['meta_value'] ) ? $local_currency_converted_amount['meta_value'] : $product_amount;
 
 $team_data      = null;
-$team_name     = '';
-$team_size     = '';
+$team_name      = '';
+$team_size      = '';
 $per_seat_price = '';
 $team_seats     = '';
 $pricing_model  = '';
@@ -105,8 +105,8 @@ if ( ! empty( $order_id ) ) {
 	if ( ! empty( $team_id ) ) {
 		$team_data = get_post_meta( $team_id, 'urm_team_data', true );
 		if ( ! empty( $team_data ) ) {
-			$team_name     = isset( $team_data['team_name'] ) ? $team_data['team_name'] : '';
-			$team_size     = isset( $team_data['team_size'] ) ? $team_data['team_size'] : '';
+			$team_name      = isset( $team_data['team_name'] ) ? $team_data['team_name'] : '';
+			$team_size      = isset( $team_data['team_size'] ) ? $team_data['team_size'] : '';
 			$pricing_model  = isset( $team_data['pricing_model'] ) ? $team_data['pricing_model'] : '';
 			$per_seat_price = isset( $team_data['per_seat_price'] ) ? $team_data['per_seat_price'] : '';
 		}
@@ -134,6 +134,8 @@ $delete_url = wp_nonce_url(
 	admin_url( 'admin.php?page=user-registration-subscriptions&action=delete&id=' . $subscription['ID'] ),
 	'ur_subscription_delete'
 );
+
+$payment_method = $subscription_order['payment_method'] ?? 'bank';
 ?>
 <div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
 	<div class="ur-page-title__wrapper">
@@ -548,7 +550,7 @@ $delete_url = wp_nonce_url(
 								);
 								$status_options = apply_filters( 'ur_membership_subscription_edit_status_options', $status_options, $subscription );
 								?>
-								<select name="status" id="ur-subscription-status" class="ur-enhanced-select" required>
+								<select name="status" id="ur-subscription-status" class="ur-enhanced-select" required <?php echo esc_attr( ! in_array( $payment_method, array( 'bank', 'paypal' ), true ) ? disabled( true ) : '' ); ?>>
 									<?php foreach ( $status_options as $status_value => $status_label ) : ?>
 									<option value="<?php echo esc_attr( $status_value ); ?>"
 										<?php selected( $subscription['status'], $status_value ); ?>>

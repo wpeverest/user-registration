@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="nav-tab-content">
 		<div class="nav-tab-inside">
 				<div class="postbox">
-					<h3 class="hndle"><?php esc_html_e( 'Export Users', 'user-registration' ); ?></h3>
+					<h3 class="hndle"><?php esc_html_e( 'Export Members', 'user-registration' ); ?></h3>
 
 					<div class="inside">
 						<p class="help">
-							<?php echo wp_kses_post( __( 'Export your users along with their extra information registered with a user registration form as a <strong>CSV</strong> file.', 'user-registration' ) ); ?>
+							<?php echo wp_kses_post( __( 'Export your members along with their extra information registered with a user registration form as a <strong>CSV</strong> file.', 'user-registration' ) ); ?>
 						</p>
 
 						<p>
@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						}
 						?>
 
-						<input type="button"  class="button button-primary ur_export_user_action_button " name="user_registration_export_users" value="<?php esc_attr_e( 'Export Users', 'user-registration' ); ?>">
+						<input type="button"  class="button button-primary ur_export_user_action_button " name="user_registration_export_users" value="<?php esc_attr_e( 'Export Members', 'user-registration' ); ?>">
 
 					</div>
 				</div><!-- .postbox -->

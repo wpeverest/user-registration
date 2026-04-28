@@ -71,7 +71,6 @@ class Orders {
 
 		$total_items = array_merge( $total_membership_items, $total_form_items );
 
-		if( count($total_items) > 0 ) {
 			$orders_page = add_submenu_page(
 				'user-registration',
 				__( 'Payments', 'user-registration' ), // page title
@@ -85,7 +84,6 @@ class Orders {
 				5
 			);
 			add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
-		}
 	}
 
 
@@ -239,7 +237,7 @@ class Orders {
 	<hr>
 	<form method="get" id="ur-membership-payment-history-form">
 		<input type="hidden" name="page" value="<?php echo $this->page; ?>" />
-		<input type="hidden" name="action" value="<?php echo $_GET['action']; ?>" />
+		<input type="hidden" name="action" value="<?php echo esc_attr( sanitize_text_field( wp_unslash( $_GET['action'] ?? '' ) ) ); ?>" />
 		<div>
 			<strong>Important Note:</strong>
 			This form is intended only to record missed payments for tracking purposes. Adding a payment here does not

@@ -34,14 +34,14 @@ class User_Registration_Stripe_Module {
 	}
 
 	/**
-	 * raw_settings
+	 * Raw Settings.
 	 *
 	 * @return array
 	 */
 	public function raw_settings() {
 		$stripe_enabled = get_option( 'user_registration_stripe_enabled', '' );
 
-		// Determine default toggle value based on urm_is_new_installation option
+		// Determine default toggle value based on urm_is_new_installation option.
 		$stripe_toggle_default = ur_string_to_bool( get_option( 'urm_is_new_installation', false ) );
 
 		return array(
@@ -128,12 +128,12 @@ class User_Registration_Stripe_Module {
 	}
 
 	/**
-	 * validate_stripe_section
+	 * Validate stripe keys.
 	 *
-	 * @param $form_data
+	 * @param array $form_data Form data with stripe creds.
 	 *
 	 * @return true[]
-	 * @throws \Stripe\Exception\ApiErrorException
+	 * @throws \Stripe\Exception\ApiErrorException Api Error Exception.
 	 */
 	public function validate_stripe_section( $form_data ) {
 		$changed  = false;
@@ -188,7 +188,7 @@ class User_Registration_Stripe_Module {
 	}
 
 	/**
-	 * save_section_settings
+	 * Save stripe section settings.
 	 *
 	 * @param array $form_data Form data.
 	 * @return void
@@ -217,6 +217,8 @@ class User_Registration_Stripe_Module {
 				);
 			}
 		}
+
+		do_action( 'user_registration_after_stripe_settings_updated', $form_data );
 	}
 }
 

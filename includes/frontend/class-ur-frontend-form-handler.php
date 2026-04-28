@@ -50,16 +50,41 @@ class UR_Frontend_Form_Handler {
 	 * @return void
 	 */
 	public static function handle_form( $form_data, $form_id ) {
+
 		$logger = ur_get_logger();
+		$logger->debug(
+			sprintf( '[Form #%d] Function == ***%s()*** - Started execution', $form_id, __FUNCTION__ ),
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
+
 		self::$form_id      = $form_id;
 		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 		if ( gettype( $form_data ) != 'array' && gettype( $form_data ) != 'object' ) {
 			$form_data = array();
 		}
-		$logger->info( __( 'Getting the form fields', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+		$logger->info(
+			sprintf( '[Form #%d] Getting the form fields...', $form_id ),
+			array(
+				'source'   => 'form-submission',
+				'form_id'  => $form_id,
+				'function' => __FUNCTION__,
+			)
+		);
+
 		$form_field_data = self::get_form_field_data( $post_content_array );
-		$logger->info( __( 'Form fields received', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+		$logger->notice(
+			sprintf( '[Form #%d] Form fields received.', $form_id ),
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
 
 		$user_pass = '';
 
@@ -82,19 +107,33 @@ class UR_Frontend_Form_Handler {
 			)
 		);
 
-		$logger->info( __( 'Organizing the form data.', 'user-registration' ), array( 'source' => 'form-submission' ) );
-		self::$valid_form_data = apply_filters( 'user_registration_reorganize_form_data', self::$valid_form_data, $form_field_data, $form_id );
-		$logger->info( __( 'Form data organized.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+		$logger->info(
+			sprintf( '[Form #%d] Organizing the form data.', $form_id ),
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
 
-		$logger->info( __( 'Getting response', 'user-registration' ), array( 'source' => 'form-submission' ) );
+		self::$valid_form_data = apply_filters( 'user_registration_reorganize_form_data', self::$valid_form_data, $form_field_data, $form_id );
+
+		$logger->info(
+			sprintf( '[Form #%d] Form data organized.', $form_id ),
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
+
+		// $logger->info( __( 'Getting response', 'user-registration' ), array( 'source' => 'form-submission' ) );
 		self::$response_array = apply_filters( 'user_registration_response_array', self::$response_array, $form_data, $form_id );
-		$logger->info( __( 'Response received', 'user-registration' ), array( 'source' => 'form-submission' ) );
+		// $logger->info( __( 'Response received', 'user-registration' ), array( 'source' => 'form-submission' ) );
 
 		if ( count( self::$response_array ) === 0 ) {
-			$user_role = ! in_array( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' ), array_keys( ur_get_default_admin_roles() ) ) ? 'subscriber' : ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' );
-			$user_role = apply_filters( 'user_registration_user_role', $user_role, self::$valid_form_data, $form_id );
+			$user_role            = ! in_array( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' ), array_keys( ur_get_default_admin_roles() ) ) ? 'subscriber' : ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_default_user_role' );
+			$user_role            = apply_filters( 'user_registration_user_role', $user_role, self::$valid_form_data, $form_id );
 			$user_registered_date = apply_filters( 'user_registration_user_registered_date', current_time( 'Y-m-d H:i:s' ) );
-			$userdata  = array(
+			$userdata             = array(
 				'user_login'      => isset( self::$valid_form_data['user_login'] ) ? self::$valid_form_data['user_login']->value : '',
 				'user_pass'       => $user_pass,
 				'user_email'      => self::$valid_form_data['user_email']->value,
@@ -104,11 +143,34 @@ class UR_Frontend_Form_Handler {
 				'role'            => $user_role,
 				'user_registered' => $user_registered_date,
 			);
-			$logger->info( __( 'Validating form data', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+			$logger->info(
+				sprintf( '[Form #%d] Validating form data...', $form_id ),
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
 			self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter', self::$valid_form_data, $form_id );
-			$logger->info( __( 'Form data validated', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+			$logger->info(
+				sprintf( '[Form #%d] Form data validation completed.', $form_id ),
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
 
 			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
+
+			$logger->debug(
+				sprintf( '[Form #%d] Action == ***user_registration_before_register_user_action*** - Triggered.', $form_id ),
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
 
 			if ( empty( $userdata['user_login'] ) ) {
 				$part_of_email          = explode( '@', $userdata['user_email'] );
@@ -121,22 +183,46 @@ class UR_Frontend_Form_Handler {
 			// If spam and reject registration return early
 			$akismet_result = apply_filters( 'user_registration_get_akismet_validate', $form_id, self::$valid_form_data );
 			if ( $akismet_result ) {
-				$logger->error( __( 'Registration blocked due to potential spam.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+				$logger->error(
+					sprintf( '[Form #%d] Registration blocked due to potential spam.', $form_id . "\n  " ),
+					array(
+						'source'  => 'form-submission',
+						'form_id' => $form_id,
+					)
+				);
+
 				wp_send_json_error(
 					array(
 						'message' => __( 'Registration blocked due to potential spam. Reach out to support for help.', 'user-registration' ),
 					)
 				);
 			}
-			$logger->info( __( 'Inserting User', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+			$logger->info(
+				sprintf( '[Form #%d] Inserting User...', $form_id ),
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
 			$user_id = wp_insert_user( $userdata ); // Insert user data in users table.
 
 			if ( is_wp_error( $user_id ) ) {
-				$err_msg = "";
+				$err_msg = '';
 				foreach ( $user_id->errors as $error ) {
-					$err_msg .= "<p>" . $error[0] . "</p>";
+					$err_msg .= '<p>' . $error[0] . '</p>';
 				}
-				$logger->info( __( 'User insertion failed', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+				$logger->error(
+					sprintf( '[Form #%d] User insertion failed.', $form_id . "\n  " ),
+					array(
+						'source'  => 'form-submission',
+						'form_id' => $form_id,
+					)
+				);
+
 				wp_send_json_error(
 					array(
 						'message' => sprintf( __( '%s', 'user-registration' ), $err_msg ),
@@ -145,13 +231,77 @@ class UR_Frontend_Form_Handler {
 			}
 
 			$filtered_form_data = apply_filters( 'user_registration_before_user_meta_update', self::$valid_form_data, $user_id, $form_id );
-			$logger->info( __( 'Inserting user meta data', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+			$logger->info(
+				sprintf( '[Form #%d] Inserting the user meta data.', $form_id ),
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
 			self::ur_update_user_meta( $user_id, $filtered_form_data, $form_id ); // Insert user data in usermeta table.
-			$logger->info( __( 'User meta data updated', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+			$logger->notice(
+				sprintf( '[Form #%d] User meta data inserted successfully.', $form_id ),
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
 			if ( $user_id > 0 ) {
-				$logger->info( __( 'User insert successfully', 'user-registration' ), array( 'source' => 'form-submission' ) );
+				$logger->notice(
+					sprintf( '[Form #%d] User created successfully.', $form_id ),
+					array(
+						'source'  => 'form-submission',
+						'form_id' => $form_id,
+					)
+				);
+
+				$user = get_userdata( $user_id );
+
+				if ( $user ) {
+					$user_data = array(
+						'ID'              => $user->ID,
+						'user_login'      => $user->user_login,
+						'user_email'      => $user->user_email,
+						'display_name'    => $user->display_name,
+						'user_nicename'   => $user->user_nicename,
+						'user_registered' => $user->user_registered,
+						'roles'           => $user->roles,
+					);
+
+					$logger->debug(
+						sprintf( '[Form #%d] Created user data:', $form_id ) . "\n" . wp_json_encode( $user_data, JSON_PRETTY_PRINT ),
+						array(
+							'source'  => 'form-submission',
+							'form_id' => $form_id,
+							'user_id' => $user_id,
+						)
+					);
+				}
+
 				do_action( 'user_registration_after_user_meta_update', self::$valid_form_data, $form_id, $user_id );
-				$login_option   = ur_get_user_login_option( $user_id );
+
+				$logger->debug(
+					sprintf( '[Form #%d] Action hook == ***user_registration_after_user_meta_update*** - Triggered.', $form_id ),
+					array(
+						'source'  => 'form-submission',
+						'form_id' => $form_id,
+					)
+				);
+
+				$login_option = ur_get_user_login_option( $user_id );
+
+				$logger->info(
+					sprintf( '[Form #%d] User Login Option: %s', $form_id, $login_option ),
+					array(
+						'source'  => 'form-submission',
+						'form_id' => $form_id,
+					)
+				);
+
 				$success_params = array(
 					'username' => isset( $userdata['user_login'] ) ? $userdata['user_login'] : '',
 				);
@@ -164,14 +314,12 @@ class UR_Frontend_Form_Handler {
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = false;
 					}
-				}
-				else if ( isset( $_POST['is_membership_active'] )) {
+				} elseif ( isset( $_POST['is_membership_active'] ) ) {
 					if ( 'auto_login' === $login_option ) {
-						$success_params['auto_login'] = true;
+						$success_params['auto_login']      = true;
 						$success_params['membership_type'] = $_POST['membership_type'];
 					}
-				}
-				elseif ( 'auto_login' === $login_option ) {
+				} elseif ( 'auto_login' === $login_option ) {
 					delete_user_meta( $user_id, 'urm_user_just_created' );
 					wp_clear_auth_cookie();
 					$remember = apply_filters( 'user_registration_autologin_remember_user', false );
@@ -179,11 +327,11 @@ class UR_Frontend_Form_Handler {
 					$success_params['auto_login'] = true;
 				}
 				$success_params['success_message_positon'] = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_success_message_position', '1' );
-				$success_params['form_login_option']       = ! ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) && 'email_confirmation' === $login_option ?  'email_confirmation' : $login_option;
+				$success_params['form_login_option']       = ! ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) && 'email_confirmation' === $login_option ? 'email_confirmation' : $login_option;
 
-				$redirect_timeout = (int) ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ) * 1000;
-				$redirect_after_registration = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
-				$success_params['redirect_timeout'] = "no-redirection" !== $redirect_after_registration ? apply_filters( 'user_registration_hold_success_message_before_redirect', $redirect_timeout ) : 0;
+				$redirect_timeout                   = (int) ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ) * 1000;
+				$redirect_after_registration        = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', ur_get_default_redirect_after_registration( $form_id ) );
+				$success_params['redirect_timeout'] = 'no-redirection' !== $redirect_after_registration ? apply_filters( 'user_registration_hold_success_message_before_redirect', $redirect_timeout ) : 0;
 
 				$redirect_url = ur_get_form_redirect_url( $form_id );
 
@@ -191,7 +339,7 @@ class UR_Frontend_Form_Handler {
 					$success_params['redirect_url'] = $redirect_url;
 				}
 				$success_params = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
-				$logger->info( __( 'Processing form data', 'user-registration' ), array( 'source' => 'form-submission' ) );
+				// $logger->info( __( 'Processing form data', 'user-registration' ), array( 'source' => 'form-submission' ) );
 				foreach ( self::$valid_form_data as $field_key => $field_value ) {
 					if ( isset( $field_value->extra_params ) && isset( $field_value->extra_params['field_key'] ) ) {
 						if ( 'file' === $field_value->extra_params['field_key'] ) {
@@ -217,21 +365,53 @@ class UR_Frontend_Form_Handler {
 					}
 				}
 				if ( ! isset( $success_params['stripe_process'] ) || $success_params['stripe_process'] == false ) {
-					$logger->info( __( 'Triggering user registration hooks', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
 					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
+
+					$logger->debug(
+						sprintf( '[Form #%d] Action hook == ***user_registration_after_register_user_action*** - Triggered.', $form_id ),
+						array(
+							'source'  => 'form-submission',
+							'form_id' => $form_id,
+						)
+					);
 				}
-				$logger->info( __( 'User registration process completed.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
 				$success_params = apply_filters( 'user_registration_success_params_before_send_json', $success_params, self::$valid_form_data, $form_id, $user_id );
 
-				if( empty( $_POST['ur_fallback_submit'] ) ) {
+				$logger->debug(
+					sprintf( '[Form #%d] Success params:', $form_id ) . "\n" . wp_json_encode( $success_params, JSON_PRETTY_PRINT ),
+					array(
+						'source'  => 'form-submission',
+						'form_id' => $form_id,
+						'user_id' => $user_id,
+					)
+				);
+
+				$logger->success(
+					sprintf( '[Form #%d] =============== ***User registration process completed*** ===============', $form_id ) . "\n   ",
+					array(
+						'source'  => 'form-submission',
+						'form_id' => $form_id,
+					)
+				);
+
+				if ( empty( $_POST['ur_fallback_submit'] ) ) {
 					wp_send_json_success( $success_params );
 				} else {
 					apply_filters( 'user_registration_post_success_message', __( 'User successfully registered.', 'user-registration' ) );
 				}
-
 			}
-			$logger->error( __( 'Something went wrong! please try again.', 'user-registration' ), array( 'source' => 'form-submission' ) );
-			if( empty( $_POST['ur_fallback_submit'] ) ) {
+
+			$logger->error(
+				sprintf( '[Form #%d] Something wen wrong!. Getting the invalid user ID %s. Please try again. ', $form_id, $user_id ) . "\n",
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
+			if ( empty( $_POST['ur_fallback_submit'] ) ) {
 				wp_send_json_error(
 					array(
 						'message' => __( 'Something went wrong! please try again', 'user-registration' ),
@@ -241,7 +421,7 @@ class UR_Frontend_Form_Handler {
 		} else {
 			apply_filters( 'user_registration_post_registration_errors', self::$response_array );
 
-			if( empty( $_POST['ur_fallback_submit'] ) ) {
+			if ( empty( $_POST['ur_fallback_submit'] ) ) {
 				wp_send_json_error(
 					array(
 						'message' => array_unique( self::$response_array, SORT_REGULAR ),
@@ -269,7 +449,7 @@ class UR_Frontend_Form_Handler {
 		foreach ( $post_content_array as $row_index => $row ) {
 			foreach ( $row as $grid_index => $grid ) {
 				foreach ( $grid as $field_index => $field ) {
-					$field_name = isset( $field->advance_setting->field_name ) ? $field->advance_setting->field_name : ( isset ( $field->general_setting->field_name ) ? $field->general_setting->field_name : '' );
+					$field_name = isset( $field->advance_setting->field_name ) ? $field->advance_setting->field_name : ( isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '' );
 					if ( 'confirm_user_pass' != $field_name ) {
 						array_push( $form_field_data_array, $field );
 					}
@@ -329,9 +509,9 @@ class UR_Frontend_Form_Handler {
 		$current_language = ur_get_current_language();
 		$current_language = isset( $_POST['registration_language'] ) ? ur_clean( $_POST['registration_language'] ) : $current_language; //phpcs:ignore.
 		update_user_meta( $user_id, 'ur_registered_language', $current_language );
-		$login_option   = ur_get_user_login_option( $user_id );
+		$login_option = ur_get_user_login_option( $user_id );
 
-		if( !empty( $_POST['membership_type'] ) ) {
+		if ( ! empty( $_POST['membership_type'] ) ) {
 			$hash = hash_hmac(
 				'sha256',
 				(string) $user_id,
@@ -344,32 +524,38 @@ class UR_Frontend_Form_Handler {
 }
 
 // Add filter to populate user_registration_post_registration_errors with actual errors
-add_filter( 'user_registration_post_registration_errors', function( $errors ) {
-	// Check if we're in a traditional form submission context
-	if ( ! empty( $_POST['ur_fallback_submit'] ) ) {
-		// Get the current form ID
-		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
-		if ( $form_id > 0 ) {
-			// Check for stored errors in transient
-			$form_errors_key = 'ur_form_errors_' . $form_id . '_' . wp_create_nonce( 'ur_form_errors' );
-			$stored_errors = get_transient( $form_errors_key );
-			if ( $stored_errors ) {
-				$errors = $stored_errors;
-				// Delete the transient after retrieving
-				delete_transient( $form_errors_key );
+add_filter(
+	'user_registration_post_registration_errors',
+	function ( $errors ) {
+		// Check if we're in a traditional form submission context
+		if ( ! empty( $_POST['ur_fallback_submit'] ) ) {
+			// Get the current form ID
+			$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+			if ( $form_id > 0 ) {
+				// Check for stored errors in transient
+				$form_errors_key = 'ur_form_errors_' . $form_id . '_' . wp_create_nonce( 'ur_form_errors' );
+				$stored_errors   = get_transient( $form_errors_key );
+				if ( $stored_errors ) {
+					$errors = $stored_errors;
+					// Delete the transient after retrieving
+					delete_transient( $form_errors_key );
+				}
 			}
 		}
+		return $errors;
 	}
-	return $errors;
-} );
+);
 
 // Add filter to provide success message
-add_filter( 'user_registration_post_success_message', function( $success_message ) {
-	// Check if we're in a traditional form submission context
-	if ( ! empty( $_POST['ur_fallback_submit'] ) ) {
-		$success_message = __( 'User successfully registered.', 'user-registration' );
+add_filter(
+	'user_registration_post_success_message',
+	function ( $success_message ) {
+		// Check if we're in a traditional form submission context
+		if ( ! empty( $_POST['ur_fallback_submit'] ) ) {
+			$success_message = __( 'User successfully registered.', 'user-registration' );
+		}
+		return $success_message;
 	}
-	return $success_message;
-} );
+);
 
 return new UR_Frontend_Form_Handler();
