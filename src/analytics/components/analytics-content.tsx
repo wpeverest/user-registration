@@ -147,7 +147,7 @@ const SUMMARY_OPTIONS: Array<{
 				id: "refunded_revenue",
 				title: __("Refunded Revenue", "user-registration")
 			}
-		]
+	  ]
 	: [
 			{
 				id: "new_members",
@@ -165,7 +165,7 @@ const SUMMARY_OPTIONS: Array<{
 				id: "denied_members",
 				title: __("Denied Members", "user-registration")
 			}
-		];
+	  ];
 
 const CHART_LABELS = {
 	0: __("Revenue Overview", "user-registration"),
@@ -692,7 +692,7 @@ export const AnalyticsContent = ({ overviewData }: AnalyticsContentProps) => {
 												currency:
 													window.__UR_ANALYTICS__
 														.currency
-											}).format(data.count)
+										  }).format(data.count)
 										: data.count}
 									<span
 										className={cn(
@@ -729,7 +729,7 @@ export const AnalyticsContent = ({ overviewData }: AnalyticsContentProps) => {
 												currency:
 													window.__UR_ANALYTICS__
 														.currency
-											}).format(data.previous)
+										  }).format(data.previous)
 										: data.previous}{" "}
 									{__("last period", "user-registration")}
 								</div>
@@ -830,7 +830,10 @@ export const AnalyticsContent = ({ overviewData }: AnalyticsContentProps) => {
 							className="UR-Analytics-Charts__Overlay-Btn"
 							asChild
 						>
-							<a href="https://wpuserregistration.com/upgrade/?utm_source=ur-analytics&utm_medium=upgrade-link&utm_campaign=lite-version">
+							<a
+								target="_blank"
+								href="https://wpuserregistration.com/upgrade/?utm_source=ur-analytics&utm_medium=upgrade-link&utm_campaign=lite-version"
+							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="24"

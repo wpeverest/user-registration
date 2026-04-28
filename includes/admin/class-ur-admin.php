@@ -75,7 +75,7 @@ class UR_Admin {
 		}
 		update_option( 'user_registration_content_restriction_enable', true );
 		if ( ur_check_module_activation( 'payments' ) && ! get_option( 'global_paypal_setting_migration', false ) ) {
-			$logger->notice( '---------- Enable override global settings for paypal standard start. ----------', array( 'source' => 'migration-logger' ) );
+			$logger->notice( '---------- Migration start for enable override global settings for paypal standard. ----------', array( 'source' => 'migration-logger' ) );
 			$get_all_forms = ur_get_all_user_registration_form();
 			foreach ( $get_all_forms as $key => $form ) {
 				$is_paypal_setting_used = get_post_meta( $key, 'user_registration_enable_paypal_standard', false );
@@ -84,7 +84,7 @@ class UR_Admin {
 					add_post_meta( $key, 'user_registration_override_paypal_global_settings', true );
 				}
 			}
-			$logger->notice( '---------- Enable override global settings for paypal standard End. ----------', array( 'source' => 'migration-logger' ) );
+			$logger->notice( '---------- Migration end for enable override global settings for paypal standard. ----------', array( 'source' => 'migration-logger' ) );
 			add_option( 'global_paypal_setting_migration', true );
 		}
 

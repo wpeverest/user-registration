@@ -31,7 +31,7 @@ class PaymentGatewayLogging {
 	 * Constructor - Add filter to format log entries with context
 	 */
 	public function __construct() {
-		add_filter( 'user_registration_format_log_entry', array( $this, 'format_log_entry_with_context' ), 10, 2 );
+		// add_filter( 'user_registration_format_log_entry', array( $this, 'format_log_entry_with_context' ), 10, 2 );
 	}
 
 	/**
@@ -80,8 +80,8 @@ class PaymentGatewayLogging {
 		}
 
 		// Use gateway-specific source name for separate log files
-		$source = 'urm-pg-' . sanitize_title( $gateway );
-		$context['source'] = $source;
+		$source             = 'urm-pg-' . sanitize_title( $gateway );
+		$context['source']  = $source;
 		$context['gateway'] = $gateway; // Add gateway info to context
 
 		ur_get_logger()->log( $level, $message, $context );
