@@ -209,26 +209,8 @@
 							data-urm-converted-amount = "<?php echo esc_attr( $converted_amount ); ?>"
 							data-has-coupon-link="<?php echo esc_attr( in_array( $membership['ID'], $membership_ids_link_with_coupons ) ? 'yes' : 'no' ); ?>"
 						<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
-							data-local-currency="
-							<?php
-							echo esc_attr(
-								( ! empty( $final_period )
-									? $local_currency_by_country
-									: ''
-								)
-							);
-							?>
-							"
-							data-zone-id="
-							<?php
-								echo esc_attr(
-									( ! empty( $final_period )
-										? $enabled_zones[ $local_currency_by_country ]['ID']
-										: ''
-									)
-								);
-							?>
-								"
+							data-local-currency="<?php echo esc_attr( ! empty( $final_period ) ? $local_currency_by_country : '' ); ?>"
+							data-zone-id="<?php echo esc_attr( ! empty( $final_period ) && isset( $enabled_zones[ $local_currency_by_country ]['ID'] ) ? $enabled_zones[ $local_currency_by_country ]['ID'] : '' ); ?>"
 					>
 					<span
 						class="ur-membership-duration"><?php echo esc_html__( $membership['title'], 'user-registration' ); ?></span>

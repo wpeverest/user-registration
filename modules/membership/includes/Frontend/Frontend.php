@@ -40,6 +40,7 @@ class Frontend {
 
 		add_action( 'template_redirect', array( $this, 'set_thank_you_transient' ) );
 		add_action( 'wp_loaded', array( $this, 'clear_upgrade_data' ) );
+		add_action( 'user_registration_before_register_user_action', array( $this, 'validate_stripe_card_before_register' ), 10, 2 );
 	}
 
 	/**
@@ -129,11 +130,11 @@ class Frontend {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		wp_enqueue_script( 'sweetalert2' );
 
-		wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url(). '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
+		wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url() . '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_enqueue_script( 'user-registration-membership-stripe-v3', 'https://js.stripe.com/v3/', array() );
 		wp_enqueue_script( 'user-registration-membership-frontend-script' );
 		// Enqueue frontend styles here.
-		wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url(). '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
+		wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url() . '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
 		wp_enqueue_style( 'user-registration-membership-frontend-style' );
 		$this->localize_scripts();
 	}
@@ -156,19 +157,19 @@ class Frontend {
 		$symbol               = $currencies[ $currency ]['symbol'];
 		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
-		$regions 				= get_option( 'user_registration_tax_regions_and_rates', array() );
+		$regions                = get_option( 'user_registration_tax_regions_and_rates', array() );
 		$tax_calculation_method = get_option( 'user_registration_tax_calculation_during_checkout', 'no' );
 
-		$is_tax_calculation_enabled		  = ur_check_module_activation( 'taxes' );
+		$is_tax_calculation_enabled = ur_check_module_activation( 'taxes' );
 
 		$redirect_page_url = get_permalink( $registration_page_id );
 
-		$thank_you_page          = urm_get_thank_you_page();
-		$stripe_settings         = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
+		$thank_you_page  = urm_get_thank_you_page();
+		$stripe_settings = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
 
 		$urm_authorize_net_supported_currencies = function_exists( 'urm_authorize_net_supported_currencies' ) ? urm_authorize_net_supported_currencies() : array();
-		$paypal_supported_currencies_list = function_exists( 'paypal_supported_currencies_list' ) ? paypal_supported_currencies_list() : array();
-		$mollie_supported_currencies_list = (
+		$paypal_supported_currencies_list       = function_exists( 'paypal_supported_currencies_list' ) ? paypal_supported_currencies_list() : array();
+		$mollie_supported_currencies_list       = (
 				class_exists( '\WPEverest\URM\Mollie\Functions\CoreFunctions' ) &&
 				method_exists( '\WPEverest\URM\Mollie\Functions\CoreFunctions', 'mollie_supported_currencies_list' )
 			)
@@ -178,7 +179,7 @@ class Frontend {
 		$supported_currencies = array(
 			'authorize' => $urm_authorize_net_supported_currencies,
 			'paypal'    => $paypal_supported_currencies_list,
-			'mollie'	=> $mollie_supported_currencies_list
+			'mollie'    => $mollie_supported_currencies_list,
 		);
 
 		$membership_endpoint_url = ur_get_my_account_url() . '/ur-membership';
@@ -207,11 +208,11 @@ class Frontend {
 				'membership_selection_message'     => __( 'Please select at least one membership plan', 'user-registration' ),
 				'tax_calculation_method'           => ur_string_to_bool( $tax_calculation_method ),
 				'regions_list'                     => $regions,
-				'gateways_configured'              => urm_get_all_active_payment_gateways('paid'),
-				'local_currencies'				   => ur_get_currencies(),
-				'local_currencies_symbol' 		   => ur_get_currency_symbols(),
-				'supported_currencies'			   => $supported_currencies,
-				'is_tax_calculation_enabled'	   => $is_tax_calculation_enabled
+				'gateways_configured'              => urm_get_all_active_payment_gateways( 'paid' ),
+				'local_currencies'                 => ur_get_currencies(),
+				'local_currencies_symbol'          => ur_get_currency_symbols(),
+				'supported_currencies'             => $supported_currencies,
+				'is_tax_calculation_enabled'       => $is_tax_calculation_enabled,
 			),
 		);
 	}
@@ -259,6 +260,8 @@ class Frontend {
 			'i18n_payment_processing_message'              => __( 'Please wait while we securely process your payment. Do not close this page.', 'user-registration' ),
 			'i18n_payment_completing_title'                => __( 'Completing Payment', 'user-registration' ),
 			'i18n_payment_completing_message'              => __( 'Your payment has been verified. Please wait while we complete your registration.', 'user-registration' ),
+			'i18n_validating_stripe_card'                  => __( 'Validating payment card, please wait...', 'user-registration' ),
+			'i18n_stripe_mode_error'                       => __( 'Card validation failed. Please try again.', 'user-registration' ),
 		);
 	}
 
@@ -299,6 +302,55 @@ class Frontend {
 					update_user_meta( $user_id, 'urm_membership_process', $membership_process );
 				}
 			}
+		}
+	}
+
+	/**
+	 * Validate Stripe card mode before user registration.
+	 *
+	 * Fires on user_registration_before_register_user_action (just before wp_insert_user).
+	 * If a Stripe PaymentMethod ID was submitted with the form, validate that its
+	 * livemode matches the configured Stripe mode. If not, abort with an error
+	 * so the user account is never created.
+	 *
+	 * @param array $valid_form_data Validated form data.
+	 * @param int   $form_id        Form ID.
+	 * @return void
+	 */
+	public function validate_stripe_card_before_register( $valid_form_data, $form_id ) {
+		$pm_id_value = isset( $_POST['urm_stripe_pm_id'] ) ? sanitize_text_field( wp_unslash( $_POST['urm_stripe_pm_id'] ) ) : 'NOT_SET'; // phpcs:ignore WordPress.Security.NonceVerification
+
+		\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+			'stripe',
+			'validate_stripe_card_before_register fired',
+			'info',
+			array(
+				'urm_stripe_pm_id' => $pm_id_value,
+				'post_keys'        => implode( ', ', array_keys( $_POST ) ), // phpcs:ignore WordPress.Security.NonceVerification
+			)
+		);
+
+		if ( empty( $_POST['urm_stripe_pm_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
+
+		$pm_id          = sanitize_text_field( wp_unslash( $_POST['urm_stripe_pm_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$stripe_service = new \WPEverest\URMembership\Admin\Services\Stripe\StripeService();
+		$result         = $stripe_service->validate_card_mode( $pm_id );
+
+		\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+			'stripe',
+			'Stripe card mode validation result',
+			'info',
+			array(
+				'pm_id'   => $pm_id,
+				'valid'   => $result['valid'],
+				'message' => isset( $result['message'] ) ? $result['message'] : '',
+			)
+		);
+
+		if ( ! $result['valid'] ) {
+			wp_send_json_error( array( 'message' => $result['message'] ) );
 		}
 	}
 }
