@@ -385,6 +385,7 @@ class UR_AJAX {
 				)
 			);
 		}
+
 		$user_id = get_current_user_id();
 
 		if ( $user_id <= 0 ) {
@@ -398,7 +399,12 @@ class UR_AJAX {
 
 			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array(); // phpcs:ignore
 
-			// valid extension for image.
+			// Sanitize filename immediately before any path operations.
+			$src_file_name  = isset( $upload['name'] ) ? sanitize_file_name( wp_unslash( $upload['name'] ) ) : '';
+			$file_extension = strtolower( pathinfo( $src_file_name, PATHINFO_EXTENSION ) );
+			$file_mime_type = isset( $upload['tmp_name'] ) ? mime_content_type( $upload['tmp_name'] ) : '';
+
+			// Valid extension for image.
 			$valid_extensions = 'image/jpeg,image/gif,image/png';
 			$form_id          = ur_get_form_id_by_userid( $user_id );
 
@@ -420,10 +426,6 @@ class UR_AJAX {
 				}
 			}
 
-			$src_file_name  = isset( $upload['name'] ) ? $upload['name'] : '';
-			$file_extension = strtolower( pathinfo( $src_file_name, PATHINFO_EXTENSION ) );
-			$file_mime_type = isset( $upload['tmp_name'] ) ? mime_content_type( $upload['tmp_name'] ) : '';
-
 			if ( ! in_array( $file_mime_type, $valid_extension_type ) ) {
 				wp_send_json_error(
 					array(
@@ -431,6 +433,7 @@ class UR_AJAX {
 					)
 				);
 			}
+
 			// Validates if the uploaded file has the acceptable extension.
 			if ( ! in_array( $file_extension, $valid_ext ) ) {
 				wp_send_json_error(
@@ -442,7 +445,7 @@ class UR_AJAX {
 
 			$upload_path = ur_get_tmp_dir();
 
-			// Checks if the upload directory has the write premission.
+			// Checks if the upload directory has the write permission.
 			if ( ! wp_is_writable( $upload_path ) ) {
 				wp_send_json_error(
 					array(
@@ -450,9 +453,21 @@ class UR_AJAX {
 					)
 				);
 			}
+
 			$upload_path = $upload_path . '/';
-			$file_name   = wp_unique_filename( $upload_path, $upload['name'] );
-			$file_path   = $upload_path . sanitize_file_name( $file_name );
+
+			// Use sanitized filename for wp_unique_filename to prevent path traversal.
+			$file_name = wp_unique_filename( $upload_path, $src_file_name );
+			$file_path = $upload_path . $file_name;
+			// Ensure the resolved path is strictly within the intended upload directory.
+			if ( strpos( realpath( dirname( $file_path ) ) . DIRECTORY_SEPARATOR, realpath( $upload_path ) . DIRECTORY_SEPARATOR ) !== 0 ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Invalid file path.', 'user-registration' ),
+					)
+				);
+			}
+
 			if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
 				$files = array(
 					'file_name'      => $file_name,
@@ -463,7 +478,7 @@ class UR_AJAX {
 				$attachment_id = wp_rand();
 
 				ur_clean_tmp_files();
-				$url = UR_UPLOAD_URL . 'temp-uploads/' . sanitize_file_name( $file_name );
+				$url = UR_UPLOAD_URL . 'temp-uploads/' . $file_name;
 				wp_send_json_success(
 					array(
 						'attachment_id' => $attachment_id,
@@ -635,13 +650,24 @@ class UR_AJAX {
 		try {
 			check_ajax_referer( 'user_input_dropped_nonce', 'security' );
 
-			$form_field_id = ( isset( $_POST['form_field_id'] ) ) ? $_POST['form_field_id'] : null; //phpcs:ignore
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'error' => __( 'You do not have permission.', 'user-registration' ) ) );
+				wp_die( -1 );
+			}
+
+			$form_field_id = ( isset( $_POST['form_field_id'] ) ) ? sanitize_key( wp_unslash( $_POST['form_field_id'] ) ) : null;
 
 			if ( null == $form_field_id || '' == $form_field_id ) {
 				throw new Exception( 'Empty form data' );
 			}
 
 			$class_file_name = str_replace( 'user_registration_', '', $form_field_id );
+
+			// Validate $class_file_name contains only safe characters (already enforced by sanitize_key, but double-check).
+			if ( ! preg_match( '/^[a-z0-9_\-]+$/', $class_file_name ) ) {
+				throw new Exception( 'Invalid form field identifier' );
+			}
+
 			$class_name      = ur_load_form_field_class( $class_file_name );
 
 			if ( empty( $class_name ) ) {

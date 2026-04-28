@@ -265,11 +265,13 @@ function ur_bool_to_string( $bool ) {
  * @param string $default_path Default path of template provided(default: '').
  */
 function ur_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
-	if ( ! empty( $args ) && is_array( $args ) ) {
-		extract( $args ); // phpcs:ignore.
-	}
+	// NOTE: extract() is intentionally deferred to the isolated closure below to prevent
+	// $args from overriding $template_name or other path-related variables.
 
 	$located = ur_locate_template( $template_name, $template_path, $default_path );
+
+	// Snapshot the trusted resolved path BEFORE the filter can modify it.
+	$trusted_located = realpath( $located );
 
 	/** Allow 3rd party plugin filter template file from their plugin.
 	 *
@@ -281,41 +283,93 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 	 */
 	$located = apply_filters( 'ur_get_template', $located, $template_name, $args, $template_path, $default_path );
 
-	if ( ! file_exists( $located ) ) {
-		_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', esc_html( $located ) ), '1.0' );
+	// Use realpath() to resolve symlinks and '..' components before validation.
+	$real_located = realpath( $located );
 
+	// Derive the plugin's templates/ root from the pre-filter trusted path.
+	// This works for every plugin/addon without needing any *_ABSPATH constant.
+	$templates_marker = DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
+	$templates_pos    = ( false !== $trusted_located ) ? strpos( $trusted_located, $templates_marker ) : false;
+	$real_plugin_path = ( false !== $templates_pos )
+		? realpath( substr( $trusted_located, 0, $templates_pos + strlen( $templates_marker ) - 1 ) )
+		: false;
+
+	// Theme override directories (child + parent) — only if /user-registration/ subfolder exists.
+	$real_child_path  = realpath( get_stylesheet_directory() . '/user-registration' );
+	$real_parent_path = realpath( get_template_directory() . '/user-registration' );
+
+	$path_allowed = false;
+
+	if ( false !== $real_located && false !== $real_plugin_path && 0 === strpos( $real_located, $real_plugin_path . DIRECTORY_SEPARATOR ) ) {
+		$path_allowed = true;
+	}
+	if ( ! $path_allowed && false !== $real_located && false !== $real_child_path && 0 === strpos( $real_located, $real_child_path . DIRECTORY_SEPARATOR ) ) {
+		$path_allowed = true;
+	}
+	if ( ! $path_allowed && false !== $real_located && false !== $real_parent_path && 0 === strpos( $real_located, $real_parent_path . DIRECTORY_SEPARATOR ) ) {
+		$path_allowed = true;
+	}
+
+	if ( ! $path_allowed ) {
+		_doing_it_wrong(
+			__FUNCTION__,
+			esc_html__( 'Template path is not allowed.', 'user-registration' ),
+			'1.0'
+		);
+		return;
+	}
+
+	if ( ! file_exists( $located ) ) {
+		_doing_it_wrong(
+			__FUNCTION__,
+			sprintf( '<code>%s</code> does not exist.', esc_html( $located ) ),
+			'1.0'
+		);
 		return;
 	}
 
 	ob_start();
+
 	/**
 	 * Executes an action before including a template part.
 	 *
 	 * @param string $template_name Name of the template part.
 	 * @param string $template_path Path to the template part.
-	 * @param string $located Path to the located template file.
-	 * @param array $args Additional arguments passed to the template part.
+	 * @param string $located       Path to the located template file.
+	 * @param array  $args          Additional arguments passed to the template part.
 	 */
 	do_action( 'user_registration_before_template_part', $template_name, $template_path, $located, $args );
 
-	include $located;
+	// Isolated closure: extract() runs inside a separate scope so it cannot override
+	// $located or any other path-related variable in the outer function.
+	// EXTR_SKIP prevents the closure's own parameters from being overridden.
+	( function ( $ur_template_file, $ur_template_args ) {
+		if ( ! empty( $ur_template_args ) && is_array( $ur_template_args ) ) {
+			extract( $ur_template_args, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+		}
+		include $ur_template_file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+	} )( $located, $args );
+
 	/**
 	 * Executes an action after including a template part.
 	 *
 	 * @param string $template_name Name of the template part.
 	 * @param string $template_path Path to the template part.
-	 * @param string $located Path to the located template file.
-	 * @param array $args Additional arguments passed to the template part.
+	 * @param string $located       Path to the located template file.
+	 * @param array  $args          Additional arguments passed to the template part.
 	 */
 	do_action( 'user_registration_after_template_part', $template_name, $template_path, $located, $args );
+
 	$template_content = ob_get_clean();
+
 	/**
 	 * Filter hook to process the smart tags in the template content.
 	 *
 	 * @param string $template_content The template content.
 	 */
 	$template_content = apply_filters( 'user_registration_process_smart_tags', $template_content, array(), array() );
-	echo $template_content;  // phpcs:ignore.
+
+	echo $template_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -542,9 +596,12 @@ function ur_doing_it_wrong( $function, $message, $version ) {
  * @param integer $expire Expiry of the cookie.
  * @param string  $secure Whether the cookie should be served only over https.
  */
-function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
+function ur_setcookie( $name, $value, $expire = 0, $secure = null, $httponly = true ) {
+	if ( null === $secure ) {
+		$secure = is_ssl();
+	}
 	if ( ! headers_sent() ) {
-		setcookie( $name, $value, $expire, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, $secure );
+		setcookie( $name, $value, $expire, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, $secure, $httponly );
 	} elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		headers_sent( $file, $line );
 		trigger_error( "{$name} cookie cannot be set - headers already sent by {$file} on line {$line}", E_USER_NOTICE ); //phpcs:ignore.
@@ -1192,6 +1249,12 @@ function ur_load_form_field_class( $class_key ) {
 	$class_path = apply_filters( 'user_registration_form_field_' . $class_key . '_path', $class_path );
 	/* Backward Compat since 1.4.0 */
 	if ( null != $class_path && file_exists( $class_path ) ) {
+		// Validate the resolved path to prevent directory traversal.
+		$real_class_path = realpath( $class_path );
+		$real_base_path  = realpath( UR_FORM_PATH );
+		if ( false === $real_class_path || false === $real_base_path || 0 !== strpos( $real_class_path, $real_base_path . DIRECTORY_SEPARATOR ) ) {
+			return '';
+		}
 		$class_name = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
 		if ( ! class_exists( $class_name ) ) {
 			include_once $class_path;
@@ -3413,7 +3476,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 					if ( 'user-registration-pro/user-registration.php' === $install_status['file'] ) {
 						$status['plugin'] = 'user-registration-pro/user-registration.php';
 						if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-							setcookie( 'urm_license_status', 'pro_activated', time() + 300, '/', '', false, false );
+							setcookie( 'urm_license_status', 'pro_activated', time() + 300, '/', '', is_ssl(), true );
 						}
 						activate_plugin( $install_status['file'] );
 					}

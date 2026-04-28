@@ -122,13 +122,16 @@ class StripeService {
 		try {
 			$payment_method = \Stripe\PaymentMethod::retrieve( $payment_method_id );
 			$ur_log         = new PaymentGatewayLogging();
-			$ur_log->log_error(
+			$ur_log->log(
 				'stripe',
-				'Payment method retrieved',
-				array(
-					'payment_method' => $payment_method,
+				'Payment method retrieved.' . "\n" . wp_json_encode(
+					array(
+						'payment_method' => $payment_method,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
+
 			if ( ! $payment_method->livemode && 'live' === $mode ) {
 				return array(
 					'valid'   => false,
@@ -235,11 +238,13 @@ class StripeService {
 		} catch ( ApiErrorException $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Webhook creation failed',
-				array(
-					'error_code'    => 'WEBHOOK_CREATE_FAILED',
-					'error_message' => $e->getMessage(),
-					'mode'          => $mode,
+				'Webhook creation failed' . "\n" . wp_json_encode(
+					array(
+						'error_code'    => 'WEBHOOK_CREATE_FAILED',
+						'error_message' => $e->getMessage(),
+						'mode'          => $mode,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			return array(
@@ -466,7 +471,7 @@ class StripeService {
 		$local_currency = ! empty( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
 		$ur_zone_id     = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
 
-		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) ) {
+		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( CoreFunctions::class ) ) {
 			$currency            = $local_currency;
 			$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
 			$local_currency_data = ! empty( $payment_data['local_currency'] ) ? $payment_data['local_currency'] : array();
@@ -624,13 +629,10 @@ class StripeService {
 					sprintf( ' [Member ID #%s] Payment intent created successfully.', $member_id ) . "\n" . wp_json_encode(
 						array(
 							'payment_intent_id' => $intent->id,
-							'amount'            => $amount / 100,
-							'currency'          => $currency,
-							'member_id'         => $member_id,
 							'membership_type'   => $membership_type,
+							JSON_PRETTY_PRINT,
 						),
-						JSON_PRETTY_PRINT
-					),
+					)
 				);
 			}
 
@@ -638,12 +640,14 @@ class StripeService {
 		} catch ( ApiErrorException $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Stripe API error occurred',
-				array(
-					'error_code'    => 'STRIPE_API_ERROR',
-					'error_message' => $e->getMessage(),
-					'member_id'     => $member_id,
-				)
+				'Stripe API error occurred' . "\n" . wp_json_encode(
+					array(
+						'error_code'    => 'STRIPE_API_ERROR',
+						'error_message' => $e->getMessage(),
+						'member_id'     => $member_id,
+					),
+					JSON_PRETTY_PRINT
+				),
 			);
 
 			if ( empty( $payment_data['upgrade'] ) ) {
@@ -1022,7 +1026,7 @@ class StripeService {
 				array(
 					'error_code' => 'EMAIL_SEND_FAILED',
 					'member_id'  => $member_id,
-					'order_id'   => $id,
+					'order_id'   => $ID,
 				)
 			);
 		}

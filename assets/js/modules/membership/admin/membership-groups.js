@@ -1243,8 +1243,10 @@
 										JSON.stringify(upgrade_order)
 									);
 
+									var $sanitized = $("<div>").html(upgrade_paths_order);
+									$sanitized.find("script").remove();
 									$(".ur-sortable-list").html(
-										upgrade_paths_order
+										$sanitized.contents()
 									);
 								} else {
 									$(
