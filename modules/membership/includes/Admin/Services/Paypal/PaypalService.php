@@ -68,16 +68,19 @@ class PaypalService {
 
 		PaymentGatewayLogging::log_transaction_start(
 			'paypal',
-			'Building PayPal payment URL',
-			array(
-				'member_id'       => $member_id,
-				'membership_id'   => $membership,
-				'member_email'    => $member_email,
-				'subscription_id' => $subscription_id,
-				'is_upgrading'    => $is_upgrading,
-				'membership_type' => $membership_type,
+			sprintf( ' [Member ID #%s] Building PayPal payment URL.', $member_id ) . "\n" . wp_json_encode(
+				array(
+					'member_id'       => $member_id,
+					'membership_id'   => $membership,
+					'member_email'    => $member_email,
+					'subscription_id' => $subscription_id,
+					'is_upgrading'    => $is_upgrading,
+					'membership_type' => $membership_type,
+				),
+				JSON_PRETTY_PRINT
 			)
 		);
+
 		$membership_amount = 0;
 		if ( ! empty( $data['team_id'] ) && ! empty( $data['team_data'] ) ) {
 			$team_data  = $data['team_data'];
@@ -145,7 +148,7 @@ class PaypalService {
 		$ur_zone_id     = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
 		$currency       = get_option( 'user_registration_payment_currency', 'USD' );
 
-		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
+		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) && UR_PRO_ACTIVE && class_exists( CoreFunctions::class ) ) {
 			$currency            = $local_currency;
 			$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
 			$local_currency_data = ! empty( $data['local_currency'] ) ? $data['local_currency'] : array();
@@ -293,18 +296,20 @@ class PaypalService {
 
 		PaymentGatewayLogging::log_transaction_success(
 			'paypal',
-			'PayPal payment URL built successfully',
-			array(
-				'final_amount'     => $final_amount,
-				'transaction_type' => $transaction,
-				'item_name'        => $item_name,
-				'currency'         => get_option( 'user_registration_payment_currency', 'USD' ),
-				'member_id'        => $member_id,
-				'membership_id'    => $membership,
-				'subscription_id'  => $subscription_id,
-				'payment_mode'     => $paypal_options['mode'],
-				'membership_type'  => $membership_type,
-			)
+			sprintf( ' [Member ID #%s] PayPal payment URL built successfully.', $member_id ) . "\n" . wp_json_encode(
+				array(
+					'final_amount'     => $final_amount,
+					'transaction_type' => $transaction,
+					'item_name'        => $item_name,
+					'currency'         => get_option( 'user_registration_payment_currency', 'USD' ),
+					'member_id'        => $member_id,
+					'membership_id'    => $membership,
+					'subscription_id'  => $subscription_id,
+					'payment_mode'     => $paypal_options['mode'],
+					'membership_type'  => $membership_type,
+				),
+				JSON_PRETTY_PRINT
+			) . "\n "
 		);
 
 		return $final_url;

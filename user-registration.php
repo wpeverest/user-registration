@@ -4,7 +4,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 5.1.5
+ * Version: 5.1.6
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -37,7 +37,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '5.1.5';
+		public $version = '5.1.6';
 
 		/**
 		 * Session instance.
@@ -143,11 +143,63 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 
 			if ( $error && in_array( $error['type'], array( E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ), true ) ) {
 				$logger = ur_get_logger();
+
+				$raw_message = isset( $error['message'] ) ? trim( wp_strip_all_tags( $error['message'] ) ) : __( 'Unknown error', 'user-registration' );
+				$file        = isset( $error['file'] ) ? $error['file'] : __( 'Unknown file', 'user-registration' );
+				$line        = isset( $error['line'] ) ? absint( $error['line'] ) : 0;
+
+				if ( false !== strpos( $file, 'wp-content/' ) ) {
+					$file = substr( $file, strpos( $file, 'wp-content/' ) );
+				}
+
+				$message = $raw_message;
+				$trace   = '';
+
+				if ( false !== strpos( $raw_message, 'Stack trace:' ) ) {
+					$parts = explode( 'Stack trace:', $raw_message, 2 );
+
+					$message = trim( $parts[0] );
+					$trace   = trim( $parts[1] );
+
+					// Remove trailing "thrown in ..." because file/line is already shown separately.
+					$trace = preg_replace( '/thrown in .*$/s', '', $trace );
+					$trace = trim( $trace );
+				}
+
+				$log  = "================================================================\n";
+				$log .= sprintf(
+					/* translators: %s: error timestamp */
+					__( '[%s] CRITICAL  Fatal error', 'user-registration' ),
+					gmdate( 'Y-m-d H:i:s' )
+				) . "\n";
+				$log .= "----------------------------------------------------------------\n";
+				$log .= sprintf(
+					/* translators: %s: error message */
+					__( 'Message : %s', 'user-registration' ),
+					$message
+				) . "\n";
+				$log .= sprintf(
+					/* translators: 1: file path, 2: line number */
+					__( 'File    : %1$s:%2$d', 'user-registration' ),
+					$file,
+					$line
+				) . "\n";
+				$log .= __( 'Status  : FAILED', 'user-registration' ) . "\n";
+
+				if ( ! empty( $trace ) ) {
+					$log .= "\n" . __( 'Trace:', 'user-registration' ) . "\n";
+					$log .= $trace . "\n";
+				}
+
+				$log .= '================================================================';
+
 				$logger->critical(
-					/* translators: 1: error message 2: file name and path 3: line number */
-					sprintf( __( '%1$s in %2$s on line %3$s', 'user-registration' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
+					$log,
 					array(
 						'source' => 'fatal-errors',
+						'type'   => $error['type'],
+						'file'   => $file,
+						'line'   => $line,
 					)
 				);
 			}
