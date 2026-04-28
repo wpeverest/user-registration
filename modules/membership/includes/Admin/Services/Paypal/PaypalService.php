@@ -212,10 +212,23 @@ class PaypalService {
 			$item_name            .= ' - ' . $currency_symbol . $final_amount . ' for ' . $subscription_value . ' ' . $subscription_duration;
 		}
 
+		$notify_url = apply_filters(
+			'user_registration_paypal_membership_notify_url',
+			add_query_arg( 'ur-membership-listener', 'IPN', home_url( 'index.php' ) )
+		);
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'PayPal notify_url configured',
+			'info',
+			array(
+				'notify_url' => $notify_url,
+				'member_id'  => $member_id,
+			)
+		);
 		$paypal_args = array(
 			'business'      => sanitize_email( $paypal_options['email'] ),
 			'cancel_return' => $paypal_options['cancel_url'],
-			'notify_url'    => add_query_arg( 'ur-membership-listener', 'IPN', home_url( 'index.php' ) ),
+			'notify_url'    => $notify_url,
 			'cbt'           => $membership_data['post_title'],
 			'charset'       => get_bloginfo( 'charset' ),
 			'cmd'           => $transaction,
@@ -324,129 +337,28 @@ class PaypalService {
 			return;
 		}
 		delete_user_meta( $member_id, 'urm_paypal_verification_token' );
-		$member_order                   = $this->members_orders_repository->get_member_orders( $member_id );
-		$membership                     = $this->membership_repository->get_single_membership_by_ID( $membership_id );
-		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
-		$membership_metas['post_title'] = $membership['post_title'];
-		$membership_type                = $membership_metas['type'] ?? 'unknown'; // free, paid, or subscription
-		$membership_process             = urm_get_membership_process( $member_id );
+
+		$member_order = $this->members_orders_repository->get_member_orders( $member_id );
 
 		PaymentGatewayLogging::log_webhook_received(
 			'paypal',
-			'PayPal redirect callback received - User returned from PayPal',
+			'PayPal redirect callback received - awaiting IPN confirmation',
 			array(
-				'webhook_type'    => 'redirect_callback',
-				'payer_id'        => $payer_id,
-				'membership_id'   => $membership_id,
-				'member_id'       => $member_id,
-				'membership_type' => $membership_type,
+				'webhook_type' => 'redirect_callback',
+				'payer_id'     => $payer_id,
+				'member_id'    => $member_id,
+				'order_status' => $member_order['status'] ?? 'unknown',
 			)
 		);
 
-		$member_subscription = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
-		$is_renewing         = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'] );
-
-		if ( 'completed' === $member_order['status'] ) {
+		// If IPN already fired and completed the order, redirect to thank-you immediately.
+		if ( 'completed' === ( $member_order['status'] ?? '' ) ) {
 			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 		}
 
-		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
-
-		if ( $is_order_updated && ( 'paid' === $member_order['order_type'] || 'subscription' === $member_order['order_type'] ) ) {
-			$member_subscription = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
-			$status              = 'on' === $member_order['trial_status'] ? 'trial' : 'active';
-			$this->members_subscription_repository->update(
-				$member_subscription['ID'],
-				array(
-					'status'     => $status,
-					'start_date' => date( 'Y-m-d 00:00:00' ),
-				)
-			);
-			PaymentGatewayLogging::log_transaction_success(
-				'paypal',
-				'Subscription activated successfully from redirect callback',
-				array(
-					'subscription_id' => $member_subscription['ID'],
-					'member_id'       => $member_id,
-					'status'          => $status,
-					'order_type'      => $member_order['order_type'],
-					'trial_status'    => $member_order['trial_status'],
-					'payer_id'        => $payer_id,
-				)
-			);
-
-			PaymentGatewayLogging::log_general(
-				'paypal',
-				'Subscription status changed to ' . $status,
-				'notice',
-				array(
-					'event_type'      => 'status_change',
-					'old_status'      => $member_subscription['status'] ?? 'unknown',
-					'new_status'      => $status,
-					'subscription_id' => $member_subscription['ID'],
-					'member_id'       => $member_id,
-				)
-			);
-		}
-
-		if ( $is_renewing ) {
-			$subscription_service = new SubscriptionService();
-			$subscription_service->update_subscription_data_for_renewal( $member_subscription, $membership_metas );
-		}
-		$email_service = new EmailService();
-		$order_detail  = $this->orders_repository->get_order_detail( $member_order['ID'] );
-		if ( ! empty( $order_detail['coupon'] ) ) {
-			$order_detail['coupon_discount']      = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount', true );
-			$order_detail['coupon_discount_type'] = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount_type', true );
-		}
-		$email_data = array(
-			'subscription'     => $member_subscription,
-			'order'            => $order_detail,
-			'membership_metas' => $membership_metas,
-			'member_id'        => $member_id,
-			'membership'       => $membership_id,
-		);
-
-		$mail_send = $email_service->send_email( $email_data, 'payment_successful' );
-
-		if ( ! $mail_send ) {
-			PaymentGatewayLogging::log_transaction_failure(
-				'paypal',
-				'Email notification failed',
-				array(
-					'member_id'       => $member_id,
-					'subscription_id' => $member_subscription['ID'],
-				)
-			);
-		} else {
-			PaymentGatewayLogging::log_transaction_success(
-				'paypal',
-				'Email notification sent successfully',
-				array(
-					'member_id'       => $member_id,
-					'subscription_id' => $member_subscription['ID'],
-				)
-			);
-		}
-
-		$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $url_params['current_membership_id'] ] );
-
-		if ( $is_upgrading ) {
-			PaymentGatewayLogging::log_general(
-				'paypal',
-				'Processing membership upgrade',
-				'notice',
-				array(
-					'event_type'      => 'upgrade_initiated',
-					'member_id'       => $member_id,
-					'subscription_id' => $member_subscription['ID'],
-					'membership_type' => $membership_type,
-				)
-			);
-
-			$this->handle_upgrade_for_paypal( $member_id, $member_subscription['ID'] );
-		}
-
+		// Payment activation (order/subscription status, email, upgrade) is handled
+		// exclusively by the IPN handler which verifies the transaction with PayPal.
+		// The redirect callback only provides UX — it must not activate membership on its own.
 		$login_option = ur_get_user_login_option( $member_id );
 		$data         = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
 
@@ -635,7 +547,7 @@ class PaypalService {
 		$membership_type       = $membership_metas['type'] ?? 'unknown'; // free, paid, or subscription
 		$paypal_options        = is_array( $membership_metas['payment_gateways']['paypal'] ) ? $membership_metas['payment_gateways']['paypal'] : array();
 
-		$mode                         = get_option( 'user_registration_global_paypal_mode', 'test' ) == 'test' ? 'test' : 'live';
+		$mode                         = get_option( 'user_registration_global_paypal_mode', 'test' ) === 'test' ? 'test' : 'production';
 		$paypal_options['mode']       = $mode;
 		$paypal_options['email']      = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] ?? '' ) );
 		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
@@ -645,7 +557,7 @@ class PaypalService {
 		$receiver_email                 = $paypal_options['email'];
 		$amount                         = $membership_metas['amount'];
 		$payment_mode                   = $paypal_options['mode'];
-		$subscription                   = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $membership_id );
+		$subscription                   = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $subscription_id );
 
 		// initialize email service.
 		$email_service = new EmailService();
@@ -1226,7 +1138,7 @@ class PaypalService {
 			'user-agent'  => 'User Registration IPN Verification',
 		);
 
-		$remote_post_url = ( ! empty( $payment_mode ) && 'production' === $payment_mode ) ? 'https://ipnpb.paypal.com/cgi-bin/webscr' : 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+		$remote_post_url = ( ! empty( $payment_mode ) && in_array( $payment_mode, array( 'production', 'live' ), true ) ) ? 'https://ipnpb.paypal.com/cgi-bin/webscr' : 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
 		// Post back to get a response.
 		$response = wp_safe_remote_post( $remote_post_url, $params );
 

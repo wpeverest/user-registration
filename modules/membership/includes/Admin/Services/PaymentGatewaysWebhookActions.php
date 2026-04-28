@@ -66,10 +66,18 @@ class PaymentGatewaysWebhookActions {
 	 * @throws \Exception
 	 */
 	public function handle_membership_paypal_ipn() {
-
 		if ( ! isset( $_GET['ur-membership-listener'] ) || 'IPN' !== $_GET['ur-membership-listener'] ) {
 			return;
 		}
+
+		PaymentGatewayLogging::log_webhook_received(
+			'paypal',
+			'PayPal IPN POST received at membership listener',
+			array(
+				'webhook_type' => 'ipn',
+				'raw_get'      => $_GET,
+			)
+		);
 
 		$data = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
@@ -86,7 +94,7 @@ class PaymentGatewaysWebhookActions {
 		$stripe_signature = $request->get_header( 'stripe_signature' );
 		$body             = $request->get_body();
 
-		$legacy  = apply_filters( 'user_registration_stripe_webhook_secret', get_option( 'user_registration_stripe_webhook_secret', '' ) );
+		$legacy      = apply_filters( 'user_registration_stripe_webhook_secret', get_option( 'user_registration_stripe_webhook_secret', '' ) );
 		$secret_test = get_option( 'user_registration_stripe_webhook_secret_test', '' );
 		$secret_live = get_option( 'user_registration_stripe_webhook_secret_live', '' );
 		$candidates  = array_filter( array( $legacy, $secret_test, $secret_live ) );
@@ -137,7 +145,7 @@ class PaymentGatewaysWebhookActions {
 			return;
 		}
 
-		$event          = json_decode( $body, true );
+		$event           = json_decode( $body, true );
 		$subscription_id = isset( $event['data']['object']['subscription'] ) ? $event['data']['object']['subscription'] : null;
 
 		$stripe_service = new StripeService();
