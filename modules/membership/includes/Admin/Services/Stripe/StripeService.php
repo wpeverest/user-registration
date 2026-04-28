@@ -630,8 +630,9 @@ class StripeService {
 						array(
 							'payment_intent_id' => $intent->id,
 							'membership_type'   => $membership_type,
-						JSON_PRETTY_PRINT
-					),
+							JSON_PRETTY_PRINT,
+						),
+					)
 				);
 			}
 
