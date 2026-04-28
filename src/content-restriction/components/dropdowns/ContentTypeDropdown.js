@@ -14,11 +14,11 @@ const ContentTypeDropdown = ({
 }) => {
 	// Get content type options from localized data
 	const allOptions = getURCRData("content_type_options", [
+		{ value: "whole_site", label: __("Whole Site", "user-registration") },
 		{ value: "pages", label: __("Pages", "user-registration") },
 		{ value: "posts", label: __("Posts", "user-registration") },
 		{ value: "post_types", label: __("Post Type", "user-registration") },
 		{ value: "taxonomy", label: __("Taxonomy", "user-registration") },
-		{ value: "whole_site", label: __("Whole Site", "user-registration") },
 		{
 			value: "masteriyo_courses",
 			label: __("Courses", "user-registration")
@@ -52,7 +52,21 @@ const ContentTypeDropdown = ({
 		disabled: isContentTypeExists(option.value)
 	}));
 
-	return <DropdownMenu options={options} onSelect={onSelect} />;
+	// Pro options to show when pro is not active
+	const proOptions = [
+		{ value: "post-type", label: __("Post Type", "user-registration") },
+		{ value: "taxonomy", label: __("Taxonomy", "user-registration") },
+		{ value: "file_downloads", label: __("File Downloads", "user-registration") }
+	];
+
+	return (
+		<DropdownMenu
+			options={options}
+			onSelect={onSelect}
+			showProOptions={true}
+			proOptions={proOptions}
+		/>
+	);
 };
 
 export default ContentTypeDropdown;

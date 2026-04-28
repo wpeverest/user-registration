@@ -8,8 +8,10 @@
  * @version 1.0.0
  */
 
+use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -436,6 +438,67 @@ function ur_help_tip( $tip, $allow_html = false, $classname = 'user-registration
 	return sprintf( '<span class="%s" data-tip="%s"></span>', $classname, $tip );
 }
 
+function ur_render_premium_feature_gate_template( $args = array() ) {
+	if ( UR_PRO_ACTIVE ) {
+		return;
+	}
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'template_id' => 'ur-pro-feature',
+			'utm_source'  => 'ur-membership-create',
+		)
+	);
+	if ( empty( $args['upgrade_url'] ) ) {
+		$args['upgrade_url'] = 'https://wpuserregistration.com/upgrade/?utm_source=' . esc_attr( $args['utm_source'] ) . '&utm_medium=upgrade-link&utm-campaign=lite-version';
+	}
+
+	static $rendered_templates = array();
+	if ( in_array( $args['template_id'], $rendered_templates, true ) ) {
+		return;
+	}
+	$rendered_templates[] = $args['template_id'];
+	?>
+	<template id="<?php echo esc_attr( $args['template_id'] ); ?>">
+		<div class="ur-feature">
+			<div class="ur-feature__title">
+				<?php esc_html_e( 'You have run into a premium feature, please upgrade to URM Pro', 'user-registration' ); ?>
+			</div>
+			<a class="ur-feature__btn" target="_blank" href="<?php echo esc_url( $args['upgrade_url'] ); ?>">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
+				<?php esc_html_e( 'Upgrade to Pro', 'user-registration' ); ?>
+			</a>
+		</div>
+	</template>
+	<?php
+}
+
+function ur_render_premium_feature_gate( $args = array() ) {
+	if ( UR_PRO_ACTIVE ) {
+		return;
+	}
+
+	$args                = wp_parse_args(
+		$args,
+		array(
+			'template_id'     => 'ur-pro-feature',
+			'utm_source'      => 'ur-membership-create',
+			'render_template' => true,
+		)
+	);
+	$args['upgrade_url'] = 'https://wpuserregistration.com/upgrade/?utm_source=' . esc_attr( $args['utm_source'] ) . '&utm_medium=upgrade-link&utm-campaign=lite-version';
+
+	if ( ! empty( $args['render_template'] ) ) {
+		ur_render_premium_feature_gate_template( $args );
+	}
+
+	$gate_attrs = 'data-feature-gate="tooltip" data-gate-placement="right" data-gate-interactive="true" data-gate-content="' . esc_attr( $args['template_id'] ) . '"';
+	?>
+	<span class="ur-premium-pro" <?php echo $gate_attrs; ?>><img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' ); ?>" alt="" /></span>
+	<?php
+}
+
 /**
  * Checks whether the content passed contains a specific short code.
  *
@@ -506,7 +569,7 @@ if ( ! function_exists( 'ur_is_login_form_markup_rendered' ) ) {
  * @since  1.0.0
  */
 function ur_doing_it_wrong( $function, $message, $version ) {
-	$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
+	$message .= ' Backtrace: ' . wp_debug_backtrace_summary(); // PHPCS:Ignore WordPress.PHP.DevelopmentFunctions.error_log_backtrace_summary -- Backtrace is added to the message for better debugging and error tracking.
 
 	if ( defined( 'DOING_AJAX' ) ) {
 		/**
@@ -517,6 +580,8 @@ function ur_doing_it_wrong( $function, $message, $version ) {
 		 * @param string $version The version when the incorrect usage was introduced.
 		 */
 		do_action( 'doing_it_wrong_run', $function, $message, $version );
+
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
 	} else {
 		_doing_it_wrong( esc_html( $function ), esc_html( $message ), esc_html( $version ) );
@@ -1263,7 +1328,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 			$ur_enabled_captchas[ $key ] = $value;
 		}
 	}
-	$arguments = array(
+	$redirect_after_registration_default = ur_get_default_redirect_after_registration( $form_id );
+	$arguments                           = array(
 		'form_id'      => $form_id,
 		'setting_data' => array(
 			array(
@@ -1385,6 +1451,79 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', get_option( 'user_registration_form_setting_default_user_role', 'subscriber' ) ),
 				'tip'               => __( 'Pick what role new users will have after they sign up.', 'user-registration' ),
 				'default_value'     => get_option( 'user_registration_form_setting_default_user_role', 'subscriber' ),
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Redirect After Registration', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_after_registration',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				/**
+				 * Filters the redirection options after user registration.
+				 *
+				 * @param array $redirection_options An associative array where keys represent
+				 *                                   the option values, and values represent the labels
+				 *                                   for the redirection options.
+				 */
+				'options'           => apply_filters(
+					'user_registration_redirect_after_registration_options',
+					array(
+						'no-redirection' => __( 'No Redirection', 'user-registration' ),
+						'internal-page'  => __( 'Internal Page', 'user-registration' ),
+						'external-url'   => __( 'External URL', 'user-registration' ),
+						'previous-page'  => __( 'Previous Page', 'user-registration' ),
+					)
+				),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', $redirect_after_registration_default ),
+				'tip'               => __( 'Decide where users go after completing registration.', 'user-registration' ),
+				'default_value'     => $redirect_after_registration_default,
+				'custom_attributes' => array(),
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'number',
+				'label'             => __( 'Delay Before Redirect ( Seconds )', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_after',
+				'class'             => array( 'ur-input-field' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'min'               => '0',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ),
+				'tip'               => __( 'How many seconds to wait before sending the user to another page.', 'user-registration' ),
+				'default_value'     => '2',
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Redirect to Page', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_page',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => ur_get_all_pages(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', get_option( 'user_registration_thank_you_page_id', '' ) ),
+				'tip'               => __( 'Pick the page users will see after signing up.', 'user-registration' ),
+				'default_value'     => get_option( 'user_registration_thank_you_page_id', '' ),
+				'custom_attributes' => array(),
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'text',
+				'label'             => __( 'Redirect URL', 'user-registration' ),
+				'id'                => 'user_registration_form_setting_redirect_options',
+				'class'             => array( 'ur-input-field' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'tip'               => __( 'Set the URL of the page users should be sent to after signing up.', 'user-registration' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),
+				// Getting redirect options from global settings for backward compatibility.
+				'default_value'     => get_option( 'user_registration_general_setting_redirect_options', '' ),
 				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
@@ -1627,79 +1766,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'description' => ur_check_akismet_installation(),
 				'product'     => 'user-registration/user-registration.php',
 			),
-			array(
-				'type'              => 'select',
-				'label'             => __( 'Redirect After Registration', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_redirect_after_registration',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				/**
-				 * Filters the redirection options after user registration.
-				 *
-				 * @param array $redirection_options An associative array where keys represent
-				 *                                   the option values, and values represent the labels
-				 *                                   for the redirection options.
-				 */
-				'options'           => apply_filters(
-					'user_registration_redirect_after_registration_options',
-					array(
-						'no-redirection' => __( 'No Redirection', 'user-registration' ),
-						'internal-page'  => __( 'Internal Page', 'user-registration' ),
-						'external-url'   => __( 'External URL', 'user-registration' ),
-						'previous-page'  => __( 'Previous Page', 'user-registration' ),
-					)
-				),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' ),
-				'tip'               => __( 'Decide where users go after completing registration.', 'user-registration' ),
-				'default_value'     => 'no-redirection',
-				'custom_attributes' => array(),
-				'product'           => 'user-registration/user-registration.php',
-			),
-			array(
-				'type'              => 'number',
-				'label'             => __( 'Delay Before Redirect ( Seconds )', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_redirect_after',
-				'class'             => array( 'ur-input-field' ),
-				'input_class'       => array(),
-				'custom_attributes' => array(),
-				'min'               => '0',
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ),
-				'tip'               => __( 'How many seconds to wait before sending the user to another page.', 'user-registration' ),
-				'default_value'     => '2',
-				'product'           => 'user-registration/user-registration.php',
-			),
-			array(
-				'type'              => 'select',
-				'label'             => __( 'Redirect to Page', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_redirect_page',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				'options'           => ur_get_all_pages(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' ),
-				'tip'               => __( 'Pick the page users will see after signing up.', 'user-registration' ),
-				'default_value'     => '',
-				'custom_attributes' => array(),
-				'product'           => 'user-registration/user-registration.php',
-			),
-			array(
-				'type'              => 'text',
-				'label'             => __( 'Redirect URL', 'user-registration' ),
-				'id'                => 'user_registration_form_setting_redirect_options',
-				'class'             => array( 'ur-input-field' ),
-				'input_class'       => array(),
-				'custom_attributes' => array(),
-				'tip'               => __( 'Set the URL of the page users should be sent to after signing up.', 'user-registration' ),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),
-				// Getting redirect options from global settings for backward compatibility.
-				'default_value'     => get_option( 'user_registration_general_setting_redirect_options', '' ),
-				'product'           => 'user-registration/user-registration.php',
-			),
 		),
 	);
 
@@ -1787,6 +1853,27 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 	}
 
 	return $default;
+}
+
+if ( ! function_exists( 'ur_get_default_redirect_after_registration' ) ) {
+	/**
+	 * Get default redirect-after-registration value for a form.
+	 * Returns 'internal-page' if the form has a membership field, otherwise 'no-redirection'.
+	 *
+	 * @param int $form_id Form ID.
+	 * @return string 'internal-page' or 'no-redirection'
+	 * @since 1.0.1
+	 */
+	function ur_get_default_redirect_after_registration( $form_id ) {
+		if ( ! $form_id ) {
+			return 'no-redirection';
+		}
+		$form_post = get_post( $form_id );
+		if ( $form_post && isset( $form_post->post_content ) && false !== strpos( $form_post->post_content, '"field_key":"membership"' ) ) {
+			return 'internal-page';
+		}
+		return 'no-redirection';
+	}
 }
 
 /**
@@ -2080,6 +2167,7 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
  *
  * @param string $context Recaptcha context.
  * @param string $recaptcha_enabled Is Recaptcha enabled.
+ * @param int    $form_id Form ID.
  *
  * @return string
  */
@@ -2140,8 +2228,8 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 	}
 
 	if ( $recaptcha_enabled ) {
-		// Don't enqueue scripts for test_captcha context (admin settings)
-		// Admin settings will handle script loading via JavaScript
+		// Don't enqueue scripts for test_captcha context (admin settings).
+		// Admin settings will handle script loading via JavaScript.
 		if ( 'test_captcha' !== $context ) {
 			wp_enqueue_script( 'ur-recaptcha' );
 			wp_enqueue_script( $enqueue_script );
@@ -2155,14 +2243,14 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 			'theme_mode'        => $theme_mod,
 		);
 		$ur_recaptcha_slug = 'ur_' . strtolower( $recaptcha_type ) . '_recaptcha_code';
-		if ( $recaptcha_type === 'v2' ) {
+		if ( 'v2' === $recaptcha_type ) {
 			$ur_recaptcha_slug = 'ur_recaptcha_code';
 		}
 
 		if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
 			?>
-			<script id="<?php echo esc_attr( $enqueue_script ); ?>_<?php echo $rc_counter; ?>">
-				const <?php echo $ur_recaptcha_slug; ?> = <?php echo wp_json_encode( $ur_recaptcha_code ); ?>
+			<script id="<?php echo esc_attr( $enqueue_script ); ?>_<?php echo esc_attr( $rc_counter ); ?>">
+				const <?php echo $ur_recaptcha_slug; // PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> = <?php echo wp_json_encode( $ur_recaptcha_code ); ?>
 			</script>
 			<?php
 		} else {
@@ -2271,7 +2359,8 @@ function ur_get_meta_key_label( $form_id ) {
 /**
  * Get all user registration fields of the user by querying to database.
  *
- * @param int $user_id User ID.
+ * @param int    $user_id User ID.
+ * @param string $action The action being performed (e.g., 'export_users').
  *
  * @return array
  * @since  1.5.0
@@ -2332,7 +2421,7 @@ function ur_get_user_extra_fields( $user_id, $action = '' ) {
 	$form_fields = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore.
 	if ( ! empty( $form_fields ) ) {
 		foreach ( $form_fields as $field_key => $field_data ) {
-			// For repeator export
+			// For repeator export.
 			if ( 'export_users' === $action ) {
 				$value = isset( $all_meta_for_user[ $field_key ] ) ? $all_meta_for_user[ $field_key ] : get_user_meta( $user_id, $field_key, true );
 			} else {
@@ -2632,8 +2721,8 @@ function ur_string_translation( $form_id, $field_id, $variable ) {
 				$variable = icl_t( $context, $name, $variable );
 			}
 		}
-	} // For handling translation in Polylang.
-	elseif ( defined( 'POLYLANG_VERSION' ) ) {
+	} elseif ( defined( 'POLYLANG_VERSION' ) ) {
+		// For handling translation in Polylang.
 		if ( function_exists( 'pll_register_string' ) ) {
 			pll_register_string( $name, $variable, $context );
 			if ( function_exists( 'pll__' ) ) {
@@ -2921,8 +3010,8 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		}
 
 		if ( isset( $form_data->extra_params['field_key'] ) && 'country' === $form_data->extra_params['field_key'] && '' !== $form_data->value ) {
-			$isJson = preg_match( '/^\{.*\}$/s', $form_data->value ) ? true : false;
-			if ( $isJson ) {
+			$is_json = preg_match( '/^\{.*\}$/s', $form_data->value ) ? true : false;
+			if ( $is_json ) {
 				$country_data = json_decode( $form_data->value, true );
 				$country_code = isset( $country_data['country'] ) ? $country_data['country'] : '';
 				$state_code   = isset( $country_data['state'] ) ? $country_data['state'] : '';
@@ -3041,7 +3130,7 @@ if ( ! function_exists( 'user_registration_get_form_fields_for_dropdown' ) ) {
 		$field_array    = array();
 		if ( isset( $get_all_fields ) ) {
 			foreach ( $get_all_fields as $key => $field ) {
-				if ( $field['field_key'] === 'phone' ) {
+				if ( 'phone' === $field['field_key'] ) {
 					$field_array[ $key ] = $field['label'];
 				}
 			}
@@ -3384,7 +3473,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 
 			if ( current_user_can( 'activate_plugin', $install_status['file'] ) ) {
 				if ( is_plugin_inactive( $install_status['file'] ) ) {
-					if ( $install_status['file'] === 'user-registration-pro/user-registration.php' ) {
+					if ( 'user-registration-pro/user-registration.php' === $install_status['file'] ) {
 						$status['plugin'] = 'user-registration-pro/user-registration.php';
 						if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 							setcookie( 'urm_license_status', 'pro_activated', time() + 300, '/', '', is_ssl(), true );
@@ -3504,7 +3593,7 @@ if ( ! function_exists( 'ur_size_to_limit_length_migration_script' ) ) {
 							}
 						}
 					}
-					$post_content       = json_encode( $post_content_array );
+					$post_content       = wp_json_encode( $post_content_array );
 					$post->post_content = $post_content;
 				}
 				wp_update_post( $post );
@@ -3607,7 +3696,7 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 	 * @return array|WP_Error Array of created pages or WP_Error on failure.
 	 */
 	function ur_generate_required_pages( $missing_pages ) {
-		// Include admin functions for ur_create_page
+		// Include admin functions for ur_create_page.
 		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
 
 		$missing_pages_array = json_decode( $missing_pages, true );
@@ -3616,10 +3705,10 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 			return new WP_Error( 'invalid_pages', __( 'Invalid pages data provided.', 'user-registration' ) );
 		}
 
-		// Check if membership module is activated
+		// Check if membership module is activated.
 		$is_membership_activated = ur_check_module_activation( 'membership' );
 
-		// Define page configurations
+		// Define page configurations.
 		$page_configs = array(
 			'user_registration_login_page_id'              => array(
 				'name'                => 'login',
@@ -3668,12 +3757,12 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 
 			$config = $page_configs[ $page_option ];
 
-			// Skip membership pages if membership module is not activated
+			// Skip membership pages if membership module is not activated.
 			if ( $config['requires_membership'] && ! $is_membership_activated ) {
 				continue;
 			}
 
-			// Create the page
+			// Create the page.
 			$page_id = ur_create_page(
 				$config['name'],
 				$page_option,
@@ -3696,6 +3785,12 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 }
 
 if ( ! function_exists( 'ur_format_field_values_using_field_key' ) ) {
+	/**
+	 * Format field values using field key.
+	 *
+	 * @param string $field_key Field key.
+	 * @param mixed  $field_value Field Value.
+	 */
 	function ur_format_field_values_using_field_key( $field_key, $field_value ) {
 
 		switch ( $field_key ) {
@@ -3838,55 +3933,65 @@ if ( ! function_exists( 'ur_find_lost_password_in_page' ) ) {
 
 if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 	/**
-	 * Finds the "Reset Password" form shortcode.
+	 * Find whether the reset password form exists in the given page.
 	 *
-	 * @param int $reset_password_page_id The page ID to check for the reset password form.
-	 *
-	 * @return bool Whether the page contains the reset password form.
+	 * @param int $reset_password_page_id The ID of the associated reset password page.
+	 * @return bool Whether the "Reset Password" form was found in the page.
 	 */
 	function ur_find_reset_password_in_page( $reset_password_page_id ) {
 		global $wpdb;
-		$post_table      = $wpdb->prefix . 'posts';
-		$post_meta_table = $wpdb->prefix . 'postmeta';
 
-		$matched = $wpdb->get_var(
+		$shortcode_like = '%[user_registration_reset_password_form%';
+		$block_like     = '%<!-- wp:user-registration/reset_password_form%';
+
+		// Check in post_content.
+		$matched = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$post_table}
-				WHERE ID = %d
-				AND (
-					post_content LIKE '%[user_registration_reset_password_form%'
-					OR post_content LIKE '%<!-- wp:user-registration/reset_password_form%'
-				)",
-				$reset_password_page_id
-			) // phpcs:ignore
+				"
+			SELECT COUNT(*)
+			FROM {$wpdb->posts}
+			WHERE ID = %d
+			AND (
+				post_content LIKE %s
+				OR post_content LIKE %s
+			)
+			",
+				$reset_password_page_id,
+				$shortcode_like,
+				$block_like
+			)
 		);
 
+		// If not found in post_content, check postmeta.
 		if ( $matched <= 0 ) {
-			$matched = $wpdb->get_var(
+			$matched = (int) $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$post_meta_table}
-					WHERE post_id = %d
-					AND (
-						meta_value LIKE '%[user_registration_reset_password_form%'
-						OR meta_value LIKE '%<!-- wp:user-registration/reset_password_form%'
-					)",
-					$reset_password_page_id
-				) // phpcs:ignore
+					"
+				SELECT COUNT(*)
+				FROM {$wpdb->postmeta}
+				WHERE post_id = %d
+				AND (
+					meta_value LIKE %s
+					OR meta_value LIKE %s
+				)
+				",
+					$reset_password_page_id,
+					$shortcode_like,
+					$block_like
+				)
 			);
 		}
 
 		/**
 		 * Filters whether the reset password form was found in this page.
 		 *
-		 * @param bool $matched Whether the "Reset Password" form was found in the page.
-		 * @param int $reset_password_page_id The ID of the associated reset password page.
+		 * @param bool $matched                Whether the "Reset Password" form was found in the page.
+		 * @param int  $reset_password_page_id The ID of the associated reset password page.
 		 */
-		$matched = apply_filters( 'user_registration_find_reset_password_in_page', $matched, $reset_password_page_id );
+		$matched = apply_filters( 'user_registration_find_reset_password_in_page', $matched > 0, $reset_password_page_id );
 
-		return $matched;
+		return (bool) $matched;
 	}
-
-
 }
 
 if ( ! function_exists( 'ur_get_license_plan' ) ) {
@@ -3904,7 +4009,7 @@ if ( ! function_exists( 'ur_get_license_plan' ) ) {
 			include_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		if ( $license_key /*&& is_plugin_active( 'user-registration-pro/user-registration.php' ) */ ) {
+		if ( $license_key ) {
 			$license_data = get_transient( 'ur_pro_license_plan' );
 
 			if ( false === $license_data ) {
@@ -3993,8 +4098,6 @@ if ( ! function_exists( 'ur_file_get_contents' ) ) {
 				return $response;
 			}
 		}
-
-		return;
 	}
 }
 
@@ -4295,8 +4398,8 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 			$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
 		} elseif ( 'register' === $context && $form_id ) {
 			if ( $form_save_action ) {
-				if ( isset( $_POST['data']['form_setting_data'] ) ) {
-					foreach ( $_POST['data']['form_setting_data'] as $value ) {
+				if ( isset( $_POST['data']['form_setting_data'] ) ) { // phpcs:ignore
+					foreach ( $_POST['data']['form_setting_data'] as $value ) { //phpcs:ignore
 						if ( 'user_registration_form_setting_configured_captcha_type' === $value['name'] ) {
 							$recaptcha_type = $value['value'];
 						}
@@ -4691,7 +4794,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 							),
 						),
 						'dropbox'      => array(
-							'label'  => esc_html__( 'Dropbox', 'user-registration' ),
+							'label'  => esc_html__( 'Cloud Storage', 'user-registration' ),
 							'plugin' => 'user-registration-cloud-storage',
 							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
@@ -4801,15 +4904,16 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							/* translators: %s: Addon Name. */
 							$description = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail['plugin'] ) ) );
 
-							/*
-							translators: %s: Action Name. */
-							// $button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
 							$button_class = 'user-registration-settings-addon-' . strtolower( $action );
 							$button_attrs = array(
 								'data-slug' => $detail['plugin'],
 								'data-name' => $plugin_name,
 							);
-							$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
+							$button_title = sprintf(
+								/* translators: %s: Addon Name. */
+								esc_html__( '%s Addon', 'user-registration' ),
+								$action
+							);
 
 							$settings['sections'][ $detail['plugin'] ] = array_merge(
 								$detail,
@@ -5101,6 +5205,15 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				}
 			}
 
+			if ( 'previous-page' === get_option( 'user_registration_login_options_redirect_after_login', 'no' ) ) {
+				if ( ! empty( $post['previous_page'] ) ) {
+					$referer = $post['previous_page'];
+					if ( $referer && false === strpos( $referer, 'wp-login.php' ) && $referer !== get_permalink() ) {
+						$post['redirect'] = $referer;
+					}
+				}
+			}
+
 			// Handles the role based redirection.
 			if ( ur_string_to_bool( get_option( 'user_registration_pro_role_based_redirection', false ) ) ) {
 				$registration_redirect = get_option( 'ur_pro_settings_redirection_after_login', array() );
@@ -5271,15 +5384,15 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				 */
 				$redirect = apply_filters( 'user_registration_login_redirect', $redirect, $user );
 
-				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) {
+				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) { // phpcs:ignore
 					wp_send_json_success( array( 'message' => $redirect ) );
 					wp_send_json( $user );
 				} else {
-					wp_redirect( wp_validate_redirect( $redirect, $redirect ) );
+					wp_redirect( wp_validate_redirect( $redirect, $redirect ) ); // phpcs:ignore
 					exit;
 				}
 
-				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) {
+				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) { // phpcs:ignore
 					wp_send_json( $user );
 				}
 			}
@@ -5288,7 +5401,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			$message     = $e->getMessage();
 
 			if ( $status_code >= 200 && $status_code < 300 ) {
-				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) {
+				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) { // phpcs:ignore
 					wp_send_json_success(
 						array(
 							'message' => $message,
@@ -5312,7 +5425,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				);
 			} else {
 
-				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) {
+				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) { // phpcs:ignore
 					wp_send_json_error(
 						array(
 							'message' => apply_filters( 'login_errors', $message ),
@@ -5340,17 +5453,57 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 }
 
 if ( ! function_exists( 'ur_process_registration' ) ) {
+	/**
+	 * Process Registration.
+	 *
+	 * @param string $nonce_value Nonce value.
+	 * @return void
+	 */
 	function ur_process_registration( $nonce_value ) {
 		/**
 		 * Filter to modify user capability.
 		 * Default value is 'create_users'.
 		 */
 		$logger = ur_get_logger();
-		$logger->info( __( 'Checking permissions.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+
+		$logger->notice(
+			sprintf( '[Form #%d] =============== ***USER REGISTRATION STARTED*** ===============', $form_id ),
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
+
+		$logger->debug(
+			sprintf( '[Form #%d] Function == ***%s()*** - Started execution.', $form_id, __FUNCTION__ ),
+			array(
+				'source'   => 'form-submission',
+				'form_id'  => $form_id,
+				'function' => __FUNCTION__,
+			)
+		);
+
+		$logger->info(
+			sprintf( '[Form #%d] Checking user capability permissions...', $form_id ),
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
+
 		$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
 
 		if ( is_user_logged_in() && ! current_user_can( 'administrator' ) && ! current_user_can( $current_user_capability ) ) { //phpcs:ignore
-			$logger->warning( __( 'User is already logged in and lacks permission.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+			$logger->warning(
+				sprintf( '[Form #%d] User is already logged in and does not have permission to register a new account.', $form_id ) . "\n  ",
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
 			wp_send_json_error(
 				array(
 					'message' => __( 'You are already logged in.', 'user-registration' ),
@@ -5359,7 +5512,14 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		}
 
 		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) && empty( $_POST['ur_fallback_submit'] ) ) {
-			$logger->error( __( 'Nonce verification failed.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+			$logger->error(
+				sprintf( '[Form #%d] AJAX nonce verification failed for form submission.', $form_id ) . "\n   ",
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
 			wp_send_json_error(
 				array(
 					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
@@ -5367,14 +5527,14 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			);
 		}
 
-		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		$logger->info(
-			__( 'Processing form submission.', 'user-registration' ),
+			sprintf( '[Form #%d] Processing form submission.', $form_id ),
 			array(
 				'source'  => 'form-submission',
 				'form_id' => $form_id,
 			)
 		);
+
 		$nonce            = $nonce_value;
 		$captcha_response = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
 		$flag             = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
@@ -5400,17 +5560,26 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
 			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 		}
+
 		if ( $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
 			if ( ! empty( $captcha_response ) ) {
 				if ( 'hCaptcha' === $recaptcha_type ) {
 					$data = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 					$data = json_decode( wp_remote_retrieve_body( $data ) );
+
 					/**
 					 * Filter to modify hcaptcha threshold.
 					 * Default value is 0.5
 					 */
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
-						$logger->error( __( 'Error on hCaptcha.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+						$logger->error(
+							sprintf( '[Form #%d] hCaptcha validation failed. Submission could not be verified.', $form_id ) . "\n  ",
+							array(
+								'source'  => 'form-submission',
+								'form_id' => $form_id,
+							)
+						);
+
 						wp_send_json_error(
 							array(
 								'message' => __( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ),
@@ -5428,8 +5597,16 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 					);
 					$data   = wp_safe_remote_post( $url, $params );
 					$data   = json_decode( wp_remote_retrieve_body( $data ) );
+
 					if ( empty( $data->success ) ) {
-						$logger->error( __( 'Error on Cloudflare Turnstile', 'user-registration' ), array( 'source' => 'form-submission' ) );
+						$logger->error(
+							sprintf( '[Form #%d] Cloudflare Turnstile verification failed. Submission could not be verified.', $form_id ) . "\n  ",
+							array(
+								'source'  => 'form-submission',
+								'form_id' => $form_id,
+							)
+						);
+
 						wp_send_json_error(
 							array(
 								'message' => __( 'Error on Cloudflare Turnstile. Contact your site administrator.', 'user-registration' ),
@@ -5439,12 +5616,20 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 				} else {
 					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 					$data = json_decode( wp_remote_retrieve_body( $data ) );
+
 					/**
 					 * Filter to modify V3 recaptcha threshold.
 					 * Default value is 0.5
 					 */
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
-						$logger->error( __( 'Error on google reCaptcha.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+						$logger->error(
+							sprintf( '[Form #%d] Google reCAPTCHA verification failed. Submission could not be verified.', $form_id ) . "\n  ",
+							array(
+								'source'  => 'form-submission',
+								'form_id' => $form_id,
+							)
+						);
+
 						wp_send_json_error(
 							array(
 								'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
@@ -5453,7 +5638,14 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 					}
 				}
 			} else {
-				$logger->error( __( 'Captcha code error.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+				$logger->error(
+					sprintf( '[Form #%d] Captcha response is missing from the submitted form data.', $form_id ) . "\n  ",
+					array(
+						'source'  => 'form-submission',
+						'form_id' => $form_id,
+					)
+				);
+
 				wp_send_json_error(
 					array(
 						'message' => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
@@ -5463,7 +5655,14 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		}
 
 		if ( true != $flag || is_wp_error( $flag ) ) {
-			$logger->error( __( 'Nonce error, please reload.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+			$logger->error(
+				sprintf( '[Form #%d] Frontend form nonce verification failed. Please reload and try again.', $form_id ) . "\n  ",
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
 			wp_send_json_error(
 				array(
 					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
@@ -5485,6 +5684,14 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 
 			if ( ! current_user_can( $current_user_capability ) ) {
 				global $wp;
+
+				$logger->warning(
+					sprintf( '[Form #%d] Logged-in user does not have the required capability to proceed with registration.', $form_id ) . "\n",
+					array(
+						'source'  => 'form-submission',
+						'form_id' => $form_id,
+					)
+				);
 
 				$user_ID      = get_current_user_id();
 				$user         = get_user_by( 'ID', $user_ID );
@@ -5509,13 +5716,50 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		}
 
 		$form_data = array();
-		$logger->info( __( 'Form data receiving', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+		$logger->info(
+			sprintf( '[Form #%d] Receiving submitted form data.', $form_id ),
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
+
 		if ( isset( $_POST['form_data'] ) ) {
 			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
-		$logger->info( __( 'Form data received', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+		$loggable_form_data = array();
+
+		if ( is_array( $form_data ) ) {
+			foreach ( $form_data as $field ) {
+				$log_field = clone $field;
+
+				if ( isset( $log_field->field_type ) && 'password' === $log_field->field_type ) {
+					$log_field->value = '********';
+				}
+
+				$loggable_form_data[] = $log_field;
+			}
+		}
+
+		$logger->info(
+			sprintf( '[Form #%d] Form data received successfully.', $form_id ) . "\n" . wp_json_encode( $loggable_form_data, JSON_PRETTY_PRINT ),
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
+
 		UR_Frontend_Form_Handler::handle_form( $form_data, $form_id );
-		$logger->info( __( 'Form submission processed successfully.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+
+		$logger->success(
+			sprintf( '[Form #%d] Form submission processed successfully.', $form_id ) . "\n",
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
 	}
 }
 
@@ -5898,88 +6142,85 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 	 */
 	function ur_wrap_email_body_content( $body_content ) {
 		// Check if we're in editor context - exclude CSS when displaying editor on settings page.
-		// Include CSS for preview, email sending, cron, CLI, and AJAX email actions.
-		$is_preview       = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$is_preview       = isset( $_GET['ur_email_preview'] );
 		$current_screen   = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
-		$is_email_action  = isset( $_REQUEST['action'] ) && (
-				'ur_send_test_email' === $_REQUEST['action'] ||
-				strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$is_email_action  = isset( $_REQUEST['action'] ) && ( // phpcs:ignore
+				'ur_send_test_email' === $_REQUEST['action'] || // phpcs:ignore
+				strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore
 			);
 
-		// Only exclude CSS when on settings page displaying editor (not when sending emails).
 		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
 							! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
 							! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
 
-		// Responsive CSS styles for email template - only include when not in editor context.
 		$responsive_styles = '';
 		if ( ! $is_editor_context ) {
-			$responsive_styles = '<style type="text/css">
-	/* Responsive Email Styles - Scoped to email wrapper only */
-	@media only screen and (max-width: 600px) {
-		.email-wrapper-outer {
-			padding: 20px 0 !important;
-		}
-		.email-wrapper-inner {
-			width: 100% !important;
-			max-width: 100% !important;
-			margin: 0 !important;
-			border-radius: 0 !important;
-		}
-		.email-header {
-			padding: 20px 15px !important;
-			border-radius: 0 !important;
-		}
-		.email-body {
-			padding: 25px 15px !important;
-		}
-		.email-footer {
-			padding: 20px 15px !important;
-		}
-		.email-logo img {
-			max-width: 150px !important;
-			max-height: 50px !important;
-		}
-		.email-header-text {
-			font-size: 16px !important;
-			margin-top: 10px !important;
-		}
-		.email-footer p {
-			font-size: 12px !important;
-		}
-		.email-footer a {
-			font-size: 13px !important;
-		}
-	}
-	@media only screen and (max-width: 480px) {
-		.email-wrapper-outer {
-			padding: 10px 0 !important;
-		}
-		.email-header {
-			padding: 15px 10px !important;
-		}
-		.email-body {
-			padding: 20px 10px !important;
-		}
-		.email-footer {
-			padding: 15px 10px !important;
-		}
-		.email-logo img {
-			max-width: 120px !important;
-			max-height: 40px !important;
-		}
-		.email-header-text {
-			font-size: 14px !important;
-		}
-	}
-</style>';
+			$responsive_styles = '<div style="display:none!important;visibility:hidden;opacity:0;color:transparent;height:0;width:0;line-height:0;font-size:0;overflow:hidden;mso-hide:all;">
+		<style type="text/css">
+			@media only screen and (max-width: 600px) {
+				.email-wrapper-outer {
+					padding: 20px 0 !important;
+				}
+				.email-wrapper-inner {
+					width: 100% !important;
+					max-width: 100% !important;
+					margin: 0 !important;
+					border-radius: 0 !important;
+				}
+				.email-header {
+					padding: 20px 15px !important;
+					border-radius: 0 !important;
+				}
+				.email-body {
+					padding: 25px 15px !important;
+				}
+				.email-footer {
+					padding: 20px 15px !important;
+				}
+				.email-logo img {
+					max-width: 150px !important;
+					max-height: 50px !important;
+				}
+				.email-header-text {
+					font-size: 16px !important;
+					margin-top: 10px !important;
+				}
+				.email-footer p {
+					font-size: 12px !important;
+				}
+				.email-footer a {
+					font-size: 13px !important;
+				}
+			}
+			@media only screen and (max-width: 480px) {
+				.email-wrapper-outer {
+					padding: 10px 0 !important;
+				}
+				.email-header {
+					padding: 15px 10px !important;
+				}
+				.email-body {
+					padding: 20px 10px !important;
+				}
+				.email-footer {
+					padding: 15px 10px !important;
+				}
+				.email-logo img {
+					max-width: 120px !important;
+					max-height: 40px !important;
+				}
+				.email-header-text {
+					font-size: 14px !important;
+				}
+			}
+		</style>
+		</div>';
 		}
 
-		// Check if this is a preview and set width to 600px.
 		$is_preview  = isset( $_GET['ur_email_preview'] ) && 'email_template_option' === sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$email_width = $is_preview ? '600px' : 'unset';
-		$max_width   = $is_preview ? '600px' : '600px'; // Max width for better readability on all devices.
+		$max_width   = '600px';
 
 		return $responsive_styles . '
 	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0;">
@@ -6007,26 +6248,19 @@ if ( ! function_exists( 'ur_unwrap_email_body_content' ) ) {
 		// Remove style tags (including those with type="text/css").
 		$content = preg_replace( '/<style[^>]*>.*?<\/style>/is', '', $content );
 
-		// Check if content contains email wrapper structure.
 		if ( strpos( $content, 'email-wrapper-outer' ) !== false || strpos( $content, 'email-body' ) !== false ) {
-			// Pattern to match: <div...class="...email-body...">CONTENT</div> followed by closing divs
-			// Use a pattern that matches the email-body div and extracts its content.
 			if ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*)<\/div>\s*<\/div>\s*<\/div>/is', $content, $matches ) ) {
 				$content = $matches[1];
 			} elseif ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*?)<\/div>/is', $content, $matches ) ) {
-				// Fallback: just get content from email-body div (may have nested divs).
 				$content = $matches[1];
 			} else {
-				// Last resort: Remove wrapper divs manually.
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-outer[^"\']*["\'][^>]*>/is', '', $content );
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-inner[^"\']*["\'][^>]*>/is', '', $content );
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>/is', '', $content );
-				// Remove closing divs at the end (up to 3 closing divs).
 				$content = preg_replace( '/(<\/div>\s*){1,3}\s*$/is', '', $content );
 			}
 		}
 
-		// Clean up any extra whitespace.
 		$content = trim( $content );
 
 		return $content;
@@ -6261,7 +6495,7 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		} elseif ( is_page() || is_single() ) {
 
-			if ( isset( $_GET['vc_editable'] ) ) {
+			if ( isset( $_GET['vc_editable'] ) ) { // phpcs:ignore
 				return;
 			}
 			$post_content = get_the_content();
@@ -6567,7 +6801,7 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 						break;
 				}
 			}
-			$data->value = json_encode( $field_data );
+			$data->value = wp_json_encode( $field_data );
 		}
 
 		if ( in_array( $data->field_name, $form_key_list, true ) ) {
@@ -6806,7 +7040,7 @@ if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data
 			if ( 'user_email' === $single_form_field->field_key ) {
 				// Do not allow admin to update others email, case may change in future
 				// if ( ! email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && $user_id !== get_current_user_id() ) {
-				//  ur_add_notice( esc_html__( 'Email field is not editable.', 'user-registration' ), 'error' );
+				// ur_add_notice( esc_html__( 'Email field is not editable.', 'user-registration' ), 'error' );
 				// }
 				// Check if email already exists before updating user details.
 				if ( email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) !== $user_id ) {
@@ -6840,10 +7074,10 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 	 */
 	function user_registration_edit_profile_row_template( $data, $profile, $current_row = '', $row_count = '' ) {
 
-		$user_id = ! empty( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : get_current_user_id();
+		$user_id = ! empty( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : get_current_user_id(); // phpcs:ignore
 		$form_id = ur_get_form_id_by_userid( $user_id );
 		$width   = floor( 100 / count( $data ) ) - count( $data );
-		$is_edit = isset( $_REQUEST['action'] ) && ( $_REQUEST['action'] === 'edit' || $_REQUEST['action'] === 'view' ) && $user_id !== get_current_user_id();
+		$is_edit = isset( $_REQUEST['action'] ) && ( $_REQUEST['action'] === 'edit' || $_REQUEST['action'] === 'view' ) && $user_id !== get_current_user_id(); // phpcs:ignore
 
 		foreach ( $data as $grid_key => $grid_data ) {
 			$found_field = false;
@@ -7094,7 +7328,12 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 								}
 
 								$field['value'] = ! empty( $attachment_ids ) ? implode( ',', $attachment_ids ) : '';
-								update_user_meta( get_current_user_id(), 'user_registration_' . $single_item->general_setting->field_name, $field['value'] );
+
+								$user_id = get_current_user_id();
+
+								if ( current_user_can( 'edit_user', $user_id ) ) {
+									update_user_meta( $user_id, 'user_registration_' . $single_item->general_setting->field_name, $field['value'] );
+								}
 							}
 						}
 
@@ -7189,13 +7428,6 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 							$row_count_to_send = '' === $row_count ? $current_row : $row_count;
 							$field             = user_registration_form_field( $key, $field, $value, $row_count_to_send, $is_edit );
 						}
-
-						/**
-						 * Embed the current country value to allow to remove it if it's not allowed.
-						 */
-						if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
-							// printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
-						}
 						?>
 					</div>
 				<?php } ?>
@@ -7281,7 +7513,7 @@ if ( ! function_exists( 'ur_get_coupon_details' ) ) {
 	/**
 	 * This function will send email verification email to the user.
 	 *
-	 * @param int $user_id User ID.
+	 * @param string $coupon Coupon Code.
 	 *
 	 * @since 3.1.5
 	 */
@@ -7416,8 +7648,9 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
 			current_user_can( 'manage_options' ) ||
+			// phpcs:ignore
 			( ! empty( $_POST['action'] ) && in_array(
-				$_POST['action'],
+				$_POST['action'], // phpcs:ignore
 				array(
 					'user_registration_membership_confirm_payment',
 					'user_registration_membership_create_stripe_subscription',
@@ -7489,7 +7722,7 @@ if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
 		if ( ! $is_auto_enable || '' === $is_auto_enable ) {
 			return;
 		}
-		if ( strtotime( $is_auto_enable ) < strtotime( date( 'Y-m-d H:i:s' ) ) ) {
+		if ( strtotime( $is_auto_enable ) < strtotime( gmdate( 'Y-m-d H:i:s' ) ) ) {
 			delete_user_meta( $user_id, 'ur_auto_enable_time' );
 			delete_user_meta( $user_id, 'ur_disable_users' );
 
@@ -7498,7 +7731,7 @@ if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
 	}
 }
 
-// Hook the redirection to admin_init
+// Hook the redirection to admin_init.
 add_action(
 	'admin_init',
 	'ur_redirect_to_addons_page'
@@ -7509,7 +7742,7 @@ if ( ! function_exists( 'ur_redirect_to_addons_page' ) ) {
 	 * Redirect to addons page.
 	 */
 	function ur_redirect_to_addons_page() {
-		if ( isset( $_GET['page'] ) && 'user-registration-addons' === $_GET['page'] ) {
+		if ( isset( $_GET['page'] ) && 'user-registration-addons' === $_GET['page'] ) { // phpcs:ignore
 			wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-dashboard#features' ) ) );
 			exit;
 		}
@@ -7624,7 +7857,7 @@ if ( ! function_exists( 'ur_get_akismet_validate' ) ) {
 			$request = array(
 				'blog'                 => home_url(),
 				'user_ip'              => ur_get_ip_address(),
-				'user_agent'           => isset( $_SERVER['HTTP_USER_AGENT'] ) ? wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : null,
+				'user_agent'           => isset( $_SERVER['HTTP_USER_AGENT'] ) ? wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : null, // phpcs:ignore
 				// phpcs:ignore
 				'referrer'             => wp_get_referer() ? wp_get_referer() : null,
 				'permalink'            => ur_current_url(),
@@ -7751,7 +7984,7 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 	/**
 	 * Settings text format.
 	 *
-	 * @param array $args
+	 * @param array $args Arguments.
 	 *
 	 * @return array
 	 * @since 3.3.1
@@ -7771,7 +8004,7 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 				}
 			}
 
-			if ( isset( $arg['desc_tip'] ) && ( $arg['desc_tip'] != 1 || $arg['desc_tip'] !== true ) ) {
+			if ( isset( $arg['desc_tip'] ) && ( $arg['desc_tip'] != 1 || $arg['desc_tip'] !== true ) ) { // phpcs:ignore
 				$arg['desc_tip'] = ucwords( strtolower( $arg['desc_tip'] ) );
 			}
 
@@ -7806,14 +8039,14 @@ if ( ! function_exists( 'ur_format_sentence_case' ) ) {
 	/**
 	 * Capitalizes the first letter of the initial word and each word after a period.
 	 *
-	 * @param string $string
+	 * @param string $string String to format.
 	 *
 	 * @return string
 	 */
 	function ur_format_sentence_case( $string ) {
 		$sentences = preg_split( '/(\.\s+)/', $string, - 1, PREG_SPLIT_DELIM_CAPTURE );
 		foreach ( $sentences as &$sentence ) {
-			if ( trim( $sentence ) !== '' && $sentence !== '.' && ! preg_match( '/^\.\s*$/', $sentence ) ) {
+			if ( trim( $sentence ) !== '' && $sentence !== '.' && ! preg_match( '/^\.\s*$/', $sentence ) ) { // phpcs:ignore
 				$sentence = ucfirst( ltrim( $sentence ) );
 			}
 		}
@@ -7826,7 +8059,7 @@ if ( ! function_exists( 'ur_get_capitalized_words' ) ) {
 	/**
 	 * Get form data.
 	 *
-	 * @param string $label
+	 * @param string $label Label to capitalize.
 	 *
 	 * @return array
 	 * @since 3.3.1
@@ -7882,14 +8115,39 @@ if ( ! function_exists( 'ur_email_send_failed_handler' ) ) {
 	 */
 	function ur_email_send_failed_handler( $error_instance ) {
 		$error_message = '';
+		$error_data    = $error_instance->get_error_data();
+
+		ur_get_logger()->debug(
+			sprintf(
+				'Mail action ***wp_mail_failed*** triggered. Callback function :: ***%s()***',
+				__FUNCTION__
+			),
+			array( 'source' => 'ur_mail_logs' )
+		);
+
+		$mail_log_data = array(
+			'reason'      => $error_instance->get_error_message(),
+			'to'          => isset( $error_data['to'] ) ? $error_data['to'] : '',
+			'subject'     => isset( $error_data['subject'] ) ? $error_data['subject'] : '',
+			'headers'     => isset( $error_data['headers'] ) ? $error_data['headers'] : array(),
+			'attachments' => isset( $error_data['attachments'] ) ? $error_data['attachments'] : array(),
+		);
+
+		ur_get_logger()->error(
+			'Mail send failed. Details:' . "\n" . wp_json_encode( $mail_log_data, JSON_PRETTY_PRINT ),
+			array( 'source' => 'ur_mail_logs' )
+		);
 
 		if ( '' !== json_decode( $error_instance->get_error_message() ) ) {
 			/* translators: %s: Status Log URL*/
-			$error_message = wp_kses_post( sprintf( __( 'Please check the `ur_mail_logs` log under <a target="_blank" href= "%s"> Status Log </a> section.', 'user-registration' ), admin_url( 'admin.php?page=user-registration-status' ) ) );
-			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_logs' ) );
+			$error_message = wp_kses_post(
+				sprintf(
+					__( 'Please check the `ur_mail_logs` log under <a target="_blank" href="%s">Status Log</a> section.', 'user-registration' ),
+					admin_url( 'admin.php?page=user-registration-status' )
+				)
+			);
 		} else {
 			$error_message = $error_instance->get_error_message();
-			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_logs' ) );
 		}
 
 		if ( '' !== $error_message ) {
@@ -8550,8 +8808,8 @@ if ( ! function_exists( 'ur_end_setup_wizard' ) ) {
 			update_option( 'user_registration_first_time_activation_flag', false );
 			update_option( 'user_registration_onboarding_skipped', true );
 
-			if ( isset( $_REQUEST['activeStep'] ) ) {
-				update_option( 'user_registration_onboarding_skipped_step', sanitize_text_field( wp_unslash( $_REQUEST['activeStep'] ) ) );
+			if ( isset( $_REQUEST['activeStep'] ) ) { // phpcs:ignore
+				update_option( 'user_registration_onboarding_skipped_step', sanitize_text_field( wp_unslash( $_REQUEST['activeStep'] ) ) ); // phpcs:ignore
 			} else {
 				delete_option( 'user_registration_onboarding_skipped_step' );
 				update_option( 'user_registration_onboarding_skipped', false );
@@ -8561,6 +8819,9 @@ if ( ! function_exists( 'ur_end_setup_wizard' ) ) {
 }
 
 if ( ! function_exists( 'ur_get_exclude_text_format_settings' ) ) {
+	/**
+	 * Exclude text format settings.
+	 */
 	function ur_get_exclude_text_format_settings() {
 		$settings = array(
 			'user_registration_form_setting_enable_recaptcha_support',
@@ -8671,10 +8932,10 @@ if ( ! function_exists( 'ur_get_user_registered_source' ) ) {
 if ( ! function_exists( 'ur_return_social_profile_pic' ) ) {
 
 	/**
-	 * ur_return_social_profile_pic
+	 * Return social profile picture.
 	 *
-	 * @param $url
-	 * @param $user_id
+	 * @param string $url URL.
+	 * @param int    $user_id User ID.
 	 *
 	 * @return mixed
 	 */
@@ -8901,7 +9162,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'type'        => 'text',
 								'desc_tip'    => true,
 								'css'         => '',
-								'default'     => esc_html__( 'The password you entered for the %label% %email% is incorrect.', 'user-registration' ),
+								'default'     => esc_html__( 'The password you entered for the %label% %email% is incorrect.', 'user-registration' ), // phpcs:ignore
 								'placeholder' => 'Default message from WordPress',
 								'field-key'   => 'password',
 							),
@@ -9209,6 +9470,7 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 if ( ! function_exists( 'ur_check_and_sync_login_page_redirect_options' ) ) {
 	/**
 	 * Check and sync login page and redirect URL options to ensure consistency and avoid conflicts.
+	 *
 	 * @return array{ hide: bool, show_notice: bool, login_page_id: int|string, login_redirect_url: int|string }
 	 */
 	function ur_check_and_sync_login_page_redirect_options( $run_migration = true ) {
@@ -9267,6 +9529,11 @@ add_action( 'user_registration_init', 'ur_login_page_redirect_migration_run_once
 
 if ( ! function_exists( 'ur_login_page_redirect_migration_run_once' ) ) {
 
+	/**
+	 * Page redirect migration script.
+	 *
+	 * @return void
+	 */
 	function ur_login_page_redirect_migration_run_once() {
 		if ( get_option( 'ur_login_page_redirect_sync_migrated', false ) ) {
 			return;
@@ -9321,6 +9588,9 @@ add_filter( 'user_registration_login_form_settings', 'ur_filter_login_form_setti
 
 if ( ! function_exists( 'render_login_option_settings' ) ) {
 
+	/**
+	 * Render login option settings.
+	 */
 	function render_login_option_settings( $section ) {
 		$settings                = '';
 		$section_settings        = $section['settings'];
@@ -9408,7 +9678,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 			}
 
 			$field_description = UR_Admin_Settings::get_field_description( $value );
-			extract( $field_description );
+			extract( $field_description ); // phpcs:ignore
 
 			// Switch based on type.
 			switch ( $value['type'] ) {
@@ -9852,7 +10122,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					break;
 			}// End switch case.
 		}
-		echo $settings;
+		echo $settings; // phpcs:ignore
 	}
 }
 
@@ -9860,10 +10130,10 @@ add_filter( 'user_registration_find_my_account_in_page', 'ur_find_my_account_in_
 
 if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 	/**
-	 * Return true if found ur my account or login
+	 * Return true if found ur my account or login.
 	 *
-	 * @param $value
-	 * @param $page_id
+	 * @param string $value Value.
+	 * @param int    $page_id Page ID.
 	 *
 	 * @return mixed
 	 */
@@ -9924,7 +10194,7 @@ if ( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 	 * @return string Modified URL if WPML is active, original urk if WPML is not active.
 	 */
 	function ur_filter_get_endpoint_url( $url, $endpoint, $value, $permalink ) {
-		// Return early WPML is not active
+		// Return early WPML is not active.
 		if ( ! class_exists( 'SitePress' ) ) {
 			return $url;
 		}
@@ -9941,9 +10211,9 @@ if ( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 
 if ( ! function_exists( 'ur_get_endpoint_translation' ) ) {
 	/**
-	 * Get the translated endpoint
+	 * Get the translated endpoint.
 	 *
-	 * @param $endpoint
+	 * @param string $endpoint Endpoint slug.
 	 *
 	 * @return string
 	 */
@@ -9957,6 +10227,9 @@ add_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 
 
 if ( ! function_exists( 'ur_register_endpoints_translations' ) ) {
 
+	/**
+	 * Register endpoints translations.
+	 */
 	function ur_register_endpoints_translations() {
 		/**
 		 * Register the endpoint translations
@@ -9971,12 +10244,12 @@ if ( ! function_exists( 'ur_register_endpoints_translations' ) ) {
 			$query_vars = array(
 
 				// My account actions.
-				'edit-profile'    => get_endpoint_translation( 'edit-profile', $ur_vars['edit-profile'], $language ),
-				'change-password' => get_endpoint_translation( 'change-password', $ur_vars['change-password'], $language ),
-				'lost-password'   => get_endpoint_translation( 'lost-password', $ur_vars['lost-password'], $language ),
-				'user-logout'     => get_endpoint_translation( 'user-logout', $ur_vars['user-logout'], $language ),
+				'edit-profile'    => get_endpoint_translation( 'edit-profile', $ur_vars['edit-profile'], $language ), // phpcs:ignore
+				'change-password' => get_endpoint_translation( 'change-password', $ur_vars['change-password'], $language ), // phpcs:ignore
+				'lost-password'   => get_endpoint_translation( 'lost-password', $ur_vars['lost-password'], $language ), // phpcs:ignore
+				'user-logout'     => get_endpoint_translation( 'user-logout', $ur_vars['user-logout'], $language ), // phpcs:ignore
 			);
-			$query_vars = apply_filters( 'wcml_register_endpoints_query_vars', $query_vars, $ur_vars, $this );
+			$query_vars = apply_filters( 'wcml_register_endpoints_query_vars', $query_vars, $ur_vars, UR()->query );
 
 			$query_vars             = array_merge( $ur_vars, $query_vars );
 			UR()->query->query_vars = $query_vars;
@@ -9988,16 +10261,16 @@ if ( ! function_exists( 'ur_register_endpoints_translations' ) ) {
 
 if ( ! function_exists( 'get_endpoint_translation' ) ) {
 	/**
-	 * Get the translated endpoint
+	 * Get the translated endpoint.
 	 *
-	 * @param $endpoint
+	 * @param string $endpoint Endpoint Slug.
 	 *
 	 * @return string
 	 */
 	function get_endpoint_translation( $endpoint, $value, $language = null ) {
 
 		if ( function_exists( 'icl_t' ) ) {
-			$trnsl = apply_filters( 'wpml_translate_single_string', $endpoint, 'UserRegistration Endpoints', $key, $language );
+			$trnsl = apply_filters( 'wpml_translate_single_string', $endpoint, 'UserRegistration Endpoints', $key, $language ); // phpcs:ignore
 
 			if ( ! empty( $trnsl ) ) {
 				return $trnsl;
@@ -10014,6 +10287,9 @@ add_filter( 'user_registration_check_user_order_status', 'get_user_order_status'
 
 if ( ! function_exists( 'get_user_order_status' ) ) {
 
+	/**
+	 * Get user order status.
+	 */
 	function get_user_order_status( $user_id ) {
 		$member_order_repository = new MembersOrderRepository();
 		$member_order            = $member_order_repository->get_member_orders( $user_id );
@@ -10156,7 +10432,10 @@ add_action( 'user_registration_cleanup_logs', 'ur_cleanup_logs' );
 
 if ( ! function_exists( 'ur_sanitize_value_by_type' ) ) {
 	/**
-	 * Get sms verification message content .
+	 * Sanitize value by option type.
+	 *
+	 * @param mixed $option Option.
+	 * @param mixed $raw_value Raw Value.
 	 *
 	 * @return array
 	 * @since 4.2.1
@@ -10202,10 +10481,10 @@ if ( ! function_exists( 'ur_sanitize_value_by_type' ) ) {
 if ( ! function_exists( 'ur_save_settings_options' ) ) {
 
 	/**
-	 * ur_save_settings_options
+	 * Save settings options.
 	 *
-	 * @param $option
-	 * @param $raw_value
+	 * @param mixed $option Option.
+	 * @param mixed $raw_value Raw Value.
 	 *
 	 * @return void
 	 */
@@ -10220,7 +10499,7 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 			$option_name  = '';
 			$setting_name = '';
 
-			// Parse array notation (e.g., option_name[setting_name])
+			// Parse array notation (e.g., option_name[setting_name]).
 			if ( str_contains( $option_id, '[' ) && str_contains( $option_id, ']' ) ) {
 				if ( preg_match( '/^([^[\]]+)\[([^[\]]+)\]$/', $option_id, $matches ) ) {
 					$option_name  = sanitize_text_field( $matches[1] );
@@ -10377,7 +10656,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 	 * @return array
 	 */
 	function ur_get_site_assistant_data() {
-		// Check for required pages
+		// Check for required pages.
 		$required_pages = array(
 			'user_registration_login_page_id'              => 'Login Page',
 			'user_registration_lost_password_page_id'      => 'Lost Password Page',
@@ -10387,7 +10666,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 			'user_registration_membership_pricing_page_id' => 'Membership Pricing Page',
 		);
 
-		// Check if membership module is activated
+		// Check if membership module is activated.
 		$is_membership_activated = ur_check_module_activation( 'membership' );
 
 		$missing_pages_data = array();
@@ -10396,7 +10675,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 			$page_id         = get_option( $option_name, 0 );
 			$is_page_missing = ! $page_id || ! get_post( $page_id );
 
-			// For login page, also check if login redirect URL is set
+			// For login page, also check if login redirect URL is set.
 			if ( 'user_registration_login_page_id' === $option_name ) {
 				$login_redirect_url = get_option( 'user_registration_login_options_login_redirect_url', '' );
 				if ( empty( $login_redirect_url ) ) {
@@ -10405,7 +10684,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 			}
 
 			if ( $is_page_missing ) {
-				// Only include membership pages if membership module is activated
+				// Only include membership pages if membership module is activated.
 				$is_membership_page = in_array(
 					$option_name,
 					array(
@@ -10425,10 +10704,10 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 			}
 		}
 
-		// Get payment setup handled status
+		// Get payment setup handled status.
 		$payment_setup_handled = ur_get_payment_setup_handled_status();
 
-		// Get payment connection statuses
+		// Get payment connection statuses.
 		$payment_connections = ur_get_payment_connection_statuses();
 		$enabled_features    = (array) get_option( 'user_registration_enabled_features', array() );
 		$membership_enabled  = in_array( 'user-registration-membership', $enabled_features, true );
@@ -10464,7 +10743,6 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 			'has_default_form'                  => ! empty( $default_form_post ),
 			'missing_pages'                     => $missing_pages_data,
 			'test_email_sent'                   => get_option( 'user_registration_successful_test_mail', false ),
-			'wordpress_login_handled'           => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
 			'spam_protection_handled'           => ur_string_to_bool( get_option( 'user_registration_captcha_setting_v2_connection_status', false ) ) || ur_string_to_bool( get_option( 'user_registration_spam_protection_skipped', false ) ),
 			'payment_setup_handled'             => $payment_setup_handled,
 			'payment_connections'               => $payment_connections,
@@ -10488,7 +10766,7 @@ if ( ! function_exists( 'ur_get_payment_setup_handled_status' ) ) {
 	function ur_get_payment_setup_handled_status() {
 		$payment_connections = ur_get_payment_connection_statuses();
 
-		// Check if ALL payment methods are connected
+		// Check if ALL payment methods are connected.
 		$all_payments_connected = true;
 		foreach ( $payment_connections as $connection ) {
 			if ( ! $connection['is_connected'] ) {
@@ -10497,7 +10775,7 @@ if ( ! function_exists( 'ur_get_payment_setup_handled_status' ) ) {
 			}
 		}
 
-		// Check if payment setup is skipped
+		// Check if payment setup is skipped.
 		$is_skipped = get_option( 'user_registration_payment_setup_skipped', false );
 
 		return $all_payments_connected || $is_skipped;
@@ -10513,7 +10791,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 	function ur_get_payment_connection_statuses() {
 		$connections = array();
 
-		// Check Stripe connection (available in free version)
+		// Check Stripe connection (available in free version).
 		if ( ur_check_module_activation( 'stripe' ) || ur_check_module_activation( 'membership' ) ) {
 			$connections['stripe'] = array(
 				'name'         => 'Stripe',
@@ -10522,7 +10800,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 			);
 		}
 
-		// Check PayPal connection (available in free version)
+		// Check PayPal connection (available in free version).
 		if ( ur_check_module_activation( 'payments' ) || ur_check_module_activation( 'membership' ) ) {
 			$connections['paypal'] = array(
 				'name'         => 'PayPal',
@@ -10531,7 +10809,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 			);
 		}
 
-		// Check Bank connection (membership only)
+		// Check Bank connection (membership only).
 		if ( ur_check_module_activation( 'membership' ) ) {
 			$connections['bank'] = array(
 				'name'         => 'Bank Payment',
@@ -10551,7 +10829,7 @@ if ( ! function_exists( 'ur_get_login_page_url' ) ) {
 	 * @return string|false The login page URL or false if none found
 	 */
 	function ur_get_login_page_url() {
-		// Step 1: Check user_registration_login_page_id option first
+		// Step 1: Check user_registration_login_page_id option first.
 		$login_page_id = get_option( 'user_registration_login_page_id' );
 		if ( ! empty( $login_page_id ) ) {
 			$page_url = get_permalink( $login_page_id );
@@ -10560,27 +10838,27 @@ if ( ! function_exists( 'ur_get_login_page_url' ) ) {
 			}
 		}
 
-		// Step 2: Check user_registration_login_options_login_redirect_url option
+		// Step 2: Check user_registration_login_options_login_redirect_url option.
 		$login_redirect_url = get_option( 'user_registration_login_options_login_redirect_url' );
 		if ( ! empty( $login_redirect_url ) ) {
-			// If it's a page ID, get the permalink
+			// If it's a page ID, get the permalink.
 			if ( is_numeric( $login_redirect_url ) ) {
 				$page_url = get_permalink( $login_redirect_url );
 				if ( $page_url ) {
 					return $page_url;
 				}
 			} else {
-				// If it's already a URL, validate and return it
+				// If it's already a URL, validate and return it.
 				if ( ur_is_valid_url( $login_redirect_url ) ) {
 					return esc_url_raw( $login_redirect_url );
 				}
 			}
 		}
 
-		// Step 3: Find all pages with login shortcode or block
+		// Step 3: Find all pages with login shortcode or block.
 		$login_pages = ur_find_pages_with_login_functionality();
 		if ( ! empty( $login_pages ) ) {
-			// Return the first found login page URL
+			// Return the first found login page URL.
 			return get_permalink( $login_pages[0]->ID );
 		}
 
@@ -10599,13 +10877,13 @@ if ( ! function_exists( 'ur_find_pages_with_login_functionality' ) ) {
 
 		$login_pages = array();
 
-		// Search for pages with login shortcodes and blocks
+		// Search for pages with login shortcodes and blocks.
 		$patterns = array(
 			'%[user_registration_login]%',
 			'%<!-- wp:user-registration/login-form%',
 		);
 
-		// Build the SQL query
+		// Build the SQL query.
 		$pattern_conditions = array();
 		foreach ( $patterns as $pattern ) {
 			$pattern_conditions[] = 'post_content LIKE ' . $wpdb->prepare( '%s', $pattern );
@@ -10622,9 +10900,9 @@ if ( ! function_exists( 'ur_find_pages_with_login_functionality' ) ) {
 			ORDER BY p.post_title ASC
 		";
 
-		$results = $wpdb->get_results( $query );
+		$results = $wpdb->get_results( $query ); // phpcs:ignore
 
-		// Merge and deduplicate results
+		// Merge and deduplicate results.
 		$all_results  = array_merge( $results );
 		$unique_pages = array();
 
@@ -10652,7 +10930,7 @@ if ( ! function_exists( 'ur_get_login_page_info' ) ) {
 			'recommended_login_page_url'     => ur_get_login_page_url(),
 		);
 
-		// Add additional context
+		// Add additional context.
 		$info['login_redirect_url_set'] = ! empty( $info['login_redirect_url'] );
 		$info['login_page_id_set']      = ! empty( $info['login_page_id'] );
 		$info['has_login_pages']        = ! empty( $info['login_pages_with_functionality'] );
@@ -10675,7 +10953,6 @@ if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 			! $site_assistant_data['has_default_form']
 			|| ! empty( $site_assistant_data['missing_pages'] )
 			|| ! $site_assistant_data['test_email_sent']
-			|| ! $site_assistant_data['wordpress_login_handled']
 			|| ! $site_assistant_data['spam_protection_handled']
 			|| ! $site_assistant_data['payment_setup_handled']
 		);
@@ -10697,7 +10974,6 @@ if ( ! function_exists( 'ur_site_assistant_config_count' ) ) {
 			! $site_assistant_data['has_default_form'],
 			! empty( $site_assistant_data['missing_pages'] ),
 			! $site_assistant_data['test_email_sent'],
-			! $site_assistant_data['wordpress_login_handled'],
 			! $site_assistant_data['spam_protection_handled'],
 			! $site_assistant_data['payment_setup_handled'],
 		);
@@ -11074,13 +11350,18 @@ if ( ! function_exists( 'ur_pro_get_excluded_fields' ) ) {
  * @since 4.4.8
  */
 if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
+	/**
+	 * Get membership rules count.
+	 *
+	 * @return void
+	 */
 	function ur_get_membership_rules_count() {
-		// Check if membership module is active
+		// Check if membership module is active.
 		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
 			return 0;
 		}
 
-		// Check if post type exists, if not query directly from database
+		// Check if post type exists, if not query directly from database.
 		if ( post_type_exists( 'urcr_access_rule' ) ) {
 			$membership_rules = get_posts(
 				array(
@@ -11098,7 +11379,7 @@ if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
 
 			return is_array( $membership_rules ) ? count( $membership_rules ) : 0;
 		} else {
-			// Post type not registered yet, query directly from database
+			// Post type not registered yet, query directly from database.
 			global $wpdb;
 			$count = $wpdb->get_var(
 				$wpdb->prepare(
@@ -11123,7 +11404,7 @@ if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
 		/**
 		 * Fetch coupon meta using coupon code stored in post_content
 		 *
-		 * @param string $coupon_code
+		 * @param string $coupon_code Coupon code.
 		 *
 		 * @return array|bool
 		 *
@@ -11173,7 +11454,7 @@ if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
 		/**
 		 * Fetch coupon meta using coupon code stored in post_content
 		 *
-		 * @param string $coupon_code
+		 * @param string $coupon_code Coupon Code.
 		 *
 		 * @return array|bool
 		 *
@@ -11250,12 +11531,12 @@ if ( ! function_exists( 'urcr_get_custom_rules_count' ) ) {
 	 * @since 1.0.0
 	 */
 	function urcr_get_custom_rules_count( $types = array() ) {
-		// Check if content restriction post type exists
+		// Check if content restriction post type exists.
 		if ( ! post_type_exists( 'urcr_access_rule' ) ) {
 			return 0;
 		}
 
-		// Get all content access rules
+		// Get all content access rules.
 		$all_rules = get_posts(
 			array(
 				'post_type'      => 'urcr_access_rule',
@@ -11269,22 +11550,22 @@ if ( ! function_exists( 'urcr_get_custom_rules_count' ) ) {
 			return 0;
 		}
 
-		// Convert string to array for backward compatibility
+		// Convert string to array for backward compatibility.
 		if ( is_string( $types ) ) {
 			$types = empty( $types ) ? array() : array( $types );
 		}
 
-		// Ensure $types is an array
+		// Ensure $types is an array.
 		if ( ! is_array( $types ) ) {
 			$types = array();
 		}
 
-		// If types array is empty, return count of all rules
+		// If types array is empty, return count of all rules.
 		if ( empty( $types ) ) {
 			return count( $all_rules );
 		}
 
-		// Count rules based on types (rules matching any of the provided types)
+		// Count rules based on types (rules matching any of the provided types).
 		$rules_count = 0;
 		foreach ( $all_rules as $rule_id ) {
 			$rule_type     = get_post_meta( $rule_id, 'urcr_rule_type', true );
@@ -11296,26 +11577,26 @@ if ( ! function_exists( 'urcr_get_custom_rules_count' ) ) {
 			foreach ( $types as $type ) {
 				switch ( $type ) {
 					case 'custom':
-						// Count rules that are NOT membership rules
+						// Count rules that are NOT membership rules.
 						if ( 'membership' !== $rule_type && empty( $membership_id ) ) {
 							$matches = true;
-							break 2; // Break out of switch and foreach
+							break 2; // Break out of switch and foreach.
 						}
 						break;
 
 					case 'membership':
-						// Count rules that ARE membership rules
+						// Count rules that ARE membership rules.
 						if ( 'membership' === $rule_type || ! empty( $membership_id ) ) {
 							$matches = true;
-							break 2; // Break out of switch and foreach
+							break 2; // Break out of switch and foreach.
 						}
 						break;
 
 					case 'migrated':
-						// Count rules that are migrated
+						// Count rules that are migrated.
 						if ( ! empty( $is_migrated ) ) {
 							$matches = true;
-							break 2; // Break out of switch and foreach
+							break 2; // Break out of switch and foreach.
 						}
 						break;
 				}
@@ -11333,6 +11614,13 @@ if ( ! function_exists( 'urcr_get_custom_rules_count' ) ) {
 
 if ( ! function_exists( 'urm_array_key_exists_recursive' ) ) {
 
+	/**
+	 * Check key exists.
+	 *
+	 * @param string $needle Key to search.
+	 * @param array  $haystack Array.
+	 * @return void
+	 */
 	function urm_array_key_exists_recursive( $needle, array $haystack ) {
 		foreach ( $haystack as $key => $value ) {
 			if ( $key === $needle ) {
@@ -11349,6 +11637,11 @@ if ( ! function_exists( 'urm_array_key_exists_recursive' ) ) {
 }
 
 if ( ! function_exists( 'urm_is_premium_setting_section' ) ) {
+	/**
+	 * Check if premium settings.
+	 *
+	 * @param string $id Setting id.
+	 */
 	function urm_is_premium_setting_section( $id ) {
 		$premium_tabs      = ur_premium_settings_tab();
 		$premium_tab       = urm_array_key_exists_recursive( $id, $premium_tabs );
@@ -11870,6 +12163,11 @@ if ( ! function_exists( 'ur_get_currency_symbol' ) ) {
 
 if ( ! function_exists( 'ur_get_currency_name_by_key' ) ) {
 
+	/**
+	 * Get currency name by key.
+	 *
+	 * @param string $currency_key Currency Key.
+	 */
 	function ur_get_currency_name_by_key( $currency_key ) {
 		$curreny_details = ur_get_currencies();
 
@@ -11881,6 +12179,11 @@ if ( ! function_exists( 'ur_get_currency_name_by_key' ) ) {
 
 if ( ! function_exists( 'ur_get_currency_by_key' ) ) {
 
+	/**
+	 * Get currency by key.
+	 *
+	 * @param string $currency_key Currency Key.
+	 */
 	function ur_get_currency_by_key( $currency_key ) {
 		$curreny_details = ur_get_currencies();
 
@@ -11929,5 +12232,24 @@ if ( ! function_exists( 'ur_format_country_field_data' ) ) {
 		$value = implode( ', ', $final );
 
 		return $value;
+	}
+}
+
+add_action( 'user_registration_after_stripe_settings_updated', 'user_registration_create_product_and_price_for_stripe' );
+
+if ( ! function_exists( 'user_registration_create_product_and_price_for_stripe' ) ) {
+	/**
+	 * Create product and price in Stripe for all the subscription type memberships which are created before the stripe payment gateway integration.
+	 *
+	 * @param array $data The data array.
+	 */
+	function user_registration_create_product_and_price_for_stripe( $data ) {
+		$stripe_service        = new StripeService();
+		$membership_repository = new MembershipRepository();
+		$memberships           = $membership_repository->get_all_memberships_without_status_filter();
+
+		foreach ( $memberships as $membership ) {
+			$stripe_service->sync_product_and_price_in_stripe( $membership );
+		}
 	}
 }

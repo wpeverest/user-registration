@@ -70,7 +70,7 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 	if ( ! $is_edit_action ) {
 		?>
 		<div class="user-registration-MyAccount-content__header-buttons">
-			<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-profile' ) . '?action="edit"' ); ?>" class="user-registration-Button button-secondary urm-profile-action-toggle"><?php esc_html_e( 'Edit Profile', 'user-registration' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( 'action', 'edit', ur_get_account_endpoint_url( 'edit-profile' ) ) ); ?>" class="user-registration-Button button-secondary urm-profile-action-toggle"><?php esc_html_e( 'Edit Profile', 'user-registration' ); ?></a>
 			<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-password' ) ); ?>" class="user-registration-Button button-secondary urm-profile-change-password-btn"><?php esc_html_e( 'Change Password', 'user-registration' ); ?></a>
 		</div>
 		<?php
@@ -103,14 +103,14 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 							$urm_my_account_layout = get_option( 'user_registration_my_account_layout', 'vertical' );
 
 							if ( 'horizontal' === $urm_my_account_layout ) {
-								esc_html_e(
-									/**
-									 * Filter to modify the profile detail title.
-									 *
-									 * @param string Profile detail title content.
-									 * @return string modified profile detail title.
-									 */
-									apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore
+								/**
+								 * Filter to modify the profile detail title.
+								 *
+								 * @param string Profile detail title content.
+								 * @return string modified profile detail title.
+								 */
+								$profile_detail_title = apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) );
+								echo esc_html( $profile_detail_title );
 							}
 							?>
 							</h2>
@@ -228,7 +228,8 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 								foreach ( $form_data_array as $index => $data ) {
 									$row_id = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
 
-									$row_cl_props = '';
+									$row_cl_enabled = '';
+									$row_cl_map     = '';
 
 									// If the conditional logic addon is installed.
 									if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
@@ -242,13 +243,14 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 
 												$row_cl_enabled = ur_string_to_bool( $individual_row_data->conditional_logic_enabled ) ? ur_string_to_bool( $individual_row_data->conditional_logic_enabled ) : '';
 												$row_cl_map     = isset( $individual_row_data->cl_map ) ? $individual_row_data->cl_map : array();
-												$row_cl_props   = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $row_cl_enabled ), esc_attr( $row_cl_map ) );
 											}
 										}
 									}
 
+									$row_cl_map_attr = is_array( $row_cl_map ) ? wp_json_encode( $row_cl_map ) : $row_cl_map;
+
 									ob_start();
-									echo '<div class="ur-form-row" data-row-id=' . $row_id . ' ' . $row_cl_props . '>';
+									echo '<div class="ur-form-row" data-row-id="' . esc_attr( $row_id ) . '" data-conditional-logic-enabled="' . esc_attr( $row_cl_enabled ) . '" data-conditional-logic-map="' . esc_attr( $row_cl_map_attr ) . '">';
 									user_registration_edit_profile_row_template( $data, $profile );
 									echo '</div>';
 									$row_template = ob_get_clean();
@@ -319,8 +321,8 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 							$is_profile_pic_on_form = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
 							if ( $is_profile_pic_on_form ) {
 								?>
-								<div class="user-registration-profile-header">
-									<div class="user-registration-img-container" style="width:100%">
+									<div class="user-registration-profile-header">
+										<div class="user-registration-img-container" style="width:100%">
 										<?php
 										$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 										$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
@@ -332,10 +334,10 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 										$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
 										$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 										?>
-										<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
+											<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
+										</div>
 									</div>
-								</div>
-							<?php
+								<?php
 							}
 							?>
 							<?php
@@ -369,7 +371,7 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 									}
 
 									if ( ! $ignore ) {
-										echo '<div class="ur-form-row" data-row-id=' . $row_id . '>';
+										echo '<div class="ur-form-row" data-row-id="' . esc_attr( $row_id ) . '">';
 										echo '<div class="ur-form-grid">';
 
 										foreach ( $row_data as $grid_key => $grid_data ) {
@@ -440,13 +442,14 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 														$value = implode( ',', $values );
 													}
 												} elseif ( 'country' === $field_key ) {
-													$value         = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-													$isJson = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
-													if ( $isJson ) {
+													$value   = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+													$value   = is_array( $value ) ? '' : (string) $value;
+													$is_json = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
+													if ( $is_json ) {
 														$country_data = json_decode( $value, true );
 														$country_code = isset( $country_data['country'] ) ? $country_data['country'] : '';
 														$state_code   = isset( $country_data['state'] ) ? $country_data['state'] : '';
-														$value = ur_format_country_field_data( $country_code, $state_code );
+														$value        = ur_format_country_field_data( $country_code, $state_code );
 													} else {
 														$country_class = ur_load_form_field_class( $field_key );
 														$countries     = $country_class::get_instance()->get_country();
