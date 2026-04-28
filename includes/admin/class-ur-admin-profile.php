@@ -73,7 +73,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						unset( $form_fields[ $key ] );
 					}
 					// if ( isset( $value['field_key'] ) && 'membership' === $value['field_key'] && isset( $_GET['user_id'] ) ) {
-					// 	unset( $form_fields[ $key ] );
+					// unset( $form_fields[ $key ] );
 					// }
 
 					if ( array_key_exists( $key, $all_meta_for_user ) ) {
@@ -245,7 +245,13 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 												if ( ! metadata_exists( 'user', $user->ID, $key ) && isset( $profile[ $key ] ) && isset( $profile[ $key ]['type'] ) && 'country' === $profile[ $key ]['type'] ) {
 													$selected = isset( $profile[ $key ] ['default'] ) ? $profile[ $key ] ['default'] : '';
 												} else {
-													$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
+													$raw_meta = get_user_meta( $user->ID, $key, true );
+
+													if ( preg_match( '/^\{.*\}$/s', $raw_meta ) ) {
+														$decoded  = json_decode( $raw_meta, true );
+														$raw_meta = isset( $decoded['country'] ) ? $decoded['country'] : '';
+													}
+													$selected = esc_attr( $raw_meta );
 												}
 												foreach ( $field['options'] as $option_key => $option_value ) :
 													?>
@@ -348,7 +354,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 																		value="<?php echo esc_attr( $option ); ?>"
 																		class="<?php echo esc_attr( $field['class'] ); ?>"
 																						<?php
-																						if ( is_array( $value ) && in_array( html_entity_decode ( ur_sanitize_tooltip ( trim( $option ) ) ) , $value )) {
+																						if ( is_array( $value ) && in_array( html_entity_decode( ur_sanitize_tooltip( trim( $option ) ) ), $value ) ) {
 																							echo 'checked="checked"';
 																						} elseif ( $value == $option ) {
 																							echo 'checked="checked"';
