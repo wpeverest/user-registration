@@ -61,8 +61,9 @@ $border-color_6: #475bb2;
 	font-size: 13px;
 	font-weight: 400;
 	color: $color_4;
-	transition: background-color 0.15s ease,
-	color 0.15s ease;
+	transition:
+		background-color 0.15s ease,
+		color 0.15s ease;
 	margin: 0;
 	box-sizing: border-box;
 
@@ -123,7 +124,7 @@ $border-color_6: #475bb2;
 	align-items: center;
 	justify-content: space-between;
 	padding: 8px 12px;
-	background-color: #FFF4EC;
+	background-color: #fff4ec;
 	border-radius: 2px;
 	cursor: default;
 
@@ -453,8 +454,9 @@ $border-color_6: #475bb2;
 	cursor: pointer;
 	color: $color_3;
 	border-radius: 3px;
-	transition: background-color 0.2s ease,
-	color 0.2s ease;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
 
 	&:hover {
 		background: #f0f0f1;
@@ -480,8 +482,9 @@ $border-color_6: #475bb2;
 	border: 1px solid #8c8f94;
 	border-radius: 3px;
 	cursor: pointer;
-	transition: border-color 0.2s ease,
-	box-shadow 0.2s ease;
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
 
 	&:hover {
 		border-color: $border-color_6;
@@ -560,8 +563,9 @@ $border-color_6: #475bb2;
 	cursor: pointer;
 	color: $color_3;
 	border-radius: 3px;
-	transition: background-color 0.2s ease,
-	color 0.2s ease;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
 
 	&:hover {
 		background: #f0f0f1;
@@ -980,8 +984,9 @@ $border-color_6: #475bb2;
 				cursor: pointer;
 				font-size: 13px;
 				color: #383838;
-				transition: background-color 0.15s ease,
-				color 0.15s ease;
+				transition:
+					background-color 0.15s ease,
+					color 0.15s ease;
 				margin: 0;
 				margin-left: 0 !important;
 				box-shadow: none;
@@ -1057,6 +1062,7 @@ $border-color_6: #475bb2;
 			display: flex;
 			width: 14px;
 			height: 14px;
+			align-items: center;
 
 			&::before {
 				font-size: 14px;

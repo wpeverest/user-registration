@@ -1,6 +1,5 @@
 .user-registration,
 .ur-form-container {
-
 	button,
 	.button {
 		transition: all 0.25s ease 0s;
@@ -63,15 +62,24 @@
 	}
 
 	.button-primary {
-		background: var(--ur-button-background-normal-color, $primary_color);;
+		background: var(--ur-button-background-normal-color, $primary_color);
 		border-color: $primary_color;
 		box-shadow: 0 1px 0 $primary_color;
 		text-shadow: none;
 
+		min-height: 30px !important;
+		line-height: 2.15 !important;
+		font-size: 13px;
+		font-weight: 400;
+		border-radius: 3px;
+
 		&:hover,
 		&:active,
 		&:focus {
-			background: var(--ur-button-background-normal-color, $primary_color);;
+			background: var(
+				--ur-button-background-normal-color,
+				$primary_color
+			);
 			border-color: $primary_dark;
 			box-shadow: 0 1px 0 $primary_dark;
 		}
@@ -88,6 +96,12 @@
 		background: $color_gray_four;
 		border-color: $color_gray_four;
 		box-shadow: 0 1px 0 $color_gray_four;
+
+		min-height: 30px !important;
+		line-height: 20px !important;
+		font-size: 13px;
+		font-weight: 400;
+		border-radius: 3px;
 
 		&:hover,
 		&:active,
@@ -122,8 +136,13 @@
 		&:focus {
 			color: $white;
 			background: adjust-color($red, $saturation: -15%, $lightness: -8%);
-			border-color: adjust-color($red, $saturation: -15%, $lightness: -8%);
-			box-shadow: 0 1px 0 adjust-color($red, $saturation: -15%, $lightness: -8%);
+			border-color: adjust-color(
+				$red,
+				$saturation: -15%,
+				$lightness: -8%
+			);
+			box-shadow: 0 1px 0
+				adjust-color($red, $saturation: -15%, $lightness: -8%);
 		}
 	}
 
@@ -183,7 +202,6 @@
 		width: auto;
 		height: auto;
 		margin-right: 3px;
-
 	}
 }
 
@@ -194,5 +212,26 @@
 
 	.ur-unselect-all-countries-button {
 		margin: 6px 3px 4px;
+	}
+}
+
+.user-registration-settings-wrapper {
+	.user-registration-settings-container {
+		.user-registration-options-container {
+			.user-registration-card,
+			.urcma-account-management-box {
+				.urm-btn-comp-v7,
+				.ur-reset-content-button,
+				.add_media,
+				.user_registration_send_email_test {
+					min-height: 30px !important;
+					border-radius: 3px;
+					font-weight: 400px;
+					font-size: 13px;
+					line-height: 2.15 !important;
+					padding: 0 10px;
+				}
+			}
+		}
 	}
 }
