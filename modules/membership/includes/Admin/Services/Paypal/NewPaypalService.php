@@ -121,16 +121,16 @@ class NewPaypalService {
 		);
 
 		$use_legacy = $this->should_fallback_to_legacy_paypal( $context );
-
+		$logger     = ur_get_logger();
 		$logger->info(
 			sprintf( '[Member #%d] Deciding PayPal flow.', $member_id ) . "\n" .
 			wp_json_encode(
 				array(
 					'use_legacy'        => $use_legacy,
 					'is_new_install'    => ur_string_to_bool( get_option( 'urm_is_new_installation' ) ),
-					'is_subscription'   => $payment_context['is_subscription'],
-					'has_client_id'     => ! empty( $payment_context['paypal_options']['client_id'] ),
-					'has_client_secret' => ! empty( $payment_context['paypal_options']['secret_key'] ),
+					'is_subscription'   => $context['is_subscription'],
+					'has_client_id'     => ! empty( $context['paypal_options']['client_id'] ),
+					'has_client_secret' => ! empty( $context['paypal_options']['secret_key'] ),
 				),
 				JSON_PRETTY_PRINT
 			),
