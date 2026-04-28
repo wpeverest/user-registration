@@ -748,7 +748,10 @@ class StripeService {
 				$response,
 				__( 'Payment verification failed: missing payment identifier.', 'user-registration' ),
 				'Payment confirmation rejected: missing PaymentIntent ID',
-				array( 'error_code' => 'MISSING_PAYMENT_INTENT', 'member_id' => $member_id )
+				array(
+					'error_code' => 'MISSING_PAYMENT_INTENT',
+					'member_id'  => $member_id,
+				)
 			);
 		}
 
@@ -811,9 +814,12 @@ class StripeService {
 				$response,
 				__( 'Payment method mismatch: order payment method is not stripe' ),
 				'Payment method mismatch: order payment method is not stripe',
-				array( 'error_code' => 'PAYMENT_METHOD_MISMATCH', 'member_id' => $member_id,
-				'order_id'       => $latest_order['ID'],
-					'payment_method' => $latest_order['payment_method'], )
+				array(
+					'error_code'     => 'PAYMENT_METHOD_MISMATCH',
+					'member_id'      => $member_id,
+					'order_id'       => $latest_order['ID'],
+					'payment_method' => $latest_order['payment_method'],
+				)
 			);
 			$response['status']  = false;
 			$response['message'] = __( 'Invalid payment method for this order.', 'user-registration' );
@@ -844,7 +850,10 @@ class StripeService {
 					$response,
 					__( 'Invalid team data.', 'user-registration' ),
 					'Invalid team data',
-					array( 'error_code' => 'INVALID_TEAM_DATA', 'member_id' => $member_id )
+					array(
+						'error_code' => 'INVALID_TEAM_DATA',
+						'member_id'  => $member_id,
+					)
 				);
 			}
 			$membership_type = $team_data['team_plan_type'] ?? 'unknown';
@@ -1016,7 +1025,7 @@ class StripeService {
 				array(
 					'error_code' => 'EMAIL_SEND_FAILED',
 					'member_id'  => $member_id,
-					'order_id'   => $id,
+					'order_id'   => $ID,
 				)
 			);
 		}

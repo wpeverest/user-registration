@@ -156,9 +156,7 @@
 				);
 				$form.append(wrapper);
 				$(window).scrollTop(
-					$registration_form
-						.find(".ur-button-container")
-						.offset().top
+					$registration_form.find(".ur-button-container").offset().top
 				);
 				$(".notice-container").removeClass("active");
 			} else {
