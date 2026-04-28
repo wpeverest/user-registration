@@ -122,13 +122,16 @@ class StripeService {
 		try {
 			$payment_method = \Stripe\PaymentMethod::retrieve( $payment_method_id );
 			$ur_log         = new PaymentGatewayLogging();
-			$ur_log->log_error(
+			$ur_log->log(
 				'stripe',
-				'Payment method retrieved',
-				array(
-					'payment_method' => $payment_method,
+				'Payment method retrieved.' . "\n" . wp_json_encode(
+					array(
+						'payment_method' => $payment_method,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
+
 			if ( ! $payment_method->livemode && 'live' === $mode ) {
 				return array(
 					'valid'   => false,
@@ -235,11 +238,13 @@ class StripeService {
 		} catch ( ApiErrorException $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Webhook creation failed',
-				array(
-					'error_code'    => 'WEBHOOK_CREATE_FAILED',
-					'error_message' => $e->getMessage(),
-					'mode'          => $mode,
+				'Webhook creation failed' . "\n" . wp_json_encode(
+					array(
+						'error_code'    => 'WEBHOOK_CREATE_FAILED',
+						'error_message' => $e->getMessage(),
+						'mode'          => $mode,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			return array(
@@ -466,7 +471,7 @@ class StripeService {
 		$local_currency = ! empty( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
 		$ur_zone_id     = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
 
-		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
+		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( CoreFunctions::class ) ) {
 			$currency            = $local_currency;
 			$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
 			$local_currency_data = ! empty( $payment_data['local_currency'] ) ? $payment_data['local_currency'] : array();
@@ -618,17 +623,13 @@ class StripeService {
 				);
 
 				$response['client_secret'] = $intent->client_secret;
-				$this->orders_repository->update( $response_data['order_id'], array('transaction_id' => $intent->id));
+				$this->orders_repository->update( $response_data['order_id'], array( 'transaction_id' => $intent->id ) );
 				PaymentGatewayLogging::log_transaction_success(
 					'stripe',
 					sprintf( ' [Member ID #%s] Payment intent created successfully.', $member_id ) . "\n" . wp_json_encode(
 						array(
 							'payment_intent_id' => $intent->id,
-							'amount'            => $amount / 100,
-							'currency'          => $currency,
-							'member_id'         => $member_id,
 							'membership_type'   => $membership_type,
-						),
 						JSON_PRETTY_PRINT
 					),
 				);
@@ -638,12 +639,14 @@ class StripeService {
 		} catch ( ApiErrorException $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Stripe API error occurred',
-				array(
-					'error_code'    => 'STRIPE_API_ERROR',
-					'error_message' => $e->getMessage(),
-					'member_id'     => $member_id,
-				)
+				'Stripe API error occurred' . "\n" . wp_json_encode(
+					array(
+						'error_code'    => 'STRIPE_API_ERROR',
+						'error_message' => $e->getMessage(),
+						'member_id'     => $member_id,
+					),
+					JSON_PRETTY_PRINT
+				),
 			);
 
 			if ( empty( $payment_data['upgrade'] ) ) {
@@ -694,7 +697,7 @@ class StripeService {
 		$team_id                = isset( $_POST['team_id'] ) && '' !== $_POST['team_id'] ? absint( wp_unslash( $_POST['team_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$order_id               = $data['order_id'] ?? '';
 
-		if ( empty( $transaction_id ) || preg_match('/^sub_/', $transaction_id) ) {
+		if ( empty( $transaction_id ) || preg_match( '/^sub_/', $transaction_id ) ) {
 			$transaction_id = $data['payment_result']['latest_invoice']['payment_intent']['id'] ?? '';
 		}
 
@@ -749,7 +752,21 @@ class StripeService {
 			);
 		}
 
-		$latest_order = $this->orders_repository->get_order_by_transaction_id( $pi_id );
+		try {
+			$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
+		} catch ( \Stripe\Exception\ApiErrorException $ex ) {
+			return $this->update_order_error(
+				$response,
+				__( 'Payment verification failed.', 'user-registration' ),
+				'Stripe API error occurred while retrieving PaymentIntent',
+				array(
+					'error_code'        => 'STRIPE_API_ERROR',
+					'error_message'     => $ex->getMessage(),
+					'member_id'         => $member_id,
+					'payment_intent_id' => $pi_id,
+				)
+			);
+		}
 
 		if ( ! $intent->livemode && 'live' === $stripe_settings['mode'] ) {
 			$response['status']  = false;
@@ -763,7 +780,7 @@ class StripeService {
 			return $response;
 		}
 
-		if ( $intent->status !== 'succeeded' ) {
+		if ( 'succeeded' !== $intent->status ) {
 			$response['status']  = false;
 			$response['message'] = __( 'Payment not completed.', 'user-registration' );
 			return $response;
@@ -782,7 +799,10 @@ class StripeService {
 				$response,
 				__( 'Order not found for this member.', 'user-registration' ),
 				'Order not found for member',
-				array( 'error_code' => 'ORDER_NOT_FOUND', 'member_id' => $member_id )
+				array(
+					'error_code' => 'ORDER_NOT_FOUND',
+					'member_id'  => $member_id,
+				)
 			);
 		}
 
@@ -813,32 +833,6 @@ class StripeService {
 			$response['message'] = __( 'Duplicate transaction id.', 'user-registration' );
 
 			return $response;
-		}
-
-		try {
-			$intent = \Stripe\PaymentIntent::retrieve( $latest_order['transaction_id'] );
-		} catch ( \Stripe\Exception\ApiErrorException $ex ) {
-			return $this->update_order_error(
-				$response,
-				__( 'Payment verification failed.', 'user-registration' ),
-				'Stripe API error occurred while retrieving PaymentIntent',
-				array(
-					'error_code'        => 'STRIPE_API_ERROR',
-					'error_message'     => $ex->getMessage(),
-					'member_id'         => $member_id,
-					'payment_intent_id' => $pi_id,
-				)
-			);
-		}
-
-		if ( $intent->status !== 'succeeded' ) {
-			return $this->update_order_error( $response, __( 'Payment not completed.', 'user-registration' ) );
-		}
-
-		$payment_status = $intent->status;
-
-		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id , $order_id ) ) {
-			return $this->update_order_error( $response, __( 'Duplicate transaction id.', 'user-registration' ) );
 		}
 
 		$membership       = $this->membership_repository->get_single_membership_by_ID( $latest_order['item_id'] );

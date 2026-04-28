@@ -457,7 +457,12 @@ class UR_User_Approval {
 	 * @return bool
 	 */
 	protected function is_admin_creation_process() {
-		return ( isset( $_REQUEST['action'] ) && 'createuser' == $_REQUEST['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return (
+			is_admin() &&
+			current_user_can( 'create_users' ) &&
+			isset( $_REQUEST['action'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			'createuser' === $_REQUEST['action'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		);
 	}
 
 	/**
