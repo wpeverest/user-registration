@@ -193,8 +193,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 				}
 			}
 
-			// Determine default toggle value based on urm_is_new_installation option
-			$paypal_toggle_default = ur_string_to_bool( get_option( 'urm_is_new_installation', false ) );
+			$is_old_paypal_install = ur_is_paypal_old_installation();
 
 			return array(
 				'title'        => __( 'Paypal', 'user-registration' ),
@@ -210,7 +209,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 							'desc'     => __( 'Enable PayPal payment gateway.', 'user-registration' ),
 							'id'       => 'user_registration_paypal_enabled',
 							'desc_tip' => true,
-							'default'  => ( $paypal_enabled ) ? $paypal_enabled : ! $paypal_toggle_default,
+							'default'  => ( $paypal_enabled ) ? $paypal_enabled : $is_old_paypal_install,
 							'class'    => 'urm_toggle_pg_status',
 						),
 						array(
@@ -227,7 +226,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 							'default'  => $paypal_mode,
 						),
 					),
-					! $paypal_toggle_default ? array(
+					$is_old_paypal_install ? array(
 						array(
 							'type'        => 'text',
 							'title'       => __( 'Cancel Url', 'user-registration' ),

@@ -127,7 +127,7 @@ class NewPaypalService {
 			wp_json_encode(
 				array(
 					'use_legacy'        => $use_legacy,
-					'is_new_install'    => ur_string_to_bool( get_option( 'urm_is_new_installation' ) ),
+					'is_new_install'    => ! ur_is_paypal_old_installation(),
 					'is_subscription'   => $context['is_subscription'],
 					'has_client_id'     => ! empty( $context['paypal_options']['client_id'] ),
 					'has_client_secret' => ! empty( $context['paypal_options']['secret_key'] ),
@@ -135,7 +135,7 @@ class NewPaypalService {
 				JSON_PRETTY_PRINT
 			),
 			array(
-				'source'    => 'paypal',
+				'source'    => 'urm-pg-paypal',
 				'member_id' => $member_id,
 				'function'  => __FUNCTION__,
 			)
@@ -382,7 +382,7 @@ class NewPaypalService {
 	private function should_fallback_to_legacy_paypal( &$context ) {
 		$paypal_options = $context['paypal_options'];
 
-		if ( ur_string_to_bool( get_option( 'urm_is_new_installation' ) ) ) {
+		if ( ! ur_is_paypal_old_installation() ) {
 			return false;
 		}
 
@@ -1052,6 +1052,22 @@ class NewPaypalService {
 					)
 				);
 			}
+
+			PaymentGatewayLogging::log_transaction_success(
+				'paypal',
+				sprintf(
+					'[Member ID #%s] PayPal one-time order captured and status updated after redirect.',
+					$member_id
+				) . "\n" . wp_json_encode(
+					array(
+						'paypal_order_id' => $order_token,
+						'transaction_id'  => $transaction_id,
+						'order_status'    => 'completed',
+						'member_id'       => $member_id,
+					),
+					JSON_PRETTY_PRINT
+				)
+			);
 		}
 
 		// REST subscription return.
@@ -1091,16 +1107,35 @@ class NewPaypalService {
 				)
 			);
 
+			$resolved_status = 'on' === ( isset( $member_order['trial_status'] ) ? $member_order['trial_status'] : '' ) ? 'trial' : $new_status;
+
 			if ( ! empty( $member_subscription ) ) {
 				$this->members_subscription_repository->update(
 					$member_subscription['ID'],
 					array(
-						'status'          => ( 'on' === ( isset( $member_order['trial_status'] ) ? $member_order['trial_status'] : '' ) ? 'trial' : $new_status ),
+						'status'          => $resolved_status,
 						'start_date'      => date( 'Y-m-d 00:00:00' ),
 						'subscription_id' => sanitize_text_field( $paypal_subscription_id ),
 					)
 				);
 			}
+
+			PaymentGatewayLogging::log_transaction_success(
+				'paypal',
+				sprintf(
+					'[Member ID #%s] PayPal subscription confirmed and status updated after redirect.',
+					$member_id
+				) . "\n" . wp_json_encode(
+					array(
+						'paypal_subscription_id'  => $paypal_subscription_id,
+						'transaction_id'          => $paypal_subscription_id,
+						'paypal_status'           => isset( $subscription_details['status'] ) ? $subscription_details['status'] : '',
+						'subscription_status'     => $resolved_status,
+						'member_id'               => $member_id,
+					),
+					JSON_PRETTY_PRINT
+				)
+			);
 		}
 
 		// Reload local subscription after any update.
@@ -1138,6 +1173,24 @@ class NewPaypalService {
 
 		delete_user_meta( $member_id, 'urm_user_just_created' );
 		$member_order = $this->members_orders_repository->get_member_orders( $member_id );
+
+		PaymentGatewayLogging::log_transaction_success(
+			'paypal',
+			sprintf(
+				'[Member ID #%s] PayPal redirect flow completed. Redirecting to thank-you page.',
+				$member_id
+			) . "\n" . wp_json_encode(
+				array(
+					'member_id'     => $member_id,
+					'membership_id' => $membership_id,
+					'order_status'  => isset( $member_order['status'] ) ? $member_order['status'] : '',
+					'is_renewing'   => $is_renewing,
+					'is_upgrading'  => $is_upgrading,
+				),
+				JSON_PRETTY_PRINT
+			)
+		);
+
 		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 	}
 
@@ -1337,12 +1390,13 @@ class NewPaypalService {
 		PaymentGatewayLogging::log_webhook_received(
 			'paypal',
 			sprintf(
-				'PayPal REST webhook received for event %s.',
+				'PayPal REST webhook processing started for event: %s.',
 				$event_type
 			) . "\n" . wp_json_encode(
 				array(
-					'webhook_type' => $event_type,
-					'resource_id'  => isset( $resource['id'] ) ? $resource['id'] : '',
+					'event_type'  => $event_type,
+					'resource_id' => isset( $resource['id'] ) ? $resource['id'] : '',
+					'event_id'    => isset( $event['id'] ) ? $event['id'] : '',
 				),
 				JSON_PRETTY_PRINT
 			)
@@ -1351,7 +1405,8 @@ class NewPaypalService {
 		switch ( $event_type ) {
 			case 'CHECKOUT.ORDER.APPROVED':
 			case 'PAYMENT.CAPTURE.COMPLETED':
-				return $this->handle_order_webhook_event( $event_type, $resource );
+				$result = $this->handle_order_webhook_event( $event_type, $resource );
+				break;
 
 			case 'BILLING.SUBSCRIPTION.CREATED':
 			case 'BILLING.SUBSCRIPTION.ACTIVATED':
@@ -1359,7 +1414,8 @@ class NewPaypalService {
 			case 'BILLING.SUBSCRIPTION.SUSPENDED':
 			case 'BILLING.SUBSCRIPTION.CANCELLED':
 			case 'BILLING.SUBSCRIPTION.EXPIRED':
-				return $this->handle_subscription_webhook_event( $event_type, $resource );
+				$result = $this->handle_subscription_webhook_event( $event_type, $resource );
+				break;
 
 			default:
 				PaymentGatewayLogging::log_general(
@@ -1375,8 +1431,25 @@ class NewPaypalService {
 					),
 					'info'
 				);
-				return true;
+				$result = true;
 		}
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			sprintf(
+				'PayPal REST webhook processing completed for event: %s.',
+				$event_type
+			) . "\n" . wp_json_encode(
+				array(
+					'event_type' => $event_type,
+					'result'     => $result ? 'success' : 'failed',
+				),
+				JSON_PRETTY_PRINT
+			),
+			$result ? 'success' : 'warning'
+		);
+
+		return $result;
 	}
 
 	/**
@@ -1404,12 +1477,52 @@ class NewPaypalService {
 			return false;
 		}
 
-		$transaction_id = '';
+		$transaction_id       = '';
+		$current_order_status = isset( $member_order['status'] ) ? $member_order['status'] : '';
+
 		if ( ! empty( $resource['purchase_units'][0]['payments']['captures'][0]['id'] ) ) {
 			$transaction_id = sanitize_text_field( $resource['purchase_units'][0]['payments']['captures'][0]['id'] );
 		} elseif ( ! empty( $resource['id'] ) ) {
 			$transaction_id = sanitize_text_field( $resource['id'] );
 		}
+
+		if ( 'completed' === $current_order_status ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				sprintf(
+					'[Member ID #%s] Order webhook skipped: order already completed by redirect handler.',
+					$member_id
+				) . "\n" . wp_json_encode(
+					array(
+						'event_type'     => $event_type,
+						'member_id'      => $member_id,
+						'current_status' => $current_order_status,
+						'transaction_id' => isset( $member_order['transaction_id'] ) ? $member_order['transaction_id'] : '',
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
+			);
+			return true;
+		}
+
+		// Redirect was missed — webhook acting as fallback to complete the order.
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			sprintf(
+				'[Member ID #%s] Order not yet completed — webhook acting as fallback.',
+				$member_id
+			) . "\n" . wp_json_encode(
+				array(
+					'event_type'     => $event_type,
+					'member_id'      => $member_id,
+					'current_status' => $current_order_status,
+					'transaction_id' => $transaction_id,
+				),
+				JSON_PRETTY_PRINT
+			),
+			'notice'
+		);
 
 		$this->members_orders_repository->update(
 			$member_order['ID'],
@@ -1433,7 +1546,7 @@ class NewPaypalService {
 		PaymentGatewayLogging::log_transaction_success(
 			'paypal',
 			sprintf(
-				'[Member ID #%s] Order webhook processed successfully.',
+				'[Member ID #%s] Order webhook fallback completed successfully.',
 				$member_id
 			) . "\n" . wp_json_encode(
 				array(
@@ -1493,15 +1606,54 @@ class NewPaypalService {
 		);
 
 		if ( 'active' === $new_status ) {
-			$member_order = $this->members_orders_repository->get_member_orders( $member_id );
+			$member_order         = $this->members_orders_repository->get_member_orders( $member_id );
+			$current_order_status = isset( $member_order['status'] ) ? $member_order['status'] : '';
+
 			if ( ! empty( $member_order['ID'] ) ) {
-				$this->members_orders_repository->update(
-					$member_order['ID'],
-					array(
-						'status'         => 'completed',
-						'transaction_id' => $paypal_subscription_id,
-					)
-				);
+				if ( 'completed' === $current_order_status ) {
+					PaymentGatewayLogging::log_general(
+						'paypal',
+						sprintf(
+							'[Member ID #%s] Subscription webhook order update skipped: order already completed by redirect handler.',
+							$member_id
+						) . "\n" . wp_json_encode(
+							array(
+								'event_type'             => $event_type,
+								'member_id'              => $member_id,
+								'paypal_subscription_id' => $paypal_subscription_id,
+								'current_order_status'   => $current_order_status,
+							),
+							JSON_PRETTY_PRINT
+						),
+						'info'
+					);
+				} else {
+					// Redirect was missed — webhook acting as fallback to complete the order.
+					PaymentGatewayLogging::log_general(
+						'paypal',
+						sprintf(
+							'[Member ID #%s] Subscription order not yet completed — webhook acting as fallback.',
+							$member_id
+						) . "\n" . wp_json_encode(
+							array(
+								'event_type'             => $event_type,
+								'member_id'              => $member_id,
+								'paypal_subscription_id' => $paypal_subscription_id,
+								'current_order_status'   => $current_order_status,
+							),
+							JSON_PRETTY_PRINT
+						),
+						'notice'
+					);
+
+					$this->members_orders_repository->update(
+						$member_order['ID'],
+						array(
+							'status'         => 'completed',
+							'transaction_id' => $paypal_subscription_id,
+						)
+					);
+				}
 			}
 		}
 
@@ -1555,9 +1707,9 @@ class NewPaypalService {
 	 */
 	public function validate_setup( $membership_type ) {
 		$paypal_enabled        = get_option( 'user_registration_paypal_enabled', '' );
-		$paypal_toggle_default = ur_string_to_bool( get_option( 'urm_is_new_installation', false ) );
+		$is_old_paypal_install = ur_is_paypal_old_installation();
 		$has_user_changed      = ur_string_to_bool( get_option( 'urm_paypal_updated_connection_status', false ) );
-		$is_paypal_enabled     = ( $paypal_enabled ) ? $paypal_enabled : ( $has_user_changed ? $paypal_enabled : ! $paypal_toggle_default );
+		$is_paypal_enabled     = ( $paypal_enabled ) ? $paypal_enabled : ( $has_user_changed ? $paypal_enabled : $is_old_paypal_install );
 
 		if ( ! $is_paypal_enabled ) {
 			return true;
@@ -2357,5 +2509,291 @@ class NewPaypalService {
 			$payload,
 			$paypal_options
 		);
+	}
+
+	/**
+	 * Get the REST URL for this site's PayPal webhook endpoint.
+	 *
+	 * @return string
+	 */
+	public function get_webhook_url() {
+		return rest_url( 'user-registration/paypal-webhook' );
+	}
+
+	/**
+	 * Register or update the PayPal webhook for this site.
+	 *
+	 * Lists existing webhooks on the PayPal account, patches event types if our URL
+	 * is already registered, or creates a new webhook. Returns the webhook ID on success.
+	 * The caller is responsible for persisting the returned ID.
+	 *
+	 * @param array $paypal_options Credentials array (mode, client_id, secret_key).
+	 * @return string|WP_Error Webhook ID on success, WP_Error on failure.
+	 */
+	public function register_or_update_webhook( $paypal_options ) {
+		$webhook_url = $this->get_webhook_url();
+		$event_types = array(
+			array( 'name' => 'CHECKOUT.ORDER.APPROVED' ),
+			array( 'name' => 'PAYMENT.CAPTURE.COMPLETED' ),
+			array( 'name' => 'BILLING.SUBSCRIPTION.CREATED' ),
+			array( 'name' => 'BILLING.SUBSCRIPTION.ACTIVATED' ),
+			array( 'name' => 'BILLING.SUBSCRIPTION.UPDATED' ),
+			array( 'name' => 'BILLING.SUBSCRIPTION.SUSPENDED' ),
+			array( 'name' => 'BILLING.SUBSCRIPTION.CANCELLED' ),
+			array( 'name' => 'BILLING.SUBSCRIPTION.EXPIRED' ),
+		);
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'Starting PayPal webhook auto-registration.' . "\n" . wp_json_encode(
+				array(
+					'webhook_url' => $webhook_url,
+					'mode'        => isset( $paypal_options['mode'] ) ? $paypal_options['mode'] : '',
+				),
+				JSON_PRETTY_PRINT
+			),
+			'info'
+		);
+
+		// PayPal requires HTTPS for webhook URLs. Skip registration on non-HTTPS
+		// sites (e.g. local dev) and log a notice so the user knows why.
+		if ( 0 !== strpos( $webhook_url, 'https://' ) ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'PayPal webhook registration skipped: webhook URL must use HTTPS.' . "\n" . wp_json_encode(
+					array( 'webhook_url' => $webhook_url ),
+					JSON_PRETTY_PRINT
+				),
+				'notice'
+			);
+			return new WP_Error(
+				'paypal_webhook_https_required',
+				__( 'PayPal webhook registration requires an HTTPS URL. Registration skipped for non-HTTPS sites.', 'user-registration' )
+			);
+		}
+
+		$existing = $this->paypal_rest_request( 'GET', '/v1/notifications/webhooks', null, $paypal_options );
+
+		if ( is_wp_error( $existing ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'Failed to list existing PayPal webhooks during registration.' . "\n" . wp_json_encode(
+					array( 'error' => $existing->get_error_message() ),
+					JSON_PRETTY_PRINT
+				)
+			);
+			return $existing;
+		}
+
+		$existing_id = null;
+		$webhooks    = isset( $existing['webhooks'] ) ? $existing['webhooks'] : array();
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'PayPal webhooks listed, scanning for existing registration.' . "\n" . wp_json_encode(
+				array(
+					'total_webhooks' => count( $webhooks ),
+					'looking_for'    => $webhook_url,
+				),
+				JSON_PRETTY_PRINT
+			),
+			'info'
+		);
+
+		foreach ( $webhooks as $webhook ) {
+			if ( isset( $webhook['url'] ) && $webhook['url'] === $webhook_url ) {
+				$existing_id = $webhook['id'];
+				break;
+			}
+		}
+
+		if ( $existing_id ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'Existing PayPal webhook found, patching event types.' . "\n" . wp_json_encode(
+					array( 'webhook_id' => $existing_id ),
+					JSON_PRETTY_PRINT
+				),
+				'info'
+			);
+
+			$patch_payload = array(
+				array(
+					'op'    => 'replace',
+					'path'  => '/event_types',
+					'value' => $event_types,
+				),
+			);
+
+			$update = $this->paypal_rest_request(
+				'PATCH',
+				'/v1/notifications/webhooks/' . rawurlencode( $existing_id ),
+				$patch_payload,
+				$paypal_options
+			);
+
+			if ( is_wp_error( $update ) ) {
+				PaymentGatewayLogging::log_error(
+					'paypal',
+					'Failed to patch PayPal webhook event types.' . "\n" . wp_json_encode(
+						array(
+							'webhook_id' => $existing_id,
+							'error'      => $update->get_error_message(),
+						),
+						JSON_PRETTY_PRINT
+					)
+				);
+				return $update;
+			}
+
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'PayPal webhook event types patched successfully.' . "\n" . wp_json_encode(
+					array( 'webhook_id' => $existing_id ),
+					JSON_PRETTY_PRINT
+				),
+				'success'
+			);
+
+			return $existing_id;
+		}
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'No existing PayPal webhook found, creating new registration.' . "\n" . wp_json_encode(
+				array( 'webhook_url' => $webhook_url ),
+				JSON_PRETTY_PRINT
+			),
+			'info'
+		);
+
+		$create_result = $this->paypal_rest_request(
+			'POST',
+			'/v1/notifications/webhooks',
+			array(
+				'url'         => $webhook_url,
+				'event_types' => $event_types,
+			),
+			$paypal_options
+		);
+
+		if ( is_wp_error( $create_result ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'Failed to create PayPal webhook.' . "\n" . wp_json_encode(
+					array(
+						'webhook_url' => $webhook_url,
+						'error'       => $create_result->get_error_message(),
+					),
+					JSON_PRETTY_PRINT
+				)
+			);
+			return $create_result;
+		}
+
+		$webhook_id = isset( $create_result['id'] ) ? $create_result['id'] : '';
+
+		if ( empty( $webhook_id ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'PayPal webhook registration response missing ID.' . "\n" . wp_json_encode(
+					array( 'response' => $create_result ),
+					JSON_PRETTY_PRINT
+				)
+			);
+			return new WP_Error(
+				'paypal_webhook_no_id',
+				__( 'PayPal webhook created but no ID returned.', 'user-registration' )
+			);
+		}
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'PayPal webhook registered successfully.' . "\n" . wp_json_encode(
+				array(
+					'webhook_id'  => $webhook_id,
+					'webhook_url' => $webhook_url,
+				),
+				JSON_PRETTY_PRINT
+			),
+			'success'
+		);
+
+		return $webhook_id;
+	}
+
+	/**
+	 * Verify a PayPal webhook signature via the PayPal REST verification API.
+	 *
+	 * @param array  $headers        Associative array of PayPal webhook headers (transmission_id, transmission_time, cert_url, auth_algo, transmission_sig).
+	 * @param string $body           Raw webhook request body.
+	 * @param string $webhook_id     Stored PayPal webhook ID for this site.
+	 * @param array  $paypal_options Credentials (mode, client_id, secret_key).
+	 * @return bool True if PayPal confirms the signature is valid.
+	 */
+	public function verify_webhook_signature( $headers, $body, $webhook_id, $paypal_options ) {
+		$event = json_decode( $body, true );
+
+		if ( empty( $event ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'Webhook signature verification aborted: empty or invalid JSON body.'
+			);
+			return false;
+		}
+
+		$payload = array(
+			'transmission_id'   => isset( $headers['transmission_id'] ) ? $headers['transmission_id'] : '',
+			'transmission_time' => isset( $headers['transmission_time'] ) ? $headers['transmission_time'] : '',
+			'cert_url'          => isset( $headers['cert_url'] ) ? $headers['cert_url'] : '',
+			'auth_algo'         => isset( $headers['auth_algo'] ) ? $headers['auth_algo'] : '',
+			'transmission_sig'  => isset( $headers['transmission_sig'] ) ? $headers['transmission_sig'] : '',
+			'webhook_id'        => $webhook_id,
+			'webhook_event'     => $event,
+		);
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'Calling PayPal webhook signature verification API.' . "\n" . wp_json_encode(
+				array(
+					'transmission_id' => $payload['transmission_id'],
+					'auth_algo'       => $payload['auth_algo'],
+					'webhook_id'      => $webhook_id,
+				),
+				JSON_PRETTY_PRINT
+			),
+			'info'
+		);
+
+		$result = $this->paypal_rest_request(
+			'POST',
+			'/v1/notifications/verify-webhook-signature',
+			$payload,
+			$paypal_options
+		);
+
+		if ( is_wp_error( $result ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'PayPal verification API request failed.' . "\n" . wp_json_encode(
+					array( 'error' => $result->get_error_message() ),
+					JSON_PRETTY_PRINT
+				)
+			);
+			return false;
+		}
+
+		$status = isset( $result['verification_status'] ) ? strtoupper( (string) $result['verification_status'] ) : '';
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'PayPal webhook signature verification API response received.' . "\n" . wp_json_encode(
+				array( 'verification_status' => $status ),
+				JSON_PRETTY_PRINT
+			),
+			'SUCCESS' === $status ? 'success' : 'warning'
+		);
+
+		return 'SUCCESS' === $status;
 	}
 }

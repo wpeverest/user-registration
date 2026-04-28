@@ -265,10 +265,80 @@ class PaymentGatewaysWebhookActions {
 	}
 
 	/**
-	 * Handle PayPal REST webhook.
+	 * Verify PayPal webhook signature via the PayPal REST verification API.
 	 *
-	 * Webhook verification is intentionally not required here so that
-	 * PayPal REST setup stays simple. This route acts as an optional sync layer.
+	 * Fail-open when no webhook ID is stored (mirrors Stripe behaviour when
+	 * no webhook secret is configured), so existing sites are not broken before
+	 * credentials are saved for the first time.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return bool
+	 */
+	public function verify_paypal_webhook_signature( WP_REST_Request $request ) {
+		$global_mode   = get_option( 'user_registration_global_paypal_mode', 'test' );
+		$option_suffix = ( 'production' === $global_mode ) ? 'live' : 'test';
+		$webhook_id    = get_option( 'user_registration_global_paypal_' . $option_suffix . '_webhook_id', '' );
+
+		PaymentGatewayLogging::log_webhook_received(
+			'paypal',
+			'PayPal REST webhook received, starting signature verification.' . "\n" . wp_json_encode(
+				array(
+					'mode'              => $global_mode,
+					'webhook_id_stored' => ! empty( $webhook_id ),
+				),
+				JSON_PRETTY_PRINT
+			)
+		);
+
+		if ( empty( $webhook_id ) ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'PayPal webhook ID not configured — skipping signature verification (fail-open).',
+				'notice'
+			);
+			return true;
+		}
+
+		$headers = array(
+			'transmission_id'   => $request->get_header( 'paypal-transmission-id' ),
+			'transmission_time' => $request->get_header( 'paypal-transmission-time' ),
+			'cert_url'          => $request->get_header( 'paypal-cert-url' ),
+			'auth_algo'         => $request->get_header( 'paypal-auth-algo' ),
+			'transmission_sig'  => $request->get_header( 'paypal-transmission-sig' ),
+		);
+
+		$paypal_options = array(
+			'mode'       => $global_mode,
+			'client_id'  => get_option( 'user_registration_global_paypal_' . $option_suffix . '_client_id', '' ),
+			'secret_key' => get_option( 'user_registration_global_paypal_' . $option_suffix . '_client_secret', '' ),
+		);
+
+		$verified = $this->paypal_service->verify_webhook_signature(
+			$headers,
+			$request->get_body(),
+			$webhook_id,
+			$paypal_options
+		);
+
+		if ( ! $verified ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'PayPal webhook signature verification failed — request rejected.'
+			);
+			return false;
+		}
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'PayPal webhook signature verified successfully.',
+			'success'
+		);
+
+		return true;
+	}
+
+	/**
+	 * Handle PayPal REST webhook.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response
@@ -302,9 +372,8 @@ class PaymentGatewaysWebhookActions {
 			'paypal',
 			'PayPal REST webhook payload parsed successfully.',
 			array(
-				'event_type'   => isset( $event['event_type'] ) ? $event['event_type'] : '',
-				'resource_id'  => isset( $event['resource']['id'] ) ? $event['resource']['id'] : '',
-				'verification' => 'not_required',
+				'event_type'  => isset( $event['event_type'] ) ? $event['event_type'] : '',
+				'resource_id' => isset( $event['resource']['id'] ) ? $event['resource']['id'] : '',
 			)
 		);
 
