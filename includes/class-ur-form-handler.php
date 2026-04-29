@@ -30,7 +30,7 @@ class UR_Form_Handler {
 		add_action( 'template_redirect', array( __CLASS__, 'save_change_password' ) );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_login' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_registration' ), 20 );
-		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
+		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 1 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
 		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
 		add_action( 'user_registration_save_profile_details', array( __CLASS__, 'ur_update_user_ip_after_profile_update' ), 10, 2 );
@@ -670,10 +670,9 @@ class UR_Form_Handler {
 				}
 			}
 
-			$success = UR_Shortcode_My_Account::retrieve_password();
+			$result = UR_Shortcode_My_Account::retrieve_password();
 
-			// If successful, redirect to my account with query arg set.
-			if ( $success ) {
+			if ( true === $result ) {
 				wp_redirect(
 					add_query_arg(
 						'reset-link-sent',
@@ -684,6 +683,40 @@ class UR_Form_Handler {
 								'login',
 								'reset',
 							)
+						)
+					)
+				);
+				exit;
+			} else {
+
+				$lost_password_page_id = get_option( 'user_registration_lost_password_page_id', false );
+
+				if ( $lost_password_page_id && ! empty( get_post( $lost_password_page_id ) ) ) {
+					$lost_password_url = get_permalink( $lost_password_page_id );
+				} else {
+					$lost_password_url = home_url( '/' );
+				}
+				$allowed_error_types = array(
+					'empty',
+					'blocked',
+					'invalid',
+					'not_allowed',
+					'email_failed',
+				);
+
+				$error_type = isset( $result['error_type'] ) ? sanitize_key( $result['error_type'] ) : 'invalid';
+				$error_type = in_array( $error_type, $allowed_error_types, true ) ? $error_type : 'invalid';
+
+				$error_message = isset( $result['message'] ) ? sanitize_text_field( $result['message'] ) : '';
+
+				wp_redirect(
+					esc_url_raw(
+						add_query_arg(
+							array(
+								'ur-lp-error' => $error_type,
+								'message'     => rawurlencode( $error_message ),
+							),
+							$lost_password_url
 						)
 					)
 				);
