@@ -10730,9 +10730,20 @@ if ( ! function_exists( 'ur_is_paypal_old_installation' ) ) {
 	 * @return bool True for old/legacy PayPal installations, false for new ones.
 	 */
 	function ur_is_paypal_old_installation() {
-		return '' !== get_option( 'user_registration_global_paypal_email_address', '' )
+		$has_live_legacy_data = '' !== get_option( 'user_registration_global_paypal_email_address', '' )
 			|| '' !== get_option( 'user_registration_global_paypal_test_email_address', '' )
-			|| '' !== get_option( 'user_registration_global_paypal_live_email_address', '' );
+			|| '' !== get_option( 'user_registration_global_paypal_live_email_address', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_cancel_url', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_return_url', '' );
+
+		if ( $has_live_legacy_data ) {
+			if ( ! ur_string_to_bool( get_option( 'urm_is_legacy_paypal_user', false ) ) ) {
+				update_option( 'urm_is_legacy_paypal_user', 1 );
+			}
+			return true;
+		}
+
+		return ur_string_to_bool( get_option( 'urm_is_legacy_paypal_user', false ) );
 	}
 }
 

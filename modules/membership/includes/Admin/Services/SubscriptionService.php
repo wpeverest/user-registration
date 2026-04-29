@@ -220,7 +220,7 @@ class SubscriptionService {
 		switch ( $order['payment_method'] ) {
 			case 'paypal':
 				$paypal_service = new NewPaypalService();
-				$logger->notice( 'Paypal reactivation Reached', array( 'source' => 'urm-reactivation-log' ) );
+				$logger->notice( 'PayPal reactivation Reached', array( 'source' => 'urm-reactivation-log' ) );
 				return $paypal_service->reactivate_subscription( $subscription['subscription_id'] );
 				break;
 			case 'stripe':

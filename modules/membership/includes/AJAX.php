@@ -2921,9 +2921,9 @@ class AJAX {
 
 		$currency_not_supported_payment_gateways = array();
 
-		// if the currency is not supported by Paypal.
+		// if the currency is not supported by PayPal.
 		if ( ! in_array( $currency, paypal_supported_currencies_list() ) ) {
-			$currency_not_supported_payment_gateways[] = 'Paypal';
+			$currency_not_supported_payment_gateways[] = 'PayPal';
 		}
 
 		$currency_not_supported_payment_gateways = apply_filters( 'urm_currency_not_supported_payment_gateways', $currency_not_supported_payment_gateways, $currency );

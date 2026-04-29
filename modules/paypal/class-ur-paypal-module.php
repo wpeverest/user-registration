@@ -109,7 +109,7 @@ class User_Registration_Paypal_Module {
 					array(
 						'type'        => 'text',
 						'title'       => __( 'Return Url', 'user-registration' ),
-						'desc'        => __( 'Redirect url after the payment process, also used as notify_url for Paypal IPN.', 'user-registration' ),
+						'desc'        => __( 'Redirect url after the payment process, also used as notify_url for PayPal IPN.', 'user-registration' ),
 						'desc_tip'    => true,
 						'id'          => 'user_registration_global_paypal_return_url',
 						'default'     => get_option( 'user_registration_global_paypal_return_url' ),

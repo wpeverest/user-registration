@@ -157,6 +157,15 @@ class UR_Install {
 			add_option( 'urm_is_new_installation', 1 );
 		}
 
+		if ( null === get_option( 'urm_is_legacy_paypal_user', null ) ) {
+			$has_legacy_paypal_data = '' !== get_option( 'user_registration_global_paypal_email_address', '' )
+				|| '' !== get_option( 'user_registration_global_paypal_test_email_address', '' )
+				|| '' !== get_option( 'user_registration_global_paypal_live_email_address', '' )
+				|| '' !== get_option( 'user_registration_global_paypal_cancel_url', '' )
+				|| '' !== get_option( 'user_registration_global_paypal_return_url', '' );
+			add_option( 'urm_is_legacy_paypal_user', $has_legacy_paypal_data ? 1 : 0 );
+		}
+
 		self::create_files();
 		self::update_ur_version();
 		self::maybe_update_db_version();

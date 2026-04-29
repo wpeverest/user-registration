@@ -196,7 +196,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 			$is_old_paypal_install = ur_is_paypal_old_installation();
 
 			return array(
-				'title'        => __( 'Paypal', 'user-registration' ),
+				'title'        => __( 'PayPal', 'user-registration' ),
 				'type'         => 'accordian',
 				'id'           => 'paypal',
 				'desc'         => '',
