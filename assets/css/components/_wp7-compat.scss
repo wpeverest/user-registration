@@ -1,0 +1,63 @@
+/**
+ * _wp7-compat.scss
+ * WordPress 7.0 Compatibility Overrides
+ *
+ * WP 7.0 applies `line-height: 1.15` to all buttons and adds background-color
+ * to checked checkbox/radio states, breaking plugin UI. This file centralizes
+ * all overrides so future WP version conflicts can be fixed in one place.
+ *
+ * Specificity hierarchy:
+ *  1. Deep-nested rules in _button.scss (highest — inside settings wrapper)
+ *  2. Standalone .urm-btn-comp-v7 rule below (medium — fallback for buttons outside settings wrapper)
+ *  3. Broad plugin-scoped selectors below (lowest — catches all remaining plugin buttons)
+ */
+
+// Standalone fallback for urm-btn-comp-v7.
+// The class is added in PHP to specific buttons; some are outside
+// .user-registration-settings-wrapper so the deep-nested rule in _button.scss
+// cannot reach them (e.g., form modal "Add Registration Form" button).
+.urm-btn-comp-v7 {
+	min-height: 30px !important;
+	border-radius: 3px;
+	font-weight: 400;
+	font-size: 13px;
+	line-height: 2.15 !important;
+	padding: 0 10px;
+}
+
+// Broad button baseline reset for all plugin admin/frontend contexts.
+.user-registration,
+.ur-form-container,
+.user-registration-settings-wrapper,
+body.user-registration,
+body.user-registration-page {
+	button:not(.select2-search__field),
+	input[type="submit"],
+	input[type="button"],
+	.button {
+		min-height: 30px;
+		line-height: 2.15;
+		font-size: 13px;
+		font-weight: 400;
+		border-radius: 3px;
+	}
+}
+
+// Checkbox and radio background reset.
+// WP 7.0 adds background-color to :checked states on these elements.
+.user-registration,
+body.user-registration,
+body.user-registration-page {
+	input[type="checkbox"],
+	input[type="radio"] {
+		background: none;
+
+		&:checked {
+			background: none;
+		}
+
+		&:focus {
+			box-shadow: none;
+		}
+	}
+}
