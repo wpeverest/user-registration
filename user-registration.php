@@ -206,6 +206,15 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		}
 
 		/**
+		 * Instantiate WPML compatibility class when WPML is active.
+		 */
+		public function init_wpml_compat() {
+			if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+				new UR_WPML();
+			}
+		}
+
+		/**
 		 * Define FT Constants.
 		 */
 		private function define_constants() {
@@ -340,6 +349,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-privacy.php';
 			include_once UR_ABSPATH . 'includes/class-ur-form-block.php';
 			include_once UR_ABSPATH . 'includes/class-ur-cache-helper.php';
+			include_once UR_ABSPATH . 'includes/class-ur-wpml.php';
+
 			/**
 			 * Block classes.
 			 */
