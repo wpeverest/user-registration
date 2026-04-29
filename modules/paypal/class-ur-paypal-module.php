@@ -120,7 +120,6 @@ class User_Registration_Paypal_Module {
 						'title'       => __( 'PayPal Email Address', 'user-registration' ),
 						'desc'        => __( 'Enter your PayPal email address in sandbox/test mode.', 'user-registration' ),
 						'desc_tip'    => true,
-						'required'    => true,
 						'id'          => 'user_registration_global_paypal_test_email_address',
 						'default'     => $test_admin_email,
 						'placeholder' => $test_admin_email,
@@ -148,7 +147,6 @@ class User_Registration_Paypal_Module {
 						'title'       => __( 'PayPal Email Address', 'user-registration' ),
 						'desc'        => __( 'Enter your PayPal email address.', 'user-registration' ),
 						'desc_tip'    => true,
-						'required'    => true,
 						'id'          => 'user_registration_global_paypal_live_email_address',
 						'default'     => $live_admin_email,
 						'placeholder' => $live_admin_email,
@@ -209,36 +207,6 @@ class User_Registration_Paypal_Module {
 		if ( isset( $form_data['user_registration_paypal_enabled'] ) && ! $form_data['user_registration_paypal_enabled'] ) {
 			return $response;
 		}
-		//these value should not be empty
-		if ( empty( $form_data['user_registration_global_paypal_cancel_url'] ) && ur_is_paypal_old_installation() ) {
-			$response['status']  = false;
-			$response['message'] = 'Field Cancel Url is required.';
-
-			return $response;
-		}
-		if ( empty( $form_data['user_registration_global_paypal_return_url'] ) && ur_is_paypal_old_installation() ) {
-			$response['status']  = false;
-			$response['message'] = 'Field Return Url is required.';
-
-			return $response;
-		}
-
-		if ( ( ! ur_is_valid_url( $form_data['user_registration_global_paypal_cancel_url'] ) || ! ur_is_valid_url( $form_data['user_registration_global_paypal_return_url'] ) ) && ur_is_paypal_old_installation() ) {
-			$response['status']  = false;
-			$response['message'] = 'Cancel/Return url must be a valid url.';
-
-			return $response;
-		}
-		preg_match( '#^' . preg_quote( site_url(), '#' ) . '#', $form_data['user_registration_global_paypal_cancel_url'], $cancel_url_matches );
-		preg_match( '#^' . preg_quote( site_url(), '#' ) . '#', $form_data['user_registration_global_paypal_return_url'], $return_url_matches );
-
-		if ( ( count( $cancel_url_matches ) < 1 || count( $return_url_matches ) < 1 ) && ur_is_paypal_old_installation() ) {
-			$response['status']  = false;
-			$response['message'] = 'Cancel/Return url cannot be an external url.';
-
-			return $response;
-		}
-
 		//check if any value has changed
 		foreach ( $form_data as $k => $data ) {
 			$last_data = get_option( $k );
@@ -247,7 +215,58 @@ class User_Registration_Paypal_Module {
 				break;
 			}
 		}
-		$mode = $form_data['user_registration_global_paypal_mode'] == 'production' ? 'live' : 'test';
+		$mode          = $form_data['user_registration_global_paypal_mode'] == 'production' ? 'live' : 'test';
+		$client_id     = $form_data[ 'user_registration_global_paypal_' . $mode . '_client_id' ] ?? '';
+		$client_secret = $form_data[ 'user_registration_global_paypal_' . $mode . '_client_secret' ] ?? '';
+		$email         = $form_data[ 'user_registration_global_paypal_' . $mode . '_email_address' ] ?? '';
+
+		if ( empty( $client_id ) && empty( $client_secret ) && empty( $email ) ) {
+			$response['status']  = false;
+			$response['message'] = 'PayPal requires either an email address or Client ID and Secret.';
+
+			return $response;
+		}
+
+		// Validate cancel/return URLs for old installations if values are provided
+		if ( ur_is_paypal_old_installation() ) {
+			$cancel_url = $form_data['user_registration_global_paypal_cancel_url'] ?? '';
+			$return_url = $form_data['user_registration_global_paypal_return_url'] ?? '';
+
+			if ( ! empty( $cancel_url ) && ! ur_is_valid_url( $cancel_url ) ) {
+				$response['status']  = false;
+				$response['message'] = 'Cancel URL must be a valid URL.';
+
+				return $response;
+			}
+
+			if ( ! empty( $return_url ) && ! ur_is_valid_url( $return_url ) ) {
+				$response['status']  = false;
+				$response['message'] = 'Return URL must be a valid URL.';
+
+				return $response;
+			}
+
+			if ( ! empty( $cancel_url ) ) {
+				preg_match( '#^' . preg_quote( site_url(), '#' ) . '#', $cancel_url, $cancel_url_matches );
+				if ( count( $cancel_url_matches ) < 1 ) {
+					$response['status']  = false;
+					$response['message'] = 'Cancel URL cannot be an external URL.';
+
+					return $response;
+				}
+			}
+
+			if ( ! empty( $return_url ) ) {
+				preg_match( '#^' . preg_quote( site_url(), '#' ) . '#', $return_url, $return_url_matches );
+				if ( count( $return_url_matches ) < 1 ) {
+					$response['status']  = false;
+					$response['message'] = 'Return URL cannot be an external URL.';
+
+					return $response;
+				}
+			}
+		}
+
 		// if client secret is filled then client id is required and vice versa
 		if ( ! empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_id' ] ) && empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_secret' ] ) ) {
 			$response['status']  = false;
