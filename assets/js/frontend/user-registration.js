@@ -100,7 +100,7 @@
 			 * @since 4.2.1
 			 */
 			ur_remove_cookie: function (cookie_key) {
-				document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
+				document.cookie = cookie_key + "=; Max-Age=-99999999; path=/" + (window.location.protocol === 'https:' ? '; Secure' : '') + "; SameSite=Strict";
 			}
 		};
 
@@ -2009,7 +2009,7 @@
 										}
 									} catch (e) {
 										message.append(
-											"<li>" + e.message + "</li>"
+											$("<li></li>").text(e.message)
 										);
 									}
 
@@ -2572,7 +2572,7 @@
 											}
 										} catch (e) {
 											message.append(
-												"<li>" + e.message + "</li>"
+												$("<li></li>").text(e.message)
 											);
 										}
 
