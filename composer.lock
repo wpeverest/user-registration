@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "620565292395256988eb78b5abf31ceb",
+    "content-hash": "55e2c53c97d7be8796f15c207ee62d93",
     "packages": [
         {
             "name": "composer/installers",
@@ -151,16 +151,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v15.10.0",
+            "version": "v19.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "3df1a19a33477af9ead8984dbd84e8f637c36199"
+                "reference": "095384404587d07de2ad1154c389c4051c5ed92f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/3df1a19a33477af9ead8984dbd84e8f637c36199",
-                "reference": "3df1a19a33477af9ead8984dbd84e8f637c36199",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/095384404587d07de2ad1154c389c4051c5ed92f",
+                "reference": "095384404587d07de2ad1154c389c4051c5ed92f",
                 "shasum": ""
             },
             "require": {
@@ -170,7 +170,7 @@
                 "php": ">=5.6.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "3.5.0",
+                "friendsofphp/php-cs-fixer": "3.94.0",
                 "phpstan/phpstan": "^1.2",
                 "phpunit/phpunit": "^5.7 || ^9.0"
             },
@@ -204,9 +204,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v15.10.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v19.4.1"
             },
-            "time": "2024-09-18T18:38:30+00:00"
+            "time": "2026-03-06T22:53:13+00:00"
         },
         {
             "name": "themegrill/themegrill-sdk",
