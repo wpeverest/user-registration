@@ -975,6 +975,10 @@ class URCR_Frontend {
 	public function run_content_restrictions() {
 		global $post;
 
+		if ( is_super_admin() ) {
+			return;
+		}
+
 		$content_restriction_enabled = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
 
 		if ( ! $content_restriction_enabled ) {
