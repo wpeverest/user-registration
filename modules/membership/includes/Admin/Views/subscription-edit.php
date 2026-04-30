@@ -135,7 +135,9 @@ $delete_url = wp_nonce_url(
 	'ur_subscription_delete'
 );
 
-$payment_method = $subscription_order['payment_method'] ?? 'bank';
+$payment_method       = $subscription_order['payment_method'] ?? 'bank';
+$is_admin_created_meta = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'is_admin_created' );
+$is_admin_created      = ! empty( $is_admin_created_meta['meta_value'] );
 ?>
 <div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
 	<div class="ur-page-title__wrapper">
@@ -550,7 +552,7 @@ $payment_method = $subscription_order['payment_method'] ?? 'bank';
 								);
 								$status_options = apply_filters( 'ur_membership_subscription_edit_status_options', $status_options, $subscription );
 								?>
-								<select name="status" id="ur-subscription-status" class="ur-enhanced-select" required <?php echo esc_attr( ! in_array( $payment_method, array( 'bank', 'paypal' ), true ) ? disabled( true ) : '' ); ?>>
+								<select name="status" id="ur-subscription-status" class="ur-enhanced-select" required <?php echo esc_attr( ( ! in_array( $payment_method, array( 'bank', 'paypal' ), true ) && ! $is_admin_created ) ? disabled( true ) : '' ); ?>>
 									<?php foreach ( $status_options as $status_value => $status_label ) : ?>
 									<option value="<?php echo esc_attr( $status_value ); ?>"
 										<?php selected( $subscription['status'], $status_value ); ?>>
