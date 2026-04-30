@@ -11,10 +11,10 @@
 ?>
 <!--								payment gateway container-->
 <div id="payment-gateway-container"
-	 style="gap: 20px"
-	 class="ur-payment-gateway-wrapper ur-d-flex ur-align-items-center ur-g-2 <?php echo isset( $membership_details['type'] ) && $membership_details['type'] !== 'free' ? '' : 'ur-d-none'; ?>">
+	style="gap: 20px"
+	class="ur-payment-gateway-wrapper ur-d-flex ur-align-items-center ur-g-2 <?php echo isset( $membership_details['type'] ) && $membership_details['type'] !== 'free' ? '' : 'ur-d-none'; ?>">
 	<div class="ur-label" style="width: 30%">
-		<label for="ur-membership-free-type"> <?php echo __('Payment Gateways', 'user-registration'); ?> :</label>
+		<label for="ur-membership-free-type"> <?php echo __( 'Payment Gateways', 'user-registration' ); ?> :</label>
 	</div>
 	<div class="ur-d-flex ur-justify-content-between "  style="gap: 20px; width: 100%">
 		<?php render_payment_gateways( $membership_details ); ?>
@@ -33,13 +33,13 @@
  */
 function render_payment_gateways( $membership_details ) {
 	$enabled_features = get_option( 'user_registration_enabled_features', array() );
-	//render paypal settings
+	// render paypal settings
 	render_paypal_settings( $membership_details );
 
 	// render bank settings
 	render_bank_settings( $membership_details );
 
-	//render stripe settings
+	// render stripe settings
 	render_stripe_settings( $membership_details );
 	/**
 	 * Fires when payment gateway settings is rendered on the form settings.
@@ -88,30 +88,30 @@ function render_paypal_settings( $membership_details ) {
 				</span>
 			</div>
 		</div>
-		<?php if(false): ?>
+		<?php if ( false ) : ?>
 		<div class="payment-option-body"
-			 data-target-id="ur-membership-paypal-toggle-container"
-			 style="<?php echo $is_incomplete ? '' : 'display:none'; ?>">
+			data-target-id="ur-membership-paypal-toggle-container"
+			style="<?php echo $is_incomplete ? '' : 'display:none'; ?>">
 			<?php
-			$message      = esc_html__( 'Your PayPal settings is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
+			$message      = esc_html__( 'Your PayPal settings is incomplete, please complete your setup from the link below to continue (No need to refresh this page)', 'user-registration' );
 			$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment&method=paypal';
 			?>
 			<div id="settings-section" class="user-registration-payment__settings">
 				<p><?php echo "$message"; ?></p>
 				<a href="<?php echo esc_url( $settings_url ); ?>"
-				   target="_blank">
+					target="_blank">
 					<?php echo esc_html__( 'Settings', 'user-registration' ); ?>
 					>
 					<?php echo esc_html__( 'PayPal Settings', 'user-registration' ); ?>
 				</a>
 			</div>
 			<?php
-			if ( false ):
+			if ( false ) :
 				?>
 				<!--														paypal mode-->
 
 				<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
-					 style="gap:20px;">
+					style="gap:20px;">
 					<div class="ur-label">
 						<label
 							for="ur-input-type-paypal-mode"><?php esc_html_e( 'Mode', 'user-registration' ); ?>
@@ -122,13 +122,13 @@ function render_paypal_settings( $membership_details ) {
 						class="ur-input-type-membership-email ur-admin-template">
 						<div class="ur-field" data-field-key="paypal_email">
 							<input type="email"
-								   data-key-name="<?php esc_html_e( 'PayPal Email', 'user-registration' ); ?>"
-								   id="ur-input-type-paypal-mode"
-								   name="ur_membership_paypal_mode"
-								   style="width: 100%"
-								   value="<?php echo $global_paypal_settings['paypal_mode']; ?>"
-								   required
-								   readonly
+									data-key-name="<?php esc_html_e( 'PayPal Email', 'user-registration' ); ?>"
+									id="ur-input-type-paypal-mode"
+									name="ur_membership_paypal_mode"
+									style="width: 100%"
+									value="<?php echo $global_paypal_settings['paypal_mode']; ?>"
+									required
+									readonly
 							>
 						</div>
 					</div>
@@ -136,7 +136,7 @@ function render_paypal_settings( $membership_details ) {
 				</div>
 				<!--					paypal email-->
 				<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
-					 style="gap:20px;">
+					style="gap:20px;">
 					<div class="ur-label">
 						<label
 							for="ur-input-type-paypal-email"><?php esc_html_e( 'PayPal Email', 'user-registration' ); ?>
@@ -147,13 +147,13 @@ function render_paypal_settings( $membership_details ) {
 						class="ur-input-type-membership-email ur-admin-template">
 						<div class="ur-field" data-field-key="paypal_email">
 							<input type="email"
-								   data-key-name="<?php esc_html_e( 'PayPal Email', 'user-registration' ); ?>"
-								   id="ur-input-type-paypal-email"
-								   name="ur_membership_paypal_email"
-								   style="width: 100%"
-								   value="<?php echo $global_paypal_settings['paypal_email']; ?>"
-								   required
-								   readonly
+									data-key-name="<?php esc_html_e( 'PayPal Email', 'user-registration' ); ?>"
+									id="ur-input-type-paypal-email"
+									name="ur_membership_paypal_email"
+									style="width: 100%"
+									value="<?php echo $global_paypal_settings['paypal_email']; ?>"
+									required
+									readonly
 							>
 						</div>
 					</div>
@@ -168,22 +168,22 @@ function render_paypal_settings( $membership_details ) {
 						<label
 							for="ur-input-type-cancel-url"><?php esc_html_e( 'Cancel Url', 'user-registration' ); ?>
 							<span class="user-registration-help-tip tooltipstered"
-								  data-tip="<?php echo __( "Endpoint set for handling paypal cancel api." ); ?>"></span>
+									data-tip="<?php echo __( 'Endpoint set for handling paypal cancel api.' ); ?>"></span>
 						</label>
 					</div>
 
 					<div
 						class="ur-admin-template">
 						<div class="ur-field"
-							 data-field-key="paypal_cancel_url">
+							data-field-key="paypal_cancel_url">
 							<input type="url"
-								   data-key-name="<?php esc_html_e( 'Cancel Url', 'user-registration' ); ?>"
-								   id="ur-input-type-cancel-url"
-								   name="ur_membership_cancel_url"
-								   style="width: 100%"
-								   value="<?php echo $global_paypal_settings['cancel_url']; ?>"
-								   required
-								   readonly
+									data-key-name="<?php esc_html_e( 'Cancel Url', 'user-registration' ); ?>"
+									id="ur-input-type-cancel-url"
+									name="ur_membership_cancel_url"
+									style="width: 100%"
+									value="<?php echo $global_paypal_settings['cancel_url']; ?>"
+									required
+									readonly
 							>
 						</div>
 					</div>
@@ -197,20 +197,20 @@ function render_paypal_settings( $membership_details ) {
 						<label
 							for="ur-input-type-return-url"><?php esc_html_e( 'Return Url', 'user-registration' ); ?>
 							<span class="user-registration-help-tip tooltipstered"
-								  data-tip="<?php echo __( "Redirect url after the payment process, also used as notify_url for PayPal IPN." ); ?>"></span>
+									data-tip="<?php echo __( 'Redirect url after the payment process, also used as notify_url for PayPal IPN.' ); ?>"></span>
 						</label>
 					</div>
 					<div
 						class="ur-input-type-return-url ur-admin-template">
 						<div class="ur-field" data-field-key="return_url">
 							<input type="url"
-								   data-key-name="<?php esc_html_e( 'Return Url', 'user-registration' ); ?>"
-								   id="ur-input-type-return-url"
-								   name="ur_membership_return_url"
-								   style="width: 100%"
-								   value="<?php echo $global_paypal_settings['return_url']; ?>"
-								   required
-								   readonly>
+									data-key-name="<?php esc_html_e( 'Return Url', 'user-registration' ); ?>"
+									id="ur-input-type-return-url"
+									name="ur_membership_return_url"
+									style="width: 100%"
+									value="<?php echo $global_paypal_settings['return_url']; ?>"
+									required
+									readonly>
 						</div>
 					</div>
 
@@ -232,12 +232,12 @@ function render_paypal_settings( $membership_details ) {
 							class="ur-input-type-client-id ur-admin-template">
 							<div class="ur-field" data-field-key="client_id">
 								<input type="text"
-									   autocomplete="off"
-									   data-key-name="<?php esc_html_e( 'Client ID', 'user-registration' ); ?>"
-									   id="ur-input-type-client-id"
-									   name="ur_membership_client_id"
-									   style="width: 100%"
-									   value="<?php echo $global_paypal_settings['client_id']; ?>"
+										autocomplete="off"
+										data-key-name="<?php esc_html_e( 'Client ID', 'user-registration' ); ?>"
+										id="ur-input-type-client-id"
+										name="ur_membership_client_id"
+										style="width: 100%"
+										value="<?php echo $global_paypal_settings['client_id']; ?>"
 								>
 							</div>
 						</div>
@@ -256,22 +256,22 @@ function render_paypal_settings( $membership_details ) {
 						<div
 							class="ur-input-type-client-secret ur-admin-template">
 							<div class="ur-field"
-								 data-field-key="client_secret">
+								data-field-key="client_secret">
 								<input type="text"
-									   autocomplete="off"
-									   data-key-name="<?php esc_html_e( 'Client Secret', 'user-registration' ); ?>"
-									   id="ur-input-type-client-secret"
-									   name="ur_membership_client_secret"
-									   style="width: 100%"
-									   value="<?php echo $global_paypal_settings['client_secret']; ?>"
-									   readonly
+										autocomplete="off"
+										data-key-name="<?php esc_html_e( 'Client Secret', 'user-registration' ); ?>"
+										id="ur-input-type-client-secret"
+										name="ur_membership_client_secret"
+										style="width: 100%"
+										value="<?php echo $global_paypal_settings['client_secret']; ?>"
+										readonly
 								>
 							</div>
 						</div>
 
 					</div>
 				</div>
-			<?php
+				<?php
 			endif;
 			?>
 		</div>
@@ -314,10 +314,10 @@ function render_bank_settings( $membership_details ) {
 				</span>
 			</div>
 		</div>
-		<?php if(false): ?>
+		<?php if ( false ) : ?>
 		<div class="payment-option-body"
-			 data-target-id="ur-membership-bank-toggle-container"
-			 style="<?php echo empty( $global_bank_details ) ? '' : 'display:none'; ?>"
+			data-target-id="ur-membership-bank-toggle-container"
+			style="<?php echo empty( $global_bank_details ) ? '' : 'display:none'; ?>"
 		>
 
 			<div class="bank-settings">
@@ -328,7 +328,7 @@ function render_bank_settings( $membership_details ) {
 				?>
 				<p><?php echo "$message"; ?></p>
 				<a href="<?php echo esc_url( $settings_url ); ?>"
-				   target="_blank">
+					target="_blank">
 					<?php echo esc_html__( 'Settings', 'user-registration' ); ?>
 					>
 					<?php echo esc_html__( 'Bank Transfer Settings', 'user-registration' ); ?>
@@ -371,27 +371,27 @@ function render_stripe_settings( $membership_details ) {
 				</span>
 			</div>
 		</div>
-		<?php if(false): ?>
+		<?php if ( false ) : ?>
 		<div class="payment-option-body"
-			 data-target-id="ur-membership-stripe-toggle-container"
-			 style="<?php echo $setup_incomplete ? '' : 'display:none'; ?>">
+			data-target-id="ur-membership-stripe-toggle-container"
+			style="<?php echo $setup_incomplete ? '' : 'display:none'; ?>">
 
 			<div class="stripe-settings">
 				<?php
 				$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment&method=stripe';
-				$message      = esc_html__( 'Your Stripe Setup is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
+				$message      = esc_html__( 'Your Stripe Setup is incomplete, please complete your setup from the link below to continue (No need to refresh this page)', 'user-registration' );
 
 				?>
 				<p><?php echo "$message"; ?></p>
 				<a href="<?php echo esc_url( $settings_url ); ?>"
-				   target="_blank">
+					target="_blank">
 					<?php echo esc_html__( 'Settings', 'user-registration' ); ?>
 					>
 					<?php echo esc_html__( 'Stripe Settings', 'user-registration' ); ?>
 				</a>
 			</div>
 			<?php
-			if ( false ):
+			if ( false ) :
 				?>
 				<!--													stripe mode-->
 
@@ -406,14 +406,14 @@ function render_stripe_settings( $membership_details ) {
 					<div
 						class="ur-admin-template">
 						<div class="ur-field"
-							 data-field-key="stripe_mode">
+							data-field-key="stripe_mode">
 							<input type="url"
-								   data-key-name="<?php esc_html_e( 'Stripe Mode', 'user-registration' ); ?>"
-								   id="ur-input-type-stripe-mode"
-								   name="ur_membership_stripe_mode"
-								   style="width: 100%"
-								   value="<?php echo esc_html__( ucfirst( $stripe_settings['mode'] ) ); ?>"
-								   readonly
+									data-key-name="<?php esc_html_e( 'Stripe Mode', 'user-registration' ); ?>"
+									id="ur-input-type-stripe-mode"
+									name="ur_membership_stripe_mode"
+									style="width: 100%"
+									value="<?php echo esc_html__( ucfirst( $stripe_settings['mode'] ) ); ?>"
+									readonly
 							>
 						</div>
 					</div>
@@ -431,14 +431,14 @@ function render_stripe_settings( $membership_details ) {
 					<div
 						class="ur-admin-template">
 						<div class="ur-field"
-							 data-field-key="publishable_key">
+							data-field-key="publishable_key">
 							<input type="url"
-								   data-key-name="<?php esc_html_e( 'Publishable Key', 'user-registration' ); ?>"
-								   id="ur-input-type-publishable-key"
-								   name="ur_membership_publishable_key"
-								   style="width: 100%"
-								   value="<?php echo esc_html__( $stripe_settings['publishable_key'] ); ?>"
-								   readonly
+									data-key-name="<?php esc_html_e( 'Publishable Key', 'user-registration' ); ?>"
+									id="ur-input-type-publishable-key"
+									name="ur_membership_publishable_key"
+									style="width: 100%"
+									value="<?php echo esc_html__( $stripe_settings['publishable_key'] ); ?>"
+									readonly
 							>
 						</div>
 					</div>
@@ -456,20 +456,20 @@ function render_stripe_settings( $membership_details ) {
 					<div
 						class="ur-admin-template">
 						<div class="ur-field"
-							 data-field-key="secret_key">
+							data-field-key="secret_key">
 							<input type="url"
-								   data-key-name="<?php esc_html_e( 'Secret Key', 'user-registration' ); ?>"
-								   id="ur-input-type-secret-key"
-								   name="ur_membership_secret_key"
-								   style="width: 100%"
-								   value="<?php echo esc_html__( $stripe_settings['secret_key'] ); ?>"
-								   readonly
+									data-key-name="<?php esc_html_e( 'Secret Key', 'user-registration' ); ?>"
+									id="ur-input-type-secret-key"
+									name="ur_membership_secret_key"
+									style="width: 100%"
+									value="<?php echo esc_html__( $stripe_settings['secret_key'] ); ?>"
+									readonly
 							>
 						</div>
 					</div>
 
 				</div>
-			<?php
+				<?php
 			endif;
 			?>
 

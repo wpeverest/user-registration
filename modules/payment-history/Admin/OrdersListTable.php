@@ -69,19 +69,22 @@ class OrdersListTable extends \UR_List_Table {
 
 		$total_items = array();
 		if ( '' === $payment_for ) {
-			$args_forms = $this->prepare_query_args( 'forms', 999999, 1 );
-			$form_items = $this->get_user_payments( $args_forms );
+			$args_forms       = $this->prepare_query_args( 'forms', 999999, 1 );
+			$form_items       = $this->get_user_payments( $args_forms );
 			$membership_items = array();
 			if ( $this->is_membership_active && $this->orders_repository ) {
 				$args_memberships = $this->prepare_query_args( 'memberships', 999999, 1 );
 				$membership_items = $this->orders_repository->get_all( $args_memberships );
 			}
 			$total_items = array_merge( $form_items, is_array( $membership_items ) ? $membership_items : array() );
-			usort( $total_items, function ( $a, $b ) {
-				$t_a = ! empty( $a['created_at'] ) ? strtotime( $a['created_at'] ) : 0;
-				$t_b = ! empty( $b['created_at'] ) ? strtotime( $b['created_at'] ) : 0;
-				return $t_b - $t_a;
-			} );
+			usort(
+				$total_items,
+				function ( $a, $b ) {
+					$t_a = ! empty( $a['created_at'] ) ? strtotime( $a['created_at'] ) : 0;
+					$t_b = ! empty( $b['created_at'] ) ? strtotime( $b['created_at'] ) : 0;
+					return $t_b - $t_a;
+				}
+			);
 			$total_count = count( $total_items );
 			$this->items = array_slice( $total_items, ( $current_page - 1 ) * $per_page, $per_page );
 			$this->set_pagination_args(
@@ -222,7 +225,7 @@ class OrdersListTable extends \UR_List_Table {
 	public function column_transaction_id( $row ) {
 		return sprintf(
 			'<strong><div class="ur-edit-title"><a href="%s" class="row-title">%s</a></div></strong>%s',
-			esc_url( isset($row['order_id']) ? admin_url( "admin.php?page=member-payment-history&action=edit&id={$row['order_id']}" ) : '' ),
+			esc_url( isset( $row['order_id'] ) ? admin_url( "admin.php?page=member-payment-history&action=edit&id={$row['order_id']}" ) : '' ),
 			esc_html( isset( $row['transaction_id'] ) && ! empty( $row['transaction_id'] ) ? $row['transaction_id'] : ( $row['order_id'] ?? '' ) ),
 			$this->row_actions( $this->get_row_actions( $row ) )
 		);
@@ -392,9 +395,9 @@ class OrdersListTable extends \UR_List_Table {
 
 		$order_id = $item['order_id'] ?? 0;
 		if ( ! empty( $order_id ) && $this->orders_repository ) {
-			$order_detail   = $this->orders_repository->get_order_detail( $order_id );
+			$order_detail     = $this->orders_repository->get_order_detail( $order_id );
 			$order_repository = new OrdersRepository();
-			$local_currency = ! empty( $order_detail['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' ) : null;
+			$local_currency   = ! empty( $order_detail['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' ) : null;
 			if ( ! empty( $local_currency['meta_value'] ) ) {
 				$currency = $local_currency['meta_value'];
 			}
@@ -443,7 +446,7 @@ class OrdersListTable extends \UR_List_Table {
 			$this,
 			array(
 				'page'           => $this->page,
-				'title' 		 => esc_html__( 'Payments', 'user-registration' ),
+				'title'          => esc_html__( 'Payments', 'user-registration' ),
 				'add_new_action' => 'add_new_payment',
 				'search_id'      => 'user-registration-payment-history-search',
 				'skip_query_key' => 'add-new-membership',
@@ -471,12 +474,12 @@ class OrdersListTable extends \UR_List_Table {
 	}
 
 	/**
-		 * Generates the table navigation above or below the table
-		 *
-		 * @since 4.1
-		 *
-		 * @param string $which
-		 */
+	 * Generates the table navigation above or below the table
+	 *
+	 * @since 4.1
+	 *
+	 * @param string $which
+	 */
 	protected function display_tablenav( $which ) {
 		if ( 'top' === $which ) {
 			wp_nonce_field( 'bulk-' . $this->_args['plural'] );
@@ -711,7 +714,7 @@ class OrdersListTable extends \UR_List_Table {
 			return;
 		}
 		echo '<select name="action' . esc_attr( $two ) . '" id="bulk-action-selector-' . esc_attr( $which ) . '">' . "\n";
-		echo '<option value="-1">' . esc_html__( 'Bulk actions' ) . "</option>\n";
+		echo '<option value="-1">' . esc_html__( 'Bulk actions', 'user-registration' ) . "</option>\n";
 
 		foreach ( $this->_actions as $key => $value ) {
 			if ( is_array( $value ) ) {
@@ -732,7 +735,7 @@ class OrdersListTable extends \UR_List_Table {
 
 		echo "</select>\n";
 
-		submit_button( __( 'Apply' ), 'action', '', false, array( 'id' => "doaction-orders$two" ) );
+		submit_button( __( 'Apply', 'user-registration' ), 'action', '', false, array( 'id' => "doaction-orders$two" ) );
 		echo "\n";
 	}
 
@@ -815,7 +818,7 @@ class OrdersListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( remove_query_arg( 'paged', $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'First page' ),
+				__( 'First page', 'user-registration' ),
 				'&laquo;'
 			);
 		}
@@ -830,7 +833,7 @@ class OrdersListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Previous page' ),
+				__( 'Previous page', 'user-registration' ),
 				'&lsaquo;'
 			);
 		}
@@ -842,7 +845,7 @@ class OrdersListTable extends \UR_List_Table {
 				'<span id="table-paging" class="paging-input">' .
 				'<span class="tablenav-paging-text">',
 				/* translators: Hidden accessibility text. */
-				__( 'Current Page' )
+				__( 'Current Page', 'user-registration' )
 			);
 		} else {
 			$html_current_page = sprintf(
@@ -851,7 +854,7 @@ class OrdersListTable extends \UR_List_Table {
 					name='paged' value='%s' size='%d' aria-describedby='table-paging' />" .
 				"<span class='tablenav-paging-text'>",
 				/* translators: Hidden accessibility text. */
-				__( 'Current Page' ),
+				__( 'Current Page', 'user-registration' ),
 				$current,
 				strlen( $total_pages )
 			);
@@ -861,7 +864,7 @@ class OrdersListTable extends \UR_List_Table {
 
 		$page_links[] = $total_pages_before . sprintf(
 			/* translators: 1: Current page, 2: Total pages. */
-			_x( '%1$s of %2$s', 'paging' ),
+			_x( '%1$s of %2$s', 'paging', 'user-registration' ),
 			$html_current_page,
 			$html_total_pages
 		) . $total_pages_after;
@@ -876,7 +879,7 @@ class OrdersListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Next page' ),
+				__( 'Next page', 'user-registration' ),
 				'&rsaquo;'
 			);
 		}
@@ -891,7 +894,7 @@ class OrdersListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Last page' ),
+				__( 'Last page', 'user-registration' ),
 				'&raquo;'
 			);
 		}

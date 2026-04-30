@@ -89,7 +89,7 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 
 				switch ( $date_range ) {
 					case 'day':
-						$start_date = strtotime(date( 'm/d/Y' ) . '00:00:00' );
+						$start_date = strtotime( date( 'm/d/Y' ) . '00:00:00' );
 						$start_date = date( 'Y-m-d H:i:s', $start_date );
 						break;
 
@@ -318,16 +318,16 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 			<label class="screen-reader-text" for="<?php echo $id; ?>">
 				<?php
 				/* translators: Hidden accessibility text. */
-				_e( 'Change role to&hellip;' );
+				_e( 'Change role to&hellip;', 'user-registration' );
 				?>
 			</label>
 			<select name="<?php echo $id; ?>" id="<?php echo $id; ?>">
-				<option value=""><?php _e( 'Change role to&hellip;' ); ?></option>
+				<option value=""><?php _e( 'Change role to&hellip;', 'user-registration' ); ?></option>
 				<?php wp_dropdown_roles(); ?>
-				<option value="none"><?php _e( '&mdash; No role for this site &mdash;' ); ?></option>
+				<option value="none"><?php _e( '&mdash; No role for this site &mdash;', 'user-registration' ); ?></option>
 			</select>
 				<?php
-				submit_button( __( 'Change' ), '', $button_id, false );
+				submit_button( __( 'Change', 'user-registration' ), '', $button_id, false );
 			endif;
 
 			/**
@@ -389,14 +389,14 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 
 			if ( is_multisite() && current_user_can( 'manage_network_users' ) ) {
 				if ( in_array( $user_object->user_login, get_super_admins(), true ) ) {
-					$super_admin = ' &mdash; ' . __( 'Super Admin' );
+					$super_admin = ' &mdash; ' . __( 'Super Admin', 'user-registration' );
 				}
 			}
 
 			// Check if the user for this row is editable.
 			if ( current_user_can( 'list_users' ) || current_user_can( 'manage_user_registration' ) ) {
 				// Set up the user editing link.
-				$edit_link       = add_query_arg(
+				$edit_link = add_query_arg(
 					array(
 						'action'   => 'edit',
 						'user_id'  => $user_object->ID,
@@ -410,12 +410,12 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 					'<a href="%s" rel="noreferrer noopener" target="_blank" aria-label="%s">%s</a>',
 					esc_url( admin_url( 'admin.php?page=user-registration-users&view_user&user_id=' . $user_object->ID ) ),
 					/* translators: %s: Author's display name. */
-					esc_attr( sprintf( __( 'View details for %s' ), $user_object->display_name ) ),
-					__( 'View' )
+					esc_attr( sprintf( __( 'View details for %s', 'user-registration' ), $user_object->display_name ) ),
+					__( 'View', 'user-registration' )
 				);
 
 				if ( current_user_can( 'edit_user', $user_object->ID ) ) {
-					$actions['edit'] = '<a href="' . $edit_link . '" rel="noreferrer noopener" target="_blank">' . __( 'Edit' ) . '</a>';
+					$actions['edit'] = '<a href="' . $edit_link . '" rel="noreferrer noopener" target="_blank">' . __( 'Edit', 'user-registration' ) . '</a>';
 				}
 				if ( current_user_can( 'edit_user', $user_object->ID ) ) {
 					$user_id = $user_object->ID;
@@ -436,9 +436,8 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 							$enable_link,
 							__( 'Enable', 'user-registration' )
 						);
-					} else {
+					} elseif ( $user_id !== get_current_user_id() ) {
 
-						if ( $user_id !== get_current_user_id() ) {
 							$actions['disable_user'] = sprintf(
 								'<a>
 									<span style="cursor:pointer;" id="disable-user-link-%d" class="disable-user-link" data-nonce="%s">
@@ -450,7 +449,6 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 								__( 'Disable', 'user-registration' ),
 							);
 					}
-				}
 				}
 
 				/**
@@ -474,7 +472,7 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 					'<input type="checkbox" name="users[]" id="user_%1$s" class="%3$s" value="%1$s" />',
 					$user_object->ID,
 					/* translators: Hidden accessibility text. %s: User login. */
-					sprintf( __( 'Select %s' ), $user_object->user_login ),
+					sprintf( __( 'Select %s', 'user-registration' ), $user_object->user_login ),
 					$role_classes
 				);
 
@@ -585,11 +583,11 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 
 								$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
 
-								if( $user_source === 'membership' && 'approved' === strtolower($status_label) ) {
+								if ( $user_source === 'membership' && 'approved' === strtolower( $status_label ) ) {
 
 									$order_status = apply_filters( 'user_registration_check_user_order_status', $user_id );
 									if ( ! empty( $order_status ) && 'pending' === $order_status ) {
-										$status_label = __('Payment Pending', "user-registration");
+										$status_label = __( 'Payment Pending', 'user-registration' );
 										$status_class = 'pending';
 									}
 								}
@@ -1064,7 +1062,7 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 				if ( ! empty( $search_conditions ) ) {
 					$pattern = "/AND\s*\(\s*(?:\w+\.)?(user_login|user_url|user_email|user_nicename|display_name)\s+LIKE\s+'[^']+'\s*(OR\s+(?:\w+\.)?(user_login|user_url|user_email|user_nicename|display_name)\s+LIKE\s+'[^']+'\s*)+\)/i";
 
-					$query->query_where = preg_replace( $pattern, '', $query->query_where );
+					$query->query_where  = preg_replace( $pattern, '', $query->query_where );
 					$query->query_where .= ' AND (' . implode( ' OR ', $search_conditions ) . ')';
 				}
 			}

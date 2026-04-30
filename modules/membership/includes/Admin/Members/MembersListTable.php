@@ -76,7 +76,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 			}
 
 			if ( isset( $_REQUEST['order'] ) ) {
-				$order = strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
+				$order         = strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
 				$args['order'] = in_array( $order, array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 			}
 
@@ -154,7 +154,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 				$actions['view'] = sprintf(
 					'<a href="%s" target="_blank">%s</a>',
 					esc_url( $member_view_url ),
-					__( 'View' )
+					__( 'View', 'user-registration' )
 				);
 
 				if ( current_user_can( 'edit_user', $user_id ) ) {

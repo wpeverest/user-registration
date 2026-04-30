@@ -816,7 +816,7 @@ class StripeService {
 		if ( ! empty( $latest_order ) && 'stripe' !== $latest_order['payment_method'] ) {
 			return $this->update_order_error(
 				$response,
-				__( 'Payment method mismatch: order payment method is not stripe' ),
+				__( 'Payment method mismatch: order payment method is not stripe', 'user-registration' ),
 				'Payment method mismatch: order payment method is not stripe',
 				array(
 					'error_code'     => 'PAYMENT_METHOD_MISMATCH',

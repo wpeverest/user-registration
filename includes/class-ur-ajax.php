@@ -2115,7 +2115,7 @@ class UR_AJAX {
 			);
 		}
 		do_action( 'urm_save_captcha_settings', $form_data, $setting_id );
-		$message = ( 'captcha-settings' === $setting_id ) ? __( 'Captcha settings saved successfully.' ) : sprintf( __( 'Captcha Setting for %s has been saved successfully.', 'user-registration' ), $setting_id );
+		$message = ( 'captcha-settings' === $setting_id ) ? __( 'Captcha settings saved successfully.', 'user-registration' ) : sprintf( __( 'Captcha Setting for %s has been saved successfully.', 'user-registration' ), $setting_id );
 
 		wp_send_json_success(
 			array(
@@ -2338,7 +2338,7 @@ class UR_AJAX {
 		if ( ! $referer || $referer_host !== $allowed_host ) {
 			wp_send_json_error(
 				array(
-					__( 'Invalid form submission source.', 'user-registratifdeafon' ),
+					__( 'Invalid form submission source.', 'user-registration' ),
 				)
 			);
 		}

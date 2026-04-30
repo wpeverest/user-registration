@@ -288,7 +288,7 @@ class UR_Install {
 	public static function cron_schedules( $schedules ) {
 		$schedules['monthly'] = array(
 			'interval' => 2635200,
-			'display'  => __( 'Monthly', 'everest-forms' ),
+			'display'  => __( 'Monthly', 'user-registration' ),
 		);
 		return $schedules;
 	}
@@ -352,7 +352,7 @@ class UR_Install {
 			),
 			'5.1.5' => array(
 				'ur_update_515_redirect_thank_you_page_migrate',
-			)
+			),
 		);
 
 		if ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) {
@@ -367,7 +367,7 @@ class UR_Install {
 				),
 				'6.0'   => array(
 					'urm_update_50_option_migrate',
-				)
+				),
 			);
 		}
 

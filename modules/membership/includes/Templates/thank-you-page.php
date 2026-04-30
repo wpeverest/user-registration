@@ -52,14 +52,14 @@ $redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
 
 				$values = array();
 
-				if ( ! empty( $username ) ) {
-					$user                = get_user_by( 'login', sanitize_text_field( $username ) );
-					$values['member_id'] = $user->ID;
-					$values['email']     = $user->user_email;
-					$values['context']   = 'thank_you_page';
-					if ( ! empty( $transaction_id ) ) {
-						$values['transaction_id'] = $transaction_id;
-					}
+			if ( ! empty( $username ) ) {
+				$user                = get_user_by( 'login', sanitize_text_field( $username ) );
+				$values['member_id'] = $user->ID;
+				$values['email']     = $user->user_email;
+				$values['context']   = 'thank_you_page';
+				if ( ! empty( $transaction_id ) ) {
+					$values['transaction_id'] = $transaction_id;
+				}
 
 				$main_content = apply_filters( 'user_registration_process_smart_tags', $main_content, $values );
 			}
@@ -69,7 +69,7 @@ $redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
 
 			<?php if ( $show_bank_data && $show_bank_details ) : ?>
 				<div class="ur-bank-details">
-					<p class="ur-bank-details-title" ><?php echo __( 'Bank Details :') ?></p>
+					<p class="ur-bank-details-title" ><?php echo __( 'Bank Details :', 'user-registration' ); ?></p>
 					<?php echo wp_kses_post( $bank_data ); ?>
 				</div>
 			<?php endif; ?>

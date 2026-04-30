@@ -5027,7 +5027,7 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 						$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
 						$settings['sections']['premium_setting_section']['before_desc'] = $description;
 						$upgradable_plans                                        = implode( 'plan, ', $detail['plan'] );
-						$settings['sections']['premium_setting_section']['desc'] = sprintf( __( 'To unlock this setting, consider upgrading to %s', 'user-registration ' ), $upgradable_plans );
+						$settings['sections']['premium_setting_section']['desc'] = sprintf( __( 'To unlock this setting, consider upgrading to %s', 'user-registration' ), $upgradable_plans );
 					} else {
 						$plugin_name = $detail['name'];
 						$action      = '';

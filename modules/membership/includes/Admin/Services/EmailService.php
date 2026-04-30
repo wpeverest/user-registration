@@ -287,7 +287,7 @@ class EmailService {
 		$currencies     = ur_payment_integration_get_currencies();
 		$symbol         = $currencies[ $currency ]['symbol'];
 		$message        = sprintf( __( 'Hi <b><i>%1$s</i></b>, Your payment of amount %2$s for the membership: <b>%3$s</b> has been approved by admin.', 'user-registration' ), $data['display_name'] ?? '', number_format( $data['total_amount'], 2 ) . $symbol, $data['post_title'] ?? '' ) . "\n\n";
-		$extra_message  = __( 'You can now login as a member.' );
+		$extra_message  = __( 'You can now login as a member.', 'user-registration' );
 		$final_greeting = __( 'Thank You.', 'user-registration' );
 
 		$template_file = locate_template( 'payment-approval-email.php' );
@@ -304,64 +304,64 @@ class EmailService {
 
 		return wp_mail( $data['user_email'], $subject, $message, $headers );
 	}
-	//  /**
-	//   * Send payment successful email
-	//   *
-	//   * @param $data
-	//   *
-	//   * @return bool|mixed|void
-	//   */
-	//  public function send_payment_successful_email( $data ) {
-	//      if ( ! $this->validate_email_fields( $data ) ) {
-	//          return false;
-	//      }
-	//      $subject          = __( 'Payment Received!', 'user-registration' );
-	//      $user             = get_userdata( $data['member_id'] );
-	//      $order            = $data['order'];
-	//      $subscription     = $data['subscription'];
-	//      $membership_metas = $data['membership_metas'];
-	//      $extra_message    = $data['extra_message'] ?? '';
-	//      $currency         = get_option( 'user_registration_payment_currency', 'USD' );
-	//      $currencies       = ur_payment_integration_get_currencies();
-	//      $symbol           = $currencies[ $currency ]['symbol'];
+	// **
+	// * Send payment successful email
+	// *
+	// * @param $data
+	// *
+	// * @return bool|mixed|void
+	// */
+	// public function send_payment_successful_email( $data ) {
+	// if ( ! $this->validate_email_fields( $data ) ) {
+	// return false;
+	// }
+	// $subject          = __( 'Payment Received!', 'user-registration' );
+	// $user             = get_userdata( $data['member_id'] );
+	// $order            = $data['order'];
+	// $subscription     = $data['subscription'];
+	// $membership_metas = $data['membership_metas'];
+	// $extra_message    = $data['extra_message'] ?? '';
+	// $currency         = get_option( 'user_registration_payment_currency', 'USD' );
+	// $currencies       = ur_payment_integration_get_currencies();
+	// $symbol           = $currencies[ $currency ]['symbol'];
 	//
-	//      $total = $order['total_amount'];
+	// $total = $order['total_amount'];
 	//
-	//      if ( isset( $order['coupon'] ) && ! empty( $order['coupon'] ) && "bank" !== $order['payment_method'] && isset( $membership_metas ) && ( "paid" === $membership_metas['type'] || ( "subscription" === $membership_metas['type'] && "off" === $order['trial_status'] ) ) ) {
-	//          $discount_amount = ( $order['coupon_discount_type'] === 'fixed' ) ? $order['coupon_discount'] : $order['total_amount'] * $order['coupon_discount'] / 100;
-	//          $total           = $order['total_amount'] - $discount_amount;
-	//      }
-	//      $billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) : 'N/A';
+	// if ( isset( $order['coupon'] ) && ! empty( $order['coupon'] ) && "bank" !== $order['payment_method'] && isset( $membership_metas ) && ( "paid" === $membership_metas['type'] || ( "subscription" === $membership_metas['type'] && "off" === $order['trial_status'] ) ) ) {
+	// $discount_amount = ( $order['coupon_discount_type'] === 'fixed' ) ? $order['coupon_discount'] : $order['total_amount'] * $order['coupon_discount'] / 100;
+	// $total           = $order['total_amount'] - $discount_amount;
+	// }
+	// $billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) : 'N/A';
 	//
-	//      $invoice_details = array(
-	//          'membership_name'   => esc_html( $membership_metas['post_title'] ),
-	//          'trial_status'      => esc_html( $order['trial_status'] ),
-	//          'trial_start_date'  => esc_html( $subscription['trial_start_date'] ),
-	//          'trial_end_date'    => esc_html( $subscription['trial_end_date'] ),
-	//          'next_billing_date' => esc_html( $subscription['next_billing_date'] ),
-	//          'payment_date'      => esc_html( $order['created_at'] ),
-	//          'billing_cycle'     => esc_html( $billing_cycle ),
-	//          'amount'            => $symbol . number_format( $membership_metas['amount'], 2 ),
-	//          'trial_amount'      => $symbol . number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ),
-	//          'coupon_discount'   => isset( $order['coupon_discount'] ) ? ( ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] == 'percent' ) ? $order['coupon_discount'] . '%' : $symbol . $order['coupon_discount'] ) : '',
-	//          'coupon'            => esc_html( $order['coupon'] ?? '' ),
-	//          'total'             => $symbol . number_format( $total, 2 ),
-	//      );
+	// $invoice_details = array(
+	// 'membership_name'   => esc_html( $membership_metas['post_title'] ),
+	// 'trial_status'      => esc_html( $order['trial_status'] ),
+	// 'trial_start_date'  => esc_html( $subscription['trial_start_date'] ),
+	// 'trial_end_date'    => esc_html( $subscription['trial_end_date'] ),
+	// 'next_billing_date' => esc_html( $subscription['next_billing_date'] ),
+	// 'payment_date'      => esc_html( $order['created_at'] ),
+	// 'billing_cycle'     => esc_html( $billing_cycle ),
+	// 'amount'            => $symbol . number_format( $membership_metas['amount'], 2 ),
+	// 'trial_amount'      => $symbol . number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ),
+	// 'coupon_discount'   => isset( $order['coupon_discount'] ) ? ( ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] == 'percent' ) ? $order['coupon_discount'] . '%' : $symbol . $order['coupon_discount'] ) : '',
+	// 'coupon'            => esc_html( $order['coupon'] ?? '' ),
+	// 'total'             => $symbol . number_format( $total, 2 ),
+	// );
 	//
-	//      $template_file = locate_template( 'payment-successful-email.php' );
+	// $template_file = locate_template( 'payment-successful-email.php' );
 	//
-	//      if ( ! $template_file ) {
-	//          $template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/payment-successful-email.php';
-	//      }
-	//      ob_start();
-	//      require $template_file;
+	// if ( ! $template_file ) {
+	// $template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/payment-successful-email.php';
+	// }
+	// ob_start();
+	// require $template_file;
 	//
-	//      $message = ob_get_clean();
-	//      $message = apply_filters( 'ur_membership_payment_successful_email_custom_template', $message, $subject );
-	//      $headers = \UR_Emailer::ur_get_header();
+	// $message = ob_get_clean();
+	// $message = apply_filters( 'ur_membership_payment_successful_email_custom_template', $message, $subject );
+	// $headers = \UR_Emailer::ur_get_header();
 	//
-	//      return wp_mail( $user->user_email, $subject, $message, $headers );
-	//  }
+	// return wp_mail( $user->user_email, $subject, $message, $headers );
+	// }
 
 	/**
 	 * Validate email fields
