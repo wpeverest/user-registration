@@ -168,7 +168,7 @@ function render_paypal_settings( $membership_details ) {
 						<label
 							for="ur-input-type-cancel-url"><?php esc_html_e( 'Cancel Url', 'user-registration' ); ?>
 							<span class="user-registration-help-tip tooltipstered"
-									data-tip="<?php echo __( 'Endpoint set for handling paypal cancel api.' ); ?>"></span>
+									data-tip="<?php echo __( 'Endpoint set for handling paypal cancel api.', 'user-registration' ); ?>"></span>
 						</label>
 					</div>
 
@@ -197,7 +197,7 @@ function render_paypal_settings( $membership_details ) {
 						<label
 							for="ur-input-type-return-url"><?php esc_html_e( 'Return Url', 'user-registration' ); ?>
 							<span class="user-registration-help-tip tooltipstered"
-									data-tip="<?php echo __( 'Redirect url after the payment process, also used as notify_url for PayPal IPN.' ); ?>"></span>
+									data-tip="<?php echo __( 'Redirect url after the payment process, also used as notify_url for PayPal IPN.', 'user-registration' ); ?>"></span>
 						</label>
 					</div>
 					<div
@@ -323,7 +323,7 @@ function render_bank_settings( $membership_details ) {
 			<div class="bank-settings">
 				<?php
 				$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment&method=bank';
-				$message      = esc_html__( 'Your Bank Setup is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
+				$message      = esc_html__( 'Your Bank Setup is incomplete, please complete your setup from the link below to continue (No need to refresh this page)', 'user-registration' );
 
 				?>
 				<p><?php echo "$message"; ?></p>

@@ -1141,7 +1141,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			}
 
 			if ( empty( $role_list ) ) {
-				$role_list['none'] = _x( 'None', 'no user roles' );
+				$role_list['none'] = _x( 'None', 'no user roles', 'user-registration' );
 			}
 
 			/**

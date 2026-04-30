@@ -1135,8 +1135,17 @@ class MembershipService {
 
 		$membership_group_repository = new MembershipGroupRepository();
 		$membership_group_service    = new MembershipGroupService();
-		$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
-		$user_membership_group_ids   = array();
+		$membership_id               = null;
+		if ( is_array( $membership ) && isset( $membership['ID'] ) ) {
+			$membership_id = $membership['ID'];
+		}
+
+		if ( empty( $membership_id ) ) {
+			return 'register';
+		}
+
+		$current_membership_group  = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
+		$user_membership_group_ids = array();
 
 		if ( empty( $user_membership_ids ) ) {
 			return 'register';

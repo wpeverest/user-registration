@@ -518,7 +518,7 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 							if ( $user_object->first_name && $user_object->last_name ) {
 								$row .= sprintf(
 									/* translators: 1: User's first name, 2: Last name. */
-									_x( '%1$s %2$s', 'Display name based on first name and last name' ),
+									_x( '%1$s %2$s', 'Display name based on first name and last name', 'user-registration' ),
 									$user_object->first_name,
 									$user_object->last_name
 								);
@@ -530,7 +530,7 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 								$row .= sprintf(
 									'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
 									/* translators: Hidden accessibility text. */
-									_x( 'Unknown', 'name' )
+									_x( 'Unknown', 'name', 'user-registration' )
 								);
 							}
 							break;
@@ -864,7 +864,7 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 			}
 
 			if ( empty( $role_list ) ) {
-				$role_list['none'] = _x( 'None', 'no user roles' );
+				$role_list['none'] = _x( 'None', 'no user roles', 'user-registration' );
 			}
 
 			/**
