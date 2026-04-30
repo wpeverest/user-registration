@@ -10782,6 +10782,34 @@ if ( ! function_exists( 'ur_get_payment_setup_handled_status' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_is_paypal_old_installation' ) ) {
+	/**
+	 * Determines if the current site has legacy PayPal (IPN/NVP) data.
+	 *
+	 * Checks for the presence of actual legacy option values in the DB as the
+	 * source of truth, avoiding reliance on urm_is_new_installation which can
+	 * be incorrectly set for users who upgrade from an older version.
+	 *
+	 * @return bool True for old/legacy PayPal installations, false for new ones.
+	 */
+	function ur_is_paypal_old_installation() {
+		$has_live_legacy_data = '' !== get_option( 'user_registration_global_paypal_email_address', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_test_email_address', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_live_email_address', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_cancel_url', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_return_url', '' );
+
+		if ( $has_live_legacy_data ) {
+			if ( ! ur_string_to_bool( get_option( 'urm_is_legacy_paypal_user', false ) ) ) {
+				update_option( 'urm_is_legacy_paypal_user', 1 );
+			}
+			return true;
+		}
+
+		return ur_string_to_bool( get_option( 'urm_is_legacy_paypal_user', false ) );
+	}
+}
+
 if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 	/**
 	 * Get payment connection statuses for available modules.

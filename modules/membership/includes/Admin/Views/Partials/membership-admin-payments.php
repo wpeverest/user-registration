@@ -74,7 +74,7 @@ function render_paypal_settings( $membership_details ) {
 			class="ur-d-flex ur-payment-option-header"
 			style="gap: 20px; justify-content: space-between;"
 		>
-			<label><?php echo __( 'Paypal', 'user-registration' ); ?></label>
+			<label><?php echo __( 'PayPal', 'user-registration' ); ?></label>
 			<div class="ur-toggle-section m1-auto">
 				<span class="user-registration-toggle-form">
 					<input
@@ -93,7 +93,7 @@ function render_paypal_settings( $membership_details ) {
 			 data-target-id="ur-membership-paypal-toggle-container"
 			 style="<?php echo $is_incomplete ? '' : 'display:none'; ?>">
 			<?php
-			$message      = esc_html__( 'Your Paypal settings is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
+			$message      = esc_html__( 'Your PayPal settings is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
 			$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment&method=paypal';
 			?>
 			<div id="settings-section" class="user-registration-payment__settings">
@@ -102,7 +102,7 @@ function render_paypal_settings( $membership_details ) {
 				   target="_blank">
 					<?php echo esc_html__( 'Settings', 'user-registration' ); ?>
 					>
-					<?php echo esc_html__( 'Paypal Settings', 'user-registration' ); ?>
+					<?php echo esc_html__( 'PayPal Settings', 'user-registration' ); ?>
 				</a>
 			</div>
 			<?php
@@ -122,7 +122,7 @@ function render_paypal_settings( $membership_details ) {
 						class="ur-input-type-membership-email ur-admin-template">
 						<div class="ur-field" data-field-key="paypal_email">
 							<input type="email"
-								   data-key-name="<?php esc_html_e( 'Paypal Email', 'user-registration' ); ?>"
+								   data-key-name="<?php esc_html_e( 'PayPal Email', 'user-registration' ); ?>"
 								   id="ur-input-type-paypal-mode"
 								   name="ur_membership_paypal_mode"
 								   style="width: 100%"
@@ -139,7 +139,7 @@ function render_paypal_settings( $membership_details ) {
 					 style="gap:20px;">
 					<div class="ur-label">
 						<label
-							for="ur-input-type-paypal-email"><?php esc_html_e( 'Paypal Email', 'user-registration' ); ?>
+							for="ur-input-type-paypal-email"><?php esc_html_e( 'PayPal Email', 'user-registration' ); ?>
 							<span style="color:red">*</span>
 						</label>
 					</div>
@@ -147,7 +147,7 @@ function render_paypal_settings( $membership_details ) {
 						class="ur-input-type-membership-email ur-admin-template">
 						<div class="ur-field" data-field-key="paypal_email">
 							<input type="email"
-								   data-key-name="<?php esc_html_e( 'Paypal Email', 'user-registration' ); ?>"
+								   data-key-name="<?php esc_html_e( 'PayPal Email', 'user-registration' ); ?>"
 								   id="ur-input-type-paypal-email"
 								   name="ur_membership_paypal_email"
 								   style="width: 100%"
@@ -197,7 +197,7 @@ function render_paypal_settings( $membership_details ) {
 						<label
 							for="ur-input-type-return-url"><?php esc_html_e( 'Return Url', 'user-registration' ); ?>
 							<span class="user-registration-help-tip tooltipstered"
-								  data-tip="<?php echo __( "Redirect url after the payment process, also used as notify_url for Paypal IPN." ); ?>"></span>
+								  data-tip="<?php echo __( "Redirect url after the payment process, also used as notify_url for PayPal IPN." ); ?>"></span>
 						</label>
 					</div>
 					<div

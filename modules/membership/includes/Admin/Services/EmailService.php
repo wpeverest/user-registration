@@ -203,8 +203,11 @@ class EmailService {
 		$headers = \UR_Emailer::ur_get_header();
 
 		if ( ur_string_to_bool( get_option( 'user_registration_enable_payment_success_email', true ) ) ) {
-			\UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id );
+			return \UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id );
+
 		}
+
+		return false;
 	}
 
 	/**

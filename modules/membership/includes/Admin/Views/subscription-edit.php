@@ -454,7 +454,7 @@ $payment_method = $subscription_order['payment_method'] ?? 'bank';
 						</div>
 					</div>
 					<?php
-					if ( UR_PRO_ACTIVE ) {
+					if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URMembership\Admin\Services\SubscriptionEventsService' ) ) {
 						$subscription_events_service = new WPEverest\URMembership\Admin\Services\SubscriptionEventsService();
 						$limit                       = 10;
 						$events                      = $subscription_events_service->get_events( $subscription['ID'], $limit );

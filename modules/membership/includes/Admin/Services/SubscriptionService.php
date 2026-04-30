@@ -16,6 +16,7 @@ use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 use WPEverest\URMembership\Admin\Services\CouponService;
+use WPEverest\URMembership\Admin\Services\Paypal\NewPaypalService;
 
 class SubscriptionService {
 
@@ -194,7 +195,7 @@ class SubscriptionService {
 	public function cancel_subscription( $order, $subscription ) {
 		switch ( $order['payment_method'] ) {
 			case 'paypal':
-				$paypal_service = new PaypalService();
+				$paypal_service = new NewPaypalService();
 
 				return $paypal_service->cancel_subscription( $order, $subscription );
 
@@ -218,8 +219,8 @@ class SubscriptionService {
 		$response = array( 'status' => false );
 		switch ( $order['payment_method'] ) {
 			case 'paypal':
-				$paypal_service = new PaypalService();
-				$logger->notice( 'Paypal reactivation Reached', array( 'source' => 'urm-reactivation-log' ) );
+				$paypal_service = new NewPaypalService();
+				$logger->notice( 'PayPal reactivation Reached', array( 'source' => 'urm-reactivation-log' ) );
 				return $paypal_service->reactivate_subscription( $subscription['subscription_id'] );
 				break;
 			case 'stripe':
@@ -1197,7 +1198,7 @@ class SubscriptionService {
 		update_user_meta( $subscription['member_id'], 'urm_is_payment_retrying', $retry_count + 1 );
 		switch ( $subscription['payment_method'] ) {
 			case 'paypal':
-				$paypal_service = new PaypalService();
+				$paypal_service = new NewPaypalService();
 				$paypal_service->retry_subscription( $subscription );
 				break;
 			case 'stripe':
