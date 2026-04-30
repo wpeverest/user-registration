@@ -136,6 +136,8 @@ class UR_Admin_Export_Users {
 					'meta_query' => $form_meta_query, //phpcs:ignore
 					'number'     => $batch_size,
 					'offset'     => $offset,
+					'orderby'    => 'registered',
+					'order'      => 'ASC',
 				)
 			);
 
