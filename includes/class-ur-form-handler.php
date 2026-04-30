@@ -30,7 +30,7 @@ class UR_Form_Handler {
 		add_action( 'template_redirect', array( __CLASS__, 'save_change_password' ) );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_login' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_registration' ), 20 );
-		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 1 );
+		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
 		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
 		add_action( 'user_registration_save_profile_details', array( __CLASS__, 'ur_update_user_ip_after_profile_update' ), 10, 2 );
