@@ -339,7 +339,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 						'default'  => '',
 					),
 					array(
-						'title'    => __( 'Publishable key', 'user-registration' ),
+						'title'    => __( 'Test Publishable key', 'user-registration' ),
 						'desc'     => __( 'Stripe publishable key in test mode.', 'user-registration' ),
 						'id'       => 'user_registration_stripe_test_publishable_key',
 						'type'     => 'text',
@@ -348,7 +348,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 						'default'  => '',
 					),
 					array(
-						'title'    => __( 'Secret key', 'user-registration' ),
+						'title'    => __( 'Test Secret key', 'user-registration' ),
 						'desc'     => __( 'Stripe secret key in test mode.', 'user-registration' ),
 						'id'       => 'user_registration_stripe_test_secret_key',
 						'type'     => 'text',
@@ -357,7 +357,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 						'default'  => '',
 					),
 					array(
-						'title'    => __( 'Publishable Key', 'user-registration' ),
+						'title'    => __( 'Live Publishable Key', 'user-registration' ),
 						'desc'     => __( 'Stripe publishable key in live mode.', 'user-registration' ),
 						'id'       => 'user_registration_stripe_live_publishable_key',
 						'type'     => 'text',
@@ -366,7 +366,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 						'default'  => '',
 					),
 					array(
-						'title'    => __( 'Secret key', 'user-registration' ),
+						'title'    => __( 'Live Secret key', 'user-registration' ),
 						'desc'     => __( 'Stripe secret key in live mode.', 'user-registration' ),
 						'id'       => 'user_registration_stripe_live_secret_key',
 						'type'     => 'text',

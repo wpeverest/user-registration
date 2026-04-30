@@ -157,7 +157,23 @@ class User_Registration_Stripe_Module {
 			$publishable_key = $form_data[ sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) ];
 			$secret_key      = $form_data[ sprintf( 'user_registration_stripe_%s_secret_key', $mode ) ];
 
-			\Stripe\Stripe::setApiKey( $secret_key );
+			if ( empty( $secret_key ) ) {
+				$response['status']  = false;
+				$response['message'] = esc_html__( 'Stripe secret key is missing.', 'user-registration' );
+				return $response;
+			}
+
+			// Detect mode from key
+			if ( strpos( $secret_key, 'sk_test_' ) === 0 ) {
+
+				if ( 'live' === $mode ) {
+					$response['status']  = false;
+					$response['message'] = esc_html__( 'Test key used while Live mode is selected.', 'user-registration' );
+					return $response;
+				}
+			}
+
+			\Stripe\Stripe::setApiKey( $secret_key ); // Replace with your actual key
 
 			try {
 				$customers = \Stripe\Customer::all( array( 'limit' => 1 ) );
