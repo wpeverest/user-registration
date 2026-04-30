@@ -1177,11 +1177,30 @@ class StripeService {
 					),
 				)
 			);
+
+			// For team subscriptions the total amount differs from the base membership price,
+			// so resolve a Stripe price that matches the actual charged amount.
+			if ( $team_id && $total_amount > 0 ) {
+				$effective_price_id = $this->ensure_price_in_stripe(
+					'subscription',
+					$stripe_product_details['product_id'] ?? '',
+					$stripe_product_details['price_id'] ?? '',
+					$total_amount,
+					$currency,
+					array(
+						'subscription_duration' => $subscription_duration,
+						'subscription_value'    => $subscription_value,
+					)
+				);
+			} else {
+				$effective_price_id = $stripe_product_details['price_id'];
+			}
+
 			$subscription_details = array(
 				'customer' => $customer->id,
 				'items'    => array(
 					array(
-						'price' => $stripe_product_details['price_id'],
+						'price' => $effective_price_id,
 					),
 				),
 			);
