@@ -409,6 +409,11 @@ class OrdersListTable extends \UR_List_Table {
 		}
 		$symbol = ur_get_currency_symbol( $currency );
 
+		if ( ! empty( $order_detail['trial_status'] ) && 'on' === $order_detail['trial_status'] ) {
+			$formatted_amount = number_format( 0, $decimals, $decimal_separator, $thousands_separator );
+			return 'right' === $symbol_pos ? $formatted_amount . ' ' . $symbol : $symbol . $formatted_amount;
+		}
+
 		if ( isset( $item['subscription_id'] ) ) {
 			$subscription = ( new MembersSubscriptionRepository() )->get_subscription_by_subscription_id( absint( $item['subscription_id'] ) );
 			if ( ! empty( $subscription ) && ! empty( $subscription['coupon'] ) ) {

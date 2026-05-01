@@ -1414,12 +1414,38 @@ class StripeService {
 			$three_ds2_source = $subscription->latest_invoice->payment_intent->next_action->use_stripe_sdk->three_d_secure_2_source ?? '';
 
 			if ( 'active' === $subscription_status || 'trialing' === $subscription_status || ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ) {
-				$status = ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ? 'pending' : 'completed';
-				$this->members_orders_repository->update(
+				$status                    = ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ? 'pending' : 'completed';
+				$payment_intent_id_to_save = $subscription->latest_invoice->payment_intent->id ?? null;
+				$update_data               = array( 'status' => $status );
+				if ( ! empty( $payment_intent_id_to_save ) ) {
+					$update_data['transaction_id'] = $payment_intent_id_to_save;
+				}
+
+				PaymentGatewayLogging::log_debug(
+					'stripe',
+					'Updating order with subscription activation data' . "\n" . wp_json_encode(
+						array(
+							'order_id'       => $member_order['ID'] ?? null,
+							'transaction_id' => $payment_intent_id_to_save,
+							'status'         => $status,
+						),
+						JSON_PRETTY_PRINT
+					)
+				);
+
+				$update_result = $this->members_orders_repository->update(
 					$member_order['ID'],
-					array(
-						'status'         => $status,
-						'transaction_id' => $subscription->latest_invoice->payment_intent->id,
+					$update_data
+				);
+
+				PaymentGatewayLogging::log_debug(
+					'stripe',
+					'Order update result after subscription activation' . "\n" . wp_json_encode(
+						array(
+							'order_id'      => $member_order['ID'] ?? null,
+							'update_result' => $update_result,
+						),
+						JSON_PRETTY_PRINT
 					)
 				);
 
@@ -1863,19 +1889,46 @@ class StripeService {
 
 		$existing_order = $order_repository->get_order_by_transaction_id( $payment_intent_id );
 		if ( empty( $existing_order ) ) {
-			$order_data                                   = $order_service->prepare_orders_data( $order_info, $member_id, $current_subscription );
-			$order_data['orders_data']['status']          = 'completed';
-			$order_data['orders_data']['user_id']         = $member_id;
-			$order_data['orders_data']['created_by']      = $member_id;
-			$order_data['orders_data']['trial_status']    = 'off';
-			$order_data['orders_data']['notes']           = sanitize_text_field( esc_html__( 'Generated with stripe webhook', 'user-registration' ) );
-			$order_data['orders_data']['total_amount']    = $membership_metas['amount'];
-			$order_data['orders_data']['transaction_id']  = $payment_intent_id ? sanitize_text_field( $payment_intent_id ) : '';
-			$order_data['orders_data']['subscription_id'] = $current_subscription['sub_id'];
+			// Fallback: if registration created an order before the payment_intent_id was persisted,
+			// update that order instead of creating a duplicate.
+			$existing_by_subscription = $order_repository->get_order_by_subscription( $current_subscription['sub_id'] );
+			if ( ! empty( $existing_by_subscription ) && empty( $existing_by_subscription['transaction_id'] ) && 'on' !== ( $existing_by_subscription['trial_status'] ?? 'off' ) ) {
+				PaymentGatewayLogging::log_general(
+					'stripe',
+					'Found existing order by subscription ID — updating instead of creating duplicate' . "\n" . wp_json_encode(
+						array(
+							'event_type'      => 'existing_order_updated_by_webhook',
+							'order_id'        => $existing_by_subscription['ID'],
+							'subscription_id' => $current_subscription['sub_id'],
+							'transaction_id'  => $payment_intent_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+					'notice'
+				);
+				$order_repository->update(
+					$existing_by_subscription['ID'],
+					array(
+						'transaction_id' => sanitize_text_field( $payment_intent_id ),
+						'status'         => 'completed',
+					)
+				);
+				$order_id = $existing_by_subscription['ID'];
+			} else {
+				$order_data                                   = $order_service->prepare_orders_data( $order_info, $member_id, $current_subscription );
+				$order_data['orders_data']['status']          = 'completed';
+				$order_data['orders_data']['user_id']         = $member_id;
+				$order_data['orders_data']['created_by']      = $member_id;
+				$order_data['orders_data']['trial_status']    = 'off';
+				$order_data['orders_data']['notes']           = sanitize_text_field( esc_html__( 'Generated with stripe webhook', 'user-registration' ) );
+				$order_data['orders_data']['total_amount']    = $membership_metas['amount'];
+				$order_data['orders_data']['transaction_id']  = $payment_intent_id ? sanitize_text_field( $payment_intent_id ) : '';
+				$order_data['orders_data']['subscription_id'] = $current_subscription['sub_id'];
 
-			$order_id = $order_repository->create( $order_data );
+				$order_id = $order_repository->create( $order_data );
+			}
 		} else {
-			$order_id = $existing_order['id'] ?? '';
+			$order_id = $existing_order['ID'] ?? $existing_order['id'] ?? '';
 		}
 
 		PaymentGatewayLogging::log_general(

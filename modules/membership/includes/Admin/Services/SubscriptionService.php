@@ -98,7 +98,7 @@ class SubscriptionService {
 			$status      = 'pending';
 		} elseif ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trail date
 			$expiry_date = self::get_expiry_date( $data['membership_data']['start_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
-			$status      = 'on' === $membership_meta['trial_status'] ? 'trial' : 'pending';
+			$status      = 'pending';
 		}
 
 		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
