@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - master
+            - UR-4247-tweak/stripe-sdk-update-for-urm
         workflow_dispatch:
 jobs:
     sync:
