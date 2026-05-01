@@ -1241,7 +1241,7 @@ class StripeService {
 			if ( ! empty( $order_detail['coupon'] ) ) {
 				$coupon_details = ur_get_coupon_details( $order_detail['coupon'] );
 				if ( ! empty( $coupon_details['stripe_coupon_id'] ) ) {
-					$subscription_details['coupon'] = $coupon_details['stripe_coupon_id'];
+					$subscription_details['discounts'] = array( array( 'coupon' => $coupon_details['stripe_coupon_id'] ) );
 				}
 			}
 
@@ -1322,7 +1322,7 @@ class StripeService {
 									)
 								);
 
-								$subscription_details['coupon'] = $coupon->id;
+								$subscription_details['discounts'] = array( array( 'coupon' => $coupon->id ) );
 							}
 						}
 					}
@@ -1394,7 +1394,7 @@ class StripeService {
 					'customer_id' => $customer_id,
 					'member_id'   => $member_id,
 					'has_trial'   => isset( $subscription_details['trial_end'] ),
-					'has_coupon'  => isset( $subscription_details['coupon'] ),
+					'has_coupon'  => isset( $subscription_details['discounts'] ),
 				)
 			);
 
