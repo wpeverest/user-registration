@@ -304,4 +304,26 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 			$order_meta
 		);
 	}
+
+	/**
+	 * Get pending PayPal one-time payment orders created on or after a given timestamp.
+	 *
+	 * @param int $since Unix timestamp.
+	 * @return array
+	 */
+	public function get_pending_paypal_one_time_orders( $since ) {
+		$result = $this->wpdb()->get_results(
+			$this->wpdb()->prepare(
+				"SELECT * FROM {$this->table}
+				 WHERE payment_method = 'paypal'
+				 AND order_type = 'paid'
+				 AND status = 'pending'
+				 AND created_at >= %s",
+				gmdate( 'Y-m-d H:i:s', $since )
+			),
+			ARRAY_A
+		);
+
+		return $result ? $result : array();
+	}
 }

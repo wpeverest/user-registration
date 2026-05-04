@@ -1300,6 +1300,22 @@ class SubscriptionService {
 							return;
 						}
 						break;
+					case 'paypal':
+						try {
+							$paypal_service = new NewPaypalService();
+							$paypal_service->run_missed_subscription_backfill( $last_synced, $now );
+							$paypal_service->run_missed_payment_backfill( $last_synced, $now );
+							$paypal_service->run_missed_onetime_payment_backfill( $last_synced, $now );
+						} catch ( \Exception $e ) {
+							ur_get_logger()->error(
+								sprintf(
+									__( 'Error fetching missed events for PayPal: %s', 'user-registration' ),
+									$e->getMessage()
+								),
+								array( 'source' => 'urm-missed-payment-backfill' )
+							);
+						}
+						break;
 					default:
 						do_action( 'urm_fetch_and_process_missed_payment_events_for_gateway', $gateway_key, $last_synced, $now );
 						break;

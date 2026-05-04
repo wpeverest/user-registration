@@ -2540,6 +2540,340 @@ class NewPaypalService {
 	 *
 	 * @return string
 	 */
+	// -------------------------------------------------------------------------
+	// Missed-payment backfill (hourly cron)
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Whether REST API credentials (client ID + secret) are present for the current mode.
+	 *
+	 * @return bool
+	 */
+	public function has_rest_credentials() {
+		$options = $this->get_paypal_rest_credentials();
+		return ! empty( trim( (string) ( $options['client_id'] ?? '' ) ) )
+			&& ! empty( trim( (string) ( $options['secret_key'] ?? '' ) ) );
+	}
+
+	/**
+	 * Map a PayPal subscription status to the local system status string.
+	 *
+	 * @param string $paypal_status Raw PayPal status (e.g. "ACTIVE").
+	 * @return string Local status string, or empty string if unmapped.
+	 */
+	private function map_paypal_subscription_status( $paypal_status ) {
+		$map = array(
+			'ACTIVE'           => 'active',
+			'SUSPENDED'        => 'suspended',
+			'CANCELLED'        => 'canceled',
+			'EXPIRED'          => 'expired',
+			'APPROVAL_PENDING' => 'pending',
+			'APPROVED'         => 'pending',
+		);
+		$key = strtoupper( (string) $paypal_status );
+		return isset( $map[ $key ] ) ? $map[ $key ] : '';
+	}
+
+	/**
+	 * List transactions for a PayPal subscription within a time window.
+	 *
+	 * @param string $subscription_id PayPal subscription ID (I-XXXX).
+	 * @param string $start_time      ISO 8601 UTC start time.
+	 * @param string $end_time        ISO 8601 UTC end time.
+	 * @param array  $paypal_options
+	 * @return array|WP_Error
+	 */
+	private function get_paypal_subscription_transactions( $subscription_id, $start_time, $end_time, $paypal_options ) {
+		$path = sprintf(
+			'/v1/billing/subscriptions/%s/transactions?start_time=%s&end_time=%s',
+			rawurlencode( $subscription_id ),
+			rawurlencode( $start_time ),
+			rawurlencode( $end_time )
+		);
+		return $this->paypal_rest_request( 'GET', $path, null, $paypal_options );
+	}
+
+	/**
+	 * Fetch details of a PayPal checkout order (used for one-time payments).
+	 *
+	 * @param string $order_id       PayPal order ID.
+	 * @param array  $paypal_options
+	 * @return array|WP_Error
+	 */
+	private function get_paypal_order_details( $order_id, $paypal_options ) {
+		return $this->paypal_rest_request(
+			'GET',
+			'/v2/checkout/orders/' . rawurlencode( $order_id ),
+			null,
+			$paypal_options
+		);
+	}
+
+	/**
+	 * Backfill subscription status changes missed by webhooks.
+	 *
+	 * Iterates every local subscription paid via PayPal that has a stored
+	 * PayPal subscription ID, fetches the current status from PayPal, and
+	 * updates the local record when the statuses differ. Also refreshes
+	 * next_billing_date / expiry_date from PayPal's billing_info.
+	 *
+	 * A 100 ms pause between API calls prevents burst rate-limiting.
+	 *
+	 * @param int $last_synced Unix timestamp of the previous sync.
+	 * @param int $now         Current Unix timestamp.
+	 * @return void
+	 */
+	public function run_missed_subscription_backfill( $last_synced, $now ) {
+		if ( ! $this->has_rest_credentials() ) {
+			return;
+		}
+
+		$paypal_options = $this->get_paypal_rest_credentials();
+		$subscriptions  = $this->members_subscription_repository->get_paypal_subscriptions_for_backfill();
+
+		foreach ( $subscriptions as $subscription ) {
+			$paypal_subscription_id = isset( $subscription['subscription_id'] ) ? $subscription['subscription_id'] : '';
+
+			if ( empty( $paypal_subscription_id ) ) {
+				continue;
+			}
+
+			$paypal_subscription = $this->get_paypal_subscription( $paypal_subscription_id, $paypal_options );
+
+			if ( is_wp_error( $paypal_subscription ) ) {
+				PaymentGatewayLogging::log_error(
+					'paypal',
+					sprintf(
+						'[Backfill] Could not fetch subscription %s: %s',
+						$paypal_subscription_id,
+						$paypal_subscription->get_error_message()
+					)
+				);
+				usleep( 100000 );
+				continue;
+			}
+
+			$paypal_status = $this->map_paypal_subscription_status( isset( $paypal_subscription['status'] ) ? $paypal_subscription['status'] : '' );
+
+			if ( empty( $paypal_status ) || $paypal_status === $subscription['status'] ) {
+				usleep( 100000 );
+				continue;
+			}
+
+			$update_data = array( 'status' => $paypal_status );
+
+			$next_billing_time = isset( $paypal_subscription['billing_info']['next_billing_time'] ) ? $paypal_subscription['billing_info']['next_billing_time'] : null;
+			if ( ! empty( $next_billing_time ) ) {
+				try {
+					$dt        = new \DateTime( $next_billing_time );
+					$formatted = $dt->format( 'Y-m-d H:i:s' );
+
+					$update_data['next_billing_date'] = $formatted;
+					$update_data['expiry_date']       = $formatted;
+				} catch ( \Exception $e ) {
+					// Leave dates unchanged if parsing fails.
+				}
+			}
+
+			$this->members_subscription_repository->update( $subscription['ID'], $update_data );
+
+			usleep( 100000 );
+		}
+	}
+
+	/**
+	 * Backfill missing subscription renewal payment records from PayPal.
+	 *
+	 * For each local PayPal subscription, fetches transactions from PayPal
+	 * within the sync window. Any COMPLETED transaction without a matching
+	 * local order is created. When the only existing order uses the PayPal
+	 * subscription ID as a placeholder transaction_id (set on initial sign-up),
+	 * that placeholder is deleted and replaced with the real transaction ID —
+	 * mirroring the Stripe backfill behaviour.
+	 *
+	 * @param int $last_synced Unix timestamp of the previous sync.
+	 * @param int $now         Current Unix timestamp.
+	 * @return void
+	 */
+	public function run_missed_payment_backfill( $last_synced, $now ) {
+		if ( ! $this->has_rest_credentials() ) {
+			return;
+		}
+
+		$paypal_options = $this->get_paypal_rest_credentials();
+		$start_time     = gmdate( 'Y-m-d\TH:i:s\Z', $last_synced );
+		$end_time       = gmdate( 'Y-m-d\TH:i:s\Z', $now );
+		$subscriptions  = $this->members_subscription_repository->get_paypal_subscriptions_for_backfill();
+
+		foreach ( $subscriptions as $membership_subscription ) {
+			$paypal_subscription_id = isset( $membership_subscription['subscription_id'] ) ? $membership_subscription['subscription_id'] : '';
+
+			if ( empty( $paypal_subscription_id ) ) {
+				usleep( 100000 );
+				continue;
+			}
+
+			$response = $this->get_paypal_subscription_transactions( $paypal_subscription_id, $start_time, $end_time, $paypal_options );
+
+			if ( is_wp_error( $response ) ) {
+				PaymentGatewayLogging::log_error(
+					'paypal',
+					sprintf(
+						'[Backfill] Could not fetch transactions for subscription %s: %s',
+						$paypal_subscription_id,
+						$response->get_error_message()
+					)
+				);
+				usleep( 100000 );
+				continue;
+			}
+
+			$transactions = isset( $response['transactions'] ) ? $response['transactions'] : array();
+
+			foreach ( $transactions as $transaction ) {
+				if ( 'COMPLETED' !== strtoupper( isset( $transaction['status'] ) ? $transaction['status'] : '' ) ) {
+					continue;
+				}
+
+				$transaction_id = isset( $transaction['id'] ) ? $transaction['id'] : '';
+				if ( empty( $transaction_id ) ) {
+					continue;
+				}
+
+				$existing_payment = $this->orders_repository->get_order_by_transaction_id( $transaction_id );
+				if ( ! empty( $existing_payment ) ) {
+					continue;
+				}
+
+				// Replace placeholder order (transaction_id = PayPal subscription ID) if one exists.
+				$placeholder = $this->orders_repository->get_order_by_transaction_id( $paypal_subscription_id );
+				if ( ! empty( $placeholder ) && ! empty( $placeholder['ID'] ) ) {
+					$this->orders_repository->delete( $placeholder['ID'] );
+				}
+
+				$gross_amount = (float) ( isset( $transaction['amount_with_breakdown']['gross_amount']['value'] ) ? $transaction['amount_with_breakdown']['gross_amount']['value'] : 0 );
+				$time_string  = isset( $transaction['time'] ) ? $transaction['time'] : '';
+				$created_at   = ! empty( $time_string ) ? gmdate( 'Y-m-d H:i:s', strtotime( $time_string ) ) : gmdate( 'Y-m-d H:i:s' );
+
+				$order_data = array(
+					'orders_data'      => array(
+						'user_id'         => absint( $membership_subscription['user_id'] ),
+						'item_id'         => $membership_subscription['item_id'],
+						'subscription_id' => $membership_subscription['ID'],
+						'created_by'      => $membership_subscription['user_id'],
+						'transaction_id'  => $transaction_id,
+						'payment_method'  => 'paypal',
+						'total_amount'    => $gross_amount,
+						'status'          => 'completed',
+						'order_type'      => 'subscription',
+						'trial_status'    => 'off',
+						'notes'           => 'Backfilled order for missed PayPal payment event',
+						'created_at'      => $created_at,
+					),
+					'orders_meta_data' => array(
+						array(
+							'meta_key'   => 'is_admin_created',
+							'meta_value' => false,
+						),
+					),
+				);
+
+				$this->orders_repository->create( $order_data );
+			}
+
+			usleep( 100000 );
+		}
+	}
+
+	/**
+	 * Backfill pending one-time PayPal payment orders.
+	 *
+	 * For each local pending one-time order within the sync window, checks the
+	 * PayPal order status using the order ID stored in user meta. If PayPal
+	 * reports the order as COMPLETED, the local record is updated with the
+	 * capture ID and marked as completed, and the linked subscription is
+	 * activated.
+	 *
+	 * @param int $last_synced Unix timestamp of the previous sync.
+	 * @param int $now         Current Unix timestamp.
+	 * @return void
+	 */
+	public function run_missed_onetime_payment_backfill( $last_synced, $now ) {
+		if ( ! $this->has_rest_credentials() ) {
+			return;
+		}
+
+		$paypal_options = $this->get_paypal_rest_credentials();
+		$pending_orders = $this->orders_repository->get_pending_paypal_one_time_orders( $last_synced );
+
+		foreach ( $pending_orders as $order ) {
+			$user_id         = absint( isset( $order['user_id'] ) ? $order['user_id'] : 0 );
+			$paypal_order_id = get_user_meta( $user_id, 'urm_paypal_order_id', true );
+
+			if ( empty( $user_id ) || empty( $paypal_order_id ) ) {
+				continue;
+			}
+
+			$paypal_order = $this->get_paypal_order_details( $paypal_order_id, $paypal_options );
+
+			if ( is_wp_error( $paypal_order ) ) {
+				usleep( 100000 );
+				continue;
+			}
+
+			if ( 'COMPLETED' !== strtoupper( isset( $paypal_order['status'] ) ? $paypal_order['status'] : '' ) ) {
+				usleep( 100000 );
+				continue;
+			}
+
+			$capture_id = isset( $paypal_order['purchase_units'][0]['payments']['captures'][0]['id'] )
+				? $paypal_order['purchase_units'][0]['payments']['captures'][0]['id']
+				: '';
+
+			if ( empty( $capture_id ) ) {
+				usleep( 100000 );
+				continue;
+			}
+
+			$this->orders_repository->update(
+				$order['ID'],
+				array(
+					'status'         => 'completed',
+					'transaction_id' => $capture_id,
+				)
+			);
+
+			$subscription_row_id = isset( $order['subscription_id'] ) ? $order['subscription_id'] : '';
+			if ( ! empty( $subscription_row_id ) ) {
+				$subscription = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $subscription_row_id );
+				if ( ! empty( $subscription['ID'] ) ) {
+					$this->members_subscription_repository->update(
+						$subscription['ID'],
+						array(
+							'status'     => 'active',
+							'start_date' => gmdate( 'Y-m-d 00:00:00' ),
+						)
+					);
+				}
+			}
+
+			PaymentGatewayLogging::log_transaction_success(
+				'paypal',
+				sprintf(
+					'[Backfill] One-time order ID #%s for member #%s completed via PayPal order %s (capture: %s).',
+					$order['ID'],
+					$user_id,
+					$paypal_order_id,
+					$capture_id
+				)
+			);
+
+			usleep( 100000 );
+		}
+	}
+
+	// -------------------------------------------------------------------------
+
 	public function get_webhook_url() {
 		return rest_url( 'user-registration/paypal-webhook' );
 	}
