@@ -4259,6 +4259,13 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 				}
 			}
 		} else {
+			// A numeric value is sent when the user keeps their existing profile picture
+			// (the template pre-populates the hidden field with the stored attachment ID).
+			// Only allow it if the attachment actually belongs to this user; a bare numeric
+			// ID referencing another user's media must be rejected.
+			if ( (int) get_post_field( 'post_author', $upload_file ) !== (int) $user_id ) {
+				return;
+			}
 			$attachment_id = $upload_file;
 		}
 		$attachment_id = ! empty( $attachment_id ) ? $attachment_id : '';
