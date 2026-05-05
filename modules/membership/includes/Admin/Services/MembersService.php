@@ -248,7 +248,7 @@ class MembersService {
 
 		$saved_hash = '';
 		if ( $check_just_created ) {
-			$saved_hash = get_user_meta( $user_id, 'urm_user_just_created', true );
+			$saved_hash = get_transient( 'urm_pending_login_' . $user_id );
 		}
 
 		if ( empty( $password ) ) {
@@ -273,7 +273,7 @@ class MembersService {
 			}
 		}
 
-		delete_user_meta( $user_id, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $user_id );
 		wp_clear_auth_cookie();
 		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 		wp_set_auth_cookie( $user_id, $remember );

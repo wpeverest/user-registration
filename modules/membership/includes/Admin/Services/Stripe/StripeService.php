@@ -1841,7 +1841,7 @@ class StripeService {
 		);
 
 		if ( $is_renewing ) {
-			delete_user_meta( $member_id, 'urm_user_just_created' );
+			delete_transient( 'urm_pending_login_' . $member_id );
 		}
 	}
 
@@ -1908,7 +1908,7 @@ class StripeService {
 				'member_id'       => $member_id,
 			)
 		);
-		delete_user_meta( $member_id, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $member_id );
 	}
 
 	/**
@@ -1954,7 +1954,7 @@ class StripeService {
 				)
 			);
 		}
-		delete_user_meta( $order['user_id'], 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $order['user_id'] );
 	}
 
 	/**

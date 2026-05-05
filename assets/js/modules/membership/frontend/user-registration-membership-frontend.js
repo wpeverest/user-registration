@@ -3044,12 +3044,16 @@
 						$(pointer).find("#ur-membership-registration").length >
 						0
 					) {
-						data["is_membership_active"] = $(pointer)
-							.find('input[name="urm_membership"]:checked')
-							.val();
-						data["membership_type"] = $(
-							'input[name="urm_membership"]:checked'
-						).val();
+						var membersData = ur_membership_ajax_utils.prepare_members_data();
+						if (validated_stripe_pm_id) {
+							membersData.payment_method_id = validated_stripe_pm_id;
+						}
+						data["members_data"] = JSON.stringify(membersData);
+						data["is_membership_active"] = membersData.membership;
+						data["membership_type"] = membersData.membership;
+						if (typeof ur_authorize_net !== "undefined") {
+							data["ur_authorize_net"] = ur_authorize_net;
+						}
 					}
 					if (validated_stripe_pm_id) {
 						data["urm_stripe_pm_id"] = validated_stripe_pm_id;
@@ -3072,7 +3076,9 @@
 						response.data.registration_type === "membership"
 					) {
 						flag = false;
-						ur_membership_ajax_utils.create_member(required_data);
+						var membersData = ur_membership_ajax_utils.prepare_members_data();
+						membersData.username = response.data.username;
+						ur_membership_ajax_utils.handle_response(response, membersData, required_data);
 					}
 					ajaxFlag["status"] = flag;
 				}

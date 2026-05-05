@@ -6684,7 +6684,7 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 	 * @since 3.1.5
 	 */
 	function ur_automatic_user_login( $user ) {
-		delete_user_meta( $user->ID, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $user->ID );
 		wp_clear_auth_cookie();
 		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 		wp_set_auth_cookie( $user->ID, $remember );

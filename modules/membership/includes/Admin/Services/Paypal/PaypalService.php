@@ -455,7 +455,7 @@ class PaypalService {
 			$password       = isset( $data['password'] ) ? $data['password'] : '';
 			$member_service->login_member( $member_id, true, $password );
 		}
-		delete_user_meta( $member_id, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $member_id );
 		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 	}
 
@@ -983,7 +983,7 @@ class PaypalService {
 			);
 			$email_service->send_email( $email_data, 'payment_retry_failed' );
 		}
-		delete_user_meta( $member_id, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $member_id );
 	}
 
 	/**
