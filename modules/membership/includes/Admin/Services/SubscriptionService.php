@@ -1301,6 +1301,14 @@ class SubscriptionService {
 			foreach ( $payment_gateways as $gateway_key => $gateway_details ) {
 				switch ( $gateway_key ) {
 					case 'stripe':
+						$stripe_settings = StripeService::get_stripe_settings();
+						if ( empty( $stripe_settings['secret_key'] ) ) {
+							ur_get_logger()->info(
+								'[Backfill][Stripe] Skipped — Stripe secret key not configured.',
+								array( 'source' => 'urm-missed-payment-backfill' )
+							);
+							break;
+						}
 						try {
 							$stripe_service = new StripeService();
 							$stripe_service->run_missed_subscription_backfill( $last_synced );
@@ -1315,7 +1323,7 @@ class SubscriptionService {
 								),
 								array( 'source' => 'urm-missed-payment-backfill' )
 							);
-							return;
+							break;
 						}
 						break;
 					case 'paypal':

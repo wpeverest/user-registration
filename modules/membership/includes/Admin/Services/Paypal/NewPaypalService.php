@@ -2757,15 +2757,15 @@ class NewPaypalService {
 			$events = $this->get_paypal_webhook_events( $event_type, $start_time, $end_time, $paypal_options );
 
 			if ( is_wp_error( $events ) ) {
-				PaymentGatewayLogging::log_error(
-					'paypal',
+				$logger->info(
 					'[Backfill][PayPal][Status] API error fetching events.' . "\n" . wp_json_encode(
 						array(
 							'event_type_queried' => $event_type,
 							'error'              => $events->get_error_message(),
 						),
 						JSON_PRETTY_PRINT
-					)
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
 				);
 				++$count_errors;
 				continue;
@@ -3012,38 +3012,37 @@ class NewPaypalService {
 		$end_time       = gmdate( 'Y-m-d\TH:i:s\Z', $now );
 
 		$logger->info( '[Backfill][PayPal][Payments] ---------- STARTED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+		$logger->info(
+			'[Backfill][PayPal][Payments] Starting subscription payment backfill.' . "\n" . wp_json_encode(
+				array(
+					'event_type'   => 'backfill_start',
+					'window_start' => $start_time,
+					'window_end'   => $end_time,
+					'event_types'  => array( 'PAYMENT.SALE.COMPLETED' ),
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
 
 		$events = $this->get_paypal_webhook_events( 'PAYMENT.SALE.COMPLETED', $start_time, $end_time, $paypal_options );
 
 		if ( is_wp_error( $events ) ) {
-			PaymentGatewayLogging::log_error(
-				'paypal',
+			$logger->info(
 				'[Backfill][PayPal][Payments] API error fetching PAYMENT.SALE.COMPLETED events.' . "\n" . wp_json_encode(
 					array(
 						'event_type' => 'api_error',
 						'error'      => $events->get_error_message(),
 					),
 					JSON_PRETTY_PRINT
-				)
+				),
+				array( 'source' => 'urm-missed-payment-backfill' )
 			);
 			$logger->info( '[Backfill][PayPal][Payments] ---------- ENDED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
 			return;
 		}
 
 		$total = count( $events );
-
-		$logger->info(
-			'[Backfill][PayPal][Payments] Starting subscription payment backfill.' . "\n" . wp_json_encode(
-				array(
-					'event_type'   => 'backfill_start',
-					'window_start' => gmdate( 'Y-m-d H:i:s', $last_synced ),
-					'window_end'   => gmdate( 'Y-m-d H:i:s', $now ),
-					'total_found'  => $total,
-				),
-				JSON_PRETTY_PRINT
-			),
-			array( 'source' => 'urm-missed-payment-backfill' )
-		);
 
 		$count_created = 0;
 		$count_updated = 0;
@@ -3675,14 +3674,34 @@ class NewPaypalService {
 			'info'
 		);
 
+		$existing_event_types = array();
+
 		foreach ( $webhooks as $webhook ) {
 			if ( isset( $webhook['url'] ) && $webhook['url'] === $webhook_url ) {
-				$existing_id = $webhook['id'];
+				$existing_id          = $webhook['id'];
+				$existing_event_types = isset( $webhook['event_types'] ) ? $webhook['event_types'] : array();
 				break;
 			}
 		}
 
 		if ( $existing_id ) {
+			$desired_names  = array_column( $event_types, 'name' );
+			$existing_names = array_column( $existing_event_types, 'name' );
+			sort( $desired_names );
+			sort( $existing_names );
+
+			if ( $desired_names === $existing_names ) {
+				PaymentGatewayLogging::log_general(
+					'paypal',
+					'Existing PayPal webhook already has all required event types — no update needed.' . "\n" . wp_json_encode(
+						array( 'webhook_id' => $existing_id ),
+						JSON_PRETTY_PRINT
+					),
+					'info'
+				);
+				return $existing_id;
+			}
+
 			PaymentGatewayLogging::log_general(
 				'paypal',
 				'Existing PayPal webhook found, patching event types.' . "\n" . wp_json_encode(

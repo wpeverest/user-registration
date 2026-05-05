@@ -197,6 +197,19 @@ class StripeService {
 				\Stripe\Stripe::setApiKey( $secret_key );
 				$webhook = \Stripe\WebhookEndpoint::retrieve( $existing_webhook_id );
 				if ( $webhook && $webhook->id ) {
+					$required_events  = apply_filters( 'urm_stripe_webhook_enabled_events', self::get_handled_webhook_events(), $mode );
+					$current_events   = isset( $webhook->enabled_events ) ? (array) $webhook->enabled_events : array();
+					$is_catch_all     = in_array( '*', $current_events, true );
+					$missing_events   = array_diff( $required_events, $current_events );
+
+					if ( ! $is_catch_all && ! empty( $missing_events ) ) {
+						$updated_events = array_values( array_unique( array_merge( $current_events, $required_events ) ) );
+						\Stripe\WebhookEndpoint::update(
+							$webhook->id,
+							array( 'enabled_events' => $updated_events )
+						);
+					}
+
 					return array(
 						'success'    => true,
 						'message'    => 'Webhook already exists for ' . $mode . ' mode',
