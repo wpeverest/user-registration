@@ -304,4 +304,46 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 			$order_meta
 		);
 	}
+
+	/**
+	 * Get pending PayPal one-time payment orders created on or after a given timestamp.
+	 *
+	 * @param int $since Unix timestamp.
+	 * @return array
+	 */
+	public function get_pending_paypal_one_time_orders() {
+		$result = $this->wpdb()->get_results(
+			"SELECT * FROM {$this->table}
+			 WHERE payment_method = 'paypal'
+			 AND order_type = 'paid'
+			 AND status = 'pending'",
+			ARRAY_A
+		);
+
+		return $result ? $result : array();
+	}
+
+	/**
+	 * Get completed PayPal one-time orders whose linked subscription is still pending.
+	 * Used by the backfill to activate subscriptions when the order completed but
+	 * the subscription activation step was missed.
+	 *
+	 * @return array
+	 */
+	public function get_completed_paypal_onetime_with_pending_subscription() {
+		$subs_table = $this->wpdb()->prefix . 'ur_membership_subscriptions';
+
+		$result = $this->wpdb()->get_results(
+			"SELECT o.*
+			 FROM {$this->table} o
+			 JOIN {$subs_table} s ON s.ID = o.subscription_id
+			 WHERE o.payment_method = 'paypal'
+			 AND o.order_type = 'paid'
+			 AND o.status = 'completed'
+			 AND s.status = 'pending'",
+			ARRAY_A
+		);
+
+		return $result ? $result : array();
+	}
 }

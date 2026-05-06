@@ -1151,11 +1151,11 @@ class NewPaypalService {
 					$member_id
 				) . "\n" . wp_json_encode(
 					array(
-						'paypal_subscription_id'  => $paypal_subscription_id,
-						'transaction_id'          => $paypal_subscription_id,
-						'paypal_status'           => isset( $subscription_details['status'] ) ? $subscription_details['status'] : '',
-						'subscription_status'     => $resolved_status,
-						'member_id'               => $member_id,
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'transaction_id'         => $paypal_subscription_id,
+						'paypal_status'          => isset( $subscription_details['status'] ) ? $subscription_details['status'] : '',
+						'subscription_status'    => $resolved_status,
+						'member_id'              => $member_id,
 					),
 					JSON_PRETTY_PRINT
 				)
@@ -1432,6 +1432,11 @@ class NewPaypalService {
 				$result = $this->handle_order_webhook_event( $event_type, $resource );
 				break;
 
+			case 'PAYMENT.CAPTURE.REFUNDED':
+			case 'PAYMENT.SALE.REFUNDED':
+				$result = $this->handle_refund_webhook_event( $event_type, $resource );
+				break;
+
 			case 'BILLING.SUBSCRIPTION.CREATED':
 			case 'BILLING.SUBSCRIPTION.ACTIVATED':
 			case 'BILLING.SUBSCRIPTION.UPDATED':
@@ -1586,6 +1591,68 @@ class NewPaypalService {
 	}
 
 	/**
+	 * Handle PAYMENT.CAPTURE.REFUNDED and PAYMENT.SALE.REFUNDED webhooks.
+	 *
+	 * For CAPTURE.REFUNDED the original capture ID is extracted from the 'up'
+	 * HATEOAS link in the refund resource and matched against order.transaction_id.
+	 * For SALE.REFUNDED the original sale ID is in resource.sale_id.
+	 *
+	 * @param string $event_type
+	 * @param array  $resource
+	 * @return bool
+	 */
+	private function handle_refund_webhook_event( $event_type, $resource ) {
+		if ( 'PAYMENT.CAPTURE.REFUNDED' === $event_type ) {
+			$transaction_id = null;
+			$links          = isset( $resource['links'] ) ? $resource['links'] : array();
+			foreach ( $links as $link ) {
+				if ( 'up' === ( isset( $link['rel'] ) ? $link['rel'] : '' ) && ! empty( $link['href'] ) ) {
+					$transaction_id = basename( rtrim( $link['href'], '/' ) );
+					break;
+				}
+			}
+		} else {
+			// PAYMENT.SALE.REFUNDED: sale_id is the original sale transaction ID.
+			$transaction_id = isset( $resource['sale_id'] ) ? $resource['sale_id'] : null;
+		}
+
+		if ( empty( $transaction_id ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				sprintf( 'PayPal %s webhook: could not determine original transaction ID.', $event_type ),
+				array(
+					'error_code' => 'NO_TRANSACTION_ID',
+					'event_type' => $event_type,
+				)
+			);
+			return false;
+		}
+
+		$order = $this->orders_repository->get_order_by_transaction_id( $transaction_id );
+		if ( empty( $order ) ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				sprintf( 'PayPal %s webhook: no local order for transaction %s.', $event_type, $transaction_id ),
+				array(
+					'error_code'     => 'ORDER_NOT_FOUND',
+					'transaction_id' => $transaction_id,
+				)
+			);
+			return false;
+		}
+
+		$this->orders_repository->update( $order['ID'], array( 'status' => 'refunded' ) );
+
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			sprintf( 'PayPal %s: marked order %d as refunded (transaction %s).', $event_type, $order['ID'], $transaction_id ),
+			'success'
+		);
+
+		return true;
+	}
+
+	/**
 	 * Handle subscription-related REST webhook.
 	 *
 	 * @param string $event_type
@@ -1614,7 +1681,7 @@ class NewPaypalService {
 			'BILLING.SUBSCRIPTION.CREATED'   => 'pending',
 			'BILLING.SUBSCRIPTION.ACTIVATED' => 'active',
 			'BILLING.SUBSCRIPTION.UPDATED'   => isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'active',
-			'BILLING.SUBSCRIPTION.SUSPENDED' => 'suspended',
+			'BILLING.SUBSCRIPTION.SUSPENDED' => 'pending',
 			'BILLING.SUBSCRIPTION.CANCELLED' => 'canceled',
 			'BILLING.SUBSCRIPTION.EXPIRED'   => 'expired',
 		);
@@ -2540,6 +2607,986 @@ class NewPaypalService {
 	 *
 	 * @return string
 	 */
+	// -------------------------------------------------------------------------
+	// Missed-payment backfill (hourly cron)
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Whether REST API credentials (client ID + secret) are present for the current mode.
+	 *
+	 * @return bool
+	 */
+	public function has_rest_credentials() {
+		$options = $this->get_paypal_rest_credentials();
+		return ! empty( trim( (string) ( $options['client_id'] ?? '' ) ) )
+			&& ! empty( trim( (string) ( $options['secret_key'] ?? '' ) ) );
+	}
+
+	/**
+	 * Map a PayPal subscription status to the local system status string.
+	 *
+	 * @param string $paypal_status Raw PayPal status (e.g. "ACTIVE").
+	 * @return string Local status string, or empty string if unmapped.
+	 */
+	private function map_paypal_subscription_status( $paypal_status ) {
+		$map = array(
+			'ACTIVE'           => 'active',
+			'SUSPENDED'        => 'pending',
+			'CANCELLED'        => 'canceled',
+			'EXPIRED'          => 'expired',
+			'APPROVAL_PENDING' => 'pending',
+			'APPROVED'         => 'pending',
+		);
+		$key = strtoupper( (string) $paypal_status );
+		return isset( $map[ $key ] ) ? $map[ $key ] : '';
+	}
+
+	/**
+	 * Fetch all PayPal webhook events of a given type within a time range.
+	 * Follows HATEOAS next links to collect all pages.
+	 *
+	 * @param string $event_type     PayPal event type (e.g. BILLING.SUBSCRIPTION.ACTIVATED).
+	 * @param string $start_time     ISO 8601 UTC start time.
+	 * @param string $end_time       ISO 8601 UTC end time.
+	 * @param array  $paypal_options REST credentials.
+	 * @return array|\WP_Error Flat array of event objects, or WP_Error on failure.
+	 */
+	private function get_paypal_webhook_events( $event_type, $start_time, $end_time, $paypal_options ) {
+		$all_events = array();
+		$path       = sprintf(
+			'/v1/notifications/webhooks-events?event_type=%s&start_time=%s&end_time=%s&page_size=50',
+			rawurlencode( $event_type ),
+			rawurlencode( $start_time ),
+			rawurlencode( $end_time )
+		);
+
+		while ( ! empty( $path ) ) {
+			$response = $this->paypal_rest_request( 'GET', $path, null, $paypal_options );
+
+			if ( is_wp_error( $response ) ) {
+				return $response;
+			}
+
+			$events     = isset( $response['events'] ) ? $response['events'] : array();
+			$all_events = array_merge( $all_events, $events );
+
+			// Follow HATEOAS next link for the next page.
+			$path = null;
+			if ( ! empty( $response['links'] ) ) {
+				foreach ( $response['links'] as $link ) {
+					if ( 'next' === ( $link['rel'] ?? '' ) && ! empty( $link['href'] ) ) {
+						$parsed = parse_url( $link['href'] );
+						$path   = isset( $parsed['path'] ) ? $parsed['path'] : '';
+						if ( ! empty( $parsed['query'] ) ) {
+							$path .= '?' . $parsed['query'];
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		return $all_events;
+	}
+
+	/**
+	 * Fetch details of a PayPal checkout order (used for one-time payments).
+	 *
+	 * @param string $order_id       PayPal order ID.
+	 * @param array  $paypal_options
+	 * @return array|WP_Error
+	 */
+	private function get_paypal_order_details( $order_id, $paypal_options ) {
+		return $this->paypal_rest_request(
+			'GET',
+			'/v2/checkout/orders/' . rawurlencode( $order_id ),
+			null,
+			$paypal_options
+		);
+	}
+
+	/**
+	 * Backfill subscription status changes missed by webhooks.
+	 *
+	 * Iterates every local subscription paid via PayPal that has a stored
+	 * PayPal subscription ID, fetches the current status from PayPal, and
+	 * updates the local record when the statuses differ. Also refreshes
+	 * next_billing_date / expiry_date from PayPal's billing_info.
+	 *
+	 * A 100 ms pause between API calls prevents burst rate-limiting.
+	 *
+	 * @param int $last_synced Unix timestamp of the previous sync.
+	 * @param int $now         Current Unix timestamp.
+	 * @return void
+	 */
+	public function run_missed_subscription_backfill( $last_synced, $now ) {
+		$logger = ur_get_logger();
+
+		if ( ! $this->has_rest_credentials() ) {
+			$logger->info(
+				'[Backfill][PayPal][Status] Skipped.' . "\n" . wp_json_encode(
+					array(
+						'event_type' => 'backfill_skipped',
+						'reason'     => 'no_rest_credentials',
+					),
+					JSON_PRETTY_PRINT
+				),
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+			return;
+		}
+
+		$paypal_options = $this->get_paypal_rest_credentials();
+		$start_time     = gmdate( 'Y-m-d\TH:i:s\Z', $last_synced );
+		$end_time       = gmdate( 'Y-m-d\TH:i:s\Z', $now );
+
+		$logger->info( '[Backfill][PayPal][Status] ---------- STARTED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+
+		// Fetch events for all subscription status event types.
+		$event_types  = array(
+			'BILLING.SUBSCRIPTION.ACTIVATED',
+			'BILLING.SUBSCRIPTION.UPDATED',
+			'BILLING.SUBSCRIPTION.SUSPENDED',
+			'BILLING.SUBSCRIPTION.CANCELLED',
+			'BILLING.SUBSCRIPTION.EXPIRED',
+		);
+		$all_events   = array();
+		$count_errors = 0;
+
+		foreach ( $event_types as $event_type ) {
+			$events = $this->get_paypal_webhook_events( $event_type, $start_time, $end_time, $paypal_options );
+
+			if ( is_wp_error( $events ) ) {
+				$logger->info(
+					'[Backfill][PayPal][Status] API error fetching events.' . "\n" . wp_json_encode(
+						array(
+							'event_type_queried' => $event_type,
+							'error'              => $events->get_error_message(),
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				++$count_errors;
+				continue;
+			}
+
+			$all_events = array_merge( $all_events, $events );
+		}
+
+		// Sort ascending by create_time so the most recent event for each subscription
+		// is processed last and its status wins — avoids an old ACTIVATED event
+		// overriding a newer SUSPENDED/CANCELLED event when both fall in the same window.
+		usort(
+			$all_events,
+			function ( $a, $b ) {
+				$ta = strtotime( isset( $a['create_time'] ) ? $a['create_time'] : '1970-01-01T00:00:00Z' );
+				$tb = strtotime( isset( $b['create_time'] ) ? $b['create_time'] : '1970-01-01T00:00:00Z' );
+				return $ta - $tb;
+			}
+		);
+
+		$total = count( $all_events );
+
+		$logger->info(
+			'[Backfill][PayPal][Status] Starting subscription status sync.' . "\n" . wp_json_encode(
+				array(
+					'event_type'   => 'backfill_start',
+					'window_start' => gmdate( 'Y-m-d H:i:s', $last_synced ),
+					'window_end'   => gmdate( 'Y-m-d H:i:s', $now ),
+					'total_found'  => $total,
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
+		$count_updated = 0;
+		$count_skipped = 0;
+
+		foreach ( $all_events as $event ) {
+			$resource               = isset( $event['resource'] ) ? $event['resource'] : array();
+			$paypal_subscription_id = isset( $resource['id'] ) ? $resource['id'] : '';
+			$paypal_raw_status      = isset( $resource['status'] ) ? $resource['status'] : '';
+
+			if ( empty( $paypal_subscription_id ) ) {
+				$logger->info(
+					'[Backfill][PayPal][Status] Skipped — no subscription ID in event.' . "\n" . wp_json_encode(
+						array(
+							'event_type' => 'skip',
+							'reason'     => 'no_paypal_subscription_id',
+							'event_id'   => $event['id'] ?? null,
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				++$count_skipped;
+				continue;
+			}
+
+			$paypal_status = $this->map_paypal_subscription_status( $paypal_raw_status );
+
+			if ( empty( $paypal_status ) ) {
+				$logger->info(
+					'[Backfill][PayPal][Status] Skipped — unrecognised PayPal status.' . "\n" . wp_json_encode(
+						array(
+							'event_type'             => 'skip',
+							'reason'                 => 'unrecognised_paypal_status',
+							'paypal_subscription_id' => $paypal_subscription_id,
+							'paypal_raw_status'      => $paypal_raw_status,
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				++$count_skipped;
+				continue;
+			}
+
+			$subscription = $this->members_subscription_repository->get_subscription_by_subscription_id_meta( $paypal_subscription_id );
+
+			if ( empty( $subscription ) ) {
+				$logger->info(
+					'[Backfill][PayPal][Status] Skipped — no local subscription found.' . "\n" . wp_json_encode(
+						array(
+							'event_type'             => 'skip',
+							'reason'                 => 'no_local_subscription',
+							'paypal_subscription_id' => $paypal_subscription_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				++$count_skipped;
+				continue;
+			}
+
+			$local_sub_id = $subscription['ID'];
+			$user_id      = $subscription['user_id'];
+			$local_status = $subscription['status'];
+
+			if ( $paypal_status === $local_status ) {
+				$logger->info(
+					'[Backfill][PayPal][Status] Skipped — status unchanged.' . "\n" . wp_json_encode(
+						array(
+							'event_type'             => 'skip',
+							'reason'                 => 'status_unchanged',
+							'local_sub_id'           => $local_sub_id,
+							'paypal_subscription_id' => $paypal_subscription_id,
+							'status'                 => $local_status,
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				++$count_skipped;
+				continue;
+			}
+
+			$update_data       = array( 'status' => $paypal_status );
+			$next_billing_time = isset( $resource['billing_info']['next_billing_time'] ) ? $resource['billing_info']['next_billing_time'] : null;
+
+			if ( ! empty( $next_billing_time ) ) {
+				try {
+					$dt        = new \DateTime( $next_billing_time );
+					$formatted = $dt->format( 'Y-m-d H:i:s' );
+
+					$update_data['next_billing_date'] = $formatted;
+					$update_data['expiry_date']       = $formatted;
+				} catch ( \Exception $e ) {
+					$logger->info(
+						'[Backfill][PayPal][Status] Could not parse next_billing_time — dates not updated.' . "\n" . wp_json_encode(
+							array(
+								'event_type'        => 'date_parse_error',
+								'local_sub_id'      => $local_sub_id,
+								'next_billing_time' => $next_billing_time,
+								'error'             => $e->getMessage(),
+							),
+							JSON_PRETTY_PRINT
+						),
+						array( 'source' => 'urm-missed-payment-backfill' )
+					);
+				}
+			}
+
+			$this->members_subscription_repository->update( $local_sub_id, $update_data );
+
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[Backfill][PayPal][Status] Subscription status updated.' . "\n" . wp_json_encode(
+					array(
+						'event_type'             => 'status_updated',
+						'member_id'              => $user_id,
+						'subscription_id'        => $local_sub_id,
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'status_from'            => $local_status,
+						'status_to'              => $paypal_status,
+						'next_billing_date'      => isset( $update_data['next_billing_date'] ) ? $update_data['next_billing_date'] : null,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'success'
+			);
+
+			// When a subscription becomes active, also complete its pending order.
+			if ( 'active' === $paypal_status && 'active' !== $local_status ) {
+				$pending_order = $this->orders_repository->get_order_by_subscription( $local_sub_id );
+				if ( ! empty( $pending_order ) && 'pending' === ( $pending_order['status'] ?? '' ) ) {
+					$order_prev_status = $pending_order['status'];
+					$this->orders_repository->update(
+						$pending_order['ID'],
+						array( 'status' => 'completed' )
+					);
+					$logger->info(
+						'[Backfill][PayPal][Status] Pending order completed alongside subscription activation.' . "\n" . wp_json_encode(
+							array(
+								'event_type'      => 'order_completed',
+								'member_id'       => $user_id,
+								'order_id'        => $pending_order['ID'],
+								'subscription_id' => $local_sub_id,
+								'status_from'     => $order_prev_status,
+								'status_to'       => 'completed',
+							),
+							JSON_PRETTY_PRINT
+						),
+						array( 'source' => 'urm-missed-payment-backfill' )
+					);
+				}
+			}
+
+			++$count_updated;
+		}
+
+		$logger->info(
+			'[Backfill][PayPal][Status] Done.' . "\n" . wp_json_encode(
+				array(
+					'event_type' => 'backfill_done',
+					'total'      => $total,
+					'updated'    => $count_updated,
+					'skipped'    => $count_skipped,
+					'errors'     => $count_errors,
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
+		$logger->info( '[Backfill][PayPal][Status] ---------- ENDED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+	}
+
+
+	/**
+	 * Backfill missing subscription renewal payment records from PayPal.
+	 *
+	 * For each local PayPal subscription, fetches transactions from PayPal
+	 * within the sync window. Any COMPLETED transaction without a matching
+	 * local order is created. When the only existing order uses the PayPal
+	 * subscription ID as a placeholder transaction_id (set on initial sign-up),
+	 * that placeholder is deleted and replaced with the real transaction ID —
+	 * mirroring the Stripe backfill behaviour.
+	 *
+	 * @param int $last_synced Unix timestamp of the previous sync.
+	 * @param int $now         Current Unix timestamp.
+	 * @return void
+	 */
+	public function run_missed_payment_backfill( $last_synced, $now ) {
+		$logger = ur_get_logger();
+
+		if ( ! $this->has_rest_credentials() ) {
+			$logger->info(
+				'[Backfill][PayPal][Payments] Skipped.' . "\n" . wp_json_encode(
+					array(
+						'event_type' => 'backfill_skipped',
+						'reason'     => 'no_rest_credentials',
+					),
+					JSON_PRETTY_PRINT
+				),
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+			return;
+		}
+
+		$paypal_options = $this->get_paypal_rest_credentials();
+		$start_time     = gmdate( 'Y-m-d\TH:i:s\Z', $last_synced );
+		$end_time       = gmdate( 'Y-m-d\TH:i:s\Z', $now );
+
+		$logger->info( '[Backfill][PayPal][Payments] ---------- STARTED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+		$logger->info(
+			'[Backfill][PayPal][Payments] Starting subscription payment backfill.' . "\n" . wp_json_encode(
+				array(
+					'event_type'   => 'backfill_start',
+					'window_start' => $start_time,
+					'window_end'   => $end_time,
+					'event_types'  => array( 'PAYMENT.SALE.COMPLETED' ),
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
+		$events = $this->get_paypal_webhook_events( 'PAYMENT.SALE.COMPLETED', $start_time, $end_time, $paypal_options );
+
+		if ( is_wp_error( $events ) ) {
+			$logger->info(
+				'[Backfill][PayPal][Payments] API error fetching PAYMENT.SALE.COMPLETED events.' . "\n" . wp_json_encode(
+					array(
+						'event_type' => 'api_error',
+						'error'      => $events->get_error_message(),
+					),
+					JSON_PRETTY_PRINT
+				),
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+			$logger->info( '[Backfill][PayPal][Payments] ---------- ENDED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+			return;
+		}
+
+		$total = count( $events );
+
+		$count_created = 0;
+		$count_updated = 0;
+		$count_skipped = 0;
+		$count_errors  = 0;
+
+		foreach ( $events as $event ) {
+			$resource               = isset( $event['resource'] ) ? $event['resource'] : array();
+			$transaction_id         = isset( $resource['id'] ) ? $resource['id'] : '';
+			$paypal_subscription_id = isset( $resource['billing_agreement_id'] ) ? $resource['billing_agreement_id'] : '';
+			$gross_amount           = (float) ( $resource['amount']['total'] ?? 0 );
+			$time_string            = isset( $resource['create_time'] ) ? $resource['create_time'] : '';
+			$created_at             = ! empty( $time_string ) ? gmdate( 'Y-m-d H:i:s', strtotime( $time_string ) ) : gmdate( 'Y-m-d H:i:s' );
+
+			if ( empty( $transaction_id ) || empty( $paypal_subscription_id ) ) {
+				$logger->info(
+					'[Backfill][PayPal][Payments] Skipped — missing transaction or subscription ID in event.' . "\n" . wp_json_encode(
+						array(
+							'event_type'     => 'skip',
+							'reason'         => 'missing_ids',
+							'event_id'       => $event['id'] ?? null,
+							'transaction_id' => $transaction_id ?: null,
+							'paypal_sub_id'  => $paypal_subscription_id ?: null,
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				++$count_skipped;
+				continue;
+			}
+
+			// Skip if an order for this transaction already exists.
+			$existing_payment = $this->orders_repository->get_order_by_transaction_id( $transaction_id );
+			if ( ! empty( $existing_payment ) ) {
+				$logger->info(
+					'[Backfill][PayPal][Payments] Skipped — order already exists.' . "\n" . wp_json_encode(
+						array(
+							'event_type'     => 'skip',
+							'reason'         => 'order_already_exists',
+							'transaction_id' => $transaction_id,
+							'existing_order' => $existing_payment['ID'] ?? null,
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				++$count_skipped;
+				continue;
+			}
+
+			// Find local subscription by PayPal subscription ID.
+			$membership_subscription = $this->members_subscription_repository->get_subscription_by_subscription_id_meta( $paypal_subscription_id );
+
+			if ( empty( $membership_subscription ) ) {
+				$logger->info(
+					'[Backfill][PayPal][Payments] Skipped — no local subscription found.' . "\n" . wp_json_encode(
+						array(
+							'event_type'             => 'skip',
+							'reason'                 => 'no_local_subscription',
+							'paypal_subscription_id' => $paypal_subscription_id,
+							'transaction_id'         => $transaction_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				++$count_skipped;
+				continue;
+			}
+
+			$local_sub_id = $membership_subscription['ID'];
+			$user_id      = $membership_subscription['user_id'];
+
+			// Replace placeholder order (transaction_id = PayPal subscription ID) if one exists.
+			$placeholder = $this->orders_repository->get_order_by_transaction_id( $paypal_subscription_id );
+			if ( ! empty( $placeholder ) && ! empty( $placeholder['ID'] ) ) {
+				$logger->info(
+					'[Backfill][PayPal][Payments] Deleting placeholder order.' . "\n" . wp_json_encode(
+						array(
+							'event_type'             => 'placeholder_deleted',
+							'local_sub_id'           => $local_sub_id,
+							'placeholder_order_id'   => $placeholder['ID'],
+							'paypal_subscription_id' => $paypal_subscription_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				$this->orders_repository->delete( $placeholder['ID'] );
+			}
+
+			// Update a pending order in place rather than creating a duplicate.
+			$existing_pending = $this->orders_repository->get_order_by_subscription( $local_sub_id );
+			if (
+				! empty( $existing_pending['ID'] ) &&
+				'pending' === ( $existing_pending['status'] ?? '' ) &&
+				'' === (string) ( $existing_pending['transaction_id'] ?? '' )
+			) {
+				$this->orders_repository->update(
+					$existing_pending['ID'],
+					array(
+						'status'         => 'completed',
+						'transaction_id' => $transaction_id,
+						'total_amount'   => $gross_amount,
+					)
+				);
+				PaymentGatewayLogging::log_general(
+					'paypal',
+					'[Backfill][PayPal][Payments] Pending order updated with real transaction.' . "\n" . wp_json_encode(
+						array(
+							'event_type'      => 'order_updated',
+							'member_id'       => $user_id,
+							'subscription_id' => $local_sub_id,
+							'order_id'        => $existing_pending['ID'],
+							'status_from'     => 'pending',
+							'status_to'       => 'completed',
+							'transaction_id'  => $transaction_id,
+							'amount'          => $gross_amount,
+						),
+						JSON_PRETTY_PRINT
+					),
+					'success'
+				);
+				++$count_updated;
+				continue;
+			}
+
+			// Create a new completed order for this payment event.
+			$order_data = array(
+				'orders_data'      => array(
+					'user_id'         => absint( $membership_subscription['user_id'] ),
+					'item_id'         => $membership_subscription['item_id'],
+					'subscription_id' => $membership_subscription['ID'],
+					'created_by'      => $membership_subscription['user_id'],
+					'transaction_id'  => $transaction_id,
+					'payment_method'  => 'paypal',
+					'total_amount'    => $gross_amount,
+					'status'          => 'completed',
+					'order_type'      => 'subscription',
+					'trial_status'    => 'off',
+					'notes'           => 'Backfilled order for missed PayPal payment event',
+					'created_at'      => $created_at,
+				),
+				'orders_meta_data' => array(
+					array(
+						'meta_key'   => 'is_admin_created',
+						'meta_value' => false,
+					),
+				),
+			);
+
+			$this->orders_repository->create( $order_data );
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[Backfill][PayPal][Payments] New order created for missed payment.' . "\n" . wp_json_encode(
+					array(
+						'event_type'       => 'order_created',
+						'member_id'        => $user_id,
+						'subscription_id'  => $local_sub_id,
+						'status_from'      => null,
+						'status_to'        => 'completed',
+						'transaction_id'   => $transaction_id,
+						'amount'           => $gross_amount,
+						'transaction_time' => $created_at,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'success'
+			);
+			++$count_created;
+		}
+
+		$logger->info(
+			'[Backfill][PayPal][Payments] Done.' . "\n" . wp_json_encode(
+				array(
+					'event_type'     => 'backfill_done',
+					'total'          => $total,
+					'orders_created' => $count_created,
+					'orders_updated' => $count_updated,
+					'skipped'        => $count_skipped,
+					'errors'         => $count_errors,
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
+		$logger->info( '[Backfill][PayPal][Payments] ---------- ENDED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+	}
+
+	/**
+	 * Backfill pending one-time PayPal payment orders.
+	 *
+	 * For each local pending one-time order within the sync window, checks the
+	 * PayPal order status using the order ID stored in user meta. If PayPal
+	 * reports the order as COMPLETED, the local record is updated with the
+	 * capture ID and marked as completed, and the linked subscription is
+	 * activated.
+	 *
+	 * @param int $last_synced Unix timestamp of the previous sync.
+	 * @param int $now         Current Unix timestamp.
+	 * @return void
+	 */
+	public function run_missed_onetime_payment_backfill( $last_synced, $now ) {
+		$logger = ur_get_logger();
+
+		if ( ! $this->has_rest_credentials() ) {
+			$logger->info(
+				'[Backfill][PayPal][OneTime] Skipped.' . "\n" . wp_json_encode(
+					array(
+						'event_type' => 'backfill_skipped',
+						'reason'     => 'no_rest_credentials',
+					),
+					JSON_PRETTY_PRINT
+				),
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+			return;
+		}
+
+		$paypal_options = $this->get_paypal_rest_credentials();
+		$start_time     = gmdate( 'Y-m-d\TH:i:s\Z', $last_synced );
+		$end_time       = gmdate( 'Y-m-d\TH:i:s\Z', $now );
+
+		$logger->info( '[Backfill][PayPal][OneTime] ---------- STARTED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+		$logger->info(
+			'[Backfill][PayPal][OneTime] Starting one-time payment backfill.' . "\n" . wp_json_encode(
+				array(
+					'event_type'   => 'backfill_start',
+					'window_start' => $start_time,
+					'window_end'   => $end_time,
+					'event_types'  => array( 'PAYMENT.CAPTURE.COMPLETED' ),
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
+		$events = $this->get_paypal_webhook_events( 'PAYMENT.CAPTURE.COMPLETED', $start_time, $end_time, $paypal_options );
+
+		$count_completed = 0;
+		$count_skipped   = 0;
+
+		if ( is_wp_error( $events ) ) {
+			$logger->info(
+				'[Backfill][PayPal][OneTime] API error fetching PAYMENT.CAPTURE.COMPLETED events.' . "\n" . wp_json_encode(
+					array( 'error' => $events->get_error_message() ),
+					JSON_PRETTY_PRINT
+				),
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+			$events = array();
+		}
+
+		foreach ( $events as $event ) {
+			$resource   = isset( $event['resource'] ) ? $event['resource'] : array();
+			$capture_id = isset( $resource['id'] ) ? $resource['id'] : '';
+			$custom_id  = isset( $resource['custom_id'] ) ? $resource['custom_id'] : '';
+
+			if ( empty( $capture_id ) || empty( $custom_id ) ) {
+				++$count_skipped;
+				continue;
+			}
+
+			// Skip if already processed.
+			if ( ! empty( $this->orders_repository->get_order_by_transaction_id( $capture_id ) ) ) {
+				++$count_skipped;
+				continue;
+			}
+
+			$parsed          = $this->parse_custom_id( $custom_id );
+			$subscription_id = absint( isset( $parsed['subscription_id'] ) ? $parsed['subscription_id'] : 0 );
+
+			if ( empty( $subscription_id ) ) {
+				$logger->info(
+					'[Backfill][PayPal][OneTime] Skipped — no subscription_id in custom_id.' . "\n" . wp_json_encode(
+						array(
+							'event_type' => 'skip',
+							'reason'     => 'no_subscription_id',
+							'custom_id'  => $custom_id,
+							'capture_id' => $capture_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				++$count_skipped;
+				continue;
+			}
+
+			$order = $this->orders_repository->get_order_by_subscription( $subscription_id );
+
+			if ( empty( $order ) || 'pending' !== ( isset( $order['status'] ) ? $order['status'] : '' ) ) {
+				++$count_skipped;
+				continue;
+			}
+
+			$this->orders_repository->update(
+				$order['ID'],
+				array(
+					'status'         => 'completed',
+					'transaction_id' => $capture_id,
+				)
+			);
+
+			$subscription = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $subscription_id );
+			if ( ! empty( $subscription['ID'] ) && 'pending' === ( isset( $subscription['status'] ) ? $subscription['status'] : '' ) ) {
+				$this->members_subscription_repository->update(
+					$subscription['ID'],
+					array(
+						'status'     => 'active',
+						'start_date' => gmdate( 'Y-m-d 00:00:00' ),
+					)
+				);
+				$logger->info(
+					'[Backfill][PayPal][OneTime] Subscription activated.' . "\n" . wp_json_encode(
+						array(
+							'event_type'      => 'subscription_activated',
+							'subscription_id' => $subscription['ID'],
+							'order_id'        => $order['ID'],
+							'capture_id'      => $capture_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+			}
+
+			++$count_completed;
+			$logger->info(
+				'[Backfill][PayPal][OneTime] Order completed.' . "\n" . wp_json_encode(
+					array(
+						'event_type'      => 'order_completed',
+						'order_id'        => $order['ID'],
+						'subscription_id' => $subscription_id,
+						'capture_id'      => $capture_id,
+					),
+					JSON_PRETTY_PRINT
+				),
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+		}
+
+		// Second pass: activate subscriptions for orders already completed locally
+		// but whose subscription status was never flipped to active.
+		$orphaned        = $this->orders_repository->get_completed_paypal_onetime_with_pending_subscription();
+		$count_activated = 0;
+
+		$logger->info(
+			'[Backfill][PayPal][OneTime] Checking completed orders with pending subscriptions.' . "\n" . wp_json_encode(
+				array(
+					'event_type'  => 'orphaned_check',
+					'total_found' => count( $orphaned ),
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
+		foreach ( $orphaned as $order ) {
+			$order_id            = isset( $order['ID'] ) ? $order['ID'] : '?';
+			$subscription_row_id = isset( $order['subscription_id'] ) ? $order['subscription_id'] : '';
+
+			if ( empty( $subscription_row_id ) ) {
+				continue;
+			}
+
+			$subscription = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $subscription_row_id );
+			if ( empty( $subscription['ID'] ) ) {
+				continue;
+			}
+
+			$this->members_subscription_repository->update(
+				$subscription['ID'],
+				array(
+					'status'     => 'active',
+					'start_date' => gmdate( 'Y-m-d 00:00:00' ),
+				)
+			);
+			++$count_activated;
+			$logger->info(
+				'[Backfill][PayPal][OneTime] Orphaned subscription activated.' . "\n" . wp_json_encode(
+					array(
+						'event_type'      => 'orphaned_activated',
+						'order_id'        => $order_id,
+						'subscription_id' => $subscription['ID'],
+					),
+					JSON_PRETTY_PRINT
+				),
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+		}
+
+		$logger->info(
+			'[Backfill][PayPal][OneTime] Done.' . "\n" . wp_json_encode(
+				array(
+					'event_type'              => 'backfill_done',
+					'events_found'            => count( $events ),
+					'completed'               => $count_completed,
+					'subscriptions_activated' => $count_activated,
+					'skipped'                 => $count_skipped,
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+		$logger->info( '[Backfill][PayPal][OneTime] ---------- ENDED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+	}
+
+	/**
+	 * Backfill refunded orders missed by webhooks.
+	 *
+	 * Queries the PayPal webhook events log for PAYMENT.CAPTURE.REFUNDED and
+	 * PAYMENT.SALE.REFUNDED events within the backfill window and marks matching
+	 * local orders as refunded. Only events recorded after webhook registration
+	 * will appear; this is best-effort for older refunds.
+	 *
+	 * @param int $last_synced Unix timestamp of the previous sync.
+	 * @param int $now         Current Unix timestamp.
+	 * @return void
+	 */
+	public function run_missed_refund_backfill( $last_synced, $now ) {
+		$logger = ur_get_logger();
+
+		if ( ! $this->has_rest_credentials() ) {
+			$logger->info(
+				'[Backfill][PayPal][Refunds] Skipped.' . "\n" . wp_json_encode(
+					array(
+						'event_type' => 'backfill_skipped',
+						'reason'     => 'no_rest_credentials',
+					),
+					JSON_PRETTY_PRINT
+				),
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+			return;
+		}
+
+		$paypal_options = $this->get_paypal_rest_credentials();
+		$start_time     = gmdate( 'Y-m-d\TH:i:s\Z', $last_synced );
+		$end_time       = gmdate( 'Y-m-d\TH:i:s\Z', $now );
+
+		$logger->info( '[Backfill][PayPal][Refunds] ---------- STARTED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+		$logger->info(
+			'[Backfill][PayPal][Refunds] Starting refund backfill.' . "\n" . wp_json_encode(
+				array(
+					'event_type'   => 'backfill_start',
+					'window_start' => $start_time,
+					'window_end'   => $end_time,
+					'event_types'  => array( 'PAYMENT.CAPTURE.REFUNDED', 'PAYMENT.SALE.REFUNDED' ),
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
+		$all_events = array();
+		foreach ( array( 'PAYMENT.CAPTURE.REFUNDED', 'PAYMENT.SALE.REFUNDED' ) as $event_type ) {
+			$events = $this->get_paypal_webhook_events( $event_type, $start_time, $end_time, $paypal_options );
+			if ( is_wp_error( $events ) ) {
+				$logger->info(
+					'[Backfill][PayPal][Refunds] API error fetching ' . $event_type . ' events.' . "\n" . wp_json_encode(
+						array( 'error' => $events->get_error_message() ),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+			} else {
+				$all_events = array_merge( $all_events, $events );
+			}
+		}
+
+		$total_found   = count( $all_events );
+		$total_updated = 0;
+		$total_skipped = 0;
+
+		$logger->info(
+			sprintf( '[Backfill][PayPal][Refunds] Total refund events found: %d', $total_found ),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
+		foreach ( $all_events as $event ) {
+			$event_type = isset( $event['event_type'] ) ? $event['event_type'] : '';
+			$resource   = isset( $event['resource'] ) ? $event['resource'] : array();
+
+			if ( 'PAYMENT.CAPTURE.REFUNDED' === $event_type ) {
+				$transaction_id = null;
+				$links          = isset( $resource['links'] ) ? $resource['links'] : array();
+				foreach ( $links as $link ) {
+					if ( 'up' === ( isset( $link['rel'] ) ? $link['rel'] : '' ) && ! empty( $link['href'] ) ) {
+						$transaction_id = basename( rtrim( $link['href'], '/' ) );
+						break;
+					}
+				}
+			} else {
+				$transaction_id = isset( $resource['sale_id'] ) ? $resource['sale_id'] : null;
+			}
+
+			if ( empty( $transaction_id ) ) {
+				++$total_skipped;
+				continue;
+			}
+
+			$order = $this->orders_repository->get_order_by_transaction_id( $transaction_id );
+			if ( empty( $order ) ) {
+				$logger->info(
+					sprintf( '[Backfill][PayPal][Refunds] No local order for transaction %s — skipping.', $transaction_id ),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				++$total_skipped;
+				continue;
+			}
+
+			if ( 'refunded' === $order['status'] ) {
+				++$total_skipped;
+				continue;
+			}
+
+			$this->orders_repository->update( $order['ID'], array( 'status' => 'refunded' ) );
+			++$total_updated;
+			$logger->info(
+				sprintf( '[Backfill][PayPal][Refunds] Marked order %d as refunded (transaction %s)', $order['ID'], $transaction_id ),
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+		}
+
+		$logger->info(
+			'[Backfill][PayPal][Refunds] Done.' . "\n" . wp_json_encode(
+				array(
+					'event_type'    => 'backfill_done',
+					'total_found'   => $total_found,
+					'total_updated' => $total_updated,
+					'total_skipped' => $total_skipped,
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+		$logger->info( '[Backfill][PayPal][Refunds] ---------- ENDED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+	}
+
+	// -------------------------------------------------------------------------
+
 	public function get_webhook_url() {
 		return rest_url( 'user-registration/paypal-webhook' );
 	}
@@ -2559,6 +3606,9 @@ class NewPaypalService {
 		$event_types = array(
 			array( 'name' => 'CHECKOUT.ORDER.APPROVED' ),
 			array( 'name' => 'PAYMENT.CAPTURE.COMPLETED' ),
+			array( 'name' => 'PAYMENT.CAPTURE.REFUNDED' ),
+			array( 'name' => 'PAYMENT.SALE.COMPLETED' ),
+			array( 'name' => 'PAYMENT.SALE.REFUNDED' ),
 			array( 'name' => 'BILLING.SUBSCRIPTION.CREATED' ),
 			array( 'name' => 'BILLING.SUBSCRIPTION.ACTIVATED' ),
 			array( 'name' => 'BILLING.SUBSCRIPTION.UPDATED' ),
@@ -2624,14 +3674,34 @@ class NewPaypalService {
 			'info'
 		);
 
+		$existing_event_types = array();
+
 		foreach ( $webhooks as $webhook ) {
 			if ( isset( $webhook['url'] ) && $webhook['url'] === $webhook_url ) {
-				$existing_id = $webhook['id'];
+				$existing_id          = $webhook['id'];
+				$existing_event_types = isset( $webhook['event_types'] ) ? $webhook['event_types'] : array();
 				break;
 			}
 		}
 
 		if ( $existing_id ) {
+			$desired_names  = array_column( $event_types, 'name' );
+			$existing_names = array_column( $existing_event_types, 'name' );
+			sort( $desired_names );
+			sort( $existing_names );
+
+			if ( $desired_names === $existing_names ) {
+				PaymentGatewayLogging::log_general(
+					'paypal',
+					'Existing PayPal webhook already has all required event types — no update needed.' . "\n" . wp_json_encode(
+						array( 'webhook_id' => $existing_id ),
+						JSON_PRETTY_PRINT
+					),
+					'info'
+				);
+				return $existing_id;
+			}
+
 			PaymentGatewayLogging::log_general(
 				'paypal',
 				'Existing PayPal webhook found, patching event types.' . "\n" . wp_json_encode(
