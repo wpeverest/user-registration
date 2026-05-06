@@ -9512,6 +9512,17 @@ body.user-registration-page {
 							font-size: 15px;
 							font-weight: $semi_bold;
 							line-height: 18px;
+							display: flex;
+							flex-direction: column;
+							align-items: flex-end;
+							text-align: right;
+
+							.ur-membership-trial-end {
+								font-weight: 400;
+								color: #3c434a;
+								font-size: 13px;
+								line-height: 1.4em;
+							}
 						}
 
 						&-description {
