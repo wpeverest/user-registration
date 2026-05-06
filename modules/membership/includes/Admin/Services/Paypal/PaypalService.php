@@ -753,7 +753,13 @@ class PaypalService {
 				)
 			);
 
-			$this->members_orders_repository->update( $latest_order['ID'], array( 'status' => 'completed' ) );
+			$this->members_orders_repository->update(
+				$latest_order['ID'],
+				array(
+					'status'         => 'completed',
+					'transaction_id' => sanitize_text_field( $data['txn_id'] ?? '' ),
+				)
+			);
 
 			PaymentGatewayLogging::log_general(
 				'paypal',
@@ -856,6 +862,8 @@ class PaypalService {
 			return;
 		}
 		$payment_status = strtolower( $data['payment_status'] );
+		$transaction_id = '';
+		$order_id       = null;
 
 		// Verify receiver's email address.
 		if ( empty( $receiver_email ) || ! is_email( $receiver_email ) || strtolower( $data['business'] ) !== strtolower( trim( $receiver_email ) ) ) {
@@ -928,7 +936,7 @@ class PaypalService {
 		} elseif ( 'subscr_eot' == $txn_type ) {
 			// Verify further if eot is ever received for time specified subscriptions
 		}
-		if ( 'completed' === $payment_status ) {
+		if ( 'completed' === $payment_status && empty( $order_id ) ) {
 			PaymentGatewayLogging::log_transaction_success(
 				'paypal',
 				'Payment completed successfully',
