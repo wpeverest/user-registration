@@ -216,7 +216,7 @@ class MembershipService {
 					'meta'            => array(),
 				);
 
-				if ( isset( $subscription_data['status'] ) && 'trial' === $subscription_data['status'] ) {
+				if ( ! empty( $subscription_data['trial_end_date'] ) ) {
 					// Register subscription trial started event.
 					$payload['event_type'] = 'trial_started';
 					$payload['meta']       = array(

@@ -33,6 +33,16 @@ $per_page    = intval( $orders['per_page'] ?? 10 );
 
 $current_url       = get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'urm-payments/';
 $is_invoice_active = ur_check_module_activation( 'pdf-invoice' );
+
+$gateway_labels = array(
+	'stripe'    => __( 'Stripe', 'user-registration' ),
+	'paypal'    => __( 'PayPal', 'user-registration' ),
+	'bank'      => __( 'Bank Transfer', 'user-registration' ),
+	'authorize' => __( 'Authorize.Net', 'user-registration' ),
+	'mollie'    => __( 'Mollie', 'user-registration' ),
+	'manual'    => __( 'Manual', 'user-registration' ),
+	'free'      => __( 'Free', 'user-registration' ),
+);
 ?>
 
 <div class="user-registration-MyAccount-content__body">
@@ -61,7 +71,11 @@ $is_invoice_active = ur_check_module_activation( 'pdf-invoice' );
 
 					<?php
 					foreach ( $items as $user_order ) :
-						$total_amount = $user_order['total_amount'] ? number_format( $user_order['total_amount'], 2 ) : '-';
+						if ( ! empty( $user_order['trial_status'] ) && 'on' === $user_order['trial_status'] ) {
+								$total_amount = number_format( 0, 2 );
+							} else {
+								$total_amount = $user_order['total_amount'] ? number_format( $user_order['total_amount'], 2 ) : '-';
+							}
 
 						$user_id    = get_current_user_id();
 						$currencies = ur_payment_integration_get_currencies();
@@ -82,7 +96,10 @@ $is_invoice_active = ur_check_module_activation( 'pdf-invoice' );
 						?>
 						<tr class="ur-account-table__row">
 							<td class="ur-account-table__cell ur-account-table__cell--transaction-id"><?php echo esc_html( $user_order['transaction_id'] ?? '-' ); ?></td>
-							<td class="ur-account-table__cell ur-account-table__cell--payment"><?php echo esc_html( $user_order['payment_method'] ?? '-' ); ?></td>
+							<td class="ur-account-table__cell ur-account-table__cell--payment"><?php
+								$method = $user_order['payment_method'] ?? '';
+								echo esc_html( ! empty( $method ) ? ( $gateway_labels[ $method ] ?? ucfirst( $method ) ) : '-' );
+							?></td>
 							<td class="ur-account-table__cell ur-account-table__cell--amount"><?php echo esc_html( $total_amount ); ?></td>
 							<td class="ur-account-table__cell ur-account-table__cell--status"><span id="ur-membership-status" class="btn-<?php echo esc_attr( $user_order['status'] ?? '-' ); ?>"><?php echo esc_html( $user_order['status'] ?? '-' ); ?></span></td>
 							<td class="ur-account-table__cell ur-account-table__cell--date">
