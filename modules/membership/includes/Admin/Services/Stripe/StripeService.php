@@ -1250,7 +1250,14 @@ class StripeService {
 										$amount = $current_price + $discount_amount;
 									}
 								} elseif ( 'pro-rata' === $upgrade_type ) {
-									$amount = $new_price - $first_month_price;
+									$proration_result = $membership_upgrade_service->handle_subscription_to_paid_or_subscription_membership_upgrade(
+										$previous_membership_metas,
+										$membership_metas,
+										$previous_subscription,
+										false
+									);
+									$chargeable       = isset( $proration_result['chargeable_amount'] ) ? floatval( $proration_result['chargeable_amount'] ) : floatval( $new_price );
+									$amount           = max( 0, $new_price - $chargeable );
 								}
 
 								$currency = get_option( 'user_registration_payment_currency', 'USD' );

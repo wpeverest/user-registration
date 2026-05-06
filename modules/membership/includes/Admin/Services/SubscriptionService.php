@@ -649,7 +649,7 @@ class SubscriptionService {
 
 		return array(
 			'trial_status'                 => $is_trial ? 'on' : 'off',
-			'chargeable_amount'            => ! empty( $result['chargeable_amount'] ) ? $result['chargeable_amount'] : 0,
+			'chargeable_amount'            => isset( $result['chargeable_amount'] ) ? $result['chargeable_amount'] : 0,
 			'remaining_subscription_value' => ! empty( $result['remaining_subscription_value'] ) ? $result['remaining_subscription_value'] : 0,
 			'delayed_until'                => ! empty( $result['delayed_until'] ) ? $result['delayed_until'] : '',
 		);

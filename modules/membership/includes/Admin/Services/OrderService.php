@@ -75,6 +75,12 @@ class OrderService {
 				$total           = $total - $discount_amount;
 		}
 
+		// For upgrades, replace $total with the pre-tax prorated amount so that
+		// tax and total_amount are both calculated on the correct base.
+		if ( ! empty( $upgrade_details ) && isset( $upgrade_details['chargeable_amount'] ) ) {
+			$total = floatval( $upgrade_details['chargeable_amount'] );
+		}
+
 		$local_currency_converted_amount = 0;
 
 		if ( ! empty( $data['local_currency_details'] ) ) {
@@ -119,7 +125,7 @@ class OrderService {
 			'created_by'      => isset( $current_user ) && $current_user->ID != 0 ? $current_user->ID : absint( $member_id ),
 			'transaction_id'  => $transaction_id,
 			'payment_method'  => ( $data['membership_data']['payment_method'] ) ? sanitize_text_field( $data['membership_data']['payment_method'] ) : '',
-			'total_amount'    => ! empty( $upgrade_details ) ? $upgrade_details['chargeable_amount'] : $total,
+			'total_amount'    => number_format( $total, 2, '.', '' ),
 			'status'          => ( 'free' === $membership_meta['type'] || $is_admin ) ? 'completed' : 'pending',
 			'order_type'      => $order_type,
 			'trial_status'    => ( ! empty( $upgrade_details ) && ( 'on' === $upgrade_details['trial_status'] ) ) ? 'on' : ( isset( $membership_meta['trial_status'] ) ? sanitize_text_field( $membership_meta['trial_status'] ) : 'off' ),
