@@ -122,12 +122,14 @@ class StripeService {
 		$mode            = $stripe_settings['mode'];
 
 		try {
-			$payment_method = \Stripe\PaymentMethod::retrieve( $payment_method_id );
-			$ur_log         = new PaymentGatewayLogging();
+			$payment_method    = \Stripe\PaymentMethod::retrieve( $payment_method_id );
+			$current_member_id = get_current_user_id();
+			$ur_log            = new PaymentGatewayLogging();
 			$ur_log->log(
 				'stripe',
-				'Payment method retrieved.' . "\n" . wp_json_encode(
+				'[Member ID #' . $current_member_id . '] Payment method retrieved.' . "\n" . wp_json_encode(
 					array(
+						'member_id'      => $current_member_id,
 						'payment_method' => $payment_method,
 					),
 					JSON_PRETTY_PRINT
@@ -1229,7 +1231,7 @@ class StripeService {
 				),
 			);
 
-			$subscription_details['expand'] = array( 'latest_invoice.payment_intent' );
+			$subscription_details['expand'] = array( 'latest_invoice.payments' );
 
 			// Handle trial period.
 			if ( isset( $membership_metas['trial_status'] ) && 'on' === $membership_metas['trial_status'] && ! $team_id ) {
@@ -1411,41 +1413,26 @@ class StripeService {
 				)
 			);
 
-			$three_ds2_source = $subscription->latest_invoice->payment_intent->next_action->use_stripe_sdk->three_d_secure_2_source ?? '';
+			$payments_data  = ! empty( $subscription->latest_invoice->payments->data ) ? $subscription->latest_invoice->payments->data : array();
+			$payment_intent = ! empty( $payments_data ) ? ( $payments_data[0]->payment->payment_intent ?? null ) : null;
+
+			$three_ds2_source = '';
+			if ( ! empty( $payment_intent ) && ! is_string( $payment_intent ) ) {
+				$three_ds2_source = $payment_intent->next_action->use_stripe_sdk->three_d_secure_2_source ?? '';
+			}
 
 			if ( 'active' === $subscription_status || 'trialing' === $subscription_status || ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ) {
-				$status                    = ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ? 'pending' : 'completed';
-				$payment_intent_id_to_save = $subscription->latest_invoice->payment_intent->id ?? null;
-				$update_data               = array( 'status' => $status );
-				if ( ! empty( $payment_intent_id_to_save ) ) {
-					$update_data['transaction_id'] = $payment_intent_id_to_save;
+				$status = ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ? 'pending' : 'completed';
+				$pi_id  = '';
+				if ( ! empty( $payment_intent ) ) {
+					$pi_id = is_string( $payment_intent ) ? $payment_intent : ( $payment_intent->id ?? '' );
 				}
-
-				PaymentGatewayLogging::log_debug(
-					'stripe',
-					'Updating order with subscription activation data' . "\n" . wp_json_encode(
-						array(
-							'order_id'       => $member_order['ID'] ?? null,
-							'transaction_id' => $payment_intent_id_to_save,
-							'status'         => $status,
-						),
-						JSON_PRETTY_PRINT
-					)
-				);
-
-				$update_result = $this->members_orders_repository->update(
+				$transaction_id = ! empty( $pi_id ) ? $pi_id : $subscription->id;
+				$this->members_orders_repository->update(
 					$member_order['ID'],
-					$update_data
-				);
-
-				PaymentGatewayLogging::log_debug(
-					'stripe',
-					'Order update result after subscription activation' . "\n" . wp_json_encode(
-						array(
-							'order_id'      => $member_order['ID'] ?? null,
-							'update_result' => $update_result,
-						),
-						JSON_PRETTY_PRINT
+					array(
+						'status'         => $status,
+						'transaction_id' => $transaction_id,
 					)
 				);
 
@@ -1467,6 +1454,18 @@ class StripeService {
 					array(
 						'subscription_id' => sanitize_text_field( $subscription->id ),
 						'status'          => $subscription_status,
+					)
+				);
+
+				PaymentGatewayLogging::log_debug(
+					'stripe',
+					'[Member ID #' . $member_id . '] Subscription record updated with Stripe subscription ID' . "\n" . wp_json_encode(
+						array(
+							'local_subscription_id'  => $member_order['subscription_id'],
+							'stripe_subscription_id' => $subscription->id,
+							'subscription_status'    => $subscription_status,
+						),
+						JSON_PRETTY_PRINT
 					)
 				);
 
@@ -2840,7 +2839,9 @@ class StripeService {
 
 				if ( empty( $payment ) ) {
 					$payment = $this->orders_repository->get_order_by_transaction_id( $subscription_id );
-					$this->orders_repository->delete( $payment['ID'] );
+					if ( ! empty( $payment ) ) {
+						$this->orders_repository->delete( $payment['ID'] );
+					}
 
 					$subscription   = $this->members_subscription_repository->retrieve( $membership_subscription['ID'] );
 					$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent_id );
