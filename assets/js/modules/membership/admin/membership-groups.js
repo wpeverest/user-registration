@@ -990,7 +990,53 @@
 					plan_title = item.title || "",
 					plan_period = item.period || "",
 					plan_type = item.type || "free",
-					plan_amount = item.amount || 0;
+					plan_amount = item.amount || 0,
+					trial_label = "",
+					trial_end_display = "";
+
+				if (
+					item.trial_status === "on" &&
+					item.trial_data &&
+					parseInt(item.trial_data.value, 10) > 0
+				) {
+					var trial_value = parseInt(item.trial_data.value, 10),
+						trial_duration = item.trial_data.duration || "day",
+						end_date = new Date();
+
+					trial_label =
+						trial_value + "-" + trial_duration + " free trial";
+
+					if (trial_duration === "day") {
+						end_date.setDate(end_date.getDate() + trial_value);
+					} else if (trial_duration === "week") {
+						end_date.setDate(end_date.getDate() + trial_value * 7);
+					} else if (trial_duration === "month") {
+						end_date.setMonth(end_date.getMonth() + trial_value);
+					} else if (trial_duration === "year") {
+						end_date.setFullYear(
+							end_date.getFullYear() + trial_value
+						);
+					}
+
+					var month_names = [
+						"Jan",
+						"Feb",
+						"Mar",
+						"Apr",
+						"May",
+						"Jun",
+						"Jul",
+						"Aug",
+						"Sep",
+						"Oct",
+						"Nov",
+						"Dec"
+					];
+					trial_end_display =
+						month_names[end_date.getMonth()] +
+						" " +
+						end_date.getDate();
+				}
 
 				html +=
 					'<div class="urmg-plan-card ' +
@@ -1011,9 +1057,29 @@
 				html += '<div class="urmg-plan-header">';
 				html += "<div>";
 				html += '<div class="urmg-plan-title">' + plan_title + "</div>";
+				if (trial_label) {
+					html +=
+						'<span class="ur-membership-trial-label">' +
+						trial_label +
+						"</span>";
+				}
 				html += "</div>";
-				html +=
-					'<div class="urmg-plan-price">' + plan_period + "</div>";
+				html += '<div class="urmg-plan-price">' + plan_period;
+				if (trial_end_display) {
+					var trial_ends_label =
+						urmg_data &&
+						urmg_data.labels &&
+						urmg_data.labels.i18n_trial_ends
+							? urmg_data.labels.i18n_trial_ends
+							: "Trial ends";
+					html +=
+						'<span class="ur-membership-trial-end">' +
+						trial_ends_label +
+						" " +
+						trial_end_display +
+						"</span>";
+				}
+				html += "</div>";
 				html += "</div>";
 				html += "</div>";
 			});
