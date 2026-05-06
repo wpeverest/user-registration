@@ -89,6 +89,9 @@ class UR_Form_Validation extends UR_Validation {
 		}
 
 		foreach ( $form_field_data as $key => $data ) {
+			if ( empty( $data->general_setting->field_name ) ) {
+				continue;
+			}
 			$field_name = $data->general_setting->field_name;
 			if ( in_array( $field_name, $repeater_fields ) ) {
 				continue;
