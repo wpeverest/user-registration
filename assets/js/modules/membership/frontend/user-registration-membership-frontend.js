@@ -1022,6 +1022,7 @@
 					btn
 				);
 			} else {
+				var taxDetailsEl = $(document).find("#ur-tax-details");
 				this.send_data(
 					{
 						_wpnonce: urmf_data.upgrade_membership_nonce,
@@ -1032,7 +1033,13 @@
 						selected_membership_id: selected_membership_id,
 						current_subscription_id: current_subscription_id,
 						selected_pg: selected_pg,
-						coupon: data.coupon
+						coupon: data.coupon,
+						tax_rate: taxDetailsEl.length
+							? taxDetailsEl.data("tax-rate")
+							: "",
+						tax_calculation_method: taxDetailsEl.length
+							? taxDetailsEl.data("tax-calculation-method")
+							: ""
 					},
 					{
 						success: function (response) {
@@ -1470,6 +1477,7 @@
 				coupon: submittedData.coupon
 			};
 
+			var taxDetailsElAuth = $(document).find("#ur-tax-details");
 			$(document).trigger("urm_before_upgrade_membership_submit", {
 				data: data,
 				onComplete: function (data) {
@@ -1484,7 +1492,15 @@
 							selected_pg: data.selected_pg,
 							ur_authorize_data: data.ur_authorize_data,
 							form_data: submittedData.form_data,
-							coupon: submittedData.coupon
+							coupon: submittedData.coupon,
+							tax_rate: taxDetailsElAuth.length
+								? taxDetailsElAuth.data("tax-rate")
+								: "",
+							tax_calculation_method: taxDetailsElAuth.length
+								? taxDetailsElAuth.data(
+										"tax-calculation-method"
+									)
+								: ""
 						},
 						{
 							success: function (response) {

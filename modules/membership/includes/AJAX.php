@@ -1997,6 +1997,11 @@ class AJAX {
 			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
 		}
 
+		if ( ! empty( $_POST['tax_rate'] ) ) {
+			$data['tax_rate']               = sanitize_text_field( $_POST['tax_rate'] );
+			$data['tax_calculation_method'] = ! empty( $_POST['tax_calculation_method'] ) ? sanitize_text_field( $_POST['tax_calculation_method'] ) : '1';
+		}
+
 		$subscription_service = new SubscriptionService();
 		$status               = $subscription_service->can_upgrade( $data );
 

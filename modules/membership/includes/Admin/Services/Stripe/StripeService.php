@@ -481,12 +481,6 @@ class StripeService {
 			}
 		}
 
-		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
-			$tax_rate   = (float) $response_data['tax_rate'];
-			$tax_amount = $amount * $tax_rate / 100;
-			$amount     = $amount + $tax_amount;
-		}
-
 		PaymentGatewayLogging::log_transaction_start(
 			'stripe',
 			sprintf( ' [Member ID #%s] Processing Stripe payment', $member_id ) . "\n" . wp_json_encode(
@@ -515,6 +509,12 @@ class StripeService {
 				$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
 				$amount          = $amount - $discount_amount;
 			}
+		}
+
+		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
+			$tax_rate   = (float) $response_data['tax_rate'];
+			$tax_amount = $amount * $tax_rate / 100;
+			$amount     = $amount + $tax_amount;
 		}
 
 		if ( 'JPY' === $currency ) {

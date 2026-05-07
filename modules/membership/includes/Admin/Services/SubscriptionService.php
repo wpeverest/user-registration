@@ -500,6 +500,13 @@ class SubscriptionService {
 			'membership_data' => $selected_membership_details,
 		);
 
+		if ( ! empty( $data['tax_rate'] ) ) {
+			$members_data['tax_data'] = array(
+				'tax_rate'               => floatval( $data['tax_rate'] ),
+				'tax_calculation_method' => ur_string_to_bool( $data['tax_calculation_method'] ?? '1' ),
+			);
+		}
+
 		if ( ! empty( $data['coupon'] ) ) {
 			$members_data['coupon'] = $data['coupon'];
 			$coupon_service         = new CouponService();
@@ -562,6 +569,8 @@ class SubscriptionService {
 			'selected_membership_id' => $data['selected_membership_id'],
 			'current_membership_id'  => $data['current_membership_id'],
 			'order_id'               => $order['ID'],
+			'tax_rate'               => ! empty( $data['tax_rate'] ) ? $data['tax_rate'] : '',
+			'tax_calculation_method' => ! empty( $data['tax_calculation_method'] ) ? $data['tax_calculation_method'] : '',
 		);
 
 		if ( ! empty( $coupon ) ) {
