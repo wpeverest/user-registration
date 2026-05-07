@@ -67,12 +67,15 @@ class OrderService {
 			$total      = number_format( $membership_meta['amount'], 2, '.', '' );
 		}
 
+		$coupon_discount_amount = 0;
+
 		if ( isset( $membership_meta['trial_status'] ) && 'on' == $membership_meta['trial_status'] ) {
 			$total = 0;
-		} elseif ( 'bank' === $data['membership_data']['payment_method'] && ur_check_module_activation( 'coupon' ) && ! empty( $data['coupon_data'] ) ) {
-
-				$discount_amount = ( isset( $data['coupon_data']['coupon_discount_type'] ) && 'fixed' === $data['coupon_data']['coupon_discount_type'] ) ? $data['coupon_data']['coupon_discount'] : $total * $data['coupon_data']['coupon_discount'] / 100;
-				$total           = $total - $discount_amount;
+		} elseif ( ur_check_module_activation( 'coupon' ) && ! empty( $data['coupon_data'] ) ) {
+			$coupon_discount_amount = ( isset( $data['coupon_data']['coupon_discount_type'] ) && 'fixed' === $data['coupon_data']['coupon_discount_type'] )
+				? floatval( $data['coupon_data']['coupon_discount'] )
+				: $total * floatval( $data['coupon_data']['coupon_discount'] ) / 100;
+			$total                  = max( 0, $total - $coupon_discount_amount );
 		}
 
 		// For upgrades, replace $total with the pre-tax prorated amount so that
@@ -143,6 +146,20 @@ class OrderService {
 			$orders_meta[] = array(
 				'meta_key'   => 'tax_data',
 				'meta_value' => json_encode( $tax_details ),
+			);
+		}
+
+		if ( ! empty( $data['coupon_data'] ) && $coupon_discount_amount > 0 ) {
+			$orders_meta[] = array(
+				'meta_key'   => 'coupon_data',
+				'meta_value' => json_encode(
+					array(
+						'coupon_code'          => isset( $data['coupon_data']['coupon_code'] ) ? $data['coupon_data']['coupon_code'] : '',
+						'coupon_discount_type' => isset( $data['coupon_data']['coupon_discount_type'] ) ? $data['coupon_data']['coupon_discount_type'] : '',
+						'coupon_discount'      => isset( $data['coupon_data']['coupon_discount'] ) ? $data['coupon_data']['coupon_discount'] : 0,
+						'discount_amount'      => number_format( $coupon_discount_amount, 2, '.', '' ),
+					)
+				),
 			);
 		}
 

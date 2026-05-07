@@ -189,10 +189,12 @@ class PaypalService {
 			)
 		);
 
+		$tax_rate   = 0.0;
+		$tax_amount = 0.0;
 		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
-			$tax_rate     = floatval( $response_data['tax_rate'] );
-			$tax_amount   = $final_amount * $tax_rate / 100;
-			$final_amount = $final_amount + $tax_amount;
+			$tax_rate   = floatval( $response_data['tax_rate'] );
+			$tax_amount = round( $final_amount * $tax_rate / 100, 2 );
+			// $final_amount stays pre-tax; PayPal Standard adds tax via 'tax'/'tax_rate' params.
 		}
 
 		// Build item name with pricing information
@@ -204,7 +206,7 @@ class PaypalService {
 			$item_name            .= ' - ' . $currency_symbol . $final_amount . ' for ' . $subscription_value . ' ' . $subscription_duration;
 		}
 
-		//override with team subscription data
+		// override with team subscription data
 		if ( ! empty( $data['team_id'] ) && ! empty( $data['team_data'] ) && 'subscription' === $membership_type ) {
 			$subscription_value    = $data['team_data']['team_duration_value'];
 			$subscription_duration = $data['team_data']['team_duration_period'];
@@ -223,7 +225,7 @@ class PaypalService {
 			'custom'        => $membership . '-' . $member_id . '-' . $data['current_membership_id'] . '-' . $subscription_id,
 			'return'        => $return_url,
 			'rm'            => '2',
-			'tax'           => 0,
+			'tax'           => $tax_amount,
 			'upload'        => '1',
 			'sra'           => '1',
 			'src'           => '1',
@@ -241,7 +243,11 @@ class PaypalService {
 				$paypal_args['t3'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p3'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
 			}
-			$paypal_args['a3']          = floatval( user_registration_sanitize_amount( $final_amount ) );
+			$paypal_args['a3'] = floatval( user_registration_sanitize_amount( $final_amount ) );
+			if ( $tax_rate > 0 ) {
+				$paypal_args['tax_rate'] = number_format( $tax_rate, 2, '.', '' );
+				unset( $paypal_args['tax'] );
+			}
 			$new_subscription_data      = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
 			$previous_subscription_data = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
 
@@ -972,7 +978,7 @@ class PaypalService {
 			$subscription_service->update_subscription_data_for_renewal( $subscription, $membership_metas );
 		}
 
-		//only send email if IPN is received for failed attempt.
+		// only send email if IPN is received for failed attempt.
 		if ( 1 === intval( get_user_meta( $member_id, 'urm_is_payment_retrying', true ) ) ) {
 			$email_service = new EmailService();
 			$email_data    = array(
@@ -1412,7 +1418,7 @@ class PaypalService {
 			$paypal_status = $subscription_data['status'] ?? '';
 
 			if ( in_array( $paypal_status, array( 'SUSPENDED', 'CANCELLED' ) ) ) {
-				//Only if the paypal status is suspended or cancelled.
+				// Only if the paypal status is suspended or cancelled.
 				PaymentGatewayLogging::log_general(
 					'paypal',
 					'Attempting to reactivate suspended/cancelled PayPal subscription',

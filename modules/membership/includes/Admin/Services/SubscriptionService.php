@@ -344,18 +344,23 @@ class SubscriptionService {
 			$data['transaction_id'] = ! empty( $member_order['transaction_id'] ) ? $member_order['transaction_id'] : '';
 		}
 
-		if ( ! empty( $order['coupon'] ) && 'bank' !== $order['payment_method'] && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'off' === $order['trial_status'] ) ) ) {
-			$coupon_meta = ur_get_coupon_meta_by_code( $order['coupon'] );
+		if ( ! empty( $order['coupon'] ) && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'off' === $order['trial_status'] ) ) ) {
+			$coupon_meta       = ur_get_coupon_meta_by_code( $order['coupon'] );
+			$order_coupon_meta = $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'coupon_data' );
 
-			if ( ! empty( $coupon_meta ) ) {
-				$coupon_discount = isset( $coupon_meta->coupon_discount ) ? (float) $coupon_meta->coupon_discount : 0;
-				$discount_amount = ( isset( $coupon_meta->coupon_discount_type ) && $coupon_meta->coupon_discount_type === 'fixed' ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
-				$total           = $order['total_amount'] - $discount_amount;
-			} else {
-				$coupon_discount = isset( $order['coupon_discount'] ) ? (float) $order['coupon_discount'] : 0;
-				$discount_amount = ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] === 'fixed' ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
-				$total           = $order['total_amount'] - $discount_amount;
+			if ( empty( $order_coupon_meta['meta_value'] ) && 'bank' !== $order['payment_method'] ) {
+				// Legacy order: total_amount stored pre-discount — recompute discounted total for display.
+				if ( ! empty( $coupon_meta ) ) {
+					$coupon_discount = isset( $coupon_meta->coupon_discount ) ? (float) $coupon_meta->coupon_discount : 0;
+					$discount_amount = ( isset( $coupon_meta->coupon_discount_type ) && 'fixed' === $coupon_meta->coupon_discount_type ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
+					$total           = $order['total_amount'] - $discount_amount;
+				} else {
+					$coupon_discount = isset( $order['coupon_discount'] ) ? (float) $order['coupon_discount'] : 0;
+					$discount_amount = ( isset( $order['coupon_discount_type'] ) && 'fixed' === $order['coupon_discount_type'] ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
+					$total           = $order['total_amount'] - $discount_amount;
+				}
 			}
+			// New orders have coupon_data meta — total_amount already reflects the actual paid amount.
 		}
 		$billing_cycle = ( 'subscription' === $membership_metas['type'] ) ? ( ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) ) : 'N/A';
 		$trial_period  = ( 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] ) ? ( $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] . ( $membership_metas['trial_data']['value'] > 1 ? 's' : '' ) ) : 'N/A';

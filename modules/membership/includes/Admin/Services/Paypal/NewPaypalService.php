@@ -82,12 +82,12 @@ class NewPaypalService {
 	 * - subscription plan id is missing
 	 * - upgrade/trial/proration case cannot be mapped safely to REST
 	 *
-	 * @param array $data
-	 * @param int   $membership
-	 * @param string $member_email
+	 * @param array      $data
+	 * @param int        $membership
+	 * @param string     $member_email
 	 * @param int|string $subscription_id
-	 * @param int   $member_id
-	 * @param array $response_data
+	 * @param int        $member_id
+	 * @param array      $response_data
 	 *
 	 * @return string|WP_Error
 	 */
@@ -170,12 +170,12 @@ class NewPaypalService {
 	/**
 	 * Prepare a normalized context for all payment cases.
 	 *
-	 * @param array $data
-	 * @param int   $membership
-	 * @param string $member_email
+	 * @param array      $data
+	 * @param int        $membership
+	 * @param string     $member_email
 	 * @param int|string $subscription_id
-	 * @param int   $member_id
-	 * @param array $response_data
+	 * @param int        $member_id
+	 * @param array      $response_data
 	 *
 	 * @return array|WP_Error
 	 */
@@ -263,6 +263,7 @@ class NewPaypalService {
 		}
 
 		$final_amount   = (float) $membership_amount;
+		$regular_amount = $final_amount; // Pre-discount, pre-tax — used as plan base price for recurring cycles.
 		$coupon_details = array();
 		$discount_value = 0.0;
 
@@ -277,14 +278,17 @@ class NewPaypalService {
 			$final_amount = max( 0.0, (float) user_registration_sanitize_amount( $final_amount - $discount_value ) );
 		}
 
-		$tax_rate = 0.0;
+		$pre_tax_final_amount = $final_amount; // Saved before tax — used as base price in subscription plans.
+		$tax_rate             = 0.0;
+		$tax_amount           = 0.0;
 		if (
 			! empty( $response_data['tax_rate'] ) &&
 			! empty( $response_data['tax_calculation_method'] ) &&
 			ur_string_to_bool( $response_data['tax_calculation_method'] )
 		) {
 			$tax_rate     = (float) $response_data['tax_rate'];
-			$final_amount = $final_amount + ( $final_amount * $tax_rate / 100 );
+			$tax_amount   = round( $final_amount * $tax_rate / 100, 2 );
+			$final_amount = $final_amount + $tax_amount;
 		}
 
 		$paypal_verification_token = wp_generate_uuid4();
@@ -352,6 +356,9 @@ class NewPaypalService {
 			'coupon_details'                  => $coupon_details,
 			'discount_value'                  => $discount_value,
 			'tax_rate'                        => $tax_rate,
+			'tax_amount'                      => number_format( $tax_amount, 2, '.', '' ),
+			'pre_tax_amount'                  => number_format( $pre_tax_final_amount, 2, '.', '' ),
+			'regular_amount'                  => number_format( $regular_amount, 2, '.', '' ),
 			'has_team'                        => $has_team,
 			'team_quantity'                   => $this->resolve_team_quantity( $data ),
 			'fallback_reasons'                => array(),
@@ -404,27 +411,27 @@ class NewPaypalService {
 
 		// Legacy trial/proration/delayed upgrade flows are not a clean 1:1 REST map.
 		// if (
-		//  $context['is_subscription'] &&
-		//  $context['is_upgrading'] &&
-		//  (
-		//      ! empty( $context['data']['trial_status'] ) ||
-		//      ! empty( $context['data']['chargeable_amount'] )
-		//  )
+		// $context['is_subscription'] &&
+		// $context['is_upgrading'] &&
+		// (
+		// ! empty( $context['data']['trial_status'] ) ||
+		// ! empty( $context['data']['chargeable_amount'] )
+		// )
 		// ) {
-		//  $context['fallback_reasons'][] = 'subscription_upgrade_with_trial_or_proration';
-		//  return true;
+		// $context['fallback_reasons'][] = 'subscription_upgrade_with_trial_or_proration';
+		// return true;
 		// }
 
 		// Team subscription must have quantity when plan is quantity based.
 		// if (
-		//  $context['is_subscription'] &&
-		//  $context['has_team'] &&
-		//  ! empty( $context['data']['team_data']['seat_model'] ) &&
-		//  'fixed' !== $context['data']['team_data']['seat_model'] &&
-		//  empty( $context['team_quantity'] )
+		// $context['is_subscription'] &&
+		// $context['has_team'] &&
+		// ! empty( $context['data']['team_data']['seat_model'] ) &&
+		// 'fixed' !== $context['data']['team_data']['seat_model'] &&
+		// empty( $context['team_quantity'] )
 		// ) {
-		//  $context['fallback_reasons'][] = 'team_subscription_missing_quantity';
-		//  return true;
+		// $context['fallback_reasons'][] = 'team_subscription_missing_quantity';
+		// return true;
 		// }
 
 		return false;
@@ -562,6 +569,25 @@ class NewPaypalService {
 	private function create_paypal_one_time_order( $context ) {
 		$custom_id = $this->build_custom_id( $context );
 
+		$amount_data = array(
+			'currency_code' => $context['currency'],
+			'value'         => $context['final_amount'],
+		);
+
+		if ( ! empty( $context['tax_rate'] ) && (float) $context['tax_amount'] > 0 ) {
+			$pre_tax_value            = number_format( (float) $context['final_amount'] - (float) $context['tax_amount'], 2, '.', '' );
+			$amount_data['breakdown'] = array(
+				'item_total' => array(
+					'currency_code' => $context['currency'],
+					'value'         => $pre_tax_value,
+				),
+				'tax_total'  => array(
+					'currency_code' => $context['currency'],
+					'value'         => $context['tax_amount'],
+				),
+			);
+		}
+
 		$payload = array(
 			'intent'              => 'CAPTURE',
 			'purchase_units'      => array(
@@ -569,10 +595,7 @@ class NewPaypalService {
 					'reference_id' => (string) $custom_id,
 					'custom_id'    => (string) $custom_id,
 					'description'  => sanitize_text_field( $context['item_name'] ),
-					'amount'       => array(
-						'currency_code' => $context['currency'],
-						'value'         => $context['final_amount'],
-					),
+					'amount'       => $amount_data,
 				),
 			),
 			'application_context' => array(
@@ -672,7 +695,7 @@ class NewPaypalService {
 
 		// $plan_override = $this->build_subscription_plan_override( $context );
 		// if ( ! empty( $plan_override ) ) {
-		//  $payload['plan'] = $plan_override;
+		// $payload['plan'] = $plan_override;
 		// }
 		$has_trial = ! empty( $context['data']['trial_status'] ) && 'on' === $context['data']['trial_status'];
 
@@ -838,23 +861,57 @@ class NewPaypalService {
 			);
 
 			if ( isset( $interval_unit_map[ $duration ] ) ) {
-				$override['billing_cycles'] = array(
-					array(
-						'frequency'      => array(
-							'interval_unit'  => $interval_unit_map[ $duration ],
-							'interval_count' => $value,
-						),
-						'tenure_type'    => 'REGULAR',
-						'sequence'       => 1,
-						'total_cycles'   => 0,
-						'pricing_scheme' => array(
-							'fixed_price' => array(
-								'currency_code' => $context['currency'],
-								'value'         => $context['final_amount'],
+				$frequency_spec = array(
+					'interval_unit'  => $interval_unit_map[ $duration ],
+					'interval_count' => $value,
+				);
+
+				if ( ! empty( $context['coupon_details'] ) ) {
+					// Coupon applied: first cycle at discounted price, all subsequent cycles at regular price.
+					$discounted_price           = ! empty( $context['tax_rate'] ) ? $context['pre_tax_amount'] : $context['final_amount'];
+					$override['billing_cycles'] = array(
+						array(
+							'frequency'      => $frequency_spec,
+							'tenure_type'    => 'TRIAL',
+							'sequence'       => 1,
+							'total_cycles'   => 1,
+							'pricing_scheme' => array(
+								'fixed_price' => array(
+									'currency_code' => $context['currency'],
+									'value'         => $discounted_price,
+								),
 							),
 						),
-					),
-				);
+						array(
+							'frequency'      => $frequency_spec,
+							'tenure_type'    => 'REGULAR',
+							'sequence'       => 2,
+							'total_cycles'   => 0,
+							'pricing_scheme' => array(
+								'fixed_price' => array(
+									'currency_code' => $context['currency'],
+									'value'         => $context['regular_amount'],
+								),
+							),
+						),
+					);
+				} else {
+					// Currency switch only: single REGULAR cycle at converted price.
+					$override['billing_cycles'] = array(
+						array(
+							'frequency'      => $frequency_spec,
+							'tenure_type'    => 'REGULAR',
+							'sequence'       => 1,
+							'total_cycles'   => 0,
+							'pricing_scheme' => array(
+								'fixed_price' => array(
+									'currency_code' => $context['currency'],
+									'value'         => ! empty( $context['tax_rate'] ) ? $context['pre_tax_amount'] : $context['final_amount'],
+								),
+							),
+						),
+					);
+				}
 			}
 		}
 
@@ -1031,7 +1088,7 @@ class NewPaypalService {
 
 		// if buyer already returned and internal order is completed, just redirect .
 		// if ( 'completed' === ( isset( $member_order['status'] ) ? $member_order['status'] : '' ) ) {
-		//  ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
+		// ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 		// }
 
 		// REST one-time order capture.
@@ -1151,11 +1208,11 @@ class NewPaypalService {
 					$member_id
 				) . "\n" . wp_json_encode(
 					array(
-						'paypal_subscription_id'  => $paypal_subscription_id,
-						'transaction_id'          => $paypal_subscription_id,
-						'paypal_status'           => isset( $subscription_details['status'] ) ? $subscription_details['status'] : '',
-						'subscription_status'     => $resolved_status,
-						'member_id'               => $member_id,
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'transaction_id'         => $paypal_subscription_id,
+						'paypal_status'          => isset( $subscription_details['status'] ) ? $subscription_details['status'] : '',
+						'subscription_status'    => $resolved_status,
+						'member_id'              => $member_id,
 					),
 					JSON_PRETTY_PRINT
 				)
@@ -1304,7 +1361,7 @@ class NewPaypalService {
 	/**
 	 * Handle upgrade flow using existing logic.
 	 *
-	 * @param int $member_id
+	 * @param int        $member_id
 	 * @param int|string $subscription_id
 	 *
 	 * @return void
@@ -2089,10 +2146,10 @@ class NewPaypalService {
 	/**
 	 * Generic REST request helper.
 	 *
-	 * @param string $method
-	 * @param string $path
+	 * @param string     $method
+	 * @param string     $path
 	 * @param array|null $payload
-	 * @param array $paypal_options
+	 * @param array      $paypal_options
 	 *
 	 * @return array|WP_Error
 	 */
@@ -2276,6 +2333,18 @@ class NewPaypalService {
 	}
 
 	/**
+	 * Check whether a PayPal resource (plan or product) still exists in the current account/mode.
+	 *
+	 * @param string $path          REST path, e.g. '/v1/billing/plans/{id}'.
+	 * @param array  $paypal_options
+	 * @return bool
+	 */
+	private function paypal_resource_exists( $path, $paypal_options ) {
+		$response = $this->paypal_rest_request( 'GET', $path, null, $paypal_options );
+		return ! is_wp_error( $response ) && ! empty( $response['id'] );
+	}
+
+	/**
 	 * Get existing PayPal plan ID or create product + plan if missing.
 	 *
 	 * Subscription is created with plan_id, but plan needs product_id first.
@@ -2296,7 +2365,14 @@ class NewPaypalService {
 
 		$cached_plan_id = get_post_meta( $context['membership'], $plan_meta_key, true );
 		if ( ! empty( $cached_plan_id ) ) {
-			return sanitize_text_field( $cached_plan_id );
+			// Verify the plan still exists in PayPal (handles sandbox resets and credential changes).
+			if ( $this->paypal_resource_exists( '/v1/billing/plans/' . $cached_plan_id, $context['paypal_options'] ) ) {
+				return sanitize_text_field( $cached_plan_id );
+			}
+			// Plan gone — clear plan and product caches so everything is rebuilt fresh.
+			delete_post_meta( $context['membership'], $plan_meta_key );
+			delete_post_meta( $context['membership'], '_urm_paypal_latest_plan_id' );
+			delete_post_meta( $context['membership'], '_urm_paypal_product_id' );
 		}
 
 		// 3. Product is required before creating plan.
@@ -2336,7 +2412,12 @@ class NewPaypalService {
 	private function get_or_create_paypal_product_id( $context ) {
 		$product_id = get_post_meta( $context['membership'], '_urm_paypal_product_id', true );
 		if ( ! empty( $product_id ) ) {
-			return sanitize_text_field( $product_id );
+			// Verify the product still exists in PayPal (handles sandbox resets and credential changes).
+			if ( $this->paypal_resource_exists( '/v1/catalogs/products/' . $product_id, $context['paypal_options'] ) ) {
+				return sanitize_text_field( $product_id );
+			}
+			// Product gone — clear cache so a new one is created.
+			delete_post_meta( $context['membership'], '_urm_paypal_product_id' );
 		}
 
 		$product_payload = array(
@@ -2404,11 +2485,49 @@ class NewPaypalService {
 				'pricing_scheme' => array(
 					'fixed_price' => array(
 						'currency_code' => $context['currency'],
-						'value'         => $context['final_amount'],
+						'value'         => $context['regular_amount'],
 					),
 				),
 			),
 		);
+		// Coupon: plan must define a TRIAL cycle so the subscription override can set a discounted first-cycle price.
+		if (
+			! empty( $context['coupon_details'] ) &&
+			( empty( $context['data']['trial_status'] ) || 'on' !== $context['data']['trial_status'] )
+		) {
+			$billing_cycles = array(
+				array(
+					'frequency'      => array(
+						'interval_unit'  => $interval_unit,
+						'interval_count' => $value,
+					),
+					'tenure_type'    => 'TRIAL',
+					'sequence'       => 1,
+					'total_cycles'   => 1,
+					'pricing_scheme' => array(
+						'fixed_price' => array(
+							'currency_code' => $context['currency'],
+							'value'         => $context['regular_amount'],
+						),
+					),
+				),
+				array(
+					'frequency'      => array(
+						'interval_unit'  => $interval_unit,
+						'interval_count' => $value,
+					),
+					'tenure_type'    => 'REGULAR',
+					'sequence'       => 2,
+					'total_cycles'   => 0,
+					'pricing_scheme' => array(
+						'fixed_price' => array(
+							'currency_code' => $context['currency'],
+							'value'         => $context['regular_amount'],
+						),
+					),
+				),
+			);
+		}
 		// Simple trial support.
 		if (
 		! empty( $context['data']['trial_status'] ) &&
@@ -2440,7 +2559,7 @@ class NewPaypalService {
 					'pricing_scheme' => array(
 						'fixed_price' => array(
 							'currency_code' => $context['currency'],
-							'value'         => $context['final_amount'],
+							'value'         => $context['regular_amount'],
 						),
 					),
 				),
@@ -2490,15 +2609,16 @@ class NewPaypalService {
 
 		return wp_json_encode(
 			array(
-				'membership_id' => $context['membership'],
-				'currency'      => $context['currency'],
-				'amount'        => $context['final_amount'],
-				'duration'      => isset( $subscription_data['duration'] ) ? $subscription_data['duration'] : '',
-				'value'         => isset( $subscription_data['value'] ) ? $subscription_data['value'] : 1,
-				'team_quantity' => isset( $context['team_quantity'] ) ? $context['team_quantity'] : '',
-				'trial_status'  => isset( $context['data']['trial_status'] ) ? $context['data']['trial_status'] : '',
-				'trial_data'    => isset( $context['data']['trial_data'] ) ? $context['data']['trial_data'] : array(),
-				'tax_rate'      => isset( $context['tax_rate'] ) ? $context['tax_rate'] : 0,
+				'membership_id'    => $context['membership'],
+				'currency'         => $context['currency'],
+				'amount'           => $context['regular_amount'],
+				'duration'         => isset( $subscription_data['duration'] ) ? $subscription_data['duration'] : '',
+				'value'            => isset( $subscription_data['value'] ) ? $subscription_data['value'] : 1,
+				'team_quantity'    => isset( $context['team_quantity'] ) ? $context['team_quantity'] : '',
+				'trial_status'     => isset( $context['data']['trial_status'] ) ? $context['data']['trial_status'] : '',
+				'trial_data'       => isset( $context['data']['trial_data'] ) ? $context['data']['trial_data'] : array(),
+				'tax_rate'         => isset( $context['tax_rate'] ) ? $context['tax_rate'] : 0,
+				'has_coupon_cycle' => ! empty( $context['coupon_details'] ) && ( empty( $context['data']['trial_status'] ) || 'on' !== $context['data']['trial_status'] ),
 			)
 		);
 	}
