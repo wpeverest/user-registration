@@ -292,7 +292,7 @@ class OrdersListTable extends \UR_List_Table {
 		$edit_id   = $order_id ? $order_id : $user_id;
 		$edit_type = $order_id ? 'order' : 'form';
 
-		return array(
+		$actions = array(
 			'id'     => sprintf(
 				/* translators: %d: Item id */
 				__( 'ID: %d', 'user-registration' ),
@@ -305,6 +305,21 @@ class OrdersListTable extends \UR_List_Table {
 			),
 			'delete' => '<a data-user-id=' . esc_attr( $user_id ) . ' data-order-id = ' . esc_attr( $order_id ) . ' class="single-delete-order" style="cursor:pointer" >' . esc_html__( 'Trash', 'user-registration' ) . '</a>',
 		);
+
+		if ( $order_id && ur_check_module_activation( 'pdf-invoice' ) ) {
+			$actions['download_invoice'] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						admin_url( 'admin-post.php?action=ur_admin_download_invoice&order_id=' . $order_id ),
+						'ur_admin_download_invoice'
+					)
+				),
+				esc_html__( 'Download Invoice', 'user-registration' )
+			);
+		}
+
+		return $actions;
 	}
 
 	public function get_delete_links( $row ) {

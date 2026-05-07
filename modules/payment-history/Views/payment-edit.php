@@ -13,13 +13,13 @@ $order_id        = isset( $order['order_id'] ) ? $order['order_id'] : 0;
 $user_id         = isset( $order['user_id'] ) ? $order['user_id'] : 0;
 $is_form_payment = isset( $order['is_form_payment'] ) ? $order['is_form_payment'] : false;
 
-$plan_details    = ! empty( $order['plan_details'] ) ? json_decode( $order['plan_details'], true ) : array();
-$post_content    = isset( $order['post_content'] ) ? json_decode( wp_unslash( $order['post_content'] ), true ) : array();
-$trial_status    = isset( $order['trial_status'] ) ? $order['trial_status'] : 'off';
+$plan_details = ! empty( $order['plan_details'] ) ? json_decode( $order['plan_details'], true ) : array();
+$post_content = isset( $order['post_content'] ) ? json_decode( wp_unslash( $order['post_content'] ), true ) : array();
+$trial_status = isset( $order['trial_status'] ) ? $order['trial_status'] : 'off';
 
 $order_repository = new OrdersRepository();
 $order_meta_data  = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
-$tax_data 		  = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
+$tax_data         = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data['meta_value'], true ) : array();
 $tax_amount       = ! empty( $tax_data['tax_amount'] ) ? $tax_data['tax_amount'] : 0;
 
 if ( $is_form_payment ) {
@@ -48,10 +48,10 @@ $currency   = get_option( 'user_registration_payment_currency', 'USD' );
 $currencies = ur_payment_integration_get_currencies();
 $symbol     = isset( $currencies[ $currency ]['symbol'] ) ? $currencies[ $currency ]['symbol'] : '$';
 
-$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
+$local_currency = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
 
 $currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
-$symbol = ur_get_currency_symbol( $currency );
+$symbol   = ur_get_currency_symbol( $currency );
 
 $status_options = array( 'completed', 'pending', 'failed', 'refunded' );
 
@@ -114,10 +114,10 @@ if ( 0 === $coupon_discount && ! empty( $order['coupon'] ) && $user_id > 0 ) {
 	}
 }
 
-$items_subtotal = $product_amount;
-$order_total    = $items_subtotal - $coupon_discount;
-$paid_amount    = ( 'on' === $trial_status ) ? 0 : $order_total;
-$paid_amount    = ! empty( $tax_data['total_after_tax'] ) ? $tax_data['total_after_tax'] : $paid_amount;
+$items_subtotal  = $product_amount;
+$order_total     = $items_subtotal - $coupon_discount;
+$paid_amount     = ( 'on' === $trial_status ) ? 0 : $order_total;
+$paid_amount     = ! empty( $tax_data['total_after_tax'] ) ? $tax_data['total_after_tax'] : $paid_amount;
 $recurring_label = '-';
 if ( 'subscription' === $membership_type ) {
 	if ( $team ) {
@@ -207,6 +207,12 @@ if ( $first_name || $last_name ) {
 									<span class="ur-payments__badge ur-payments__badge--trial">
 										<?php esc_html_e( 'Trial', 'user-registration' ); ?>
 									</span>
+									<?php endif; ?>
+									<?php if ( ! $is_form_payment && $order_id && ur_check_module_activation( 'pdf-invoice' ) ) : ?>
+									<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=ur_admin_download_invoice&order_id=' . $order_id ), 'ur_admin_download_invoice' ) ); ?>"
+										class="button">
+										<?php esc_html_e( 'Download Invoice', 'user-registration' ); ?>
+									</a>
 									<?php endif; ?>
 								</div>
 							</div>

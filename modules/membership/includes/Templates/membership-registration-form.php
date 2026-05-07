@@ -6,18 +6,18 @@
 
 	<?php
 		// Determine redirect URL for membership registration (e.g., form setting / thank you page).
-		if ( function_exists( 'ur_get_form_redirect_url' ) ) {
-			$membership_redirect_url = ur_get_form_redirect_url( $form_id );
-		} else {
-			$membership_redirect_url = '';
-		}
+	if ( function_exists( 'ur_get_form_redirect_url' ) ) {
+		$membership_redirect_url = ur_get_form_redirect_url( $form_id );
+	} else {
+		$membership_redirect_url = '';
+	}
 		// Avoid deprecated notice: ensure this is always a string before passing to esc_url().
-		if ( null === $membership_redirect_url ) {
-			$membership_redirect_url = '';
-		}
+	if ( null === $membership_redirect_url ) {
+		$membership_redirect_url = '';
+	}
 	?>
 	<input type="hidden" id="urm-redirect-url" name="ur-redirect-url"
-		   value="<?php echo esc_url( $membership_redirect_url ); ?>"/>
+			value="<?php echo esc_url( $membership_redirect_url ); ?>"/>
 </div>
 <!--user registration section-->
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
@@ -29,7 +29,7 @@
 	use WPEverest\URMembership\Local_Currency\Admin\Api;
 
 	$is_coupon_addon_activated        = ur_check_module_activation( 'coupon' );
-	$is_tax_calculation_enabled       = ur_check_module_activation( 'taxes' );
+	$is_tax_calculation_enabled       = ur_check_module_activation( 'taxes' ) && get_option( 'user_registration_tax_calculation_during_checkout', false );
 	$is_team_addon_activated          = UR_PRO_ACTIVE && ur_check_module_activation( 'team' );
 	$membership_ids_link_with_coupons = array();
 	if ( $is_coupon_addon_activated && function_exists( 'ur_get_membership_ids_link_with_coupons' ) ) :
@@ -544,9 +544,9 @@
 		if ( isset( $attributes['user_registration_show_bank_details_on_form'] ) ) {
 			$show_bank_details_on_form = ur_string_to_bool( $attributes['user_registration_show_bank_details_on_form'] );
 		} elseif ( ! empty( $attributes['form_id'] ) && function_exists( 'ur_get_form_field_data' ) ) {
-			$form_id_raw   = $attributes['form_id'];
-			$form_id_int   = is_array( $form_id_raw ) ? ( ! empty( $form_id_raw ) ? absint( reset( $form_id_raw ) ) : 0 ) : absint( $form_id_raw );
-			$form_fields   = $form_id_int > 0 ? ur_get_form_field_data( $form_id_int ) : array();
+			$form_id_raw = $attributes['form_id'];
+			$form_id_int = is_array( $form_id_raw ) ? ( ! empty( $form_id_raw ) ? absint( reset( $form_id_raw ) ) : 0 ) : absint( $form_id_raw );
+			$form_fields = $form_id_int > 0 ? ur_get_form_field_data( $form_id_int ) : array();
 			foreach ( (array) $form_fields as $field ) {
 				if ( isset( $field->field_key, $field->general_setting->user_registration_show_bank_details_on_form ) && 'membership' === $field->field_key ) {
 					$show_bank_details_on_form = ur_string_to_bool( $field->general_setting->user_registration_show_bank_details_on_form );
