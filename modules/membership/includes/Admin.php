@@ -234,11 +234,11 @@ if ( ! class_exists( 'Admin' ) ) :
 
 		public function process_membership_after_registration( $success_params, $valid_form_data, $form_id, $user_id ) {
 		
-			// Guard 1: module active
+			// module active
 			if ( ! ur_check_module_activation( 'membership' ) ) {
 				return $success_params;
 			}
-			// Guard 2: membership POST signals present
+			// membership POST signals present
 			if ( empty( $_POST['is_membership_active'] ) && empty( $_POST['membership_type'] ) ) {
 				return $success_params;
 			}
@@ -254,7 +254,6 @@ if ( ! class_exists( 'Admin' ) ) :
 				return $success_params;
 			}
 
-			// Decode members_data (same filter as register_member())
 			$data = apply_filters(
 				'user_registration_membership_before_register_member',
 				isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array()
@@ -272,7 +271,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			$data['username'] = $member->user_login;
 			$data['email']    = $member->user_email;
 
-			// Stripe validation (mirrors register_member() lines 151-169)
+			// Stripe validation
 			if ( 'stripe' === $data['payment_method'] ) {
 				if ( ! empty( $data['stripe_pm_error'] ) ) {
 					wp_delete_user( absint( $member_id ) );
@@ -380,7 +379,6 @@ if ( ! class_exists( 'Admin' ) ) :
 			$data['order_id'] = $response['order_id'];
 
 			// Build payment gateway data
-			// ur_authorize_net comes from $_POST directly (we are inside the first AJAX, not a second one)
 			$pg_data = array();
 			if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 				$payment_service  = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
@@ -409,7 +407,6 @@ if ( ! class_exists( 'Admin' ) ) :
 				$email_service->send_email( $data, 'user_register_user' );
 				$email_service->send_email( $data, 'user_register_admin' );
 
-				// Build response_data (same filter as register_member())
 				$response_data = apply_filters(
 					'user_registration_membership_after_register_member',
 					array(
