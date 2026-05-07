@@ -1137,6 +1137,8 @@ class StripeService {
 			$order_detail     = $this->orders_repository->get_order_detail( $member_order['ID'] );
 			$order_repository = new OrdersRepository();
 			$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
+			$tax_data_meta    = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'tax_data' );
+			$tax_data         = ! empty( $tax_data_meta['meta_value'] ) ? json_decode( $tax_data_meta['meta_value'], true ) : array();
 
 			$currency = ! empty( $local_currency['meta_value'] )
 				? strtoupper( $local_currency['meta_value'] )
@@ -1202,6 +1204,14 @@ class StripeService {
 				$coupon_details = ur_get_coupon_details( $order_detail['coupon'] );
 				if ( ! empty( $coupon_details['stripe_coupon_id'] ) ) {
 					$subscription_details['coupon'] = $coupon_details['stripe_coupon_id'];
+				}
+			}
+
+			// Apply tax rate to Stripe subscription so tax is reflected in Stripe invoices.
+			if ( ! empty( $tax_data['tax_rate'] ) ) {
+				$stripe_tax_rate_id = $this->get_or_create_stripe_tax_rate( floatval( $tax_data['tax_rate'] ) );
+				if ( ! empty( $stripe_tax_rate_id ) ) {
+					$subscription_details['default_tax_rates'] = array( $stripe_tax_rate_id );
 				}
 			}
 
@@ -2714,6 +2724,43 @@ class StripeService {
 					$this->orders_repository->create( $order_data );
 				}
 			}
+		}
+	}
+
+	/**
+	 * Returns an existing Stripe Tax Rate ID for the given percentage, creating one if needed.
+	 * IDs are cached per mode (test/live) in WordPress options to avoid duplicate Tax Rates in Stripe.
+	 */
+	private function get_or_create_stripe_tax_rate( $percentage ) {
+		$mode        = self::get_stripe_settings()['mode'] ?? 'test';
+		$option_key  = 'urm_stripe_tax_rate_' . $mode . '_' . str_replace( '.', '_', (string) $percentage );
+		$tax_rate_id = get_option( $option_key );
+
+		if ( ! empty( $tax_rate_id ) ) {
+			return $tax_rate_id;
+		}
+
+		try {
+			$tax_rate = \Stripe\TaxRate::create(
+				array(
+					'display_name' => 'Tax',
+					'percentage'   => $percentage,
+					'inclusive'    => false,
+				)
+			);
+			update_option( $option_key, $tax_rate->id );
+			return $tax_rate->id;
+		} catch ( \Exception $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Failed to create Stripe Tax Rate',
+				array(
+					'error_code'    => 'TAX_RATE_CREATE_FAILED',
+					'percentage'    => $percentage,
+					'error_message' => $e->getMessage(),
+				)
+			);
+			return '';
 		}
 	}
 }
