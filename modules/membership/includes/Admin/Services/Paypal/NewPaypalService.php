@@ -160,6 +160,17 @@ class NewPaypalService {
 			return $this->revise_paypal_subscription_for_upgrade( $context );
 		}
 
+		// Proration upgrade to a subscription plan: create a new subscription with the prorated amount as a setup fee,
+		// so the member pays the proration now and the full plan price on each subsequent billing cycle.
+		if ( $context['is_upgrading'] && ! empty( $context['response_data']['chargeable_amount'] ) && $context['is_subscription'] ) {
+			return $this->create_paypal_subscription_order( $context );
+		}
+
+		// Proration upgrade to a non-subscription (one-time) plan: charge only the prorated difference.
+		if ( $context['is_upgrading'] && ! empty( $context['response_data']['chargeable_amount'] ) ) {
+			return $this->create_paypal_one_time_order( $context );
+		}
+
 		if ( $context['is_subscription'] ) {
 			return $this->create_paypal_subscription_order( $context );
 		}
@@ -370,7 +381,7 @@ class NewPaypalService {
 			$context['is_subscription'] &&
 			$context['is_upgrading'] &&
 			! empty( $context['existing_paypal_subscription_id'] ) &&
-			empty( $data['chargeable_amount'] ) &&
+			empty( $response_data['chargeable_amount'] ) &&
 			empty( $data['trial_status'] )
 		) {
 			$context['is_subscription_upgrade_revise'] = true;
@@ -699,11 +710,28 @@ class NewPaypalService {
 		// }
 		$has_trial = ! empty( $context['data']['trial_status'] ) && 'on' === $context['data']['trial_status'];
 
+		$plan_override = array();
 		if ( ! $has_trial ) {
 			$plan_override = $this->build_subscription_plan_override( $context );
-			if ( ! empty( $plan_override ) ) {
-				$payload['plan'] = $plan_override;
+		}
+
+		// For proration subscription upgrades: charge the prorated amount as a PayPal setup fee.
+		// The plan itself is at the full regular price; the setup fee covers the billing difference.
+		if ( $context['is_upgrading'] && ! empty( $context['response_data']['chargeable_amount'] ) ) {
+			$setup_fee_value = number_format( (float) $context['pre_tax_amount'], 2, '.', '' );
+			if ( ! isset( $plan_override['payment_preferences'] ) ) {
+				$plan_override['payment_preferences'] = array();
 			}
+			$plan_override['payment_preferences']['setup_fee']                = array(
+				'value'         => $setup_fee_value,
+				'currency_code' => $context['currency'],
+			);
+			$plan_override['payment_preferences']['setup_fee_failure_action'] = 'CANCEL';
+			$plan_override['payment_preferences']['auto_bill_outstanding']    = true;
+		}
+
+		if ( ! empty( $plan_override ) ) {
+			$payload['plan'] = $plan_override;
 		}
 
 		// Start time can help prevent immediate timezone confusion.
@@ -1080,11 +1108,13 @@ class NewPaypalService {
 			)
 		);
 
-		$order_token              = sanitize_text_field( isset( $_GET['token'] ) ? $_GET['token'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$paypal_subscription_id   = sanitize_text_field( isset( $_GET['subscription_id'] ) ? $_GET['subscription_id'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$member_subscription      = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
-		$is_renewing              = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'], true );
-		$is_rest_one_time_payment = ( 'paid' === $member_order['order_type'] || 'one-time' === $membership_type );
+		$order_token            = sanitize_text_field( isset( $_GET['token'] ) ? $_GET['token'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$paypal_subscription_id = sanitize_text_field( isset( $_GET['subscription_id'] ) ? $_GET['subscription_id'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$member_subscription    = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
+		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'], true );
+		// Also treat as one-time if PayPal returned a token with no subscription_id (proration upgrade).
+		$is_rest_one_time_payment = ( 'paid' === $member_order['order_type'] || 'one-time' === $membership_type )
+			|| ( ! empty( $order_token ) && empty( $paypal_subscription_id ) );
 
 		// if buyer already returned and internal order is completed, just redirect .
 		// if ( 'completed' === ( isset( $member_order['status'] ) ? $member_order['status'] : '' ) ) {

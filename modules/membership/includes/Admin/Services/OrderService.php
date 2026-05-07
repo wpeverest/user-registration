@@ -80,8 +80,10 @@ class OrderService {
 
 		// For upgrades, replace $total with the pre-tax prorated amount so that
 		// tax and total_amount are both calculated on the correct base.
+		$is_proration_upgrade_order = false;
 		if ( ! empty( $upgrade_details ) && isset( $upgrade_details['chargeable_amount'] ) ) {
-			$total = floatval( $upgrade_details['chargeable_amount'] );
+			$total                      = floatval( $upgrade_details['chargeable_amount'] );
+			$is_proration_upgrade_order = true;
 		}
 
 		$local_currency_converted_amount = 0;
@@ -146,6 +148,13 @@ class OrderService {
 			$orders_meta[] = array(
 				'meta_key'   => 'tax_data',
 				'meta_value' => json_encode( $tax_details ),
+			);
+		}
+
+		if ( $is_proration_upgrade_order ) {
+			$orders_meta[] = array(
+				'meta_key'   => 'is_proration_upgrade',
+				'meta_value' => '1',
 			);
 		}
 
