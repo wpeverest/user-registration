@@ -22,36 +22,63 @@ class AnalyticsDataService {
 	public function get_date_range_members_data( $start_date, $end_date, $unit = 'day' ) {
 		global $wpdb;
 
-		$new_members      = 0;
-		$approved_members = 0;
-		$pending_members  = 0;
-		$denied_members   = 0;
-
-		$date_keys = $this->generate_date_keys( $start_date, $end_date, $unit );
-
+		$date_keys     = $this->generate_date_keys( $start_date, $end_date, $unit );
 		$default_value = [
 			'new_members_in_a_day'      => 0,
 			'approved_members_in_a_day' => 0,
 			'pending_members_in_a_day'  => 0,
 			'denied_members_in_a_day'   => 0,
 		];
-
 		$daily_data = $this->initialize_data_structure( $date_keys, $default_value );
 
-		$members = $wpdb->get_results(
+		// %% escapes MySQL format specifiers from wpdb::prepare
+		$group_by_map = [
+			'hour'  => "DATE_FORMAT(u.user_registered, '%%Y-%%m-%%d %%H')",
+			'day'   => 'DATE(u.user_registered)',
+			'week'  => 'DATE(DATE_SUB(u.user_registered, INTERVAL WEEKDAY(u.user_registered) DAY))',
+			'month' => "DATE_FORMAT(u.user_registered, '%%Y-%%m')",
+			'year'  => "DATE_FORMAT(u.user_registered, '%%Y')",
+		];
+		$group_by = $group_by_map[ $unit ] ?? $group_by_map['day'];
+
+		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT u.ID, u.user_registered
-					FROM {$wpdb->users} u
-					INNER JOIN {$wpdb->usermeta} um ON u.ID = um.user_id
-					WHERE um.meta_key = %s
-					AND u.user_registered BETWEEN %s AND %s",
-				'ur_form_id',
+				"SELECT {$group_by} AS time_key,
+					COUNT(DISTINCT u.ID) AS total_count,
+					SUM(CASE
+						WHEN um_email.meta_value IS NOT NULL AND um_email.meta_value != '' THEN
+							CASE WHEN CAST(um_email.meta_value AS UNSIGNED) = 1 THEN 1 ELSE 0 END
+						WHEN um_status.meta_value IS NULL OR um_status.meta_value = '' THEN 1
+						WHEN CAST(um_status.meta_value AS UNSIGNED) = 1 THEN 1
+						ELSE 0
+					END) AS approved_count,
+					SUM(CASE
+						WHEN um_email.meta_value IS NOT NULL AND um_email.meta_value != '' THEN
+							CASE WHEN CAST(um_email.meta_value AS UNSIGNED) != 1 THEN 1 ELSE 0 END
+						WHEN um_status.meta_value IS NOT NULL AND um_status.meta_value != ''
+							AND CAST(um_status.meta_value AS UNSIGNED) = 0 THEN 1
+						ELSE 0
+					END) AS pending_count,
+					SUM(CASE
+						WHEN ( um_email.meta_value IS NULL OR um_email.meta_value = '' )
+							AND um_status.meta_value IS NOT NULL AND um_status.meta_value != ''
+							AND CAST(um_status.meta_value AS UNSIGNED) != 0
+							AND CAST(um_status.meta_value AS UNSIGNED) != 1 THEN 1
+						ELSE 0
+					END) AS denied_count
+				FROM {$wpdb->users} u
+				INNER JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = %s
+				LEFT JOIN {$wpdb->usermeta} um_status ON u.ID = um_status.user_id AND um_status.meta_key = %s
+				LEFT JOIN {$wpdb->usermeta} um_email ON u.ID = um_email.user_id AND um_email.meta_key = %s
+				WHERE u.user_registered BETWEEN %s AND %s
+				GROUP BY time_key ORDER BY time_key",
+				'ur_form_id', 'ur_user_status', 'ur_confirm_email',
 				wp_date( 'Y-m-d H:i:s', $start_date ),
 				wp_date( 'Y-m-d H:i:s', $end_date )
 			)
 		);
 
-		if ( empty( $members ) ) {
+		if ( empty( $results ) ) {
 			return [
 				'new_members'      => 0,
 				'approved_members' => 0,
@@ -62,52 +89,28 @@ class AnalyticsDataService {
 			];
 		}
 
-		$member_ids       = wp_list_pluck( $members, 'ID' );
-		$member_meta_data = $this->fetch_member_meta_bulk( $member_ids );
+		$new_members      = 0;
+		$approved_members = 0;
+		$pending_members  = 0;
+		$denied_members   = 0;
 
-		foreach ( $members as $member ) {
-			$member_id              = $member->ID;
-			$registration_timestamp = strtotime( $member->user_registered );
-			$registration_date      = $this->get_date_key_for_timestamp( $registration_timestamp, $unit );
+		foreach ( $results as $row ) {
+			$time_key  = $row->time_key;
+			$total     = (int) $row->total_count;
+			$approved  = (int) $row->approved_count;
+			$pending   = (int) $row->pending_count;
+			$denied    = (int) $row->denied_count;
 
-			++$new_members;
+			$new_members      += $total;
+			$approved_members += $approved;
+			$pending_members  += $pending;
+			$denied_members   += $denied;
 
-			$status       = $member_meta_data[ $member_id ]['user_status'] ?? '';
-			$email_status = $member_meta_data[ $member_id ]['user_email_status'] ?? '';
-
-			if ( '' === $status && '' === $email_status ) {
-				++$approved_members;
-				$member_status = 'approved';
-			} elseif ( '' !== $status && '' === $email_status ) {
-				if ( 1 === (int) $status ) {
-					++$approved_members;
-					$member_status = 'approved';
-				} elseif ( 0 === (int) $status ) {
-					++$pending_members;
-					$member_status = 'pending';
-				} else {
-					++$denied_members;
-					$member_status = 'denied';
-				}
-			} elseif ( '' !== $email_status ) {
-				if ( 1 === (int) $email_status ) {
-					++$approved_members;
-					$member_status = 'approved';
-				} else {
-					++$pending_members;
-					$member_status = 'pending';
-				}
-			}
-
-			if ( isset( $daily_data[ $registration_date ] ) ) {
-				++$daily_data[ $registration_date ]['new_members_in_a_day'];
-				if ( 'approved' === $member_status ) {
-					++$daily_data[ $registration_date ]['approved_members_in_a_day'];
-				} elseif ( 'pending' === $member_status ) {
-					++$daily_data[ $registration_date ]['pending_members_in_a_day'];
-				} elseif ( 'denied' === $member_status ) {
-					++$daily_data[ $registration_date ]['denied_members_in_a_day'];
-				}
+			if ( isset( $daily_data[ $time_key ] ) ) {
+				$daily_data[ $time_key ]['new_members_in_a_day']      = $total;
+				$daily_data[ $time_key ]['approved_members_in_a_day'] = $approved;
+				$daily_data[ $time_key ]['pending_members_in_a_day']  = $pending;
+				$daily_data[ $time_key ]['denied_members_in_a_day']   = $denied;
 			}
 		}
 
@@ -136,17 +139,26 @@ class AnalyticsDataService {
 			return [];
 		}
 
-		update_meta_cache( 'user', $member_ids );
+		global $wpdb;
 
-		$meta_data = [];
-		foreach ( $member_ids as $member_id ) {
-			$user_status       = get_user_meta( $member_id, 'ur_user_status', true );
-			$user_email_status = get_user_meta( $member_id, 'ur_confirm_email', true );
+		$meta_data = array_fill_keys( $member_ids, [ 'user_status' => '', 'user_email_status' => '' ] );
 
-			$meta_data[ $member_id ] = [
-				'user_status'       => $user_status,
-				'user_email_status' => $user_email_status,
-			];
+		foreach ( array_chunk( $member_ids, 500 ) as $chunk ) {
+			$placeholders = implode( ',', array_fill( 0, count( $chunk ), '%d' ) );
+			$rows         = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT user_id, meta_key, meta_value FROM {$wpdb->usermeta}
+					 WHERE user_id IN ({$placeholders}) AND meta_key IN ('ur_user_status', 'ur_confirm_email')",
+					...$chunk
+				)
+			);
+			foreach ( $rows as $row ) {
+				if ( 'ur_user_status' === $row->meta_key ) {
+					$meta_data[ (int) $row->user_id ]['user_status'] = $row->meta_value;
+				} elseif ( 'ur_confirm_email' === $row->meta_key ) {
+					$meta_data[ (int) $row->user_id ]['user_email_status'] = $row->meta_value;
+				}
+			}
 		}
 
 		return $meta_data;
@@ -504,12 +516,17 @@ class AnalyticsDataService {
 
 		$daily_data = $this->initialize_daily_data_structure( $start_date, $end_date, $unit );
 
-		$invoices = array_unique(
-			$wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT meta_value FROM {$wpdb->usermeta} WHERE meta_key = %s",
-					'ur_payment_invoices'
-				)
+		// Join wp_users to scope by user_registered; 1-year look-back covers subscription renewals
+		$buffer_start = $start_date - YEAR_IN_SECONDS;
+
+		$invoices = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT um.meta_value FROM {$wpdb->usermeta} um
+				 INNER JOIN {$wpdb->users} u ON u.ID = um.user_id
+				 WHERE um.meta_key = %s AND u.user_registered BETWEEN %s AND %s",
+				'ur_payment_invoices',
+				wp_date( 'Y-m-d H:i:s', $buffer_start ),
+				wp_date( 'Y-m-d H:i:s', $end_date )
 			)
 		);
 
