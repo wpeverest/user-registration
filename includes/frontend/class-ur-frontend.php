@@ -666,8 +666,9 @@ class UR_Frontend {
 							$tax_order_meta = $orders_repository->get_order_meta_by_order_id_and_meta_key( $subscription_last_order['ID'], 'tax_data' );
 							$tax_data       = ! empty( $tax_order_meta['meta_value'] ) ? json_decode( $tax_order_meta['meta_value'], true ) : array();
 							$tax_rate       = ! empty( $tax_data['tax_rate'] ) ? (float) $tax_data['tax_rate'] : 0;
+							$is_exclusive   = ! empty( $tax_data['tax_calculation_method'] );
 
-							if ( $tax_rate > 0 ) {
+							if ( $tax_rate > 0 && $is_exclusive ) {
 								$amount += round( $amount * $tax_rate / 100, 2 );
 							}
 						}

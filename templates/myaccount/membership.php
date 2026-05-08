@@ -94,16 +94,6 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 						$is_proration_meta    = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'is_proration_upgrade' );
 						$is_proration_upgrade = ! empty( $is_proration_meta['meta_value'] );
 
-						if ( 'subscription' === $membership_type && ! empty( $data['membership']['post_content']['amount'] ) ) {
-							$recurring_amount = (float) $data['membership']['post_content']['amount'];
-
-							if ( ! empty( $tax_data['tax_rate'] ) ) {
-								$recurring_amount += round( $recurring_amount * (float) $tax_data['tax_rate'] / 100, 2 );
-							}
-
-							$data['period'] = preg_replace( '#^[^ ]+#', $symbol . number_format( $recurring_amount, 2, '.', '' ), $data['period'] );
-						}
-
 						?>
 							<tr class="ur-account-table__row">
 								<td class="ur-account-table__cell ur-account-table__cell--membership-type">
