@@ -562,6 +562,19 @@ class SubscriptionService {
 		$ur_authorize_net_data = isset( $data['ur_authorize_net'] ) ? $data['ur_authorize_net'] : array();
 		$coupon                = isset( $data['coupon'] ) ? $data['coupon'] : '';
 
+		if ( 'free' !== $payment_method ) {
+			$membership_process = urm_get_membership_process( $user->ID );
+			if ( ! isset( $membership_process['upgrade'][ $data['current_membership_id'] ] ) ) {
+				$membership_process['upgrade'][ $data['current_membership_id'] ] = array(
+					'from'            => $data['current_membership_id'],
+					'to'              => $data['selected_membership_id'],
+					'subscription_id' => $data['current_subscription_id'],
+				);
+
+				update_user_meta( $user->ID, 'urm_membership_process', $membership_process );
+			}
+		}
+
 		$data = array(
 			'membership'             => $data['selected_membership_id'],
 			'subscription_id'        => $subscription['ID'],
@@ -590,6 +603,12 @@ class SubscriptionService {
 			$response['status'] = true;
 
 		} else {
+			$membership_process = urm_get_membership_process( $user->ID );
+			if ( ! empty( $membership_process['upgrade'][ $data['current_membership_id'] ] ) ) {
+				unset( $membership_process['upgrade'][ $data['current_membership_id'] ] );
+				update_user_meta( $user->ID, 'urm_membership_process', $membership_process );
+			}
+
 			$this->orders_repository->delete( $order['ID'] );
 		}
 

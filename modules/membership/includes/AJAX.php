@@ -2068,12 +2068,6 @@ class AJAX {
 					);
 
 					update_user_meta( $member_id, 'urm_membership_process', $membership_process );
-				} else {
-					wp_send_json_error(
-						array(
-							'message' => __( 'Membership upgrade process already initiated.', 'user-registration' ),
-						)
-					);
 				}
 			} else {
 				// Free upgrade completes immediately
