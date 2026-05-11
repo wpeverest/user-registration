@@ -196,7 +196,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 					    LEFT JOIN $this->users_table wu ON wums.user_id = wu.ID
 					    LEFT JOIN $this->posts_table wp ON wums.item_id = wp.ID
 						WHERE wums.status = 'expired'
-						AND wums.expiry_date = '%s'
+						AND DATE(wums.expiry_date) = DATE('%s')
 						",
 			$check_date
 		);

@@ -2692,7 +2692,9 @@ class StripeService {
 
 				if ( empty( $payment ) ) {
 					$payment = $this->orders_repository->get_order_by_transaction_id( $subscription_id );
-					$this->orders_repository->delete( $payment['ID'] );
+					if ( ! empty( $payment['ID'] ) ) {
+						$this->orders_repository->delete( $payment['ID'] );
+					}
 
 					$subscription   = $this->members_subscription_repository->retrieve( $membership_subscription['ID'] );
 					$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent_id );
@@ -2732,8 +2734,8 @@ class StripeService {
 	 * IDs are cached per mode (test/live) in WordPress options to avoid duplicate Tax Rates in Stripe.
 	 */
 	private function get_or_create_stripe_tax_rate( $percentage ) {
-		$mode        = self::get_stripe_settings()['mode'] ?? 'test';
-		$option_key  = 'urm_stripe_tax_rate_' . $mode . '_' . str_replace( '.', '_', (string) $percentage );
+		$mode       = self::get_stripe_settings()['mode'] ?? 'test';
+		$option_key = 'urm_stripe_tax_rate_' . $mode . '_' . str_replace( '.', '_', (string) $percentage );
 		$tax_rate_id = get_option( $option_key );
 
 		if ( ! empty( $tax_rate_id ) ) {
@@ -2755,8 +2757,8 @@ class StripeService {
 				'stripe',
 				'Failed to create Stripe Tax Rate',
 				array(
-					'error_code'    => 'TAX_RATE_CREATE_FAILED',
-					'percentage'    => $percentage,
+					'error_code'  => 'TAX_RATE_CREATE_FAILED',
+					'percentage'  => $percentage,
 					'error_message' => $e->getMessage(),
 				)
 			);

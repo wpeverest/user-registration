@@ -540,11 +540,7 @@ class EmailService {
 		$membership_url = esc_url( ur_get_page_id( 'myaccount' ) > 0 ? ur_get_page_permalink( 'myaccount' ) : ur_get_page_permalink( 'login' ) );
 		$membership_url = trailingslashit( $membership_url ) . 'ur-membership/';
 
-		$values = array(
-			'membership_tags' => $tags,
-			'renewal_link'    => $membership_url,
-			'email'           => $data['user_email'],
-		) + $data;
+		$values = array( 'membership_tags' => $tags, 'renewal_link' => $membership_url, 'email' => $data['user_email'] ) + $data;
 
 		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_expiring_soon_user_email_message', $settings->user_registration_get_membership_expiring_soon_user_email() ), $values, $form_id );
 		$subject = apply_filters( 'user_registration_process_smart_tags', $subject, $values, $form_id );
@@ -579,7 +575,9 @@ class EmailService {
 		$subscription_service = new SubscriptionService();
 		$tags                 = $subscription_service->get_membership_plan_details( $data );
 
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_ended_user_email_message', $settings->user_registration_get_membership_ended_user_email() ), $tags, $form_id );
+		$values = array( 'membership_tags' => $tags, 'email' => $data['user_email'] ) + $data;
+
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_ended_user_email_message', $settings->user_registration_get_membership_ended_user_email() ), $values, $form_id );
 
 		$message = apply_filters( 'ur_membership_membership_ended_email_custom_template', $message, $subject );
 
