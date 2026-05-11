@@ -176,6 +176,44 @@ if ( ! class_exists( 'Admin' ) ) :
 			add_action( 'plugins_loaded', array( __CLASS__, 'ur_membership_maybe_run_migrations' ), 20 );
 
 			add_action( 'user_registration_single_user_details_content', array( $this, 'render_user_membership_details' ), 10, 2 );
+
+			add_action( 'urm_member_registered', array( $this, 'send_registration_emails' ), 10, 2 );
+		}
+
+		/**
+		 * Sends the member and admin registration emails.
+		 *
+		 *
+		 * @param array $data      Member data prepared during registration.
+		 * @param int   $member_id Newly created WP user ID.
+		 */
+		public function send_registration_emails( $data, $member_id ) {
+			add_action(
+				'shutdown',
+				function () use ( $data, $member_id ) {
+					// Flush the response to the client and close the connection.
+					// PHP keeps running so emails can be sent without the user waiting.
+					if ( function_exists( 'fastcgi_finish_request' ) ) {
+						fastcgi_finish_request();
+					} elseif ( function_exists( 'litespeed_finish_request' ) ) {
+						litespeed_finish_request();
+					}
+
+					try {
+						$email_service = new EmailService();
+						$email_service->send_email( $data, 'user_register_user' );
+						$email_service->send_email( $data, 'user_register_admin' );
+					} catch ( \Throwable $e ) {
+						// Registrant already received their success response — log and move on.
+						if ( function_exists( 'ur_get_logger' ) ) {
+							ur_get_logger()->error(
+								sprintf( 'urm_member_registered email send failed for member %d: %s', $member_id, $e->getMessage() ),
+								array( 'source' => 'user-registration-membership' )
+							);
+						}
+					}
+				}
+			);
 		}
 
 		public function register_membership_admin_scripts() {
@@ -402,10 +440,7 @@ if ( ! class_exists( 'Admin' ) ) :
 					}
 				}
 
-				// Send emails
-				$email_service = new EmailService();
-				$email_service->send_email( $data, 'user_register_user' );
-				$email_service->send_email( $data, 'user_register_admin' );
+				do_action( 'urm_member_registered', $data, $member_id );
 
 				$response_data = apply_filters(
 					'user_registration_membership_after_register_member',
