@@ -275,6 +275,12 @@ class URCR_Frontend {
 				if ( null !== $restriction_rule && ! is_super_admin() ) {
 					do_action( 'urcr_pre_content_restriction_applied', $restriction_rule, $post );
 
+					if ( ! is_singular() ) {
+						$this->apply_loop_content_restriction( $restriction_rule );
+						do_action( 'urcr_post_content_restriction_applied', $restriction_rule, $post );
+						return $template;
+					}
+
 					urcr_apply_content_restriction( $restriction_rule['actions'], $post );
 
 					do_action( 'urcr_post_content_restriction_applied', $restriction_rule, $post );
@@ -289,6 +295,45 @@ class URCR_Frontend {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Render the restriction message for non-singular views (home page, blog index, archives,
+	 * search results, etc.) where there is no single queried post for the standard
+	 * urcr_apply_content_restriction() flow to mutate.
+	 *
+	 * @param array $restriction_rule The matched restriction rule.
+	 */
+	/**
+	 * Replace post content/excerpt with the restriction message on non-singular loops.
+	 */
+	private function apply_loop_content_restriction( $restriction_rule ) {
+		$placeholder = (object) array(
+			'ID'             => -1,
+			'post_title'     => '',
+			'post_content'   => '',
+			'post_excerpt'   => '',
+			'post_status'    => 'publish',
+			'post_type'      => 'page',
+			'comment_status' => 'closed',
+			'ping_status'    => 'closed',
+			'filter'         => 'raw',
+		);
+
+		urcr_apply_content_restriction( $restriction_rule['actions'], $placeholder );
+
+		$styled_content = $placeholder->post_content;
+		if ( '' === $styled_content ) {
+			return;
+		}
+
+		$replace_with_message = function () use ( $styled_content ) {
+			return $styled_content;
+		};
+
+		add_filter( 'the_content', $replace_with_message, PHP_INT_MAX );
+		add_filter( 'the_excerpt', $replace_with_message, PHP_INT_MAX );
+		add_filter( 'get_the_excerpt', $replace_with_message, PHP_INT_MAX );
 	}
 
 	/**
@@ -1374,16 +1419,6 @@ class URCR_Frontend {
 			}
 		}
 
-		if ( $is_whole_site_restriction ) {
-			add_filter(
-				'body_class',
-				function ( $classes ) {
-					$classes[] = 'urcr-hide-page-title';
-					return $classes;
-				}
-			);
-		}
-
 		// Use base template to generate styled content
 		ob_start();
 		urcr_get_template(
@@ -1476,17 +1511,6 @@ class URCR_Frontend {
 		$restricted_message      = get_post_meta( $post->ID, 'urcr_meta_content', true );
 		$override_global_message = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', true );
 		$message_content         = ! empty( $restricted_message ) && $override_global_message ? wp_kses_post( $restricted_message ) : $this->message();
-
-		// Add body class to hide page title for whole site restrictions
-		if ( $is_whole_site_restriction ) {
-			add_filter(
-				'body_class',
-				function ( $classes ) {
-					$classes[] = 'urcr-hide-page-title';
-					return $classes;
-				}
-			);
-		}
 
 		$post->post_content = $message_content;
 
