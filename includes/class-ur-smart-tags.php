@@ -630,12 +630,14 @@ class UR_Smart_Tags {
 						break;
 					case 'manage_membership_link':
 						$endpoint               = 'ur-membership';
-						$manage_membership_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'Manage Membership', 'user-registration' ) . '</a>';
+						$my_account_url         = ur_get_page_id( 'myaccount' ) > 0 ? ur_get_page_permalink( 'myaccount' ) : ur_get_page_permalink( 'login' );
+						$manage_membership_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint, '', $my_account_url ) ) . '">' . esc_html__( 'Manage Membership', 'user-registration' ) . '</a>';
 						$content                = str_replace( '{{' . $tag . '}}', wp_kses_post( $manage_membership_link ), $content );
 						break;
 					case 'reactivation_link':
 						$endpoint           = 'ur-membership';
-						$membership_tab_url = esc_url( ur_get_endpoint_url( $endpoint ) );
+						$my_account_url     = ur_get_page_id( 'myaccount' ) > 0 ? ur_get_page_permalink( 'myaccount' ) : ur_get_page_permalink( 'login' );
+						$membership_tab_url = esc_url( ur_get_endpoint_url( $endpoint, '', $my_account_url ) );
 						$reactivation_link  = '<a href="' . $membership_tab_url . '">' . esc_html__( 'Reactivate Membership', 'user-registration' ) . '</a>';
 						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $reactivation_link ), $content );
 						break;
