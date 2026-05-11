@@ -74,50 +74,56 @@ $local_currency_converted_amount = $order_repository->get_order_meta_by_order_id
 
 $product_amount = ! empty( $local_currency_converted_amount['meta_value'] ) ? $local_currency_converted_amount['meta_value'] : $product_amount;
 
-$coupon               = ! empty( $order['coupon'] ) ? ur_get_coupon_details( $order['coupon'] ) : null;
-$coupon_discount      = 0;
-$coupon_discount_type = 'fixed';
+$coupon                = ! empty( $order['coupon'] ) ? ur_get_coupon_details( $order['coupon'] ) : null;
+$coupon_discount       = 0;
+$coupon_discount_type  = 'fixed';
+$coupon_discount_value = null;
+$proration_discount    = 0;
+
+// Actual paid amount from DB already reflects all discounts (proration + coupon + tax).
+$raw_total       = isset( $order['total_amount'] ) ? (float) $order['total_amount'] : 0;
+$invoice_pre_tax = max( $raw_total - (float) $tax_amount, 0 );
 
 if ( ! empty( $coupon ) ) {
-	$discount_value = null;
-	$discount_type  = 'fixed';
-
 	if ( isset( $coupon['coupon_discount'] ) && isset( $coupon['coupon_discount_type'] ) ) {
-		$discount_value = (float) $coupon['coupon_discount'];
-		$discount_type  = $coupon['coupon_discount_type'];
+		$coupon_discount_value = (float) $coupon['coupon_discount'];
+		$coupon_discount_type  = $coupon['coupon_discount_type'];
 	} elseif ( isset( $coupon['discount'] ) ) {
-		$discount_value = (float) $coupon['discount'];
-		$discount_type  = isset( $coupon['discount_type'] ) ? $coupon['discount_type'] : ( isset( $coupon['coupon_discount_type'] ) ? $coupon['coupon_discount_type'] : 'fixed' );
-	}
-
-	if ( null !== $discount_value ) {
-		if ( 'percent' === $discount_type ) {
-			$coupon_discount = $product_amount * ( $discount_value / 100 );
-		} else {
-			$coupon_discount = $discount_value;
-		}
-		$coupon_discount_type = $discount_type;
+		$coupon_discount_value = (float) $coupon['discount'];
+		$coupon_discount_type  = isset( $coupon['discount_type'] ) ? $coupon['discount_type'] : ( isset( $coupon['coupon_discount_type'] ) ? $coupon['coupon_discount_type'] : 'fixed' );
 	}
 }
 
-if ( 0 === $coupon_discount && ! empty( $order['coupon'] ) && $user_id > 0 ) {
+if ( null === $coupon_discount_value && ! empty( $order['coupon'] ) && $user_id > 0 ) {
 	$user_coupon_discount      = get_user_meta( $user_id, 'ur_coupon_discount', true );
 	$user_coupon_discount_type = get_user_meta( $user_id, 'ur_coupon_discount_type', true );
 
 	if ( ! empty( $user_coupon_discount ) ) {
-		if ( 'percent' === $user_coupon_discount_type ) {
-			$coupon_discount = $product_amount * ( (float) $user_coupon_discount / 100 );
-		} else {
-			$coupon_discount = (float) $user_coupon_discount;
-		}
-		$coupon_discount_type = $user_coupon_discount_type;
+		$coupon_discount_value = (float) $user_coupon_discount;
+		$coupon_discount_type  = $user_coupon_discount_type;
 	}
 }
 
+// Back-calculate proration and coupon separately from the actual paid amount.
+// Coupon applies to the post-proration subtotal; proration = plan price − post-proration amount.
+if ( null !== $coupon_discount_value && $invoice_pre_tax > 0 ) {
+	if ( 'percent' === $coupon_discount_type ) {
+		$divisor        = 1 - ( $coupon_discount_value / 100 );
+		$post_proration = $divisor > 0 ? round( $invoice_pre_tax / $divisor, 2 ) : $product_amount;
+	} else {
+		$post_proration = round( $invoice_pre_tax + $coupon_discount_value, 2 );
+	}
+	$coupon_discount    = round( $post_proration - $invoice_pre_tax, 2 );
+	$proration_discount = max( round( $product_amount - $post_proration, 2 ), 0 );
+} elseif ( $invoice_pre_tax < $product_amount ) {
+	// No coupon but proration exists.
+	$proration_discount = round( $product_amount - $invoice_pre_tax, 2 );
+}
+
 $items_subtotal  = $product_amount;
-$order_total     = $items_subtotal - $coupon_discount;
-$paid_amount     = ( 'on' === $trial_status ) ? 0 : $order_total;
-$paid_amount     = ! empty( $tax_data['total_after_tax'] ) ? $tax_data['total_after_tax'] : $paid_amount;
+$order_total     = $invoice_pre_tax;
+$paid_amount     = ( 'on' === $trial_status ) ? 0 : $raw_total;
+$paid_amount     = ! empty( $tax_data['total_after_tax'] ) ? (float) $tax_data['total_after_tax'] : $paid_amount;
 $recurring_label = '-';
 if ( 'subscription' === $membership_type ) {
 	if ( $team ) {
@@ -255,9 +261,10 @@ if ( $first_name || $last_name ) {
 													<div class="ur-payments__table-price">
 														<?php echo esc_html( $symbol . number_format( $order_total, 2 ) ); ?>
 													</div>
-													<?php if ( $coupon_discount > 0 ) : ?>
+													<?php $total_discount = round( $items_subtotal - $order_total, 2 ); ?>
+													<?php if ( $total_discount > 0 ) : ?>
 													<div class="ur-payments__table-discount">
-														<?php echo esc_html( $symbol . number_format( $coupon_discount, 2 ) . ' ' . __( 'discount', 'user-registration' ) ); ?>
+														<?php echo esc_html( $symbol . number_format( $total_discount, 2 ) . ' ' . __( 'discount', 'user-registration' ) ); ?>
 													</div>
 													<?php endif; ?>
 												</td>
@@ -300,6 +307,17 @@ if ( $first_name || $last_name ) {
 														<?php echo esc_html( $symbol . number_format( $items_subtotal, 2 ) ); ?>
 													</td>
 												</tr>
+												<?php if ( $proration_discount > 0 ) : ?>
+												<tr>
+													<td class="ur-payments__summary-label">
+														<?php esc_html_e( 'Proration Discount:', 'user-registration' ); ?>
+													</td>
+													<td width="1%"></td>
+													<td class="ur-payments__summary-total">-
+														<?php echo esc_html( $symbol . number_format( $proration_discount, 2 ) ); ?>
+													</td>
+												</tr>
+												<?php endif; ?>
 												<?php if ( $coupon_discount > 0 ) : ?>
 												<tr>
 													<td class="ur-payments__summary-label">

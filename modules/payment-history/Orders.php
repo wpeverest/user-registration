@@ -508,19 +508,61 @@ class Orders {
 		$tax_rate        = ! empty( $tax_data['tax_rate'] ) ? $tax_data['tax_rate'] : 0;
 		$tax_label       = 'Tax ( ' . $tax_rate . ' %)';
 
-		$invoice_amount   = number_format( $tax_amount > 0 ? $raw_total - $tax_amount : $raw_total, 2, '.', '' );
+		$invoice_pre_tax  = $tax_amount > 0 ? $raw_total - $tax_amount : $raw_total;
+		$invoice_amount   = number_format( $invoice_pre_tax, 2, '.', '' );
 		$total_amount_str = number_format( $raw_total, 2, '.', '' );
-		$prorate_discount = ! $is_trial && $raw_total > 0.005 && $plan_amount > floatval( $invoice_amount ) + 0.005
-			? round( $plan_amount - floatval( $invoice_amount ), 2 )
+
+		// Coupon discount — applied to the post-proration amount, back-calculated from
+		// what was actually charged (invoice_pre_tax = post_proration − coupon).
+		$coupon_code    = $order['coupon'] ?? '';
+		$coupon_label   = '';
+		$coupon_raw     = 0.0;
+		$discount_value = null;
+		$discount_type  = 'fixed';
+
+		if ( ! empty( $coupon_code ) ) {
+			$coupon_data = ur_get_coupon_details( $coupon_code );
+			if ( ! empty( $coupon_data ) ) {
+				if ( isset( $coupon_data['coupon_discount'], $coupon_data['coupon_discount_type'] ) ) {
+					$discount_value = (float) $coupon_data['coupon_discount'];
+					$discount_type  = $coupon_data['coupon_discount_type'];
+				} elseif ( isset( $coupon_data['discount'] ) ) {
+					$discount_value = (float) $coupon_data['discount'];
+					$discount_type  = $coupon_data['discount_type'] ?? $coupon_data['coupon_discount_type'] ?? 'fixed';
+				}
+			}
+		}
+
+		// Back-calculate post-proration amount and coupon from what was charged.
+		if ( null !== $discount_value && $discount_value > 0 ) {
+			if ( 'percent' === $discount_type ) {
+				$pct                   = min( (float) $discount_value, 100 );
+				$post_proration_amount = $pct < 100 ? round( $invoice_pre_tax / ( 1 - $pct / 100 ), 4 ) : $plan_amount;
+				$coupon_raw            = round( $post_proration_amount * $pct / 100, 2 );
+				$coupon_label          = 'Coupon (' . $pct . '%)';
+			} else {
+				$coupon_raw            = round( $discount_value, 2 );
+				$post_proration_amount = round( $invoice_pre_tax + $coupon_raw, 4 );
+				$coupon_label          = 'Coupon (' . $coupon_code . ')';
+			}
+		} else {
+			$post_proration_amount = $invoice_pre_tax;
+		}
+
+		// Proration = plan price minus post-proration amount.
+		$prorate_discount = ( ! $is_trial && $raw_total > 0.005 && $plan_amount > $post_proration_amount + 0.005 )
+			? max( round( $plan_amount - $post_proration_amount, 2 ), 0 )
 			: 0;
 
-		$fmt_tax_bare = number_format( $tax_amount, 2, '.', '' );
-		$fmt_item     = $invoice_amount;
-		$fmt_tax      = $fmt_tax_bare;
-		$fmt_subtotal = $invoice_amount;
-		$fmt_total    = $total_amount_str;
-		$fmt_plan     = $prorate_discount > 0 ? number_format( $plan_amount, 2, '.', '' ) : '';
-		$fmt_prorate  = $prorate_discount > 0 ? number_format( $prorate_discount, 2, '.', '' ) : '';
+		$fmt_tax_bare    = number_format( $tax_amount, 2, '.', '' );
+		$fmt_item        = $invoice_amount;
+		$fmt_tax         = $fmt_tax_bare;
+		$fmt_subtotal    = $invoice_amount;
+		$fmt_total       = $total_amount_str;
+		$fmt_plan        = ( $prorate_discount > 0 || $coupon_raw > 0 ) ? number_format( $plan_amount, 2, '.', '' ) : '';
+		$fmt_prorate     = $prorate_discount > 0 ? number_format( $prorate_discount, 2, '.', '' ) : '';
+		$fmt_coupon_bare = $coupon_raw > 0 ? number_format( $coupon_raw, 2, '.', '' ) : '';
+		$fmt_coupon      = $fmt_coupon_bare;
 
 		if ( ! empty( $symbol ) ) {
 			if ( 'right' === $symbol_pos ) {
@@ -530,7 +572,8 @@ class Orders {
 				$fmt_total    = $total_amount_str . ' ' . $symbol;
 				if ( '' !== $fmt_plan ) {
 					$fmt_plan    = $fmt_plan . ' ' . $symbol;
-					$fmt_prorate = $fmt_prorate . ' ' . $symbol;
+					$fmt_prorate = '' !== $fmt_prorate ? $fmt_prorate . ' ' . $symbol : '';
+					$fmt_coupon  = '' !== $fmt_coupon ? $fmt_coupon . ' ' . $symbol : '';
 				}
 			} else {
 				$fmt_item     = $symbol . $invoice_amount;
@@ -539,17 +582,24 @@ class Orders {
 				$fmt_total    = $symbol . $total_amount_str;
 				if ( '' !== $fmt_plan ) {
 					$fmt_plan    = $symbol . $fmt_plan;
-					$fmt_prorate = $symbol . $fmt_prorate;
+					$fmt_prorate = '' !== $fmt_prorate ? $symbol . $fmt_prorate : '';
+					$fmt_coupon  = '' !== $fmt_coupon ? $symbol . $fmt_coupon : '';
 				}
 			}
 		}
 
 		// Customer info.
-		$user            = get_user_by( 'ID', $user_id );
-		$first_name      = get_user_meta( $user_id, 'first_name', true );
-		$last_name       = get_user_meta( $user_id, 'last_name', true );
-		$customer_name   = trim( $first_name . ' ' . $last_name );
-		$customer_detail = apply_filters( 'user_registration_process_smart_tags', get_option( 'urm_invoice_customer_info' ), array(), array() );
+		$user          = get_user_by( 'ID', $user_id );
+		$first_name    = get_user_meta( $user_id, 'first_name', true );
+		$last_name     = get_user_meta( $user_id, 'last_name', true );
+		$customer_name = trim( $first_name . ' ' . $last_name );
+
+		$smart_tag_context = array(
+			'email'   => $user ? $user->data->user_email : '',
+			'user_id' => $user_id,
+		);
+
+		$customer_detail = apply_filters( 'user_registration_process_smart_tags', get_option( 'urm_invoice_customer_info' ), $smart_tag_context, array() );
 		$footer_notes    = apply_filters(
 			'user_registration_process_smart_tags',
 			get_option(
@@ -557,7 +607,7 @@ class Orders {
 				'<p style="margin: 0 0 12px 0; color: #6c757d; font-size: 13px; line-height: 1.5;">Thank you for your purchase!</p>'
 				. '<p style="margin: 0; font-size: 14px; line-height: 1.6;"><a href="{{home_url}}" style="color: #4A90E2; text-decoration: none; font-weight: 500;">{{blog_info}} Team</a></p>'
 			),
-			array(),
+			$smart_tag_context,
 			array()
 		);
 
@@ -585,6 +635,9 @@ class Orders {
 			'subtotal'             => $fmt_subtotal,
 			'original_plan_amount' => $fmt_plan,
 			'prorate_discount'     => $fmt_prorate,
+			'coupon_label'         => $coupon_label,
+			'coupon_discount'      => $fmt_coupon,
+			'coupon_discount_raw'  => $fmt_coupon_bare,
 			'tax_label'            => $tax_label,
 			'tax_amount'           => $fmt_tax,
 			'tax_amount_raw'       => $fmt_tax_bare,
