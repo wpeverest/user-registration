@@ -268,7 +268,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 		}
 
 		// Get retry settings
-		$retry_count = (int) get_option( 'user_registration_payment_retry_count', 3 );
+		$retry_count    = (int) get_option( 'user_registration_payment_retry_count', 3 );
 		$retry_interval = (int) get_option( 'user_registration_payment_retry_interval', 3 );
 
 		// Calculate a retry window in days
@@ -277,7 +277,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 		// Calculate the date from which we need to fetch subscriptions
 		// We want subscriptions updated within the last X days based on the retry window
 		$current_date = current_time( 'mysql' );
-		$check_date = date( 'Y-m-d H:i:s', strtotime( "-{$retry_window_days} days", strtotime( $current_date ) ) );
+		$check_date   = date( 'Y-m-d H:i:s', strtotime( "-{$retry_window_days} days", strtotime( $current_date ) ) );
 
 		$sql = sprintf(
 			"

@@ -239,10 +239,12 @@ class SubscriptionService {
 		}
 		$period        = get_option( 'user_registration_membership_renewal_reminder_period', 'weeks' );
 		$value_in_days = convert_to_days( $days_before_value, $period );
-		$date          = new \DateTime( 'today' );
-		$check_date    = $date->modify( "+$value_in_days day" )->format( 'Y-m-d H:i:s' );
+
+		$date       = new \DateTime( 'today' );
+		$check_date = $date->modify( "+$value_in_days day" )->format( 'Y-m-d H:i:s' );
 
 		$subscriptions = $this->members_subscription_repository->get_about_to_expire_subscriptions( $check_date );
+
 		if ( empty( $subscriptions ) ) {
 			return;
 		}
