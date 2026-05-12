@@ -1983,18 +1983,16 @@
 				$membership_registration_form.find("#stripe-errors").length > 0
 			) {
 				$membership_registration_form
-					.find("#stripe-errors")
-					.html(message)
+					.find('#stripe-errors')
+					.text(message)
 					.show();
 			} else {
-				var error_message =
-					'<label id="stripe-errors" class="user-registration-error" role="alert">' +
-					message +
-					"</label>";
+				var $errorLabel = $('<label id="stripe-errors" class="user-registration-error" role="alert"></label>');
+				$errorLabel.text(message);
 				$membership_registration_form
-					.find(".stripe-container")
-					.closest(".ur_membership_frontend_input_container")
-					.append(error_message);
+					.find('.stripe-container')
+					.closest('.ur_membership_frontend_input_container')
+					.append($errorLabel);
 			}
 		},
 		init: function (is_upgrading) {

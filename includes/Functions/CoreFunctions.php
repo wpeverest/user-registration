@@ -782,15 +782,15 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 
 		switch ( $gateway_key ) {
 			case 'paypal':
-				$mode         = get_option( 'user_registration_global_paypal_mode', 'test' ) == 'test' ? 'test' : 'live';
-				$paypal_email = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address' ) );
+				$mode                 = get_option( 'user_registration_global_paypal_mode', 'test' ) == 'test' ? 'test' : 'live';
+				$paypal_email         = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address' ) );
+				$paypal_client_id     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id' ) );
+				$paypal_client_secret = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret' ) );
 
-				if ( 'subscription' === $membership_type ) {
-					$paypal_client_id     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id' ) );
-					$paypal_client_secret = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret' ) );
-					$is_configured        = ! empty( $paypal_email ) && ! empty( $paypal_client_id ) && ! empty( $paypal_client_secret );
+				if ( ur_is_paypal_old_installation() ) {
+					$is_configured = ! empty( $paypal_email ) || ! empty( $paypal_client_id ) || ! empty( $paypal_client_secret );
 				} else {
-					$is_configured = ! empty( $paypal_email );
+					$is_configured = ! empty( $paypal_client_id ) && ! empty( $paypal_client_secret );
 				}
 				break;
 

@@ -47,11 +47,15 @@ class UR_Admin_Settings {
 	public static function show_messages() {
 		if ( count( self::$errors ) > 0 ) {
 			foreach ( self::$errors as $key => $error ) {
-				echo '<div id="message" class="inline error"><p><strong>' . wp_kses_post( $error ) . '</strong></p></div>';
+				echo '<div id="' . esc_attr( 'message-' . $key ) . '" class="inline error"><p><strong>'
+				. wp_kses_post( $error )  // second layer — defence in depth
+				. '</strong></p></div>';
 			}
 		} elseif ( count( self::$messages ) > 0 ) {
-			foreach ( self::$messages as $message ) {
-				echo '<div id="message" class="inline updated"><p><strong>' . wp_kses_post( $message ) . '</strong></p></div>';
+			foreach ( self::$messages as $key => $message ) {
+				echo '<div id="' . esc_attr( 'message-' . $key ) . '" class="inline updated"><p><strong>'
+				. wp_kses_post( $message ) // second layer — defence in depth
+				. '</strong></p></div>';
 			}
 		}
 	}
@@ -436,10 +440,13 @@ class UR_Admin_Settings {
 	 * @param string $type Error Type.
 	 */
 	public static function add_error( $text, $type = '' ) {
+		// Sanitize at input — safe HTML tags allowed (links, strong etc. in error messages)
+		$sanitized = wp_kses_post( $text );
+
 		if ( ! empty( $type ) ) {
-			self::$errors[ $type ] = $text;
+			self::$errors[ sanitize_key( $type ) ] = $sanitized;
 		} else {
-			self::$errors[] = $text;
+			self::$errors[] = $sanitized;
 		}
 	}
 
