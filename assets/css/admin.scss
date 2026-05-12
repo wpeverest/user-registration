@@ -10174,3 +10174,14 @@ body.user-registration-page {
 		border-left-color: #ffc700;
 	}
 }
+
+#user-registration-base-list-table-page.ur-tax-region-layout {
+	.user-registration-base-list-table-heading {
+		position: relative;
+		margin-bottom: 16px;
+	}
+
+	.user-registration-base-list-table-form .tablenav.top {
+		margin-top: 0;
+	}
+}

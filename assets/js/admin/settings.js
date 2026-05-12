@@ -1733,6 +1733,9 @@
 			var value;
 			if ($item.attr("type") === "checkbox") {
 				value = $item.is(":checked");
+			} else if ($item.attr("type") === "radio") {
+				if (!$item.is(":checked")) return;
+				value = $item.val();
 			} else if (
 				$item.is("textarea") &&
 				typeof tinymce !== "undefined" &&

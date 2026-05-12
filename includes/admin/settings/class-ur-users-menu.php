@@ -346,8 +346,8 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 
 			if ( ! current_user_can( 'list_users' ) && ! current_user_can( 'manage_user_registration' ) ) {
 				wp_die(
-					'<h1>' . __( 'You need a higher level of permission.' ) . '</h1>' .
-						'<p>' . __( 'Sorry, you are not allowed to list users.' ) . '</p>',
+					'<h1>' . __( 'You need a higher level of permission.', 'user-registration' ) . '</h1>' .
+						'<p>' . __( 'Sorry, you are not allowed to list users.', 'user-registration' ) . '</p>',
 					403
 				);
 			}
@@ -1150,7 +1150,7 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 									?>
 									<div class="ur-form-row edit-user-save-btn-container">
 										<button class="button btn-primary save_user_details"
-											type="button"><?php echo __( 'Save Changes' ); ?>
+											type="button"><?php echo __( 'Save Changes', 'user-registration' ); ?>
 											<span></span>
 										</button>
 									</div>
@@ -1485,8 +1485,8 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 								// If the user doesn't already belong to the blog, bail.
 								if ( is_multisite() && ! is_user_member_of_blog( $id ) ) {
 									wp_die(
-										'<h1>' . __( 'Something went wrong.' ) . '</h1>' .
-											'<p>' . __( 'One of the selected users is not a member of this site.' ) . '</p>',
+										'<h1>' . __( 'Something went wrong.', 'user-registration' ) . '</h1>' .
+											'<p>' . __( 'One of the selected users is not a member of this site.', 'user-registration' ) . '</p>',
 										403
 									);
 								}

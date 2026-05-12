@@ -1253,7 +1253,7 @@ function ur_load_form_field_class( $class_key ) {
 		$real_class_path = realpath( $class_path );
 		$real_base_path  = realpath( UR_FORM_PATH );
 		if ( false === $real_class_path || false === $real_base_path || 0 !== strpos( $real_class_path, $real_base_path . DIRECTORY_SEPARATOR ) ) {
-			return '';
+			return null;
 		}
 		$class_name = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
 		if ( ! class_exists( $class_name ) ) {
@@ -5027,7 +5027,7 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 						$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
 						$settings['sections']['premium_setting_section']['before_desc'] = $description;
 						$upgradable_plans                                        = implode( 'plan, ', $detail['plan'] );
-						$settings['sections']['premium_setting_section']['desc'] = sprintf( __( 'To unlock this setting, consider upgrading to %s', 'user-registration ' ), $upgradable_plans );
+						$settings['sections']['premium_setting_section']['desc'] = sprintf( __( 'To unlock this setting, consider upgrading to %s', 'user-registration' ), $upgradable_plans );
 					} else {
 						$plugin_name = $detail['name'];
 						$action      = '';
@@ -5265,55 +5265,56 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['empty_username'] );
 			}
 
-			if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
-				$user = get_user_by( 'email', $username );
+			$login_option = get_option( 'user_registration_general_setting_login_options_with', '' );
 
-				if ( isset( $user->user_login ) ) {
-					$login_data['user_login'] = $user->user_login;
-				} else {
-					$user = get_user_by( 'login', $username );
-
-					if ( isset( $user->user_login ) ) {
-						$login_data['user_login'] = $user->user_login;
-					} elseif ( empty( $user ) ) {
-
-						if ( empty( $messages['unknown_email'] ) ) {
-							$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
-						}
-
-						throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
-					}
+			// Validate login format and resolve user_login before attempting authentication.
+			if ( 'email' === $login_option ) {
+				if ( ! is_email( $username ) ) {
+					throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . esc_html__( 'Please enter a valid email address to log in.', 'user-registration' ) );
 				}
+				$user_by_email = get_user_by( 'email', $username );
+				if ( empty( $user_by_email ) ) {
+					if ( empty( $messages['unknown_email'] ) ) {
+						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+					}
+					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+				}
+				$login_data['user_login'] = $user_by_email->user_login;
+			} elseif ( 'username' === $login_option ) {
+				if ( is_email( $username ) ) {
+					throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . esc_html__( 'Please enter your username to log in.', 'user-registration' ) );
+				}
+				$user_by_login            = get_user_by( 'login', $username );
+				$login_data['user_login'] = isset( $user_by_login->user_login ) ? $user_by_login->user_login : $username;
 			} else {
-				$login_data['user_login'] = $username;
+				// Both username and email are allowed.
+				if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
+					$user_by_email = get_user_by( 'email', $username );
+					if ( isset( $user_by_email->user_login ) ) {
+						$login_data['user_login'] = $user_by_email->user_login;
+					} else {
+						$user_by_login = get_user_by( 'login', $username );
+						if ( isset( $user_by_login->user_login ) ) {
+							$login_data['user_login'] = $user_by_login->user_login;
+						} else {
+							if ( empty( $messages['unknown_email'] ) ) {
+								$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+							}
+							throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+						}
+					}
+				} else {
+					$login_data['user_login'] = $username;
+				}
 			}
 
 			// On multisite, ensure user exists on current site, if not add them before allowing login.
 			if ( is_multisite() ) {
-				$user_data = get_user_by( 'login', $username );
+				$user_data = get_user_by( 'login', $login_data['user_login'] );
 
 				if ( $user_data && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) {
 					add_user_to_blog( get_current_blog_id(), $user_data->ID, 'customer' );
 				}
-			}
-
-			// To check the specific login.
-			if ( 'email' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
-				$user_data = get_user_by( 'email', $username );
-				if ( empty( $user_data ) ) {
-					if ( empty( $messages['unknown_email'] ) ) {
-						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
-					}
-
-					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
-				} else {
-					$login_data['user_login'] = $username;
-				}
-			} elseif ( 'username' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
-				$user_data                = get_user_by( 'login', $username );
-				$login_data['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : ! is_email( $username );
-			} else {
-				$login_data['user_login'] = $username;
 			}
 
 			// Perform the login.
@@ -10779,6 +10780,34 @@ if ( ! function_exists( 'ur_get_payment_setup_handled_status' ) ) {
 		$is_skipped = get_option( 'user_registration_payment_setup_skipped', false );
 
 		return $all_payments_connected || $is_skipped;
+	}
+}
+
+if ( ! function_exists( 'ur_is_paypal_old_installation' ) ) {
+	/**
+	 * Determines if the current site has legacy PayPal (IPN/NVP) data.
+	 *
+	 * Checks for the presence of actual legacy option values in the DB as the
+	 * source of truth, avoiding reliance on urm_is_new_installation which can
+	 * be incorrectly set for users who upgrade from an older version.
+	 *
+	 * @return bool True for old/legacy PayPal installations, false for new ones.
+	 */
+	function ur_is_paypal_old_installation() {
+		$has_live_legacy_data = '' !== get_option( 'user_registration_global_paypal_email_address', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_test_email_address', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_live_email_address', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_cancel_url', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_return_url', '' );
+
+		if ( $has_live_legacy_data ) {
+			if ( ! ur_string_to_bool( get_option( 'urm_is_legacy_paypal_user', false ) ) ) {
+				update_option( 'urm_is_legacy_paypal_user', 1 );
+			}
+			return true;
+		}
+
+		return ur_string_to_bool( get_option( 'urm_is_legacy_paypal_user', false ) );
 	}
 }
 

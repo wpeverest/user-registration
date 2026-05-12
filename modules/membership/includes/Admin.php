@@ -415,7 +415,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			$membership_payment_gateways = apply_filters(
 				'user_registration_membership_payment_gateways',
 				array(
-					'paypal' => __( 'Paypal', 'user-registration' ),
+					'paypal' => __( 'PayPal', 'user-registration' ),
 					'stripe' => __( 'Stripe', 'user-registration' ),
 					'bank'   => __( 'Bank', 'user-registration' ),
 				)
