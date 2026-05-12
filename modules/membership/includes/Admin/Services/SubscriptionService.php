@@ -1124,7 +1124,7 @@ class SubscriptionService {
 					) . "\n" . wp_json_encode(
 						array(
 							'id'              => $user_id,
-							'username'        => $subcription['username'],
+							'username'        => $subscription['username'],
 							'subscription_id' => $subscription_id,
 						),
 						JSON_PRETTY_PRINT
