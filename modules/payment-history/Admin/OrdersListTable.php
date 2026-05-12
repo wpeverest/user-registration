@@ -350,8 +350,14 @@ class OrdersListTable extends \UR_List_Table {
 	public function show_column_membership_type( $orders ) {
 
 		if ( isset( $orders['order_id'] ) ) {
-			$data = json_decode( wp_unslash( $orders['post_content'] ), true );
-			$type = $data['type'];
+			// Use the order_type stored at payment time so it never changes if the
+			// membership type is later edited. Fall back to post_content only when missing.
+			if ( ! empty( $orders['order_type'] ) ) {
+				$type = $orders['order_type'];
+			} else {
+				$data = json_decode( wp_unslash( $orders['post_content'] ), true );
+				$type = $data['type'] ?? '';
+			}
 		} else {
 			$type = $orders['type'];
 		}
@@ -405,6 +411,11 @@ class OrdersListTable extends \UR_List_Table {
 			$currency = $item['currency'];
 		}
 		$symbol = ur_get_currency_symbol( $currency );
+
+		if ( ! empty( $order_detail['trial_status'] ) && 'on' === $order_detail['trial_status'] ) {
+			$formatted_amount = number_format( 0, $decimals, $decimal_separator, $thousands_separator );
+			return 'right' === $symbol_pos ? $formatted_amount . ' ' . $symbol : $symbol . $formatted_amount;
+		}
 
 		if ( isset( $item['subscription_id'] ) ) {
 			$subscription = ( new MembersSubscriptionRepository() )->get_subscription_by_subscription_id( absint( $item['subscription_id'] ) );
