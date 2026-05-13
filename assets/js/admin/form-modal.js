@@ -18,6 +18,7 @@
 		// Sweetalert modal popup on reset content clicked.
 		$(document).on("click", ".ur-reset-content-button", function (event) {
 			event.preventDefault();
+			var editorIdFromButton = $(this).data("editor");
 			Swal.fire({
 				title: "Reset to Default",
 				text: "Are you sure you want to reset the email content to the default?",
@@ -31,28 +32,61 @@
 					var params = new URLSearchParams(window.location.search);
 					var section = params.get("section");
 					if (section) {
-						var selector = section.replace(
+						var baseSelector = section.replace(
 							/^ur_settings_/,
 							"user_registration_"
 						);
-						var editor =
-							typeof tinymce !== "undefined"
-								? tinymce.get(selector)
-								: null;
+						// Resolve the actual editor/textarea id. Prefer the
+						// data-editor attribute on the button, then fall back
+						// to the base selector (existing emails), then to the
+						// base + "_content" (newer emails like prevent
+						// concurrent login).
+						var candidates = [];
+						if (editorIdFromButton) {
+							candidates.push(editorIdFromButton);
+						}
+						candidates.push(baseSelector);
+						candidates.push(baseSelector + "_content");
+
+						var selector = null;
+						var editor = null;
+						for (var i = 0; i < candidates.length; i++) {
+							var candidate = candidates[i];
+							var candidateEditor =
+								typeof tinymce !== "undefined"
+									? tinymce.get(candidate)
+									: null;
+							if (candidateEditor) {
+								selector = candidate;
+								editor = candidateEditor;
+								break;
+							}
+							if ($("textarea#" + candidate).length) {
+								selector = candidate;
+								break;
+							}
+						}
+
+						if (!selector) {
+							return;
+						}
+
+						var defaultContent =
+							user_registration_email_settings &&
+							user_registration_email_settings[section];
+						if (typeof defaultContent === "undefined") {
+							return;
+						}
+
 						if (editor && !editor.isHidden()) {
-							var content = user_registration_email_settings[
-								section
-							]
+							var content = defaultContent
 								.replace(/\n\n/g, "<br>")
 								.replace(/\t/g, "");
 							editor.setContent(content);
 						} else {
 							var $textarea = $("textarea#" + selector);
 							if ($textarea.length) {
-								var content = user_registration_email_settings[
-									section
-								].replace(/\t/g, "");
-								$textarea.val(content);
+								$textarea.val(defaultContent.replace(/\t/g, ""));
 							}
 						}
 					}
