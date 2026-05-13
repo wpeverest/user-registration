@@ -774,7 +774,7 @@ class AJAX {
 			);
 		}
 		ur_membership_verify_nonce( 'ur_members' );
-		if ( ! isset( $_POST ) && ! isset( $_POST['members_ids'] ) && ! empty( $_POST['members_ids'] ) ) {
+		if ( ! isset( $_POST['members_ids'] ) || empty( $_POST['members_ids'] ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Field members_ids is required.', 'user-registration' ),
@@ -782,8 +782,8 @@ class AJAX {
 				422
 			);
 		}
-		$members_ids        = wp_unslash( $_POST['members_ids'] );
-		$members_ids        = implode( ',', json_decode( $members_ids, true ) );
+		$members_ids = array_map( 'absint', json_decode( wp_unslash( $_POST['members_ids'] ), true ) );
+		$members_ids = implode( ',', array_filter( $members_ids ) );
 		$members_repository = new MembersRepository();
 		$deleted            = $members_repository->delete_multiple( $members_ids );
 		if ( $deleted ) {

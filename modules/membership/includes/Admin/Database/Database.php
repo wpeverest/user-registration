@@ -15,16 +15,31 @@ use WPEverest\URMembership\TableList;
 class Database {
 
 	/**
+	 * Checks whether all required membership tables exist in the database.
+	 *
+	 * @return bool
+	 */
+	public static function tables_exist() {
+		global $wpdb;
+		foreach ( self::get_tables() as $table ) {
+			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Retrieves an array of tables used in the URMembership plugin.
 	 *
 	 * @return array An associative array with table names as keys and their corresponding table names as values.
 	 */
 	public static function get_tables() {
 		return array(
+			'subscription_events_table' => TableList::subscription_events_table(),
 			'orders_meta_table'         => TableList::order_meta_table(),
 			'orders_table'              => TableList::orders_table(),
 			'subscriptions_table'       => TableList::subscriptions_table(),
-			'subscription_events_table' => TableList::subscription_events_table(),
 		);
 	}
 
@@ -70,7 +85,7 @@ class Database {
 						created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 						updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     					PRIMARY KEY (ID),
-					    FOREIGN KEY (user_id) REFERENCES $users_table(ID) ON DELETE CASCADE ON UPDATE NO ACTION
+    					KEY idx_user_id (user_id)
     					) $collate
                     "
 		);
@@ -93,15 +108,13 @@ class Database {
 					  notes longtext,
 					  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     				  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-					  PRIMARY KEY (id),
-					  FOREIGN KEY (user_id) REFERENCES $users_table(ID) ON DELETE CASCADE ON UPDATE NO ACTION,
+					  PRIMARY KEY (ID),
 					  FOREIGN KEY (subscription_id) REFERENCES $subscriptions_table(ID) ON DELETE CASCADE ON UPDATE NO ACTION,
-					  FOREIGN KEY (created_by) REFERENCES $users_table(ID) ON UPDATE NO ACTION,
 					  INDEX idx_user_id (user_id),
 					  INDEX idx_created_by (created_by),
 					  INDEX idx_order_type (order_type),
 					  INDEX idx_transaction_id (transaction_id)
-					) $collate;
+					) $collate
 					"
 		);
 
@@ -119,38 +132,36 @@ class Database {
                     "
 		);
 
-		if ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) {
-			$subscription_events_table = TableList::subscription_events_table();
+		$subscription_events_table = TableList::subscription_events_table();
 
-			array_push(
-				$sqls,
-				"CREATE TABLE IF NOT EXISTS $subscription_events_table (
-					id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-					subscription_id BIGINT(20) UNSIGNED NOT NULL,
-					user_id BIGINT(20) UNSIGNED NOT NULL,
+		array_push(
+			$sqls,
+			"CREATE TABLE IF NOT EXISTS $subscription_events_table (
+				id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+				subscription_id BIGINT(20) UNSIGNED NOT NULL,
+				user_id BIGINT(20) UNSIGNED NOT NULL,
 
-					event_type VARCHAR(50) NOT NULL,
-					event_status VARCHAR(30) NULL,
+				event_type VARCHAR(50) NOT NULL,
+				event_status VARCHAR(30) NULL,
 
-					title VARCHAR(255) NOT NULL,
-					message TEXT NULL,
+				title VARCHAR(255) NOT NULL,
+				message TEXT NULL,
 
-					reference_id VARCHAR(255) NULL,
-					meta LONGTEXT NULL,
+				reference_id VARCHAR(255) NULL,
+				meta LONGTEXT NULL,
 
-					created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-					PRIMARY KEY (id),
-					KEY subscription_id (subscription_id),
-					KEY user_id (user_id),
-					KEY event_type (event_type),
+				PRIMARY KEY (id),
+				KEY subscription_id (subscription_id),
+				KEY user_id (user_id),
+				KEY event_type (event_type),
 
-					FOREIGN KEY (subscription_id)
-						REFERENCES $subscriptions_table(ID)
-						ON DELETE CASCADE ON UPDATE NO ACTION
-				) $collate"
-			);
-		}
+				FOREIGN KEY (subscription_id)
+					REFERENCES $subscriptions_table(ID)
+					ON DELETE CASCADE ON UPDATE NO ACTION
+			) $collate"
+		);
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		foreach ( $sqls as $sql ) {

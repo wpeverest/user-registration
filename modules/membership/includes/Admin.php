@@ -168,10 +168,10 @@ if ( ! class_exists( 'Admin' ) ) :
 			if ( isset( $_GET['post'] ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 				// Enqueue frontend scripts here.
 				$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-				wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url(). '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
+				wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url() . '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 				wp_enqueue_script( 'user-registration-membership-frontend-script' );
 				// Enqueue frontend styles here.
-				wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url(). '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
+				wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url() . '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
 				wp_enqueue_style( 'user-registration-membership-frontend-style' );
 			}
 		}
@@ -487,9 +487,11 @@ if ( ! class_exists( 'Admin' ) ) :
 
 			$installed_version = get_option( 'ur_membership_db_version', '0.0.0' );
 
-			if ( version_compare( $installed_version, '1.0.0', '<' ) ) {
+			if ( version_compare( $installed_version, '1.0.0', '<' ) || ! Database::tables_exist() ) {
 				self::on_activation();
-				update_option( 'ur_membership_db_version', '1.0.0' );
+				if ( Database::tables_exist() ) {
+					update_option( 'ur_membership_db_version', '1.0.0' );
+				}
 			}
 		}
 

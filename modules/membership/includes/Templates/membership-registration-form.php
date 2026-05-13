@@ -6,18 +6,18 @@
 
 	<?php
 		// Determine redirect URL for membership registration (e.g., form setting / thank you page).
-		if ( function_exists( 'ur_get_form_redirect_url' ) ) {
-			$membership_redirect_url = ur_get_form_redirect_url( $form_id );
-		} else {
-			$membership_redirect_url = '';
-		}
+	if ( function_exists( 'ur_get_form_redirect_url' ) ) {
+		$membership_redirect_url = ur_get_form_redirect_url( $form_id );
+	} else {
+		$membership_redirect_url = '';
+	}
 		// Avoid deprecated notice: ensure this is always a string before passing to esc_url().
-		if ( null === $membership_redirect_url ) {
-			$membership_redirect_url = '';
-		}
+	if ( null === $membership_redirect_url ) {
+		$membership_redirect_url = '';
+	}
 	?>
 	<input type="hidden" id="urm-redirect-url" name="ur-redirect-url"
-		   value="<?php echo esc_url( $membership_redirect_url ); ?>"/>
+			value="<?php echo esc_url( $membership_redirect_url ); ?>"/>
 </div>
 <!--user registration section-->
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
@@ -59,7 +59,7 @@
 			?>
 		</span>
 		<?php
-		if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) && ur_check_module_activation( 'local-currency' ) ) {
+		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) ) {
 			$pricing_zone       = CoreFunctions::ur_get_all_pricing_zone_data();
 			$switch_currency    = ur_string_to_bool( get_option( 'user_registration_switch_local_currency_option', 0 ) );
 			$enable_geolocation = ur_string_to_bool( get_option( 'user_registration_local_currency_by_geolocation', '0' ) );
@@ -111,7 +111,7 @@
 				$local_currency_details = array();
 				$enabled_zones          = array();
 				if (
-					is_plugin_active( 'user-registration-pro/user-registration.php' ) &&
+					UR_PRO_ACTIVE &&
 					ur_check_module_activation( 'local-currency' )
 				) {
 					$local_currency_details = CoreFunctions::ur_get_local_currency_details_for_membership( $membership['ID'] );
@@ -544,9 +544,9 @@
 		if ( isset( $attributes['user_registration_show_bank_details_on_form'] ) ) {
 			$show_bank_details_on_form = ur_string_to_bool( $attributes['user_registration_show_bank_details_on_form'] );
 		} elseif ( ! empty( $attributes['form_id'] ) && function_exists( 'ur_get_form_field_data' ) ) {
-			$form_id_raw   = $attributes['form_id'];
-			$form_id_int   = is_array( $form_id_raw ) ? ( ! empty( $form_id_raw ) ? absint( reset( $form_id_raw ) ) : 0 ) : absint( $form_id_raw );
-			$form_fields   = $form_id_int > 0 ? ur_get_form_field_data( $form_id_int ) : array();
+			$form_id_raw = $attributes['form_id'];
+			$form_id_int = is_array( $form_id_raw ) ? ( ! empty( $form_id_raw ) ? absint( reset( $form_id_raw ) ) : 0 ) : absint( $form_id_raw );
+			$form_fields = $form_id_int > 0 ? ur_get_form_field_data( $form_id_int ) : array();
 			foreach ( (array) $form_fields as $field ) {
 				if ( isset( $field->field_key, $field->general_setting->user_registration_show_bank_details_on_form ) && 'membership' === $field->field_key ) {
 					$show_bank_details_on_form = ur_string_to_bool( $field->general_setting->user_registration_show_bank_details_on_form );
