@@ -24,6 +24,18 @@ class UR_Cache_Helper {
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_wpsuper_cache' ) );
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_wprocket_cache' ) );
 		add_action( 'template_redirect', array( __CLASS__, 'maybe_disable_cache_for_dynamic_pages' ), 0 );
+
+		// Flush full-page cache whenever a content restriction rule is created, updated, toggled, duplicated, or deleted.
+		add_action( 'urcr_post_create_content_access_rule', array( __CLASS__, 'flush_all_page_cache' ) );
+		add_action( 'urcr_post_save_content_access_rule', array( __CLASS__, 'flush_all_page_cache' ) );
+		add_action( 'urcr_content_access_rule_toggled', array( __CLASS__, 'flush_all_page_cache' ) );
+		add_action( 'urcr_content_access_rule_duplicated', array( __CLASS__, 'flush_all_page_cache' ) );
+		add_action( 'urcr_content_access_rule_deleted', array( __CLASS__, 'flush_all_page_cache' ) );
+
+		// Also flush when content restriction settings options change.
+		add_action( 'update_option_user_registration_content_restriction_enable', array( __CLASS__, 'flush_all_page_cache' ) );
+		add_action( 'update_option_user_registration_content_restriction_whole_site_access', array( __CLASS__, 'flush_all_page_cache' ) );
+		add_action( 'update_option_user_registration_content_restriction_message', array( __CLASS__, 'flush_all_page_cache' ) );
 	}
 
 	/**
@@ -54,6 +66,48 @@ class UR_Cache_Helper {
 			$post_id = get_the_ID();
 			rocket_clean_post( $post_id );
 		}
+	}
+
+	/**
+	 * Flush the full-page HTML cache across all supported caching plugins.
+	 *
+	 * Called whenever a content restriction rule or setting is saved so that
+	 * cached pages immediately reflect the new restriction state.
+	 */
+	public static function flush_all_page_cache() {
+		// W3 Total Cache.
+		if ( function_exists( 'w3tc_pgcache_flush' ) ) {
+			w3tc_pgcache_flush();
+		}
+
+		// WP Super Cache.
+		if ( function_exists( 'wp_cache_clear_cache' ) ) {
+			wp_cache_clear_cache();
+		}
+
+		// WP Rocket.
+		if ( function_exists( 'rocket_clean_domain' ) ) {
+			rocket_clean_domain();
+		}
+
+		// LiteSpeed Cache.
+		do_action( 'litespeed_purge_all' );
+
+		// WP Fastest Cache.
+		if ( class_exists( 'WpFastestCache' ) ) {
+			$wpfc = new WpFastestCache();
+			if ( method_exists( $wpfc, 'deleteCache' ) ) {
+				$wpfc->deleteCache( true );
+			}
+		}
+
+		// Breeze (Cloudways).
+		if ( class_exists( 'Breeze_Admin' ) && method_exists( 'Breeze_Admin', 'breeze_clear_all_cache' ) ) {
+			Breeze_Admin::breeze_clear_all_cache();
+		}
+
+		// Allow other plugins/themes to hook in.
+		do_action( 'ur_flush_all_page_cache' );
 	}
 
 	/**
