@@ -1983,18 +1983,16 @@
 				$membership_registration_form.find("#stripe-errors").length > 0
 			) {
 				$membership_registration_form
-					.find("#stripe-errors")
-					.html(message)
+					.find('#stripe-errors')
+					.text(message)
 					.show();
 			} else {
-				var error_message =
-					'<label id="stripe-errors" class="user-registration-error" role="alert">' +
-					message +
-					"</label>";
+				var $errorLabel = $('<label id="stripe-errors" class="user-registration-error" role="alert"></label>');
+				$errorLabel.text(message);
 				$membership_registration_form
-					.find(".stripe-container")
-					.closest(".ur_membership_frontend_input_container")
-					.append(error_message);
+					.find('.stripe-container')
+					.closest('.ur_membership_frontend_input_container')
+					.append($errorLabel);
 			}
 		},
 		init: function (is_upgrading) {
@@ -2501,7 +2499,14 @@
 					authorize_container.addClass("urm-d-none");
 					authorize_error_container.remove();
 
-					elements = {};
+					var stripeAlreadyReady =
+						selected_method === "stripe" &&
+						elements &&
+						elements.card;
+					if (!stripeAlreadyReady) {
+						elements = {};
+					}
+
 					if (selected_method === "stripe") {
 						if (urmf_data.stripe_publishable_key.length == 0) {
 							ur_membership_frontend_utils.show_failure_message(
@@ -2511,7 +2516,9 @@
 							return;
 						}
 						stripe_container.removeClass("urm-d-none");
-						stripe_settings.init();
+						if (!stripeAlreadyReady) {
+							stripe_settings.init();
+						}
 					}
 					if (selected_method === "authorize") {
 						authorize_container.removeClass("urm-d-none");
@@ -2580,7 +2587,10 @@
 							.prop("checked", true)
 							.trigger("change");
 
-						if (urm_default_pg.toLowerCase() === "stripe") {
+						if (
+							urm_default_pg.toLowerCase() === "stripe" &&
+							!(elements && elements.card)
+						) {
 							stripe_settings.init();
 						}
 
@@ -3101,7 +3111,13 @@
 					authorize_container.addClass("urm-d-none");
 					authorize_error_container.remove();
 
-					elements = {};
+					var stripeAlreadyReady =
+						selected_method === "stripe" &&
+						elements &&
+						elements.card;
+					if (!stripeAlreadyReady) {
+						elements = {};
+					}
 					if (selected_method === "stripe") {
 						if (urmf_data.stripe_publishable_key.length == 0) {
 							ur_membership_frontend_utils.show_failure_message(

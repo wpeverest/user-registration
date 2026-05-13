@@ -157,6 +157,15 @@ class UR_Install {
 			add_option( 'urm_is_new_installation', 1 );
 		}
 
+		if ( null === get_option( 'urm_is_legacy_paypal_user', null ) ) {
+			$has_legacy_paypal_data = '' !== get_option( 'user_registration_global_paypal_email_address', '' )
+				|| '' !== get_option( 'user_registration_global_paypal_test_email_address', '' )
+				|| '' !== get_option( 'user_registration_global_paypal_live_email_address', '' )
+				|| '' !== get_option( 'user_registration_global_paypal_cancel_url', '' )
+				|| '' !== get_option( 'user_registration_global_paypal_return_url', '' );
+			add_option( 'urm_is_legacy_paypal_user', $has_legacy_paypal_data ? 1 : 0 );
+		}
+
 		self::create_files();
 		self::update_ur_version();
 		self::maybe_update_db_version();
@@ -279,7 +288,7 @@ class UR_Install {
 	public static function cron_schedules( $schedules ) {
 		$schedules['monthly'] = array(
 			'interval' => 2635200,
-			'display'  => __( 'Monthly', 'everest-forms' ),
+			'display'  => __( 'Monthly', 'user-registration' ),
 		);
 		return $schedules;
 	}
@@ -343,7 +352,7 @@ class UR_Install {
 			),
 			'5.1.5' => array(
 				'ur_update_515_redirect_thank_you_page_migrate',
-			)
+			),
 		);
 
 		if ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) {
@@ -358,7 +367,7 @@ class UR_Install {
 				),
 				'6.0'   => array(
 					'urm_update_50_option_migrate',
-				)
+				),
 			);
 		}
 

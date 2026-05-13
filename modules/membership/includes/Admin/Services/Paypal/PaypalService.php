@@ -387,6 +387,22 @@ class PaypalService {
 					'member_id'       => $member_id,
 				)
 			);
+
+			// TODO: fire trial_started event for PayPal (deferred — see Stripe implementation for reference)
+			// if ( 'trial' === $status ) {
+			// 	do_action(
+			// 		'ur_membership_subscription_event_triggered',
+			// 		array(
+			// 			'subscription_id' => $member_subscription['ID'],
+			// 			'member_id'       => $member_id,
+			// 			'event_type'      => 'trial_started',
+			// 			'meta'            => array(
+			// 				'trial_end_date'    => $member_subscription['trial_end_date'] ?? '',
+			// 				'next_billing_date' => $member_subscription['next_billing_date'] ?? '',
+			// 			),
+			// 		)
+			// 	);
+			// }
 		}
 
 		if ( $is_renewing ) {
