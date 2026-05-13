@@ -365,8 +365,14 @@ class OrdersListTable extends \UR_List_Table {
 	public function show_column_membership_type( $orders ) {
 
 		if ( isset( $orders['order_id'] ) ) {
-			$data = json_decode( wp_unslash( $orders['post_content'] ), true );
-			$type = $data['type'];
+			// Use the order_type stored at payment time so it never changes if the
+			// membership type is later edited. Fall back to post_content only when missing.
+			if ( ! empty( $orders['order_type'] ) ) {
+				$type = $orders['order_type'];
+			} else {
+				$data = json_decode( wp_unslash( $orders['post_content'] ), true );
+				$type = $data['type'] ?? '';
+			}
 		} else {
 			$type = $orders['type'];
 		}
@@ -408,9 +414,10 @@ class OrdersListTable extends \UR_List_Table {
 		$decimals            = isset( $currency_info['decimals'] ) ? (int) $currency_info['decimals'] : 2;
 		$order_id            = $item['order_id'] ?? 0;
 		if ( ! empty( $order_id ) && $this->orders_repository ) {
-			$order_detail     = $this->orders_repository->get_order_detail( $order_id );
-			$order_repository = new OrdersRepository();
-			$local_currency   = ! empty( $order_detail['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' ) : null;
+			$order_detail         = $this->orders_repository->get_order_detail( $order_id );
+			$item['trial_status'] = $order_detail['trial_status'] ?? 'off';
+			$order_repository     = new OrdersRepository();
+			$local_currency       = ! empty( $order_detail['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' ) : null;
 			if ( ! empty( $local_currency['meta_value'] ) ) {
 				$currency = $local_currency['meta_value'];
 			}
@@ -418,7 +425,9 @@ class OrdersListTable extends \UR_List_Table {
 			$currency = $item['currency'];
 		}
 		$symbol           = ur_get_currency_symbol( $currency );
-		$formatted_amount = number_format( $total_amount, $decimals, $decimal_separator, $thousands_separator );
+		$trial_status     = $item['trial_status'] ?? 'off';
+		$display_amount   = 'on' === $trial_status ? 0 : $total_amount;
+		$formatted_amount = number_format( $display_amount, $decimals, $decimal_separator, $thousands_separator );
 		return 'right' === $symbol_pos ? $formatted_amount . ' ' . $symbol : $symbol . $formatted_amount;
 	}
 

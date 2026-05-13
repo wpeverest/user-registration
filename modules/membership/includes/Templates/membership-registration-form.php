@@ -444,7 +444,32 @@
 	<!--	total container-->
 	<div id="urm-total_container"
 		class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
+		<div class="urm-membership-proration-discount-value urm-d-none">
+			<label class="ur_membership_input_label ur-label"
+			for="ur-membership-proration-discount"><?php echo esc_html__( 'Proration Discount', 'user-registration' ); ?></label>
+			<span class="ur_membership_input_class"
+			id="ur-membership-proration-discount"
+			data-key-name="<?php echo esc_html__( 'Proration Discount', 'user-registration' ); ?>"
+			disabled
+			>
+			<?php echo ceil( 0 ); ?>
+		</span>
+		</div>
+		<?php if ( $is_coupon_addon_activated ) : ?>
+			<div class="urm-membership-coupons-value">
+				<label class="ur_membership_input_label ur-label"
+				for="ur-membership-coupons"><?php echo esc_html__( 'Coupons', 'user-registration' ); ?></label>
+				<span class="ur_membership_input_class"
+				id="ur-membership-coupons"
+				data-key-name="<?php echo esc_html__( 'Coupons', 'user-registration' ); ?>"
+				disabled
+				>
+				<?php echo ceil( 0 ); ?>
+			</span>
+		</div>
+		<?php endif; ?>
 		<?php if ( $is_coupon_addon_activated || $is_tax_calculation_enabled ) : ?>
+			<hr class="ur_membership_divider">
 			<div class="urm-membership-sub-total-value">
 				<label class="ur_membership_input_label ur-label"
 				for="ur-membership-subtotal"><?php echo esc_html__( 'Sub Total', 'user-registration' ); ?></label>
@@ -470,18 +495,8 @@
 			</span>
 		</div>
 		<?php endif; ?>
-		<?php if ( $is_coupon_addon_activated ) : ?>
-			<div class="urm-membership-coupons-value">
-				<label class="ur_membership_input_label ur-label"
-				for="ur-membership-coupons"><?php echo esc_html__( 'Coupons', 'user-registration' ); ?></label>
-				<span class="ur_membership_input_class"
-				id="ur-membership-coupons"
-				data-key-name="<?php echo esc_html__( 'Coupons', 'user-registration' ); ?>"
-				disabled
-				>
-				<?php echo ceil( 0 ); ?>
-			</span>
-		</div>
+		<?php if ( $is_coupon_addon_activated || $is_tax_calculation_enabled ) : ?>
+			<hr class="ur_membership_divider">
 		<?php endif; ?>
 		<div class="urm-membership-total-value">
 			<label class="ur_membership_input_label ur-label"

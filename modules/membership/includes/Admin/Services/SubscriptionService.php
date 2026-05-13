@@ -99,7 +99,7 @@ class SubscriptionService {
 			$status      = 'pending';
 		} elseif ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trail date
 			$expiry_date = self::get_expiry_date( $data['membership_data']['start_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
-			$status      = 'on' === $membership_meta['trial_status'] ? 'trial' : 'pending';
+			$status      = 'pending';
 		}
 
 		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
@@ -642,11 +642,15 @@ class SubscriptionService {
 
 		$result['status'] = true;
 
-		if ( isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'] && ! empty( $subscription['trial_end_date'] ) ) {
-			$is_trial = $subscription['trial_end_date'] > date( 'Y-m-d H:i:s' );
-		} else {
-			$is_trial = isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'];
-		}
+		// Does the NEW plan have a trial? Drives the order's trial_status field.
+		$new_plan_has_trial = isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'];
+
+		// Is the CURRENT subscription still actively in its trial period?
+		// Proration is only skipped when the current sub hasn't been billed yet.
+		$current_sub_in_trial = ! empty( $subscription['trial_end_date'] ) && $subscription['trial_end_date'] > date( 'Y-m-d H:i:s' );
+
+		// Passed to the upgrade handler: controls whether proration is bypassed.
+		$is_trial = $current_sub_in_trial;
 
 		switch ( $upgrade_type ) {
 			case 'free->free':
@@ -681,7 +685,7 @@ class SubscriptionService {
 		}
 
 		return array(
-			'trial_status'                 => $is_trial ? 'on' : 'off',
+			'trial_status'                 => $new_plan_has_trial ? 'on' : 'off',
 			'chargeable_amount'            => isset( $result['chargeable_amount'] ) ? $result['chargeable_amount'] : 0,
 			'remaining_subscription_value' => ! empty( $result['remaining_subscription_value'] ) ? $result['remaining_subscription_value'] : 0,
 			'delayed_until'                => ! empty( $result['delayed_until'] ) ? $result['delayed_until'] : '',
@@ -1157,7 +1161,7 @@ class SubscriptionService {
 					) . "\n" . wp_json_encode(
 						array(
 							'id'              => $user_id,
-							'username'        => $subcription['username'],
+							'username'        => $subscription['username'],
 							'subscription_id' => $subscription_id,
 						),
 						JSON_PRETTY_PRINT
