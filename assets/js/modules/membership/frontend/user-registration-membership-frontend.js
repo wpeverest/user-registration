@@ -3083,8 +3083,21 @@
 							"undefined" &&
 						response.data.registration_type === "membership"
 					) {
-						flag = false;
-						ur_membership_ajax_utils.create_member(required_data);
+						var hidden_fields_raw = $(form).find("#urcl_hide_fields").val() || "[]";
+						var hidden_fields = [];
+						try { hidden_fields = JSON.parse(hidden_fields_raw); } catch (e) {}
+						var membership_field_name = $('input[name="urm_membership"]').first().attr('data-name');
+						var membership_is_hidden = membership_field_name && hidden_fields.indexOf(membership_field_name) !== -1;
+
+						if (!membership_is_hidden) {
+							flag = false;
+							ur_membership_ajax_utils.create_member(required_data);
+						} else {
+							// Membership field was hidden by conditional logic.
+							// Strip registration_type so the main JS shows the normal success message and redirect.
+							delete response.data.registration_type;
+							ajax_response.responseText = JSON.stringify(response);
+						}
 					}
 					ajaxFlag["status"] = flag;
 				}
