@@ -308,4 +308,17 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 
 		return ! $result ? array() : $result;
 	}
+
+	public function get_subscription_by_subscription_id_meta( $subscription_id ) {
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT wums.* FROM {$this->table} wums
+				WHERE wums.subscription_id = %s",
+				$subscription_id
+			),
+			ARRAY_A
+		);
+
+		return $result ? $result : false;
+	}
 }

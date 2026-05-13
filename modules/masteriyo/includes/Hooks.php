@@ -202,16 +202,21 @@ if ( ! class_exists( 'Hooks' ) ) :
 										class="membership-amount">
 										<?php echo esc_html( sprintf( '%s%.2f', $symbol, $membership['amount'] ) ); ?>
 									</span>
-									<span class="ur-membership-duration">
+									<?php
+									$time = '';
+									if ( 'paid' === $membership['type'] ) {
+										$time = esc_html__( 'lifetime', 'user-registration' );
+									}
+									$is_lifetime_listing = ( 'subscription' !== $membership['type'] && $time && false !== stripos( (string) $time, 'lifetime' ) )
+														   || ( isset( $membership['period'] ) && false !== stripos( (string) $membership['period'], 'lifetime' ) );
+									if ( ! $is_lifetime_listing && ( $time || isset( $membership['period'] ) ) ) :
+										?>
+										<span class="ur-membership-duration">
 										<?php
-										if ( $membership['time'] || $membership['subscription'] ) {
-											$duration_text = ( 'subscription' === $membership['type'] )
-												? $membership['subscription']['value'] . ' ' . ucfirst( $membership['subscription']['duration'] )
-												: $membership['time'];
-											echo esc_html( ' / ' . $duration_text );
-										}
+										echo ' every ' . ( 'subscription' === $membership['type'] ? esc_html( ucfirst( trim( strtolower( explode( 'every', $membership['period'] )[1] ?? '' ) ) ) ) : esc_html( $time ) );
 										?>
 									</span>
+									<?php endif; ?>
 								</div>
 							<?php } else { ?>
 								<div class="ur-membership-amount-wrapper">
@@ -496,21 +501,21 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			if ( ! is_user_logged_in() && CourseAccessMode::NEED_REGISTRATION === $course_obj->get_access_mode() ) {
 
-				$text = __( 'Join Now', 'learning-management-system' );
+				$text = __( 'Join Now', 'user-registration' );
 
 				if ( masteriyo_is_single_course_page() ) {
-					$text = __( 'Sign Up', 'learning-management-system' );
+					$text = __( 'Sign Up', 'user-registration' );
 				}
 			}
 
 			if ( is_user_logged_in() && CourseAccessMode::NEED_REGISTRATION === $course_obj->get_access_mode() ) {
 
 				if ( ! Helper::check_course_access( $course_obj ) ) {
-					$text = __( 'Join Now', 'learning-management-system' );
+					$text = __( 'Join Now', 'user-registration' );
 				}
 
 				if ( masteriyo_is_single_course_page() && ! Helper::check_course_access( $course_obj ) ) {
-					$text = __( 'Upgrade Now', 'learning-management-system' );
+					$text = __( 'Upgrade Now', 'user-registration' );
 				}
 			}
 

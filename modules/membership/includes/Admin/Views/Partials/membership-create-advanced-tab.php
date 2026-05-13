@@ -119,12 +119,10 @@
 							<span class="slider round" <?php echo ! $can_set_upgrade ? 'style="opacity: 0.7;"' : ''; ?>></span>
 						</span>
 						<?php if ( ! $can_set_upgrade ) : ?>
-							<div class="ur-membership-upgrade-action-notice" style="padding: 6px; background: #f8f9fc; border: 1px solid #475bb2; border-radius: 6px; color: #383838; font-size: 13px; line-height: 1.5;">
+							<div class="ur-membership-upgrade-action-notice" style="margin-bottom: 24px; margin-top:8px; padding: 10px 12px 10px 16px; font-weight: 400; color: #383838; border-radius: 4px; font-size: 14px; line-height: 22px; font-style: normal; border-left: 4px solid #475bb2; background: #f1f2f9;">
 								<?php
-								$create_membership_url = admin_url( 'admin.php?page=user-registration-membership' );
-								echo esc_html__( 'Please create more memberships to set an upgrade action.', 'user-registration' );
+								echo esc_html__( 'No upgradable memberships found, please create more or if you have configured groups use group\'s upgrade action', 'user-registration' );
 								?>
-								<a href="<?php echo esc_url( $create_membership_url ); ?>" rel="noopener noreferrer" style="color: #2271b1; text-decoration: underline;"><?php esc_html_e( 'Create a Membership', 'user-registration' ); ?></a>
 							</div>
 						<?php endif; ?>
 					</div>
@@ -189,7 +187,7 @@
 									</div>
 								</label>
 								<!-- Pro Rata Type -->
-								<label class="ur-membership-upgrade-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?> <?php echo isset( $membership_details['type'] ) && 'free' === $membership_details['type'] ? 'ur-d-none' : ''; ?>" for="ur-membership-upgrade-type-pro-rata">
+								<label class="ur-membership-upgrade-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?> <?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'free' ? 'ur-d-none' : ''; ?>" for="ur-membership-upgrade-type-pro-rata" <?php echo ! UR_PRO_ACTIVE ? 'data-feature-gate="tooltip" data-gate-placement="right" data-gate-interactive="true" data-gate-content="ur-pro-proration-content"' : ''; ?>>
 									<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 										<input data-key-name="Upgrade Type" id="ur-membership-upgrade-type-pro-rata"
 												type="radio" value="pro-rata" name="ur_membership_upgrade_type" style="margin: 0"
@@ -200,16 +198,23 @@
 										</label>
 									</div>
 								</label>
+								<?php
+								ur_render_premium_feature_gate_template(
+									array(
+										'template_id' => 'ur-pro-proration-content',
+									)
+								);
+								?>
 							</div>
 						</div>
 					</div>
 				</div>
 				<?php
 			}
-			if ( UR_PRO_ACTIVE && function_exists( 'ur_render_email_marketing_sync_settings' ) ) :
-				?>
+
+			?>
 				<!-- Sync Membership to email marketing addons. -->
-				<div class="ur-membership-sync-to-email-marketing-addons">
+				<div class="ur-membership-sync-to-email-marketing-addons <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?> ">
 					<div class="ur-membership-selection-container ur-d-flex ur-mt-2 ur-align-items-center"
 						style="gap:20px;">
 						<div class="ur-label" style="width: 30%">
@@ -228,29 +233,36 @@
 									data-key-name="Sync Email Marketing Action"
 									id="ur-membership-email-marketing-sync-action" type="checkbox"
 									class="user-registration-switch__control hide-show-check enabled"
-
+									<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>
 									name="ur_membership_email_marketing_sync_action"
 									style="width: 100%; text-align: left"
 								<?php echo $is_email_marketing_sync ? esc_attr( 'checked' ) : ''; ?>
 									>
 								<span class="slider round"></span>
+
+								<?php
+								if ( ! UR_PRO_ACTIVE ) {
+									ur_render_premium_feature_gate();
+								}
+								?>
 							</span>
 						</div>
 					</div>
 				</div>
 
 				<?php
-				ur_render_email_marketing_sync_settings( $membership_details );
-			endif;
+				if ( UR_PRO_ACTIVE && function_exists( 'ur_render_email_marketing_sync_settings' ) ) {
+					ur_render_email_marketing_sync_settings( $membership_details );
+				}
 
-			/**
-			 * Local Currency Settings Render.
-			 *
-			 * @since 6.1.0
-			 */
-			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) ) :
-				WPEverest\URMembership\Local_Currency\Admin\CoreFunctions::ur_render_local_currency_settings( $membership_details );
-				endif;
-			?>
+				/**
+				 * Local Currency Settings Render.
+				 *
+				 * @since 6.1.0
+				 */
+				if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) ) :
+					WPEverest\URMembership\Local_Currency\Admin\CoreFunctions::ur_render_local_currency_settings( $membership_details );
+					endif;
+				?>
 		</div>
 	</div>

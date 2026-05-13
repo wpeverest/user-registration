@@ -245,6 +245,9 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	public function display() {
 		$singular = $this->_args['singular'];
 
+		$this->views();
+		echo '</br>';
+
 		$this->display_tablenav( 'top' );
 
 		$this->screen->render_screen_reader_content( 'heading_list' );
@@ -367,7 +370,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 				'</a>',
 				esc_url( remove_query_arg( 'paged', $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'First page' ),
+				__( 'First page', 'user-registration' ),
 				'&laquo;'
 			);
 		}
@@ -382,7 +385,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Previous page' ),
+				__( 'Previous page', 'user-registration' ),
 				'&lsaquo;'
 			);
 		}
@@ -394,7 +397,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 				'<span id="table-paging" class="paging-input">' .
 				'<span class="tablenav-paging-text">',
 				/* translators: Hidden accessibility text. */
-				__( 'Current Page' )
+				__( 'Current Page', 'user-registration' )
 			);
 		} else {
 			$html_current_page = sprintf(
@@ -403,7 +406,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 					name='paged' value='%s' size='%d' aria-describedby='table-paging' />" .
 				"<span class='tablenav-paging-text'>",
 				/* translators: Hidden accessibility text. */
-				__( 'Current Page' ),
+				__( 'Current Page', 'user-registration' ),
 				$current,
 				strlen( $total_pages )
 			);
@@ -413,7 +416,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 
 		$page_links[] = $total_pages_before . sprintf(
 			/* translators: 1: Current page, 2: Total pages. */
-			_x( '%1$s of %2$s', 'paging' ),
+			_x( '%1$s of %2$s', 'paging', 'user-registration' ),
 			$html_current_page,
 			$html_total_pages
 		) . $total_pages_after;
@@ -428,7 +431,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Next page' ),
+				__( 'Next page', 'user-registration' ),
 				'&rsaquo;'
 			);
 		}
@@ -443,7 +446,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Last page' ),
+				__( 'Last page', 'user-registration' ),
 				'&raquo;'
 			);
 		}

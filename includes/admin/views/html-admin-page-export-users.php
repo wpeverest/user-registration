@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						}
 						?>
 
-						<input type="button"  class="button button-primary ur_export_user_action_button " name="user_registration_export_users" value="<?php esc_attr_e( 'Export Users', 'user-registration' ); ?>">
+						<input type="button"  class="button button-primary ur_export_user_action_button " name="user_registration_export_users" value="<?php esc_attr_e( 'Export Members', 'user-registration' ); ?>">
 
 					</div>
 				</div><!-- .postbox -->

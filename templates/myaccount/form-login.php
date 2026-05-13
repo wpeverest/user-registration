@@ -37,7 +37,7 @@ if ( isset( $_GET['urm_error'] ) ) {
 		delete_transient( $error_key );
 	} else {
 
-		//filter to add your custom message if the message is not found.
+		// filter to add your custom message if the message is not found.
 		$urm_error_not_found_message = apply_filters(
 			'user_registration_login_errors_not_found_message',
 			''
@@ -77,7 +77,8 @@ $placeholders = array(
 	'username' => get_option( 'user_registration_placeholder_username_or_email', '' ),
 	'password' => get_option( 'user_registration_placeholder_password', '' ),
 );
-$hide_labels  = ur_option_checked( 'user_registration_login_options_hide_labels', false );
+$hide_label_username = ur_option_checked( 'user_registration_hide_label_username_or_email', false );
+$hide_label_password = ur_option_checked( 'user_registration_hide_label_password', false );
 
 $enable_ajax = ur_option_checked( 'ur_login_ajax_submission', false );
 
@@ -183,7 +184,7 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 					class="<?php echo esc_attr( $admin_class ); ?> user-registration-form-row user-registration-form-row--wide form-row form-row-wide"
 					data-field="username">
 					<?php
-					if ( ! $hide_labels || $is_login_settings ) {
+					if ( ! $hide_label_username || $is_login_settings ) {
 						printf( '<label for="username">%s <span class="required">*</span></label>', esc_html( $labels['username'] ) );
 					}
 					?>
@@ -207,7 +208,7 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 						class="<?php echo esc_attr( $admin_class ); ?> user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>"
 						data-field="password">
 						<?php
-						if ( ! $hide_labels || $is_login_settings ) {
+						if ( ! $hide_label_password || $is_login_settings ) {
 							printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
 						}
 						?>
@@ -320,7 +321,7 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 				</div>
 				<input type="hidden" name="redirect"
 						value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>"/>
-
+				<input type="hidden" name="previous_page" value="<?php echo esc_attr( wp_get_raw_referer() ); ?>"/>
 				<?php
 
 				$url_options = get_option( 'user_registration_general_setting_registration_url_options', get_permalink( get_option( 'user_registration_registration_page_id' ) ) );

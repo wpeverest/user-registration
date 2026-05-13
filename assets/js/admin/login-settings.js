@@ -392,12 +392,9 @@
 			},
 			success: function (response) {
 				if (!response.success) {
-					var error_message = response.data.message;
-					main_container.append(
-						'<span class="error inline">' +
-							error_message +
-							"</span>"
-					);
+					var $errorSpan = $('<span class="error inline"></span>');
+					$errorSpan.text(response.data.message);
+					main_container.append($errorSpan);
 				}
 			},
 			complete: function (response) {

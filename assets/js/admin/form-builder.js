@@ -2201,6 +2201,40 @@
 						}
 					}
 				});
+				// For membership field: read membership_active_memberships from live #ur-setting-form so multiselect value is saved
+				var field_key = $single_item
+					.find(".ur-field")
+					.attr("data-field-key");
+				if (
+					field_key === "membership" &&
+					$single_item.hasClass("ur-item-active")
+				) {
+					var $activeSelect = $(
+						"#ur-setting-form .ur-general-setting-membership_active_memberships select"
+					);
+					if ($activeSelect.length) {
+						var liveVal = $activeSelect.val();
+						general_setting_data.membership_active_memberships =
+							liveVal != null && Array.isArray(liveVal)
+								? liveVal
+								: liveVal
+								? [].concat(liveVal)
+								: [];
+					}
+					var $showBankToggle = $(
+						"#ur-setting-form .ur-general-setting-user_registration_show_bank_details_on_form input.ur-general-setting-field"
+					);
+					if ($showBankToggle.length) {
+						general_setting_data.user_registration_show_bank_details_on_form =
+							$showBankToggle.is(":checked");
+						if (
+							!general_setting_data.user_registration_show_bank_details_on_form
+						) {
+							general_setting_data.user_registration_show_bank_details_on_form =
+								"false";
+						}
+					}
+				}
 				return general_setting_data;
 			},
 			/**
@@ -4052,6 +4086,22 @@
 							.find("a.nav-tab")
 							.removeClass("active");
 						$(this).addClass("active");
+
+						$(".ur-multiselect").each(function () {
+							var $el = $(this);
+							if ($el.hasClass("select2-hidden-accessible")) {
+								try {
+									$el.select2("destroy");
+								} catch (e) {}
+							}
+							$el.select2();
+							var $wrap = $el.closest(".ur-general-setting");
+							if ($wrap.length) {
+								var $containers =
+									$wrap.find(".select2-container");
+								$containers.slice(1).remove();
+							}
+						});
 					}
 				);
 				$(".ur-tabs").tabs();
@@ -6700,7 +6750,7 @@
 			handle_add_image_captcha_group: function ($this, $wrapper) {
 				var this_index = parseInt($this.attr("data-last-group")),
 					next_index = this_index + 1;
-				(captcha_unique = $this
+				((captcha_unique = $this
 					.closest("ul")
 					.attr("data-unique-captcha")),
 					(cloning_element = $this
@@ -6708,7 +6758,7 @@
 						.find('li[data-group="' + this_index + '"]')
 						.clone(true, true)),
 					(cloning_element_icons =
-						cloning_element.find(".icon-wrap"));
+						cloning_element.find(".icon-wrap")));
 
 				cloning_element.attr("data-group", next_index);
 				cloning_element

@@ -1119,6 +1119,18 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			wp_enqueue_style( 'ur-toast' );
 			wp_enqueue_script( 'ur-enhanced-select-custom' );
 
+			wp_add_inline_script(
+				'ur-enhanced-select-custom',
+				"
+			(function($) {
+				'use strict';
+				$(document).ready(function() {
+					$('.ur-multiselect').select2();
+				});
+			})(jQuery);
+			"
+			);
+
 			wp_localize_script(
 				'ur-setup',
 				'ur_setup_params',

@@ -667,7 +667,13 @@ class UR_Frontend {
 
 					$duration = $membership_details['subscription']['value'] ?? '';
 					if ( ! empty( $duration ) && ! empty( $membership['billing_cycle'] ) ) {
-						$data['period'] = 'subscription' === $membership['post_content']['type'] ? $amount . ' / ' . $duration . ' ' . $membership['billing_cycle'] : $amount;
+
+						if ( 1 === $duration ) {
+							$duration_val = '';
+						} else {
+							$duration_val = $duration;
+						}
+						$data['period'] = 'subscription' === $membership['post_content']['type'] ? $amount . ' every ' . $duration_val . ' ' . ucfirst($membership['billing_cycle']) : $amount;
 					} else {
 						$data['period'] = $amount;
 					}
@@ -733,7 +739,7 @@ class UR_Frontend {
 				$amount = $currencies[ $currency ]['symbol'] . '' . $amount;
 			}
 
-			$payment_details['period'] = $amount . ' / ' . str_replace( '1 ', '', $payment_details['membership']['billing_cycle'] );
+			$payment_details['period'] = $amount . ' every ' . str_replace( '1 ', '', $payment_details['membership']['billing_cycle'] );
 			$buttons                   = array();
 			$stripe_is_enabled         = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_stripe', false ) );
 

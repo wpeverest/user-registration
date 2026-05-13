@@ -1,6 +1,8 @@
 <?php
 /**
  * Base Page class for pages.
+ *
+ * @package UserRegistration
  */
 
 use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
@@ -10,7 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Base_Layout Class
+ * Base Layout class for pages.
+ *
+ * @package UserRegistration
  */
 class UR_Base_Layout {
 	/**
@@ -152,14 +156,14 @@ class UR_Base_Layout {
 		$search_value = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
 		?>
 		<input type="search" id="<?php echo esc_attr( $search_id ); ?>" name="s"
-			   value="<?php echo esc_attr( $search_value ); ?>"
-			   placeholder="<?php echo esc_attr( $placeholder ); ?>..."
-			   autocomplete="off">
+				value="<?php echo esc_attr( $search_value ); ?>"
+				placeholder="<?php echo esc_attr( $placeholder ); ?>..."
+				autocomplete="off">
 		<button type="submit" id="search-submit">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 				<path fill="#000" fill-rule="evenodd"
-					  d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
-					  clip-rule="evenodd"></path>
+						d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
+						clip-rule="evenodd"></path>
 			</svg>
 		</button>
 		<?php
@@ -187,17 +191,34 @@ class UR_Base_Layout {
 				esc_html( $type )
 			);
 
-			$secondary_message = sprintf(
-			/* translators: %s: type */
-				__( 'Please add %s and you’re good to go.', 'user-registration' ),
-				esc_html( strtolower( $type ) )
-			);
+			if ( 'Memberships' === $type ) {
+				$secondary_message = sprintf(
+				/* translators: %s: type */
+					__( 'Need help setting up your %s?', 'user-registration' ),
+					esc_html( strtolower( $type ) )
+				);
+			} else {
+
+				$secondary_message = sprintf(
+				/* translators: %s: type */
+					__( 'Please add %s and you’re good to go.', 'user-registration' ),
+					esc_html( strtolower( $type ) )
+				);
+			}
+
+			$video_url = 'https://www.youtube.com/playlist?list=PLcrB6drBDePkshUw7r5BNVLRwpr8RaXyy';
 		}
 		?>
 		<div class="empty-list-table-container">
 			<img src="<?php echo esc_url( $image_url ); ?>" alt="">
 			<h3><?php echo esc_html( $primary_message ); ?></h3>
-			<p><?php echo wp_kses_post( $secondary_message ); ?></p>
+			<div class="empty-list-table-subtext">
+				<p><?php echo wp_kses_post( $secondary_message ); ?></p>
+				<?php if ( ! empty( $video_url ) && 'Memberships' === $type ) : ?>
+					<a class="empty-video-url" target="_blank" href="<?php echo esc_url( $video_url ); ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+						<?php echo 'Watch Tutorials'; ?></a>
+				<?php endif; ?>
+			</div>
 		</div>
 		<?php
 	}

@@ -52,7 +52,33 @@ class MembershipListingShortcode {
 
 		$group_id = ! empty( $attributes['group_id'] ) ? $attributes['group_id'] : ( ! empty( $attributes['id'] ) ? $attributes['id'] : 0 );
 
-		if ( $group_id ) {
+		$selected_membership_ids = ! empty( $attributes['selected_membership_ids'] ) && is_array( $attributes['selected_membership_ids'] )
+			? array_map( 'absint', $attributes['selected_membership_ids'] )
+			: array();
+
+		if ( 'selected-memberships' === $group_id && ! empty( $selected_membership_ids ) ) {
+			$all_memberships = $membership_service->list_active_memberships();
+			$memberships     = array_filter(
+				$all_memberships,
+				function ( $m ) use ( $selected_membership_ids ) {
+					return isset( $m['ID'] ) && in_array( (int) $m['ID'], $selected_membership_ids, true );
+				}
+			);
+			$memberships = array_values( $memberships );
+			$memberships = array_map(
+				function ( $membership ) use ( $membershp_group_repository, $membership_group_service ) {
+					$membership_group_id = $membershp_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
+					if ( isset( $membership_group_id['ID'] ) ) {
+						$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
+						if ( $multiple_memberships_allowed ) {
+							$membership['multiple_membership'] = true;
+						}
+					}
+					return $membership;
+				},
+				$memberships
+			);
+		} elseif ( $group_id && is_numeric( $group_id ) ) {
 			$group_id    = absint( $group_id );
 			$memberships = $membership_group_service->get_group_memberships( $group_id );
 

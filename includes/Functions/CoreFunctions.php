@@ -391,6 +391,17 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				);
 				$duration_label  = $duration_labels[ $duration_key ] ?? ucfirst( $duration_key );
 			}
+
+			$subscription_period = $membership_cur_amount;
+			if ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] && ! empty( $duration_label ) ) {
+				$sub_value = (int) $membership['meta_value']['subscription']['value'];
+				if ( 1 === $sub_value ) {
+					$subscription_period = $membership_cur_amount . ' ' . __( 'every', 'user-registration' ) . ' ' . $duration_label;
+				} else {
+					$subscription_period = $membership_cur_amount . ' ' . __( 'every', 'user-registration' ) . ' ' . number_format( $sub_value ) . ' ' . ucfirst( $duration_label ) . __( 's', 'user-registration' );
+				}
+			}
+
 			$new_mem[ $k ] = array(
 				'ID'                => $membership_id,
 				'title'             => ! empty( $membership['post_title'] ) ? $membership['post_title'] : '',
@@ -399,7 +410,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'amount'            => ! empty( $membership_meta_value ) ? $membership['meta_value']['amount'] : 0,
 				'currency_symbol'   => $symbol,
 				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? round( $membership_meta_value['amount'] ) : 0 ),
-				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] ) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? __( 's', 'user-registration' ) : '' ) : $membership_cur_amount ),
+				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : $subscription_period,
 			);
 
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
@@ -771,15 +782,15 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 
 		switch ( $gateway_key ) {
 			case 'paypal':
-				$mode         = get_option( 'user_registration_global_paypal_mode', 'test' ) == 'test' ? 'test' : 'live';
-				$paypal_email = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address' ) );
+				$mode                 = get_option( 'user_registration_global_paypal_mode', 'test' ) == 'test' ? 'test' : 'live';
+				$paypal_email         = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address' ) );
+				$paypal_client_id     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id' ) );
+				$paypal_client_secret = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret' ) );
 
-				if ( 'subscription' === $membership_type ) {
-					$paypal_client_id     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id' ) );
-					$paypal_client_secret = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret' ) );
-					$is_configured        = ! empty( $paypal_email ) && ! empty( $paypal_client_id ) && ! empty( $paypal_client_secret );
+				if ( ur_is_paypal_old_installation() ) {
+					$is_configured = ! empty( $paypal_email ) || ! empty( $paypal_client_id ) || ! empty( $paypal_client_secret );
 				} else {
-					$is_configured = ! empty( $paypal_email );
+					$is_configured = ! empty( $paypal_client_id ) && ! empty( $paypal_client_secret );
 				}
 				break;
 

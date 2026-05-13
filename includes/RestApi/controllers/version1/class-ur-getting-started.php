@@ -633,6 +633,10 @@ class UR_Getting_Started {
 
 			if ( ! empty( $page['option'] ) ) {
 				update_option( $page['option'], $post_id );
+				if ( 'user_registration_thank_you_page_id' === $page['option'] && $existing_form_id ) {
+					update_post_meta( $existing_form_id, 'user_registration_form_setting_redirect_after_registration', 'internal-page' );
+					update_post_meta( $existing_form_id, 'user_registration_form_setting_redirect_page', $post_id );
+				}
 			}
 
 			$page_details[ get_post_field( 'post_name', $post_id ) ] = array(
@@ -677,7 +681,11 @@ class UR_Getting_Started {
 			'title'         => esc_html__( 'Registration Form', 'user-registration' ),
 			'page_url'      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $normal_form_id ),
 			'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
-			'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $normal_form_id ),
+			'page_slug'     => sprintf(
+				/* translators: %s: Form ID. */
+				esc_html__( 'Form Id: %s', 'user-registration' ),
+				$normal_form_id
+			),
 			'status'        => 'enabled',
 			'status_label'  => esc_html__( 'Ready to use', 'user-registration' ),
 		);
@@ -912,6 +920,7 @@ class UR_Getting_Started {
 					'index'   => $index,
 					'name'    => isset( $membership['name'] ) ? $membership['name'] : '',
 					'message' => sprintf(
+						/* translators: 1: Membership plan type 2: Allowed membership plan types. */
 						__( 'Invalid membership type: %1$s. Only %2$s memberships are allowed based on your selection.', 'user-registration' ),
 						$plan_type,
 						implode( ' or ', $allowed_types )
@@ -1541,6 +1550,7 @@ class UR_Getting_Started {
 				'paypal_production_email'         => get_option( 'user_registration_global_paypal_live_email_address', get_option( 'user_registration_global_paypal_live_admin_email', get_option( 'user_registration_global_paypal_email_address', '' ) ) ),
 				'paypal_production_client_id'     => get_option( 'user_registration_global_paypal_live_client_id', get_option( 'user_registration_global_paypal_client_id', '' ) ),
 				'paypal_production_client_secret' => get_option( 'user_registration_global_paypal_live_client_secret', get_option( 'user_registration_global_paypal_client_secret', '' ) ),
+				'is_new_installation'             => ! ur_is_paypal_old_installation(),
 			),
 			array(
 				'id'                          => 'stripe',
@@ -1591,6 +1601,7 @@ class UR_Getting_Started {
 	 *
 	 * @param \WP_REST_Request $request Request instance.
 	 * @return \WP_REST_Response
+	 * @throws \Exception When Stripe credential validation fails.
 	 */
 	public static function save_payment_settings( $request ) {
 		$offline_payment = isset( $request['offline_payment'] ) ? (bool) $request['offline_payment'] : false;
@@ -1618,7 +1629,9 @@ class UR_Getting_Started {
 
 		$offline_configured = true;
 		if ( $offline_payment ) {
-			$offline_configured = ! empty( trim( wp_strip_all_tags( $bank_details ) ) );
+			$sanitized_bank_details = trim( wp_strip_all_tags( $bank_details ) );
+			$offline_configured     = ! empty( $sanitized_bank_details );
+
 			if ( ! $offline_configured ) {
 				$configuration_needed[] = array(
 					'gateway'      => 'offline',
@@ -1631,15 +1644,21 @@ class UR_Getting_Started {
 		$paypal_configured = true;
 		if ( $paypal ) {
 			if ( 'test' === $paypal_mode ) {
-				$paypal_configured = ! empty( $paypal_test_email ) && ! empty( $paypal_test_client_id ) && ! empty( $paypal_test_client_secret );
+				$has_rest_creds    = ! empty( $paypal_test_client_id ) && ! empty( $paypal_test_client_secret );
+				$paypal_configured = $has_rest_creds || ! empty( $paypal_test_email );
 			} else {
-				$paypal_configured = ! empty( $paypal_production_email ) && ! empty( $paypal_production_client_id ) && ! empty( $paypal_production_client_secret );
+				$has_rest_creds    = ! empty( $paypal_production_client_id ) && ! empty( $paypal_production_client_secret );
+				$paypal_configured = $has_rest_creds || ! empty( $paypal_production_email );
 			}
 
 			if ( ! $paypal_configured ) {
+				$message = ur_is_paypal_old_installation()
+					? __( 'PayPal requires either an email address or Client ID and Secret.', 'user-registration' )
+					: __( 'PayPal requires Client ID and Secret.', 'user-registration' );
+
 				$configuration_needed[] = array(
 					'gateway'      => 'paypal',
-					'message'      => __( 'PayPal requires an email address, client ID, and client secret.', 'user-registration' ),
+					'message'      => $message,
 					'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
 				);
 			}
@@ -1734,24 +1753,13 @@ class UR_Getting_Started {
 						continue;
 					}
 
-					try {
-						$post_data = array(
-							'ID'           => $membership_id,
-							'post_title'   => $post->post_title,
-							'post_content' => $post->post_content,
-						);
+					$post_data = array(
+						'ID'           => $membership_id,
+						'post_title'   => $post->post_title,
+						'post_content' => $post->post_content,
+					);
 
-						$stripe_result = $stripe_service->create_stripe_product_and_price( $post_data, $meta, false );
-
-						if ( isset( $stripe_result['success'] ) && ur_string_to_bool( $stripe_result['success'] ) ) {
-							$meta['payment_gateways']['stripe']               = array();
-							$meta['payment_gateways']['stripe']['product_id'] = $stripe_result['price']->product;
-							$meta['payment_gateways']['stripe']['price_id']   = $stripe_result['price']->id;
-							update_post_meta( $membership_id, 'ur_membership', wp_json_encode( $meta ) );
-						}
-					} catch ( \Exception $e ) {
-						continue;
-					}
+					user_registration_create_product_and_price_for_stripe( $post_data );
 				}
 			} catch ( \Exception $e ) {
 

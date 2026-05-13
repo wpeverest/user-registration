@@ -394,7 +394,9 @@
 					success: function (response) {
 						if (response.success) {
 							var template = JSON.parse(response.data);
-							modal_body.html(template);
+							var $sanitized = $("<div>").html(template);
+							$sanitized.find("script").remove();
+							modal_body.html($sanitized.contents());
 						} else {
 							handle_orders_utils.show_failure_message(
 								response.data.message

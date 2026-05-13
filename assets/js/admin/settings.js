@@ -826,7 +826,9 @@
 		function () {
 			var $url = $("#user_registration_login_options_prevent_core_login");
 
-			$("#user_registration_login_options_login_redirect_url").closest(".single_select_page").toggle();
+			$("#user_registration_login_options_login_redirect_url")
+				.closest(".single_select_page")
+				.toggle();
 			$("#user_registration_login_options_login_redirect_url").prop(
 				"required",
 				function () {
@@ -1393,8 +1395,15 @@
 
 			localStorage.setItem("isSidebarEnabled", isCheckboxChecked);
 
+			var isSecure = window.location.protocol === "https:";
+			var cookieAttributes =
+				"; path=/" +
+				(isSecure ? "; Secure" : "") + // Secure only over HTTPS
+				"; SameSite=" +
+				(isSecure ? "Strict" : "Lax"); // Strict on prod, Lax on dev
+
 			document.cookie =
-				"isSidebarEnabled=" + isCheckboxChecked + "; path=/;";
+				"isSidebarEnabled=" + isCheckboxChecked + cookieAttributes;
 
 			if (isCheckboxChecked) {
 				$("body")
@@ -1646,32 +1655,34 @@
 			type: "POST",
 			complete: function (response) {
 				if (response.responseJSON.status === false) {
-						var disableSaveBtn = response.responseJSON.disable_save_btn;
-						var className = 'error';
-						var inlineStyle = "padding:10px;";
+					var disableSaveBtn = response.responseJSON.disable_save_btn;
+					var className = "error";
+					var inlineStyle = "padding:10px;";
 
-						if (typeof disableSaveBtn === "undefined") {
-							$this
-								.closest("form")
-								.find("input[name='save']")
-								.prop("disabled", true);
-
-						} else if (disableSaveBtn === "no") {
-							className += ' settings-page-notice';
-							$this
-								.closest("form")
-								.find("input[name='save']")
-								.prop("disabled", false);
-						}
-
+					if (typeof disableSaveBtn === "undefined") {
 						$this
+							.closest("form")
+							.find("input[name='save']")
+							.prop("disabled", true);
+					} else if (disableSaveBtn === "no") {
+						className += " settings-page-notice";
+						$this
+							.closest("form")
+							.find("input[name='save']")
+							.prop("disabled", false);
+					}
+
+					$this
 						.closest(".user-registration-global-settings--field")
 						.append(
-							"<div id='message' class='" + className +  " inline' style='" + inlineStyle + "'>" +
+							"<div id='message' class='" +
+								className +
+								" inline' style='" +
+								inlineStyle +
+								"'>" +
 								response.responseJSON.message +
 								"</div>"
 						);
-
 				} else {
 					if (
 						$this
@@ -1722,6 +1733,9 @@
 			var value;
 			if ($item.attr("type") === "checkbox") {
 				value = $item.is(":checked");
+			} else if ($item.attr("type") === "radio") {
+				if (!$item.is(":checked")) return;
+				value = $item.val();
 			} else if (
 				$item.is("textarea") &&
 				typeof tinymce !== "undefined" &&
@@ -1905,7 +1919,7 @@
 		license_activation_status === "pro_activated"
 	) {
 		ur_remove_cookie("urm_license_status");
-		$successModalHtml =
+		var $successModalHtml =
 			'<p style="margin: 10px 0 20px;">' +
 			user_registration_settings_params.i18n.pro_activated_success_text +
 			"</p>" +
@@ -1921,15 +1935,20 @@
 			'">' +
 			user_registration_settings_params.i18n.continue_to_dashboard_text +
 			"</button>";
+		var $successIcon =
+			'<svg width="28" height="28" viewBox="0 0 28 28" fill="none" style="flex-shrink:0" xmlns="http://www.w3.org/2000/svg">' +
+			'<circle cx="14" cy="14" r="13" stroke="#a5dc86" stroke-width="2"/>' +
+			'<path d="M8 14l4 4 8-8" stroke="#a5dc86" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+			"</svg>";
 		Swal.fire({
-			icon: "success",
-			title: user_registration_settings_params.i18n
-				.pro_activated_success_title,
+			title:
+				$successIcon +
+				user_registration_settings_params.i18n.pro_activated_success_title,
 			html: $successModalHtml,
 			showConfirmButton: false,
 			showCloseButton: true,
 			customClass:
-				"user-registration-swal2-modal user-registration user-registration-swal2-modal--center user-registration-info swal2-show",
+				"user-registration-swal2-modal user-registration user-registration-swal2-modal--center swal2-show",
 			width: 400,
 			didOpen: function () {
 				$("#dashboard-redirect-btn").on("click", function () {
@@ -2202,7 +2221,11 @@
 	 * Deletes the cookie values.
 	 */
 	function ur_remove_cookie(cookie_key) {
-		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
+		document.cookie =
+			cookie_key +
+			"=; Max-Age=-99999999; path=/" +
+			(window.location.protocol === "https:" ? "; Secure" : "") +
+			"; SameSite=Strict";
 	}
 
 	$(document).on(
@@ -2609,9 +2632,13 @@
 			var $modeSelector = $(gatewayMap[gatewayToggleId]);
 
 			if ($modeSelector.length > 0) {
-				if (gatewayToggleId === 'user_registration_paypal_enabled') {
-					var value =  $("#user_registration_global_paypal_mode").length > 0 && $("#user_registration_global_paypal_mode").val() ? $("#user_registration_global_paypal_mode").val() : 'test';
-					$modeSelector.val( value );
+				if (gatewayToggleId === "user_registration_paypal_enabled") {
+					var value =
+						$("#user_registration_global_paypal_mode").length > 0 &&
+						$("#user_registration_global_paypal_mode").val()
+							? $("#user_registration_global_paypal_mode").val()
+							: "test";
+					$modeSelector.val(value);
 				}
 				setTimeout(function () {
 					$modeSelector.trigger("change");
@@ -2657,6 +2684,8 @@
 	});
 	$(document).ready(function () {
 		$(".urm_toggle_pg_status").trigger("change");
-		$( "#user_registration_member_registration_page_id, #user_registration_thank_you_page_id").trigger( 'change' );
+		$(
+			"#user_registration_member_registration_page_id, #user_registration_thank_you_page_id"
+		).trigger("change");
 	});
 })(jQuery);
