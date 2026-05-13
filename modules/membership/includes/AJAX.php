@@ -1618,6 +1618,7 @@ class AJAX {
 		if ( 'group' == $list_type ) {
 			$membership_group_service = new MembershipGroupService();
 			$membership_plans         = $membership_group_service->get_group_memberships( $group_id );
+			$membership_plans         = apply_filters( 'build_membership_list_frontend', $membership_plans );
 		} else {
 			$membership_service = new MembershipService();
 			$membership_plans   = $membership_service->list_active_memberships();
