@@ -88,6 +88,7 @@ class UR_Smart_Tags {
 			'{{unique_id}}'        => esc_html__( 'Unique ID', 'user-registration' ),
 			'{{sign_up}}'          => esc_html__( 'Sign Up', 'user-registration' ),
 			'{{log_in}}'           => esc_html__( 'Log In', 'user-registration' ),
+			'{{urm_bank_details}}' => esc_html__( 'Bank Details', 'user-registration' ),
 		);
 
 		/**
@@ -1147,6 +1148,37 @@ class UR_Smart_Tags {
 							$password = '';
 						}
 						$content = str_replace( '{{' . $other_tag . '}}', $password, $content );
+						break;
+
+					case 'urm_bank_details':
+						$bank_details_content = '';
+						$payment_method       = '';
+
+						// Resolve payment method from available value sources.
+						if ( ! empty( $values['payment_method'] ) ) {
+							$payment_method = $values['payment_method'];
+						} elseif ( ! empty( $values['membership_tags']['membership_plan_payment_method'] ) ) {
+							$payment_method = $values['membership_tags']['membership_plan_payment_method'];
+						} else {
+							$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
+							if ( $user_id && class_exists( '\WPEverest\URMembership\Admin\Repositories\MembersOrderRepository' ) ) {
+								$members_order_repository = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
+								$latest_order             = $members_order_repository->get_member_orders( $user_id );
+								if ( ! empty( $latest_order ) && isset( $latest_order['ID'] ) ) {
+									$orders_repository = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
+									$order_detail      = $orders_repository->get_order_detail( $latest_order['ID'] );
+									if ( ! empty( $order_detail['payment_method'] ) ) {
+										$payment_method = $order_detail['payment_method'];
+									}
+								}
+							}
+						}
+
+						if ( 'bank' === strtolower( $payment_method ) ) {
+							$bank_details_content = get_option( 'user_registration_global_bank_details', '' );
+						}
+
+						$content = str_replace( '{{' . $other_tag . '}}', wp_kses_post( $bank_details_content ), $content );
 						break;
 				}
 			}

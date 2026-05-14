@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Get membership listing option.
 $membership_list_options = isset( $this->admin_data->general_setting->membership_listing_option )
-						   && ! empty( $this->admin_data->general_setting->membership_listing_option )
+	&& ! empty( $this->admin_data->general_setting->membership_listing_option )
 	? $this->admin_data->general_setting->membership_listing_option
 	: 'all';
 
@@ -54,16 +54,19 @@ if ( 'group' === $membership_list_options ) {
 } elseif ( 'selected' === $membership_list_options ) {
 	$membership_service = new MembershipService();
 	$all_memberships    = $membership_service->list_active_memberships();
-	$selected_ids      = isset( $this->admin_data->general_setting->membership_active_memberships )
+	$selected_ids       = isset( $this->admin_data->general_setting->membership_active_memberships )
 		? $this->admin_data->general_setting->membership_active_memberships
 		: array();
-	$selected_ids      = is_array( $selected_ids ) ? $selected_ids : (array) maybe_unserialize( $selected_ids );
-	$selected_ids      = array_filter( array_map( 'absint', $selected_ids ) );
-	$memberships       = array_filter( $all_memberships, function ( $m ) use ( $selected_ids ) {
-		$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
-		return $id && in_array( $id, $selected_ids, true );
-	} );
-	$memberships       = array_values( $memberships );
+	$selected_ids       = is_array( $selected_ids ) ? $selected_ids : (array) maybe_unserialize( $selected_ids );
+	$selected_ids       = array_filter( array_map( 'absint', $selected_ids ) );
+	$memberships        = array_filter(
+		$all_memberships,
+		function ( $m ) use ( $selected_ids ) {
+			$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
+			return $id && in_array( $id, $selected_ids, true );
+		}
+	);
+	$memberships        = array_values( $memberships );
 } else {
 	$membership_service = new MembershipService();
 	$memberships        = $membership_service->list_active_memberships();
@@ -80,11 +83,14 @@ $symbol     = isset( $currencies[ $currency ]['symbol'] )
 	: '$';
 
 // Get payment gateway configuration.
-$payment_gateways = get_option( 'ur_membership_payment_gateways', array(
-	'paypal' => __( 'PayPal', 'user-registration' ),
-	'stripe' => __( 'Stripe', 'user-registration' ),
-	'bank'   => __( 'Bank', 'user-registration' ),
-) );
+$payment_gateways = get_option(
+	'ur_membership_payment_gateways',
+	array(
+		'paypal' => __( 'PayPal', 'user-registration' ),
+		'stripe' => __( 'Stripe', 'user-registration' ),
+		'bank'   => __( 'Bank', 'user-registration' ),
+	)
+);
 
 // Map payment gateway keys to their image filenames.
 $gateway_images = array(
@@ -128,21 +134,64 @@ $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 						$plan_amount    = isset( $option['amount'] ) ? floatval( $option['amount'] ) : 0;
 						$is_first       = 0 === $k;
 						$selected_class = $is_first ? 'selected' : '';
+
+						// Trial indicator data.
+						$admin_trial_label       = '';
+						$admin_trial_end_display = '';
+						if ( ! empty( $option['trial_status'] ) && 'on' === $option['trial_status'] && ! empty( $option['trial_data'] ) ) {
+							$admin_trial_value    = intval( $option['trial_data']['value'] ?? 0 );
+							$admin_trial_duration = sanitize_text_field( $option['trial_data']['duration'] ?? 'day' );
+							if ( $admin_trial_value > 0 ) {
+								$admin_trial_label = sprintf(
+									/* translators: 1: trial length number, 2: duration unit e.g. "day" */
+									esc_html__( '%1$d-%2$s free trial', 'user-registration' ),
+									$admin_trial_value,
+									$admin_trial_duration
+								);
+								$admin_interval_map  = array(
+									'day'   => 'D',
+									'week'  => 'W',
+									'month' => 'M',
+									'year'  => 'Y',
+								);
+								$admin_interval_char = $admin_interval_map[ $admin_trial_duration ] ?? 'D';
+								try {
+									$admin_end_date = new DateTime();
+									$admin_end_date->add( new DateInterval( 'P' . $admin_trial_value . $admin_interval_char ) );
+									$admin_trial_end_display = $admin_end_date->format( 'M j' );
+								} catch ( Exception $e ) {
+									$admin_trial_end_display = '';
+								}
+							}
+						}
 						?>
 						<div class="urmg-plan-card <?php echo esc_attr( $selected_class ); ?>"
-							 data-plan-id="<?php echo $plan_id; ?>"
-							 data-plan-amount="<?php echo esc_attr( $plan_amount ); ?>"
-							 data-plan-type="<?php echo esc_attr( $plan_type ); ?>">
+							data-plan-id="<?php echo $plan_id; ?>"
+							data-plan-amount="<?php echo esc_attr( $plan_amount ); ?>"
+							data-plan-type="<?php echo esc_attr( $plan_type ); ?>">
 							<input type="radio"
-								   name="urm_membership"
-								   value="<?php echo $plan_id; ?>"
+									name="urm_membership"
+									value="<?php echo $plan_id; ?>"
 								<?php echo $is_first ? 'checked' : ''; ?>
-								   disabled/>
+									disabled/>
 							<div class="urmg-plan-header">
 								<div>
 									<div class="urmg-plan-title"><?php echo $plan_title; ?></div>
+									<?php if ( ! empty( $admin_trial_label ) ) : ?>
+										<span class="ur-membership-trial-label"><?php echo esc_html( $admin_trial_label ); ?></span>
+									<?php endif; ?>
 								</div>
-								<div class="urmg-plan-price"><?php echo $plan_period; ?></div>
+								<div class="urmg-plan-price">
+									<?php echo $plan_period; ?>
+									<?php if ( ! empty( $admin_trial_end_display ) ) : ?>
+										<span class="ur-membership-trial-end">
+											<?php
+											/* translators: %s: trial end date (e.g. "May 20") */
+											printf( esc_html__( 'Trial ends %s', 'user-registration' ), esc_html( $admin_trial_end_display ) );
+											?>
+										</span>
+									<?php endif; ?>
+								</div>
 							</div>
 						</div>
 					<?php endforeach; ?>
@@ -160,7 +209,7 @@ $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 				<?php
 				// Payment Gateway Selection - only show if there's more than one membership, or if single membership is not free.
 				$memberships_count       = count( $memberships );
-				$membership_type = UR_PRO_ACTIVE ? 'subscription' : 'paid';
+				$membership_type         = UR_PRO_ACTIVE ? 'subscription' : 'paid';
 				$active_payment_gateways = urm_get_all_active_payment_gateways( $membership_type );
 				$show_payment_gateways   = false;
 
@@ -185,27 +234,27 @@ $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 						</label>
 						<div class="urmg-gateway-buttons">
 							<?php
-							$gateway_index              = 0;
+							$gateway_index = 0;
 							foreach ( $active_payment_gateways as $gateway_key => $gateway_label ) :
-								$is_first_gateway = 0 === $gateway_index;
+								$is_first_gateway       = 0 === $gateway_index;
 								$selected_gateway_class = $is_first_gateway ? 'selected' : '';
 								$gateway_image_url      = urm_get_gateway_image_url( $gateway_key, $gateway_images, $plugin_url );
 								?>
 								<label class="urmg-gateway-btn <?php echo esc_attr( $selected_gateway_class ); ?>">
 									<input type="radio"
-										   name="urm_payment_method"
-										   value="<?php echo esc_attr( $gateway_key ); ?>"
+											name="urm_payment_method"
+											value="<?php echo esc_attr( $gateway_key ); ?>"
 										<?php echo $is_first_gateway ? 'checked' : ''; ?>
-										   disabled/>
+											disabled/>
 									<?php if ( ! empty( $gateway_image_url ) ) : ?>
 										<img src="<?php echo $gateway_image_url; ?>"
-											 alt="<?php echo esc_attr( $gateway_label ); ?>"
-											 class="urmg-gateway-icon"/>
+											alt="<?php echo esc_attr( $gateway_label ); ?>"
+											class="urmg-gateway-icon"/>
 									<?php endif; ?>
 									<span class="urmg-gateway-label"><?php echo esc_html( $gateway_label ); ?></span>
 								</label>
 								<?php
-								$gateway_index ++;
+								++$gateway_index;
 							endforeach;
 							?>
 						</div>

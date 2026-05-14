@@ -296,6 +296,10 @@ if ( $first_name || $last_name ) {
 									<!-- Summary and Payment Tables -->
 									<div class="ur-payments__summary-payment-wrapper">
 										<!-- Order Summary Table -->
+
+										<?php
+										if ( 'on' !== $trial_status ) {
+											?>
 										<table class="ur-payments__summary-table">
 											<tbody>
 												<tr>
@@ -349,6 +353,7 @@ if ( $first_name || $last_name ) {
 												</tr>
 											</tbody>
 										</table>
+										<?php } ?>
 
 										<!-- Payment Information Table -->
 										<table class="ur-payments__payment-table">
@@ -360,6 +365,13 @@ if ( $first_name || $last_name ) {
 													</td>
 													<td width="1%"></td>
 													<td class="ur-payments__payment-total">
+														<?php
+														if ( 'on' === $trial_status ) {
+
+															$paid_amount = 0;
+														}
+
+														?>
 														<?php echo esc_html( $symbol . number_format( $paid_amount, 2 ) ); ?>
 													</td>
 												</tr>

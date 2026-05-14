@@ -660,7 +660,20 @@
 					ur_membership_frontend_utils.show_success_message(
 						response.data.message
 					);
-					window.location.replace(response.data.pg_data.payment_url);
+					if (
+						response.data.pg_data &&
+						response.data.pg_data.payment_url
+					) {
+						window.location.replace(
+							response.data.pg_data.payment_url
+						);
+					} else {
+						ur_membership_frontend_utils.show_failure_message(
+							(response.data.pg_data &&
+								response.data.pg_data.payment_error) ||
+								"PayPal redirect failed. Please check your PayPal configuration."
+						);
+					}
 					break;
 				case "bank":
 					ur_membership_frontend_utils.show_success_message(
@@ -908,6 +921,7 @@
 			var subTotalInput = $("#ur-membership-subtotal");
 			var taxInput = $("#ur-membership-tax");
 			var couponInput = $("#ur-membership-coupons");
+			var proratedDiscountInput = $("#ur-membership-proration-discount");
 			var localCurrency = "";
 			var currency = urmf_data.currency_symbol;
 
@@ -928,40 +942,27 @@
 						: urm_calculated_total,
 				upgrade_type = $this.data("urm-upgrade-type");
 
-			var total_label = $(".urm-membership-total-value").find(
-				".ur_membership_input_label"
-			);
-
-			if ($(".urm-membership-sub-total-value").length > 0) {
-				var sub_total_label = $(".urm-membership-sub-total-value").find(
-					".ur_membership_input_label"
+			var membershipAmount =
+				parseFloat($this.data("urm-membership-amount")) || 0;
+			var proratedDiscount = 0;
+			if (upgrade_type) {
+				proratedDiscount =
+					membershipAmount - parseFloat(urm_calculated_total);
+				$(".urm-membership-proration-discount-value").removeClass(
+					"urm-d-none"
 				);
-
-				if (
-					sub_total_label.find(".user-registration-badge").length > 0
-				) {
-					sub_total_label.find(".user-registration-badge").remove();
-				}
-
-				if (upgrade_type) {
-					sub_total_label.append(
-						'<span class="user-registration-badge">' +
-							upgrade_type +
-							"</span>"
-					);
-				}
 			} else {
-				if (total_label.find(".user-registration-badge").length > 0) {
-					total_label.find(".user-registration-badge").remove();
-				}
-				if (upgrade_type) {
-					total_label.append(
-						'<span class="user-registration-badge">' +
-							upgrade_type +
-							"</span>"
-					);
-				}
+				$(".urm-membership-proration-discount-value").addClass(
+					"urm-d-none"
+				);
 			}
+
+			$(".urm-membership-sub-total-value")
+				.find(".user-registration-badge")
+				.remove();
+			$(".urm-membership-total-value")
+				.find(".user-registration-badge")
+				.remove();
 
 			var totalDetails =
 				ur_membership_ajax_utils.convert_currency_and_calculate_tax(
@@ -980,11 +981,23 @@
 					currency + parseFloat(totalDetails.subTotal).toFixed(2)
 				);
 				taxInput.text(
-					currency + parseFloat(totalDetails.taxAmount).toFixed(2)
+					"+" +
+						currency +
+						parseFloat(totalDetails.taxAmount).toFixed(2)
 				);
-				couponInput.text(
-					currency +
-						parseFloat(totalDetails.discountAmount).toFixed(2)
+				if (totalDetails.discountAmount > 0) {
+					couponInput.closest(".urm-membership-coupons-value").show();
+
+					couponInput.text(
+						"-" +
+							currency +
+							parseFloat(totalDetails.discountAmount).toFixed(2)
+					);
+				} else {
+					couponInput.closest(".urm-membership-coupons-value").hide();
+				}
+				proratedDiscountInput.text(
+					"-" + currency + parseFloat(proratedDiscount).toFixed(2)
 				);
 			} else {
 				total_input.text(
@@ -994,11 +1007,24 @@
 					parseFloat(totalDetails.subTotal).toFixed(2) + currency
 				);
 				taxInput.text(
-					parseFloat(totalDetails.taxAmount).toFixed(2) + currency
-				);
-				couponInput.text(
-					parseFloat(totalDetails.discountAmount).toFixed(2) +
+					"+" +
+						parseFloat(totalDetails.taxAmount).toFixed(2) +
 						currency
+				);
+
+				if (totalDetails.discountAmount > 0) {
+					couponInput.closest(".urm-membership-coupons-value").show();
+
+					couponInput.text(
+						"-" +
+							parseFloat(totalDetails.discountAmount).toFixed(2) +
+							currency
+					);
+				} else {
+					couponInput.closest(".urm-membership-coupons-value").hide();
+				}
+				proratedDiscountInput.text(
+					"-" + parseFloat(proratedDiscount).toFixed(2) + currency
 				);
 			}
 		},
@@ -1133,9 +1159,12 @@
 				var $span = $membershipRadio.siblings(
 					".ur-membership-period-span"
 				);
+				var $periodText = $span.find(".ur-membership-period-text");
 
 				// Parse duration assuming text
-				var oldText = $span.text();
+				var oldText = $periodText.length
+					? $periodText.text()
+					: $span.text();
 				var durationPart = "";
 				var everyIndex = oldText.toLowerCase().indexOf(" every ");
 
@@ -1166,13 +1195,33 @@
 					}
 
 					if (urmf_data.curreny_pos === "left") {
-						$span.text(
-							symbol + newSubTotal.toFixed(2) + " " + durationPart
-						);
+						$periodText.length
+							? $periodText.text(
+									symbol +
+										newSubTotal.toFixed(2) +
+										" " +
+										durationPart
+								)
+							: $span.text(
+									symbol +
+										newSubTotal.toFixed(2) +
+										" " +
+										durationPart
+								);
 					} else {
-						$span.text(
-							newSubTotal.toFixed(2) + symbol + " " + durationPart
-						);
+						$periodText.length
+							? $periodText.text(
+									newSubTotal.toFixed(2) +
+										symbol +
+										" " +
+										durationPart
+								)
+							: $span.text(
+									newSubTotal.toFixed(2) +
+										symbol +
+										" " +
+										durationPart
+								);
 					}
 
 					$membershipRadio.data(
@@ -1199,19 +1248,33 @@
 					$membershipRadio.data("urm-converted-amount", 0);
 					if (urmf_data.curreny_pos === "left") {
 						if (upgradeType) {
-							$span.text(
-								urmf_data.currency_symbol +
-									membershipAmount.toFixed(2) +
-									" " +
-									durationPart
-							);
+							$periodText.length
+								? $periodText.text(
+										urmf_data.currency_symbol +
+											membershipAmount.toFixed(2) +
+											" " +
+											durationPart
+									)
+								: $span.text(
+										urmf_data.currency_symbol +
+											membershipAmount.toFixed(2) +
+											" " +
+											durationPart
+									);
 						} else if (subTotal) {
-							$span.text(
-								urmf_data.currency_symbol +
-									subTotal.toFixed(2) +
-									" " +
-									durationPart
-							);
+							$periodText.length
+								? $periodText.text(
+										urmf_data.currency_symbol +
+											subTotal.toFixed(2) +
+											" " +
+											durationPart
+									)
+								: $span.text(
+										urmf_data.currency_symbol +
+											subTotal.toFixed(2) +
+											" " +
+											durationPart
+									);
 						}
 						if ($membershipRadio.is(":checked")) {
 							taxAmount =
@@ -1227,19 +1290,33 @@
 						}
 					} else {
 						if (upgradeType) {
-							$span.text(
-								membershipAmount.toFixed(2) +
-									urmf_data.currency_symbol +
-									" " +
-									durationPart
-							);
+							$periodText.length
+								? $periodText.text(
+										membershipAmount.toFixed(2) +
+											urmf_data.currency_symbol +
+											" " +
+											durationPart
+									)
+								: $span.text(
+										membershipAmount.toFixed(2) +
+											urmf_data.currency_symbol +
+											" " +
+											durationPart
+									);
 						} else if (subTotal) {
-							$span.text(
-								subTotal.toFixed(2) +
-									urmf_data.currency_symbol +
-									" " +
-									durationPart
-							);
+							$periodText.length
+								? $periodText.text(
+										subTotal.toFixed(2) +
+											urmf_data.currency_symbol +
+											" " +
+											durationPart
+									)
+								: $span.text(
+										subTotal.toFixed(2) +
+											urmf_data.currency_symbol +
+											" " +
+											durationPart
+									);
 						}
 						if ($membershipRadio.is(":checked")) {
 							taxAmount =
@@ -1872,7 +1949,20 @@
 					ur_membership_frontend_utils.show_success_message(
 						response.data.message
 					);
-					window.location.replace(response.data.pg_data.payment_url);
+					if (
+						response.data.pg_data &&
+						response.data.pg_data.payment_url
+					) {
+						window.location.replace(
+							response.data.pg_data.payment_url
+						);
+					} else {
+						ur_membership_frontend_utils.show_failure_message(
+							(response.data.pg_data &&
+								response.data.pg_data.payment_error) ||
+								"PayPal redirect failed. Please check your PayPal configuration."
+						);
+					}
 					break;
 				case "stripe":
 					stripe_settings.handle_stripe_response(
@@ -1916,7 +2006,20 @@
 					ur_membership_frontend_utils.show_success_message(
 						response.data.message
 					);
-					window.location.replace(response.data.pg_data.payment_url);
+					if (
+						response.data.pg_data &&
+						response.data.pg_data.payment_url
+					) {
+						window.location.replace(
+							response.data.pg_data.payment_url
+						);
+					} else {
+						ur_membership_frontend_utils.show_failure_message(
+							(response.data.pg_data &&
+								response.data.pg_data.payment_error) ||
+								"PayPal redirect failed. Please check your PayPal configuration."
+						);
+					}
 					break;
 				case "stripe":
 					stripe_settings.handle_stripe_response(
@@ -2515,7 +2618,14 @@
 					authorize_container.addClass("urm-d-none");
 					authorize_error_container.remove();
 
-					elements = {};
+					var stripeAlreadyReady =
+						selected_method === "stripe" &&
+						elements &&
+						elements.card;
+					if (!stripeAlreadyReady) {
+						elements = {};
+					}
+
 					if (selected_method === "stripe") {
 						if (urmf_data.stripe_publishable_key.length == 0) {
 							ur_membership_frontend_utils.show_failure_message(
@@ -2525,7 +2635,9 @@
 							return;
 						}
 						stripe_container.removeClass("urm-d-none");
-						stripe_settings.init();
+						if (!stripeAlreadyReady) {
+							stripe_settings.init();
+						}
 					}
 					if (selected_method === "authorize") {
 						authorize_container.removeClass("urm-d-none");
@@ -2594,7 +2706,10 @@
 							.prop("checked", true)
 							.trigger("change");
 
-						if (urm_default_pg.toLowerCase() === "stripe") {
+						if (
+							urm_default_pg.toLowerCase() === "stripe" &&
+							!(elements && elements.card)
+						) {
 							stripe_settings.init();
 						}
 
@@ -3060,12 +3175,16 @@
 						$(pointer).find("#ur-membership-registration").length >
 						0
 					) {
-						data["is_membership_active"] = $(pointer)
-							.find('input[name="urm_membership"]:checked')
-							.val();
-						data["membership_type"] = $(
-							'input[name="urm_membership"]:checked'
-						).val();
+						var membersData = ur_membership_ajax_utils.prepare_members_data();
+						if (validated_stripe_pm_id) {
+							membersData.payment_method_id = validated_stripe_pm_id;
+						}
+						data["members_data"] = JSON.stringify(membersData);
+						data["is_membership_active"] = membersData.membership;
+						data["membership_type"] = membersData.membership;
+						if (typeof ur_authorize_net !== "undefined") {
+							data["ur_authorize_net"] = ur_authorize_net;
+						}
 					}
 					if (validated_stripe_pm_id) {
 						data["urm_stripe_pm_id"] = validated_stripe_pm_id;
@@ -3087,8 +3206,23 @@
 							"undefined" &&
 						response.data.registration_type === "membership"
 					) {
-						flag = false;
-						ur_membership_ajax_utils.create_member(required_data);
+						var hidden_fields_raw = $(form).find("#urcl_hide_fields").val() || "[]";
+						var hidden_fields = [];
+						try { hidden_fields = JSON.parse(hidden_fields_raw); } catch (e) {}
+						var membership_field_name = $('input[name="urm_membership"]').first().attr('data-name');
+						var membership_is_hidden = membership_field_name && hidden_fields.indexOf(membership_field_name) !== -1;
+
+						if (!membership_is_hidden) {
+							flag = false;
+							var membersData = ur_membership_ajax_utils.prepare_members_data();
+							membersData.username = response.data.username;
+							ur_membership_ajax_utils.handle_response(response, membersData, required_data);
+						} else {
+							// Membership field was hidden by conditional logic.
+							// Strip registration_type so the main JS shows the normal success message and redirect.
+							delete response.data.registration_type;
+							ajax_response.responseText = JSON.stringify(response);
+						}
 					}
 					ajaxFlag["status"] = flag;
 				}
@@ -3115,7 +3249,13 @@
 					authorize_container.addClass("urm-d-none");
 					authorize_error_container.remove();
 
-					elements = {};
+					var stripeAlreadyReady =
+						selected_method === "stripe" &&
+						elements &&
+						elements.card;
+					if (!stripeAlreadyReady) {
+						elements = {};
+					}
 					if (selected_method === "stripe") {
 						if (urmf_data.stripe_publishable_key.length == 0) {
 							ur_membership_frontend_utils.show_failure_message(
@@ -3340,8 +3480,13 @@
 							var $span = $membershipRadio.siblings(
 								".ur-membership-period-span"
 							);
+							var $periodText = $span.find(
+								".ur-membership-period-text"
+							);
 
-							var oldText = $span.text();
+							var oldText = $periodText.length
+								? $periodText.text()
+								: $span.text();
 							var parts = oldText.split("/");
 							var durationPart = parts[1]
 								? "/ " + parts[1].trim()
@@ -3366,19 +3511,33 @@
 								}
 
 								if (urmf_data.curreny_pos === "left") {
-									$span.text(
-										symbol +
-											newCalculatedValue +
-											" " +
-											durationPart
-									);
+									$periodText.length
+										? $periodText.text(
+												symbol +
+													newCalculatedValue +
+													" " +
+													durationPart
+											)
+										: $span.text(
+												symbol +
+													newCalculatedValue +
+													" " +
+													durationPart
+											);
 								} else {
-									$span.text(
-										newCalculatedValue +
-											symbol +
-											" " +
-											durationPart
-									);
+									$periodText.length
+										? $periodText.text(
+												newCalculatedValue +
+													symbol +
+													" " +
+													durationPart
+											)
+										: $span.text(
+												newCalculatedValue +
+													symbol +
+													" " +
+													durationPart
+											);
 								}
 
 								$membershipRadio.data(
@@ -3400,24 +3559,38 @@
 								);
 								total = total.toFixed(2);
 								if (urmf_data.curreny_pos === "left") {
-									$span.text(
-										urmf_data.currency_symbol +
-											total +
-											" " +
-											durationPart
-									);
+									$periodText.length
+										? $periodText.text(
+												urmf_data.currency_symbol +
+													total +
+													" " +
+													durationPart
+											)
+										: $span.text(
+												urmf_data.currency_symbol +
+													total +
+													" " +
+													durationPart
+											);
 									if ($membershipRadio.is(":checked")) {
 										ur_membership_ajax_utils.calculate_total(
 											$membershipRadio
 										);
 									}
 								} else {
-									$span.text(
-										total +
-											urmf_data.currency_symbol +
-											" " +
-											durationPart
-									);
+									$periodText.length
+										? $periodText.text(
+												total +
+													urmf_data.currency_symbol +
+													" " +
+													durationPart
+											)
+										: $span.text(
+												total +
+													urmf_data.currency_symbol +
+													" " +
+													durationPart
+											);
 									if ($membershipRadio.is(":checked")) {
 										ur_membership_ajax_utils.calculate_total(
 											$membershipRadio

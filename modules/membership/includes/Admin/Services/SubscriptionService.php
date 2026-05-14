@@ -99,7 +99,7 @@ class SubscriptionService {
 			$status      = 'pending';
 		} elseif ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trail date
 			$expiry_date = self::get_expiry_date( $data['membership_data']['start_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
-			$status      = 'on' === $membership_meta['trial_status'] ? 'trial' : 'pending';
+			$status      = 'pending';
 		}
 
 		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
@@ -644,11 +644,15 @@ class SubscriptionService {
 
 		$result['status'] = true;
 
-		if ( isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'] && ! empty( $subscription['trial_end_date'] ) ) {
-			$is_trial = $subscription['trial_end_date'] > date( 'Y-m-d H:i:s' );
-		} else {
-			$is_trial = isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'];
-		}
+		// Does the NEW plan have a trial? Drives the order's trial_status field.
+		$new_plan_has_trial = isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'];
+
+		// Is the CURRENT subscription still actively in its trial period?
+		// Proration is only skipped when the current sub hasn't been billed yet.
+		$current_sub_in_trial = ! empty( $subscription['trial_end_date'] ) && $subscription['trial_end_date'] > date( 'Y-m-d H:i:s' );
+
+		// Passed to the upgrade handler: controls whether proration is bypassed.
+		$is_trial = $current_sub_in_trial;
 
 		switch ( $upgrade_type ) {
 			case 'free->free':
@@ -683,7 +687,7 @@ class SubscriptionService {
 		}
 
 		return array(
-			'trial_status'                 => $is_trial ? 'on' : 'off',
+			'trial_status'                 => $new_plan_has_trial ? 'on' : 'off',
 			'chargeable_amount'            => isset( $result['chargeable_amount'] ) ? $result['chargeable_amount'] : 0,
 			'remaining_subscription_value' => ! empty( $result['remaining_subscription_value'] ) ? $result['remaining_subscription_value'] : 0,
 			'delayed_until'                => ! empty( $result['delayed_until'] ) ? $result['delayed_until'] : '',
@@ -1160,7 +1164,7 @@ class SubscriptionService {
 					) . "\n" . wp_json_encode(
 						array(
 							'id'              => $user_id,
-							'username'        => $subcription['username'],
+							'username'        => $subscription['username'],
 							'subscription_id' => $subscription_id,
 						),
 						JSON_PRETTY_PRINT
@@ -1289,16 +1293,32 @@ class SubscriptionService {
 	 */
 	public function membership_missed_payment_check() {
 
-		$last_synced = (int) get_option( 'urm_last_missed_payment_events_check_sync_time', 0 );
-		$now         = time();
-
-		if ( $last_synced <= 0 ) {
-			$last_synced = $now - 3 * MONTH_IN_SECONDS; // fallback to 3 months back if no previous sync time found, to avoid missing old events.
+		// Prevent concurrent runs: if another process is still executing, bail out.
+		if ( get_transient( 'urm_backfill_running' ) ) {
+			ur_get_logger()->info(
+				'[Backfill] Skipped — another backfill process is already running.',
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+			return;
 		}
 
-		$this->urm_backfill_missed_payment_events( $last_synced, $now );
+		// Lock for up to 10 minutes — long enough to cover all API calls.
+		set_transient( 'urm_backfill_running', true, 10 * MINUTE_IN_SECONDS );
 
-		update_option( 'urm_last_missed_payment_events_check_sync_time', $now );
+		try {
+			$last_synced = (int) get_option( 'urm_last_missed_payment_events_check_sync_time', 0 );
+			$now         = time();
+
+			if ( $last_synced <= 0 ) {
+				$last_synced = $now - 3 * MONTH_IN_SECONDS; // fallback to 3 months back if no previous sync time found, to avoid missing old events.
+			}
+
+			$this->urm_backfill_missed_payment_events( $last_synced, $now );
+
+			update_option( 'urm_last_missed_payment_events_check_sync_time', $now );
+		} finally {
+			delete_transient( 'urm_backfill_running' );
+		}
 	}
 
 	/**
@@ -1321,10 +1341,20 @@ class SubscriptionService {
 			foreach ( $payment_gateways as $gateway_key => $gateway_details ) {
 				switch ( $gateway_key ) {
 					case 'stripe':
+						$stripe_settings = StripeService::get_stripe_settings();
+						if ( empty( $stripe_settings['secret_key'] ) ) {
+							ur_get_logger()->info(
+								'[Backfill][Stripe] Skipped — Stripe secret key not configured.',
+								array( 'source' => 'urm-missed-payment-backfill' )
+							);
+							break;
+						}
 						try {
 							$stripe_service = new StripeService();
 							$stripe_service->run_missed_subscription_backfill( $last_synced );
 							$stripe_service->run_missed_payment_backfill( $last_synced );
+							$stripe_service->run_missed_onetime_payment_backfill( $last_synced );
+							$stripe_service->run_missed_refund_backfill( $last_synced );
 						} catch ( \Exception $e ) {
 							ur_get_logger()->error(
 								sprintf(
@@ -1333,7 +1363,24 @@ class SubscriptionService {
 								),
 								array( 'source' => 'urm-missed-payment-backfill' )
 							);
-							return;
+							break;
+						}
+						break;
+					case 'paypal':
+						try {
+							$paypal_service = new NewPaypalService();
+							$paypal_service->run_missed_subscription_backfill( $last_synced, $now );
+							$paypal_service->run_missed_payment_backfill( $last_synced, $now );
+							$paypal_service->run_missed_onetime_payment_backfill( $last_synced, $now );
+							$paypal_service->run_missed_refund_backfill( $last_synced, $now );
+						} catch ( \Exception $e ) {
+							ur_get_logger()->error(
+								sprintf(
+									__( 'Error fetching missed events for PayPal: %s', 'user-registration' ),
+									$e->getMessage()
+								),
+								array( 'source' => 'urm-missed-payment-backfill' )
+							);
 						}
 						break;
 					default:

@@ -365,8 +365,14 @@ class OrdersListTable extends \UR_List_Table {
 	public function show_column_membership_type( $orders ) {
 
 		if ( isset( $orders['order_id'] ) ) {
-			$data = json_decode( wp_unslash( $orders['post_content'] ), true );
-			$type = $data['type'];
+			// Use the order_type stored at payment time so it never changes if the
+			// membership type is later edited. Fall back to post_content only when missing.
+			if ( ! empty( $orders['order_type'] ) ) {
+				$type = $orders['order_type'];
+			} else {
+				$data = json_decode( wp_unslash( $orders['post_content'] ), true );
+				$type = $data['type'] ?? '';
+			}
 		} else {
 			$type = $orders['type'];
 		}
@@ -408,16 +414,53 @@ class OrdersListTable extends \UR_List_Table {
 		$decimals            = isset( $currency_info['decimals'] ) ? (int) $currency_info['decimals'] : 2;
 		$order_id            = $item['order_id'] ?? 0;
 		if ( ! empty( $order_id ) && $this->orders_repository ) {
-			$order_detail     = $this->orders_repository->get_order_detail( $order_id );
-			$order_repository = new OrdersRepository();
-			$local_currency   = ! empty( $order_detail['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' ) : null;
+			$order_detail         = $this->orders_repository->get_order_detail( $order_id );
+			$item['trial_status'] = $order_detail['trial_status'] ?? 'off';
+			$order_repository     = new OrdersRepository();
+			$local_currency       = ! empty( $order_detail['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' ) : null;
 			if ( ! empty( $local_currency['meta_value'] ) ) {
 				$currency = $local_currency['meta_value'];
 			}
 		} elseif ( ! empty( $item['currency'] ) ) {
 			$currency = $item['currency'];
 		}
-		$symbol           = ur_get_currency_symbol( $currency );
+		$symbol       = ur_get_currency_symbol( $currency );
+		$trial_status = $item['trial_status'] ?? 'off';
+
+		if ( 'on' === $trial_status ) {
+			$formatted_amount = number_format( 0, $decimals, $decimal_separator, $thousands_separator );
+			return 'right' === $symbol_pos ? $formatted_amount . ' ' . $symbol : $symbol . $formatted_amount;
+		}
+
+		$coupon_discount = 0;
+		if ( isset( $item['subscription_id'] ) ) {
+			$subscription = ( new MembersSubscriptionRepository() )->get_subscription_by_subscription_id( absint( $item['subscription_id'] ) );
+			if ( ! empty( $subscription ) && ! empty( $subscription['coupon'] ) ) {
+				$coupon = ur_get_coupon_details( $subscription['coupon'] );
+				if ( ! empty( $coupon ) ) {
+					$discount_value = null;
+					$discount_type  = 'fixed';
+
+					if ( isset( $coupon['coupon_discount'] ) && isset( $coupon['coupon_discount_type'] ) ) {
+						$discount_value = (float) $coupon['coupon_discount'];
+						$discount_type  = $coupon['coupon_discount_type'];
+					} elseif ( isset( $coupon['discount'] ) ) {
+						$discount_value = (float) $coupon['discount'];
+						$discount_type  = isset( $coupon['discount_type'] ) ? $coupon['discount_type'] : ( isset( $coupon['coupon_discount_type'] ) ? $coupon['coupon_discount_type'] : 'fixed' );
+					}
+
+					if ( null !== $discount_value && $total_amount ) {
+						if ( 'percent' === $discount_type ) {
+							$coupon_discount = $total_amount * ( $discount_value / 100 );
+						} else {
+							$coupon_discount = $discount_value;
+						}
+					}
+				}
+			}
+		}
+
+		$total_amount     = max( $total_amount - $coupon_discount, 0 );
 		$formatted_amount = number_format( $total_amount, $decimals, $decimal_separator, $thousands_separator );
 		return 'right' === $symbol_pos ? $formatted_amount . ' ' . $symbol : $symbol . $formatted_amount;
 	}

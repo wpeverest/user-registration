@@ -411,6 +411,8 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'currency_symbol'   => $symbol,
 				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? round( $membership_meta_value['amount'] ) : 0 ),
 				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : $subscription_period,
+				'trial_status'      => ! empty( $membership['meta_value']['trial_status'] ) ? $membership['meta_value']['trial_status'] : 'off',
+				'trial_data'        => ( ! empty( $membership['meta_value']['trial_data'] ) && is_array( $membership['meta_value']['trial_data'] ) ) ? $membership['meta_value']['trial_data'] : array(),
 			);
 
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
@@ -426,7 +428,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 						if ( isset( $gateways['status'] ) && 'on' !== $gateways['status'] ) {
 							continue;
 						}
-						$active_payment_gateways[ $key ] = isset( $gateways['status'] ) ? $gateways['status'] : 'off'; //setting users gateway to off for now if no status received.
+						$active_payment_gateways[ $key ] = isset( $gateways['status'] ) ? $gateways['status'] : 'off'; // setting users gateway to off for now if no status received.
 					}
 				}
 
@@ -640,7 +642,7 @@ if ( ! function_exists( 'urm_get_gateway_image_url' ) ) {
 	 * Get payment gateway image URL.
 	 *
 	 * @param string $gateway_key Gateway key.
-	 * @param array $gateway_images Gateway images mapping.
+	 * @param array  $gateway_images Gateway images mapping.
 	 * @param string $plugin_url Plugin URL.
 	 *
 	 * @return string
@@ -827,7 +829,7 @@ if ( ! function_exists( 'urcr_build_migration_actions' ) ) {
 	 * Build migration actions array.
 	 *
 	 * @param string $migration_source Migration source type ('membership' or 'content').
-	 * @param int $timestamp Optional timestamp to use for action IDs. If not provided, generates a new one.
+	 * @param int    $timestamp Optional timestamp to use for action IDs. If not provided, generates a new one.
 	 *
 	 * @return array Actions array.
 	 */
@@ -875,7 +877,7 @@ if ( ! function_exists( 'urcr_create_membership_rule' ) ) {
 	/**
 	 * Create a default membership rule.
 	 *
-	 * @param int $membership_id The membership ID.
+	 * @param int    $membership_id The membership ID.
 	 * @param string $membership_title Optional membership title.
 	 *
 	 * @return int|false Rule ID on success, false on failure.
@@ -975,7 +977,7 @@ if ( ! function_exists( 'urcr_create_or_update_membership_rule' ) ) {
 	/**
 	 * Create or update membership rule with data from UI.
 	 *
-	 * @param int $membership_id The membership ID.
+	 * @param int   $membership_id The membership ID.
 	 * @param array $rule_data Optional rule data from UI (access_rule_data structure).
 	 *
 	 * @return int|false Rule ID on success, false on failure.

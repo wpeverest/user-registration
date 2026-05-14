@@ -15,9 +15,9 @@ if ( ! empty( $button_class ) && ! empty( $button_hover_style ) ) :
 			width: 16px !important;
 			height: 16px !important;
 			border: 2px solid
-		<?php
-		echo esc_attr( $radio_color . ' !important;' );
-		?>
+			<?php
+			echo esc_attr( $radio_color . ' !important;' );
+			?>
 		;
 			border-radius: 50%;
 			cursor: pointer;
@@ -28,9 +28,9 @@ if ( ! empty( $button_class ) && ! empty( $button_hover_style ) ) :
 			width: 10px;
 			height: 10px;
 			background:
-		<?php
-		echo esc_attr( $radio_color ) . ' !important;';
-		?>
+			<?php
+			echo esc_attr( $radio_color ) . ' !important;';
+			?>
 		;
 			border-radius: 50%;
 			position: absolute !important;
@@ -42,13 +42,13 @@ if ( ! empty( $button_class ) && ! empty( $button_hover_style ) ) :
 
 		<?php endif ?>
 	</style>
-<?php
+	<?php
 endif;
 if ( 'block' === $type ) :
 	?>
 	<div class="ur-membership-list-container">
 		<form id="membership-old-selection-form" class="membership-selection-form ur-membership-container layout-block column-<?php echo esc_attr( $column_number ); ?>"
-			  method="GET" data-layout="block">
+				method="GET" data-layout="block">
 			<?php
 			foreach ( $memberships as $k => $membership ) :
 				$current_plan = false;
@@ -75,7 +75,7 @@ if ( 'block' === $type ) :
 						<input type="hidden" name="membership_id" value="<?php echo esc_html( $membership['ID'] ); ?>">
 						<input type="hidden" name="action" value="<?php echo esc_html( $intended_action ); ?>">
 						<input type="hidden" name="redirection_url"
-							   value="<?php echo esc_url( $redirect_page_url ); ?>">
+								value="<?php echo esc_url( $redirect_page_url ); ?>">
 						<input type="hidden" name="urm_uuid" value="<?php echo esc_attr( $uuid ); ?>">
 						<input type="hidden" name="thank_you_page_id" value="<?php echo $thank_you_page_id; ?>">
 						<div class="ur-membership-amount-wrapper">
@@ -87,7 +87,7 @@ if ( 'block' === $type ) :
 									</span>
 									<?php
 									$is_lifetime_listing = ( 'subscription' !== $membership['type'] && $time && false !== stripos( (string) $time, 'lifetime' ) )
-														   || ( isset( $membership['period'] ) && false !== stripos( (string) $membership['period'], 'lifetime' ) );
+															|| ( isset( $membership['period'] ) && false !== stripos( (string) $membership['period'], 'lifetime' ) );
 									if ( ! $is_lifetime_listing && ( $time || isset( $membership['period'] ) ) ) :
 										?>
 										<span class="ur-membership-duration">
@@ -115,18 +115,18 @@ if ( 'block' === $type ) :
 					<?php } ?>
 
 				</div>
-			<?php
+				<?php
 			endforeach;
 			?>
 		</form>
 
 	</div>
-<?php
+	<?php
 elseif ( 'row' === $type ) :
 	?>
 	<div class="ur-membership-list-container">
 		<form id="membership-old-selection-form" class="membership-selection-form ur-membership-container layout-row"
-			  method="GET" data-layout="row">
+				method="GET" data-layout="row">
 			<?php
 			foreach ( $memberships as $k => $membership ) :
 				$current_plan = false;
@@ -163,7 +163,7 @@ elseif ( 'row' === $type ) :
 						<input type="hidden" name="membership_id" value="<?php echo esc_html( $membership['ID'] ); ?>">
 						<input type="hidden" name="action" value="<?php echo esc_html( $intended_action ); ?>">
 						<input type="hidden" name="redirection_url"
-							   value="<?php echo esc_url( $redirect_page_url ); ?>">
+								value="<?php echo esc_url( $redirect_page_url ); ?>">
 						<input type="hidden" name="urm_uuid" value="<?php echo esc_html( $uuid ); ?>">
 						<input type="hidden" name="thank_you_page_id" value="<?php echo absint( $thank_you_page_id ); ?>">
 						<div class="ur-membership-amount-wrapper">
@@ -175,7 +175,7 @@ elseif ( 'row' === $type ) :
 									</span>
 									<?php
 									$is_lifetime_listing = ( 'subscription' !== $membership['type'] && $time && false !== stripos( (string) $time, 'lifetime' ) )
-														   || ( isset( $membership['period'] ) && false !== stripos( (string) $membership['period'], 'lifetime' ) );
+															|| ( isset( $membership['period'] ) && false !== stripos( (string) $membership['period'], 'lifetime' ) );
 									if ( ! $is_lifetime_listing && ( $time || isset( $membership['period'] ) ) ) :
 										?>
 										<span class="ur-membership-duration">
@@ -194,13 +194,13 @@ elseif ( 'row' === $type ) :
 								class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) || $is_editor || $current_plan ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" <?php echo $open_in_new_tab ? "target = '_blank'" : ''; ?> ><?php echo esc_html( $button_text ); ?></button>
 					</div>
 				</div>
-			<?php
+				<?php
 			endforeach;
 			?>
 		</form>
 
 	</div>
-<?php
+	<?php
 elseif ( 'list' === $type ) :
 
 	?>
@@ -208,7 +208,7 @@ elseif ( 'list' === $type ) :
 		<input type="hidden" name="urm_uuid" value="<?php echo esc_html( $uuid ); ?>">
 		<input type="hidden" name="thank_you_page_id" value="<?php echo absint( $thank_you_page_id ); ?>">
 		<input type="hidden" name="redirection_url"
-			   value="<?php echo esc_url( $redirect_page_url ); ?>">
+				value="<?php echo esc_url( $redirect_page_url ); ?>">
 		<div class="ur_membership_frontend_input_container radio">
 			<?php
 			$membership_listing_div = '';
@@ -221,61 +221,102 @@ elseif ( 'list' === $type ) :
 						unset( $memberships[ $m ] );
 						continue;
 					}
-					$intended_action = $membership_service->fetch_intended_action( $action_to_take, $membership, $user_membership_ids );
-					$time            = '';
+					$intended_action   = $membership_service->fetch_intended_action( $action_to_take, $membership, $user_membership_ids );
+					$time              = '';
+					$trial_label       = '';
+					$trial_end_display = '';
 
 					if ( 'paid' === $membership['type'] ) {
 						$time = esc_html__( 'lifetime', 'user-registration' );
 					}
+
+					if ( ! empty( $membership['trial_status'] ) && 'on' === $membership['trial_status'] && ! empty( $membership['trial_data'] ) ) {
+						$trial_value    = intval( $membership['trial_data']['value'] ?? 0 );
+						$trial_duration = sanitize_text_field( $membership['trial_data']['duration'] ?? 'day' );
+						if ( $trial_value > 0 ) {
+							$trial_label = sprintf(
+								/* translators: 1: trial length number, 2: duration unit e.g. "day" */
+								esc_html__( '%1$d-%2$s free trial', 'user-registration' ),
+								$trial_value,
+								$trial_duration
+							);
+							$interval_map  = array(
+								'day'   => 'D',
+								'week'  => 'W',
+								'month' => 'M',
+								'year'  => 'Y',
+							);
+							$interval_char = $interval_map[ $trial_duration ] ?? 'D';
+							try {
+								$end_date = new DateTime();
+								$end_date->add( new DateInterval( 'P' . $trial_value . $interval_char ) );
+								$trial_end_display = $end_date->format( 'M j' );
+							} catch ( Exception $e ) {
+								$trial_end_display = '';
+							}
+						}
+					}
 					?>
 					<div class="membership-block">
 						<label class="ur_membership_input_label ur-label"
-							   for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
+								for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
 							<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field <?php echo esc_html( $radio_class ); ?>"
-								   id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
-								   type="radio"
-								   name="membership_id"
-								   value="<?php echo esc_attr( $membership['ID'] ); ?>"
-								   data-urm-uuid="<?php echo esc_html( $uuid ); ?>"
-								   data-action="<?php echo esc_attr( $intended_action ); ?>"
-								   data-redirect="<?php echo esc_url( $redirect_page_url ); ?>"
-								   data-thankyou="<?php echo esc_attr( $thank_you_page_id ); ?>"
+									id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
+									type="radio"
+									name="membership_id"
+									value="<?php echo esc_attr( $membership['ID'] ); ?>"
+									data-urm-uuid="<?php echo esc_html( $uuid ); ?>"
+									data-action="<?php echo esc_attr( $intended_action ); ?>"
+									data-redirect="<?php echo esc_url( $redirect_page_url ); ?>"
+									data-thankyou="<?php echo esc_attr( $thank_you_page_id ); ?>"
 							>
 							<div class="ur-membership-title-wrapper">
-							<span
-								class="ur-membership-title"><?php echo esc_html__( $membership['title'], 'user-registration' ); ?></span>
+								<span class="ur-membership-title">
+									<?php echo esc_html( $membership['title'] ); ?>
+									<?php if ( ! empty( $trial_label ) ) : ?>
+										<span class="ur-membership-trial-label"><?php echo esc_html( $trial_label ); ?></span>
+									<?php endif; ?>
+								</span>
 								<?php if ( 'free' !== $membership['type'] ) { ?>
 									<div class="ur-membership-amount-wrapper">
-									<span
-										class="membership-amount">
-										<?php echo esc_html( sprintf( '%s%.2f', $symbol, $membership['amount'] ) ); ?>
-									</span>
-										<?php
-										$is_lifetime_listing = ( 'subscription' !== $membership['type'] && $time && false !== stripos( (string) $time, 'lifetime' ) )
-															   || ( isset( $membership['period'] ) && false !== stripos( (string) $membership['period'], 'lifetime' ) );
-										if ( ! $is_lifetime_listing && ( $time || isset( $membership['period'] ) ) ) :
-											?>
-											<span class="ur-membership-duration">
-										<?php
-										echo ' every ' . ( 'subscription' === $membership['type'] ? esc_html( ucfirst( trim( strtolower( explode( 'every', $membership['period'] )[1] ?? '' ) ) ) ) : esc_html( $time ) );
-										?>
-									</span>
+										<div class="ur-membership-price-row">
+											<span class="membership-amount">
+												<?php echo esc_html( sprintf( '%s%.2f', $symbol, $membership['amount'] ) ); ?>
+											</span>
+											<?php
+											$is_lifetime_period  = isset( $membership['period'] ) && false !== stripos( (string) $membership['period'], 'lifetime' );
+											$is_lifetime_listing = ( 'subscription' !== $membership['type'] && $time && false !== stripos( (string) $time, 'lifetime' ) )
+												|| $is_lifetime_period;
+											if ( ! $is_lifetime_listing && ( $time || isset( $membership['period'] ) ) ) :
+												?>
+												<span class="ur-membership-duration">
+												<?php
+												echo ' every ' . ( 'subscription' === $membership['type'] ? esc_html( ucfirst( trim( strtolower( explode( 'every', $membership['period'] )[1] ?? '' ) ) ) ) : esc_html( $time ) );
+												?>
+												</span>
+											<?php endif; ?>
+										</div>
+										<?php if ( ! empty( $trial_end_display ) ) : ?>
+											<span class="ur-membership-trial-end">
+												<?php
+												/* translators: %s: trial end date (e.g. "May 20") */
+												printf( esc_html__( 'Trial ends %s', 'user-registration' ), esc_html( $trial_end_display ) );
+												?>
+											</span>
 										<?php endif; ?>
 									</div>
 								<?php } else { ?>
 									<div class="ur-membership-amount-wrapper">
-
-									<span
-										class="membership-amount">
-										<?php echo esc_html__( 'Free', 'user-registration' ); ?>
-									</span>
+										<span class="membership-amount">
+											<?php echo esc_html__( 'Free', 'user-registration' ); ?>
+										</span>
 									</div>
 								<?php } ?>
 							</div>
 						</label>
 					</div>
 
-				<?php
+					<?php
 				endforeach;
 			endif;
 			$membership_listing_div = ob_get_clean();
@@ -302,6 +343,6 @@ elseif ( 'list' === $type ) :
 			?>
 		</div>
 	</form>
-<?php
+	<?php
 endif;
 ?>
