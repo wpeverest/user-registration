@@ -134,11 +134,10 @@ class UR_Emailer {
 
 			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 
-			if ( 'admin_approval' === $login_option && ur_option_checked( 'user_registration_enable_approval_link_email', true ) ) {
+			if ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) {
 				self::send_approve_link_in_email( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
-			} else {
-				self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 			}
+			self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 
 			/**
 			 * Action to do after the email send.
