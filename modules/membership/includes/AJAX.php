@@ -64,7 +64,6 @@ class AJAX {
 			'delete_members'               => false,
 			'confirm_payment'              => true,
 			'create_stripe_subscription'   => true,
-			'register_member'              => true,
 			'validate_coupon'              => true,
 			'cancel_subscription'          => false,
 			'reactivate_membership'        => false,
@@ -101,223 +100,6 @@ class AJAX {
 					)
 				);
 			}
-		}
-	}
-
-	/**
-	 * Register user from frontend
-	 *
-	 * @return void
-	 */
-	public static function register_member() {
-
-		ur_membership_verify_nonce( 'ur_members_frontend' ); // nonce verification.
-		if ( ! isset( $_POST['members_data'] ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Field members data is required.', 'user-registration' ),
-				)
-			);
-		}
-
-		$data = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
-
-		if ( ! isset( $data['username'] ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Field username is required.', 'user-registration' ),
-				)
-			);
-		}
-		$member          = get_user_by( 'login', $data['username'] );
-		$member_id       = $member->ID;
-		$is_just_created = get_user_meta( $member_id, 'urm_user_just_created', true );
-
-		if ( ! $is_just_created ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'User already exists.', 'user-registration' ),
-				)
-			);
-		}
-		if ( empty( $data['payment_method'] ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Payment method is required.', 'user-registration' ),
-				)
-			);
-		}
-
-		if ( 'stripe' === $data['payment_method'] ) {
-			if ( ! empty( $data['stripe_pm_error'] ) ) {
-				wp_delete_user( absint( $member_id ) );
-				wp_send_json_error(
-					array(
-						'message' => sanitize_text_field( $data['stripe_pm_error'] ),
-					)
-				);
-			}
-
-			if ( ! empty( $data['payment_method_id'] ) ) {
-				$stripe_service = new StripeService();
-				$mode_result    = $stripe_service->validate_card_mode( sanitize_text_field( $data['payment_method_id'] ) );
-				if ( ! $mode_result['valid'] ) {
-					wp_delete_user( absint( $member_id ) );
-					wp_send_json_error( array( 'message' => $mode_result['message'] ) );
-				}
-			}
-		}
-
-		// Get membership type for logging
-		$membership_repository = new \WPEverest\URMembership\Admin\Repositories\MembershipRepository();
-		$membership_data       = $membership_repository->get_single_membership_by_ID( $data['membership'] );
-		$membership_meta       = json_decode( wp_unslash( $membership_data['meta_value'] ), true );
-		$membership_type       = $membership_meta['type'] ?? 'unknown'; // free, paid, or subscription
-
-		// Log session start with divider
-		$payment_gateway = $data['payment_method'] ?? 'unknown';
-		if ( class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
-			// Add session divider
-			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
-				$payment_gateway,
-				sprintf( ' [Member ID #%s] ========== ***NEW PAYMENT SESSION*** ==========', $member_id ) . "\n" . wp_json_encode(
-					array(
-						'timestamp'       => current_time( 'mysql' ),
-						'membership_type' => $membership_type,
-						'username'        => $member->user_login,
-					),
-					JSON_PRETTY_PRINT
-				),
-				'notice'
-			);
-
-			// Log form submission
-			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
-				$payment_gateway,
-				sprintf( ' [Member ID #%s] Membership registration form submitted.', $member_id ) . "\n" . wp_json_encode(
-					array(
-						'event_type'      => 'form_submission',
-						'member_id'       => $member_id,
-						'username'        => $member->user_login,
-						'email'           => $member->user_email,
-						'membership_id'   => $data['membership'] ?? 'N/A',
-						'payment_method'  => $payment_gateway,
-						'membership_type' => $membership_type,
-					),
-					JSON_PRETTY_PRINT
-				),
-				'info'
-			);
-		}
-
-		$membership_service = new MembershipService();
-
-		$response = $membership_service->create_membership_order_and_subscription( $data );
-
-		// Log order and subscription creation
-		if ( $response['status'] && class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
-			// For free and bank, status is 'active' immediately. For others, it's 'pending'
-			$initial_status = ( 'free' === $payment_gateway ) ? 'active' : 'pending';
-
-			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
-				$payment_gateway,
-				sprintf( ' [Member ID #%s] Order and subscription created - Status: %s', $member_id, $initial_status ) . "\n" . wp_json_encode(
-					array(
-						'event_type'      => 'status_change',
-						'member_id'       => $member_id,
-						'subscription_id' => $response['subscription_id'] ?? 'N/A',
-						'transaction_id'  => $response['transaction_id'] ?? 'N/A',
-						'status'          => $initial_status,
-						'membership_id'   => $data['membership'] ?? 'N/A',
-						'membership_type' => $membership_type,
-					),
-					JSON_PRETTY_PRINT
-				),
-				'info'
-			);
-
-			// Log activation for free and bank immediately
-			if ( 'free' === $payment_gateway ) {
-				\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
-					$payment_gateway,
-					sprintf( ' [Member ID #%s] Subscription activated successfully.', $member_id ) . "\n" . wp_json_encode(
-						array(
-							'member_id'       => $member_id,
-							'subscription_id' => $response['subscription_id'] ?? 'N/A',
-							'status'          => 'active',
-							'payment_method'  => $payment_gateway,
-							'membership_type' => $membership_type,
-							'auto_activated'  => true,
-						),
-						JSON_PRETTY_PRINT
-					) . "\n  ",
-					'info'
-				);
-			}
-		}
-
-		$transaction_id          = isset( $response['transaction_id'] ) ? $response['transaction_id'] : 0;
-		$data['member_id']       = $member_id;
-		$data['subscription_id'] = isset( $response['subscription_id'] ) ? $response['subscription_id'] : 0;
-		if ( ur_check_module_activation( 'team' ) ) {
-			$data['team_id'] = ! empty( $response['team_id'] ) ? $response['team_id'] : 0;
-		}
-		$data['email']    = $response['member_email'];
-		$data['order_id'] = $response['order_id'];
-
-		$pg_data = array();
-		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
-			$payment_service  = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
-			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-			$ur_authorize_net = array( 'ur_authorize_net' => ! empty( $form_response['ur_authorize_net'] ) ? $form_response['ur_authorize_net'] : array() );
-			$data             = array_merge( $data, $ur_authorize_net );
-			$pg_data          = $payment_service->build_response( $data );
-		}
-		if ( $response['status'] ) {
-			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-
-			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] && 'free' == $data['payment_method'] ) {
-				$members_service = new MembersService();
-				$password        = isset( $data['password'] ) ? $data['password'] : '';
-				$logged_in       = $members_service->login_member( $member_id, true, $password );
-				if ( ! $logged_in ) {
-					wp_send_json_error(
-						array(
-							'message' => __( 'Invalid User', 'user-registration' ),
-						)
-					);
-				}
-			}
-			$email_service = new EmailService();
-			$email_service->send_email( $data, 'user_register_user' );
-			$email_service->send_email( $data, 'user_register_admin' );
-
-			$response = apply_filters(
-				'user_registration_membership_after_register_member',
-				array(
-					'member_id'      => absint( $member_id ),
-					'transaction_id' => esc_html( $transaction_id ),
-					'order_id'       => esc_html( $data['order_id'] ),
-					'message'        => esc_html__( 'New member has been successfully created.', 'user-registration' ),
-				)
-			);
-			if ( ur_check_module_activation( 'team' ) ) {
-				$response['team_id'] = absint( $data['team_id'] );
-			}
-			if ( 'free' !== $data['payment_method'] ) {
-				$response['pg_data'] = $pg_data;
-			}
-			if ( in_array( $data['payment_method'], array( 'free', 'bank' ) ) ) {
-				delete_user_meta( $member_id, 'urm_user_just_created' );
-			}
-			wp_send_json_success( $response );
-		} else {
-			$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while registering the user . ', 'user-registration' );
-			wp_send_json_error(
-				array(
-					'message' => $message,
-				)
-			);
 		}
 	}
 
@@ -1057,16 +839,18 @@ class AJAX {
 			);
 		}
 
-		$member_id              = absint( $_POST['member_id'] );
-		$is_user_created        = get_user_meta( $member_id, 'urm_user_just_created' );
-		$membership_process     = urm_get_membership_process( $member_id );
+		$member_id           = absint( $_POST['member_id'] );
+		$orders_repository   = new MembersOrderRepository();
+		$member_latest_order = $orders_repository->get_member_orders( $member_id );
+		$has_pending_order   = ! empty( $member_latest_order ) && 'pending' === ( $member_latest_order['status'] ?? '' );
+		$membership_process  = urm_get_membership_process( $member_id );
 		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
 		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
 		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] ) && empty( absint( $_POST['team_id'] ) );
 		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
 		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
 
-		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
+		if ( ! $has_pending_order && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid Request.', 'user-registration' ),
@@ -1117,7 +901,7 @@ class AJAX {
 				}
 			}
 
-			delete_user_meta( $member_id, 'urm_user_just_created' );
+			delete_transient( 'urm_pending_login_' . $member_id );
 			$response = array(
 				'message'                => $update_stripe_order['message'] ?? '',
 				'is_upgrading'           => ur_string_to_bool( $is_upgrading ),
@@ -1291,8 +1075,10 @@ class AJAX {
 		ur_membership_verify_nonce( 'urm_confirm_payment' );
 		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
 		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
-		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$is_user_created   = get_user_meta( $member_id, 'urm_user_just_created' );
+		$member_id           = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$orders_repository   = new MembersOrderRepository();
+		$member_latest_order = $orders_repository->get_member_orders( $member_id );
+		$has_pending_order   = ! empty( $member_latest_order ) && 'pending' === ( $member_latest_order['status'] ?? '' );
 
 		$membership_process     = urm_get_membership_process( $member_id );
 		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
@@ -1302,12 +1088,12 @@ class AJAX {
 		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
 		$team_id                = ! empty( $_POST['team_id'] ) ? absint( $_POST['team_id'] ) : 0;
 
-		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
-					wp_send_json_error(
-						array(
-							'message' => __( 'Invalid Request.', 'user-registration' ),
-						)
-					);
+		if ( ! $has_pending_order && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid Request.', 'user-registration' ),
+				)
+			);
 		}
 		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
 			wp_send_json_error(

@@ -320,7 +320,7 @@ class UR_Frontend_Form_Handler {
 						$success_params['membership_type'] = $_POST['membership_type'];
 					}
 				} elseif ( 'auto_login' === $login_option ) {
-					delete_user_meta( $user_id, 'urm_user_just_created' );
+					delete_transient( 'urm_pending_login_' . $user_id );
 					wp_clear_auth_cookie();
 					$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 					wp_set_auth_cookie( $user_id, $remember );
@@ -518,7 +518,7 @@ class UR_Frontend_Form_Handler {
 				wp_salt( 'auth' )
 			);
 
-			update_user_meta( $user_id, 'urm_user_just_created', $hash );
+			set_transient( 'urm_pending_login_' . $user_id, $hash, 2 * HOUR_IN_SECONDS );
 		}
 	}
 }

@@ -1195,7 +1195,7 @@ class NewPaypalService {
 
 		$this->handle_auto_login_after_payment( $member_id );
 
-		delete_user_meta( $member_id, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $member_id );
 		$member_order = $this->members_orders_repository->get_member_orders( $member_id );
 
 		PaymentGatewayLogging::log_transaction_success(
