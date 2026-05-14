@@ -103,8 +103,8 @@ const ContentAccessRules = () => {
 			? membershipRules
 			: []
 		: activeTab === "membership"
-		? membershipRules
-		: customRules;
+			? membershipRules
+			: customRules;
 
 	const [hasSetDefaultTab, setHasSetDefaultTab] = useState(false);
 	useEffect(() => {

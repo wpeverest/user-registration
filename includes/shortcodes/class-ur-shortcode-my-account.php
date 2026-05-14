@@ -66,9 +66,11 @@ class UR_Shortcode_My_Account {
 			$redirect_url = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
 			$redirect_url = UR_Shortcodes::check_is_valid_redirect_url( $redirect_url );
 			$redirect_url = esc_url( $redirect_url );
-			$redirect_url      = ( isset( $_GET['redirect_to'] ) && empty( $redirect_url ) ) ? esc_url( wp_unslash( $_GET['redirect_to'] ) ) : $redirect_url; // @codingStandardsIgnoreLine
-			$form_id      = isset( $atts['form_id'] ) ? absint( $atts['form_id'] ) : 0;
-			$message      = apply_filters( 'user_registration_my_account_message', '' );
+			if ( isset( $_GET['redirect_to'] ) && empty( $redirect_url ) ) { // @codingStandardsIgnoreLine
+				$redirect_url = wp_validate_redirect( sanitize_url( wp_unslash( $_GET['redirect_to'] ) ), '' ); // @codingStandardsIgnoreLine
+			}
+			$form_id = isset( $atts['form_id'] ) ? absint( $atts['form_id'] ) : 0;
+			$message = apply_filters( 'user_registration_my_account_message', '' );
 
 			if ( ! empty( $message ) ) {
 				ur_add_notice( $message );
@@ -350,15 +352,20 @@ class UR_Shortcode_My_Account {
 		} elseif ( ! empty( $_GET['show-reset-form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
 				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
-					$user                  = get_user_by( 'login', $rp_login );
-					$rp_login              = $user ? $user->user_login : $rp_login;
+				// Break taint chain: restrict $rp_key to alphanumeric chars only.
+				$rp_key   = preg_replace( '/[^a-zA-Z0-9]/', '', $rp_key );
+					$user = get_user_by( 'login', $rp_login );
+					// Use DB-sourced user_login to break cookie taint chain.
+					$rp_login = $user ? $user->user_login : '';
 
 				$user = self::check_password_reset_key( $rp_key, $rp_login );
 
 				if ( ! empty( $user ) ) {
-					$form_id                   = ur_get_form_id_by_userid( $user->ID );
-					$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
-					$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+						// Re-assign from validated user object (DB value, breaks taint chain).
+						$rp_login                  = $user->user_login;
+						$form_id                   = ur_get_form_id_by_userid( $user->ID );
+						$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
+						$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 						$form_data_array           = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 					do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
@@ -385,7 +392,7 @@ class UR_Shortcode_My_Account {
 				echo '<p>' . esc_html__( 'Password reset link is invalid or expired.', 'user-registration' ) . '</p>';
 				return;
 			}
-		}elseif ( isset( $_GET['ur-lp-error'] ) && is_scalar( $_GET['ur-lp-error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		} elseif ( isset( $_GET['ur-lp-error'] ) && is_scalar( $_GET['ur-lp-error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$allowed_error_types = array(
 				'empty',
 				'blocked',
@@ -452,7 +459,7 @@ class UR_Shortcode_My_Account {
 		if ( empty( $login ) ) {
 			$result = array(
 				'error_type' => 'empty_username',
-				'message' => apply_filters(
+				'message'    => apply_filters(
 					'user_registration_empty_login_error_message',
 					__( 'Enter a username or email address.', 'user-registration' )
 				),
@@ -474,7 +481,7 @@ class UR_Shortcode_My_Account {
 		if ( $errors->get_error_code() ) {
 			$result = array(
 				'error_type' => 'validation_error',
-				'message' => $errors->get_error_message(),
+				'message'    => $errors->get_error_message(),
 			);
 			return $result;
 		}
@@ -495,7 +502,7 @@ class UR_Shortcode_My_Account {
 		if ( ! $user_data || ( is_multisite() && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) ) {
 			$result = array(
 				'error_type' => 'invalid_username_or_email',
-				'message' => $error_message,
+				'message'    => $error_message,
 			);
 			return $result;
 		}
@@ -508,14 +515,14 @@ class UR_Shortcode_My_Account {
 		if ( ! $allow ) {
 			$result = array(
 				'error_type' => 'password_reset_not_allowed',
-				'message' => apply_filters( 'user_registration_password_reset_not_allowed_error_message', __( 'Password reset is not allowed for this user.', 'user-registration' ) ),
+				'message'    => apply_filters( 'user_registration_password_reset_not_allowed_error_message', __( 'Password reset is not allowed for this user.', 'user-registration' ) ),
 			);
 			return $result;
 
 		} elseif ( is_wp_error( $allow ) ) {
 			$result = array(
 				'error_type' => 'validation_error',
-				'message' => $allow->get_error_message(),
+				'message'    => $allow->get_error_message(),
 			);
 			return $result;
 		}
@@ -527,7 +534,7 @@ class UR_Shortcode_My_Account {
 		if ( UR_Emailer::lost_password_email( $user_login, $user_data, $key ) == false ) {
 			$result = array(
 				'error_type' => 'email_sending_failed',
-				'message' => apply_filters( 'user_registration_lost_password_email_sending_failed_error_message', __( 'There was a problem while sending the email. Please try again later.', 'user-registration' ) ),
+				'message'    => apply_filters( 'user_registration_lost_password_email_sending_failed_error_message', __( 'There was a problem while sending the email. Please try again later.', 'user-registration' ) ),
 			);
 			return $result;
 		}
@@ -539,12 +546,17 @@ class UR_Shortcode_My_Account {
 
 		if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
 			list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
-			$user                      = get_user_by( 'login', $rp_login );
-			$rp_login                  = isset( $user->user_login ) ? $user->user_login : $rp_login;
+			// Break taint chain: restrict $rp_key to alphanumeric chars only.
+			$rp_key = preg_replace( '/[^a-zA-Z0-9]/', '', $rp_key );
+			$user   = get_user_by( 'login', $rp_login );
+			// Use DB-sourced user_login to break cookie taint chain.
+			$rp_login = isset( $user->user_login ) ? $user->user_login : '';
 
 			$user = self::check_password_reset_key( $rp_key, $rp_login );
 
 			if ( ! empty( $user ) ) {
+				// Re-assign from validated user object (DB value, breaks taint chain).
+				$rp_login                  = $user->user_login;
 				$form_id                   = ur_get_form_id_by_userid( $user->ID );
 				$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
 				$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );

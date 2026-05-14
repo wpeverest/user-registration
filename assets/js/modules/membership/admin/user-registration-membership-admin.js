@@ -2212,13 +2212,9 @@
 						.find(".ur-spinner")
 						.remove();
 
-					if (!response.success) {
-						$(document)
-							.find(".ur-local-currency-" + zone_id + "-message")
-							.removeClass("hidden");
-						$(document)
-							.find(".ur-local-currency-" + zone_id + "-message")
-							.html(response.data.message);
+					if ( ! response.success ) {
+						$( document ).find( '.ur-local-currency-' + zone_id + '-message' ).removeClass( 'hidden' );
+						$( document ).find( '.ur-local-currency-' + zone_id + '-message' ).text( response.data.message );
 					}
 				}
 			});
@@ -2414,7 +2410,9 @@
 					if (response.success) {
 						$listContainer.find("select").remove();
 
-						$listContainer.append(response.data.html);
+						var $sanitizedList = $("<div>").html(response.data.html);
+						$sanitizedList.find("script").remove();
+						$listContainer.append($sanitizedList.contents());
 
 						if ("mailchimp" === addon && response.data?.tag_html) {
 							var $tagContainer = $(
@@ -2435,7 +2433,9 @@
 
 							$tagContainer.find("select").remove();
 
-							$tagContainer.append(response.data.tag_html);
+							var $sanitizedTags = $("<div>").html(response.data.tag_html);
+							$sanitizedTags.find("script").remove();
+							$tagContainer.append($sanitizedTags.contents());
 
 							$tagContainer
 								.find("select.ur-enhanced-select")

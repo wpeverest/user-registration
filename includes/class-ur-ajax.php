@@ -98,7 +98,7 @@ class UR_AJAX {
 			'login_settings_page_validation'       => false,
 			'activate_dependent_module'            => false,
 			'add_membership_field_to_default_form' => false,
-			'update_state_field'				   => true,
+			'update_state_field'                   => true,
 
 		);
 
@@ -298,7 +298,7 @@ class UR_AJAX {
 			$response       = array(
 				'message'        => $message,
 				'profile_pic_id' => $profile_pic_id,
-				'email'			 => ! empty( $single_field['user_registration_user_email'] ) ? $single_field['user_registration_user_email'] : '',
+				'email'          => ! empty( $single_field['user_registration_user_email'] ) ? $single_field['user_registration_user_email'] : '',
 			);
 
 			if ( $email_updated && ! is_admin() ) {
@@ -385,6 +385,7 @@ class UR_AJAX {
 				)
 			);
 		}
+
 		$user_id = get_current_user_id();
 
 		if ( $user_id <= 0 ) {
@@ -398,7 +399,12 @@ class UR_AJAX {
 
 			$upload = isset( $_FILES['file'] ) ? $_FILES['file'] : array(); // phpcs:ignore
 
-			// valid extension for image.
+			// Sanitize filename immediately before any path operations.
+			$src_file_name  = isset( $upload['name'] ) ? sanitize_file_name( wp_unslash( $upload['name'] ) ) : '';
+			$file_extension = strtolower( pathinfo( $src_file_name, PATHINFO_EXTENSION ) );
+			$file_mime_type = isset( $upload['tmp_name'] ) ? mime_content_type( $upload['tmp_name'] ) : '';
+
+			// Valid extension for image.
 			$valid_extensions = 'image/jpeg,image/gif,image/png';
 			$form_id          = ur_get_form_id_by_userid( $user_id );
 
@@ -420,10 +426,6 @@ class UR_AJAX {
 				}
 			}
 
-			$src_file_name  = isset( $upload['name'] ) ? $upload['name'] : '';
-			$file_extension = strtolower( pathinfo( $src_file_name, PATHINFO_EXTENSION ) );
-			$file_mime_type = isset( $upload['tmp_name'] ) ? mime_content_type( $upload['tmp_name'] ) : '';
-
 			if ( ! in_array( $file_mime_type, $valid_extension_type ) ) {
 				wp_send_json_error(
 					array(
@@ -431,6 +433,7 @@ class UR_AJAX {
 					)
 				);
 			}
+
 			// Validates if the uploaded file has the acceptable extension.
 			if ( ! in_array( $file_extension, $valid_ext ) ) {
 				wp_send_json_error(
@@ -442,7 +445,7 @@ class UR_AJAX {
 
 			$upload_path = ur_get_tmp_dir();
 
-			// Checks if the upload directory has the write premission.
+			// Checks if the upload directory has the write permission.
 			if ( ! wp_is_writable( $upload_path ) ) {
 				wp_send_json_error(
 					array(
@@ -450,9 +453,21 @@ class UR_AJAX {
 					)
 				);
 			}
+
 			$upload_path = $upload_path . '/';
-			$file_name   = wp_unique_filename( $upload_path, $upload['name'] );
-			$file_path   = $upload_path . sanitize_file_name( $file_name );
+
+			// Use sanitized filename for wp_unique_filename to prevent path traversal.
+			$file_name = wp_unique_filename( $upload_path, $src_file_name );
+			$file_path = $upload_path . $file_name;
+			// Ensure the resolved path is strictly within the intended upload directory.
+			if ( strpos( realpath( dirname( $file_path ) ) . DIRECTORY_SEPARATOR, realpath( $upload_path ) . DIRECTORY_SEPARATOR ) !== 0 ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Invalid file path.', 'user-registration' ),
+					)
+				);
+			}
+
 			if ( move_uploaded_file( $upload['tmp_name'], $file_path ) ) {
 				$files = array(
 					'file_name'      => $file_name,
@@ -463,7 +478,7 @@ class UR_AJAX {
 				$attachment_id = wp_rand();
 
 				ur_clean_tmp_files();
-				$url = UR_UPLOAD_URL . 'temp-uploads/' . sanitize_file_name( $file_name );
+				$url = UR_UPLOAD_URL . 'temp-uploads/' . $file_name;
 				wp_send_json_success(
 					array(
 						'attachment_id' => $attachment_id,
@@ -635,13 +650,24 @@ class UR_AJAX {
 		try {
 			check_ajax_referer( 'user_input_dropped_nonce', 'security' );
 
-			$form_field_id = ( isset( $_POST['form_field_id'] ) ) ? $_POST['form_field_id'] : null; //phpcs:ignore
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'error' => __( 'You do not have permission.', 'user-registration' ) ) );
+				wp_die( -1 );
+			}
+
+			$form_field_id = ( isset( $_POST['form_field_id'] ) ) ? sanitize_key( wp_unslash( $_POST['form_field_id'] ) ) : null;
 
 			if ( null == $form_field_id || '' == $form_field_id ) {
 				throw new Exception( 'Empty form data' );
 			}
 
 			$class_file_name = str_replace( 'user_registration_', '', $form_field_id );
+
+			// Validate $class_file_name contains only safe characters (already enforced by sanitize_key, but double-check).
+			if ( ! preg_match( '/^[a-z0-9_\-]+$/', $class_file_name ) ) {
+				throw new Exception( 'Invalid form field identifier' );
+			}
+
 			$class_name      = ur_load_form_field_class( $class_file_name );
 
 			if ( empty( $class_name ) ) {
@@ -690,48 +716,105 @@ class UR_AJAX {
 	 * @throws Exception Throw if any issue while saving form data.
 	 */
 	public static function form_save_action() {
-		$logger = ur_get_logger();
+		$logger  = ur_get_logger();
+		$form_id = isset( $_POST['data']['form_id'] ) ? absint( $_POST['data']['form_id'] ) : 0;
+		$start   = microtime( true );
+
 		try {
-			check_ajax_referer( 'ur_form_save_nonce', 'security' );
-			// Check permissions.
-			$logger->info(
-				__( 'Checking permissions.', 'user-registration' ),
-				array( 'source' => 'form-save' )
+			$logger->notice(
+				sprintf( '[Form #%d] =============== ***Form save started*** ===============', $form_id ),
+				array(
+					'source'   => 'form-save',
+					'form_id'  => $form_id,
+					'function' => __FUNCTION__,
+				)
 			);
+
+			$logger->info(
+				sprintf( '[Form #%d] Function == ***%s()*** - Started execution', $form_id, __FUNCTION__ ),
+				array(
+					'source'  => 'form-save',
+					'form_id' => $form_id,
+				)
+			);
+
+			check_ajax_referer( 'ur_form_save_nonce', 'security' );
+
 			if ( ! current_user_can( 'manage_options' ) ) {
 				$logger->critical(
-					__( 'You do not have permission.', 'user-registration' ),
-					array( 'source' => 'form-save' )
+					sprintf( '[Form #%d] Permission check failed', $form_id ) . "\n" . 'Reason: User does not have permission to save forms',
+					array(
+						'source'   => 'form-save',
+						'form_id'  => $form_id,
+						'function' => __FUNCTION__,
+					)
 				);
 				throw new Exception( __( "You don't have enough permission to perform this task. Please contact the Administrator.", 'user-registration' ) );
 			}
 
-			$logger->info( 'Validating post data.', array( 'source' => 'form-save' ) );
+			$logger->debug(
+				sprintf( '[Form #%d] Security checks passed', $form_id ),
+				array(
+					'source'   => 'form-save',
+					'form_id'  => $form_id,
+					'function' => __FUNCTION__,
+				)
+			);
 
-			if ( ! isset( $_POST['data'] ) || ( isset( $_POST['data'] ) && gettype( wp_unslash( $_POST['data'] ) ) != 'array' ) ) { //phpcs:ignore
-				throw new Exception( __( 'post data not set', 'user-registration' ) );
-			} elseif ( ! isset( $_POST['data']['form_data'] )
-			           || ( isset( $_POST['data']['form_data'] )
-			                && gettype( wp_unslash( $_POST['data']['form_data'] ) ) != 'string' ) ) { //phpcs:ignore
+			if ( ! isset( $_POST['data'] ) || ! is_array( wp_unslash( $_POST['data'] ) ) ) { // phpcs:ignore
 				$logger->critical(
-					__( 'post data not set', 'user-registration' ),
-					array( 'source' => 'form-save' )
+					sprintf( '[Form #%d] Form payload validation failed', $form_id ) . "\n" . 'Reason: Post data is missing or invalid',
+					array(
+						'source'   => 'form-save',
+						'form_id'  => $form_id,
+						'function' => __FUNCTION__,
+					)
 				);
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 			}
-			$logger->info( 'Decoding and processing form data.', array( 'source' => 'form-save' ) );
-			$post_data = json_decode( wp_unslash( $_POST['data']['form_data'] ) ); //phpcs:ignore
+
+			if ( ! isset( $_POST['data']['form_data'] ) || ! is_string( wp_unslash( $_POST['data']['form_data'] ) ) ) { // phpcs:ignore
+				$logger->critical(
+					sprintf( '[Form #%d] Form payload validation failed', $form_id ) . "\n" . 'Reason: Form data is missing or invalid',
+					array(
+						'source'   => 'form-save',
+						'form_id'  => $form_id,
+						'function' => __FUNCTION__,
+					)
+				);
+				throw new Exception( __( 'post data not set', 'user-registration' ) );
+			}
+
+			$logger->debug(
+				sprintf( '[Form #%d] Form payload validated', $form_id ),
+				array(
+					'source'   => 'form-save',
+					'form_id'  => $form_id,
+					'function' => __FUNCTION__,
+				)
+			);
+
+			$post_data = json_decode( wp_unslash( $_POST['data']['form_data'] ) ); // phpcs:ignore
 			self::sweep_array( $post_data );
 
-			if ( isset( self::$failed_key_value['value'] ) && '' != self::$failed_key_value['value'] ) {
-				if ( in_array( self::$failed_key_value['value'], self::$field_key_aray ) ) {
+			$logger->debug(
+				sprintf( '[Form #%d] Form builder data decoded', $form_id ) . "\n" . wp_json_encode( $post_data, JSON_PRETTY_PRINT ),
+				array(
+					'source'   => 'form-save',
+					'form_id'  => $form_id,
+					'function' => __FUNCTION__,
+				)
+			);
+
+			if ( isset( self::$failed_key_value['value'] ) && '' !== self::$failed_key_value['value'] ) {
+				if ( in_array( self::$failed_key_value['value'], self::$field_key_aray, true ) ) {
 					$logger->critical(
-						sprintf(
-							'Could not save form. Duplicate field name <span>%s</span>. Context: %s',
-							self::$failed_key_value['value'],
-							'user_registration'
-						),
-						array( 'source' => 'form-save' )
+						sprintf( '[Form #%d] Duplicate field name detected', $form_id ) . "\n" . sprintf( 'Field: %s', self::$failed_key_value['value'] ),
+						array(
+							'source'   => 'form-save',
+							'form_id'  => $form_id,
+							'function' => __FUNCTION__,
+						)
 					);
 					throw new Exception( sprintf( "Could not save form. Duplicate field name <span style='color:red'>%s</span>", self::$failed_key_value['value'] ) );
 				}
@@ -739,24 +822,31 @@ class UR_AJAX {
 
 			if ( false === self::$is_field_key_pass ) {
 				$logger->critical(
-					__( 'Could not save form. Invalid field name. Please check all field name', 'user-registration' ),
-					array( 'source' => 'form-save' )
+					sprintf( '[Form #%d] Invalid field name detected', $form_id ) . "\n" . 'Reason: One or more field names are invalid',
+					array(
+						'source'   => 'form-save',
+						'form_id'  => $form_id,
+						'function' => __FUNCTION__,
+					)
 				);
 				throw new Exception( __( 'Could not save form. Invalid field name. Please check all field name', 'user-registration' ) );
 			}
-			$logger->info( 'Validating required fields.', array( 'source' => 'form-save' ) );
+
 			$required_fields = array(
 				'user_email',
 				'user_pass',
 			);
 
-			// check captcha configuration before form save action.
 			if ( isset( $_POST['data']['form_setting_data'] ) ) {
-				foreach ( wp_unslash( $_POST['data']['form_setting_data'] ) as $setting_data ) { //phpcs:ignore
+				foreach ( wp_unslash( $_POST['data']['form_setting_data'] ) as $setting_data ) { // phpcs:ignore
 					if ( 'user_registration_form_setting_enable_recaptcha_support' === $setting_data['name'] && ur_string_to_bool( $setting_data['value'] ) && ! ur_check_captch_keys( 'register', $_POST['data']['form_id'], true ) ) {
 						$logger->critical(
-							__( 'Captcha error', 'user-registration' ),
-							array( 'source' => 'form-save' )
+							sprintf( '[Form #%d] Captcha configuration validation failed', $form_id ) . "\n" . 'Reason: Captcha is enabled but keys are missing',
+							array(
+								'source'   => 'form-save',
+								'form_id'  => $form_id,
+								'function' => __FUNCTION__,
+							)
 						);
 						throw new Exception(
 							sprintf(
@@ -774,24 +864,51 @@ class UR_AJAX {
 				}
 			}
 
-			$contains_search = count( array_intersect( $required_fields, self::$field_key_aray ) ) == count( $required_fields );
+			$logger->info(
+				sprintf( '[Form #%d] Captcha configuration validated', $form_id ),
+				array(
+					'source'   => 'form-save',
+					'form_id'  => $form_id,
+					'function' => __FUNCTION__,
+				)
+			);
+
+			$contains_search = count( array_intersect( $required_fields, self::$field_key_aray ) ) === count( $required_fields );
 
 			if ( false === $contains_search ) {
 				$logger->critical(
-					__( 'Required fields are required', 'user-registration' ),
-					array( 'source' => 'form-save' )
+					sprintf( '[Form #%d] Required field validation failed', $form_id ) . "\n" . 'Missing fields: ' . implode( ', ', $required_fields ),
+					array(
+						'source'   => 'form-save',
+						'form_id'  => $form_id,
+						'function' => __FUNCTION__,
+					)
 				);
-				throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) ); //phpcs:ignore
+				throw new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) ); // phpcs:ignore
 			}
-			$logger->info( __( 'Saving form data.', 'user-registration' ), array( 'source' => 'form-save' ) );
-			/**
-			 * Perform validation before form save from form builder.
-			 */
+
+			$logger->info(
+				sprintf( '[Form #%d] Required fields validated', $form_id ),
+				array(
+					'source'   => 'form-save',
+					'form_id'  => $form_id,
+					'function' => __FUNCTION__,
+				)
+			);
+
 			do_action( 'user_registration_admin_backend_validation_before_form_save' );
 
-			$form_name     = sanitize_text_field( $_POST['data']['form_name'] ); //phpcs:ignore
-			$form_row_ids  = sanitize_text_field( $_POST['data']['form_row_ids'] ); //phpcs:ignore
-			$form_id       = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
+			$logger->debug(
+				sprintf( '[Form #%d] Action == ***user_registration_admin_backend_validation_before_form_save*** - Triggered.', $form_id ),
+				array(
+					'source'  => 'form-save',
+					'form_id' => $form_id,
+				)
+			);
+
+			$form_name     = sanitize_text_field( $_POST['data']['form_name'] ); // phpcs:ignore
+			$form_row_ids  = sanitize_text_field( $_POST['data']['form_row_ids'] ); // phpcs:ignore
+			$form_id       = sanitize_text_field( $_POST['data']['form_id'] ); // phpcs:ignore
 			$form_row_data = sanitize_text_field( $_POST['data']['row_data'] );
 
 			$post_data = array(
@@ -799,8 +916,8 @@ class UR_AJAX {
 				'post_title'     => sanitize_text_field( $form_name ),
 				'post_content'   => wp_json_encode( $post_data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ),
 				'post_status'    => 'publish',
-				'comment_status' => 'closed',   // if you prefer.
-				'ping_status'    => 'closed',      // if you prefer.
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
 			);
 
 			if ( $form_id > 0 && is_numeric( $form_id ) ) {
@@ -812,9 +929,9 @@ class UR_AJAX {
 			$post_id = wp_insert_post( wp_slash( $post_data ) );
 
 			if ( $post_id > 0 ) {
-				$_POST['data']['form_id'] = $post_id; // Form id for new form.
+				$_POST['data']['form_id'] = $post_id; // phpcs:ignore
 
-				$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array(); //phpcs:ignore
+				$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array(); // phpcs:ignore
 
 				if ( isset( $_POST['data']['form_restriction_submit_data'] ) && ! empty( $_POST['data']['form_restriction_submit_data'] ) ) {
 					array_push(
@@ -834,12 +951,46 @@ class UR_AJAX {
 				// Form row_data save.
 				update_post_meta( $form_id, 'user_registration_form_row_data', $form_row_data );
 			}
+
 			/**
 			 * Action after form setting save.
 			 * Default is the $_POST['data'].
 			 */
-			do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
-			$logger->info( __( 'Form successfully saved.', 'user-registration' ), array( 'source' => 'form-save' ) );
+			do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); // phpcs:ignore
+
+			$logger->debug(
+				sprintf( '[Form #%d] Action == ***user_registration_after_form_settings_save*** - Triggered.', $form_id ),
+				array(
+					'source'  => 'form-save',
+					'form_id' => $form_id,
+				)
+			);
+
+			$duration = round( microtime( true ) - $start, 2 );
+
+			$logger->notice(
+				sprintf( '[Form #%d] Form saved successfully', $post_id ? $post_id : absint( $form_id ) ) . "\n" . wp_json_encode(
+					$post_data,
+					JSON_PRETTY_PRINT
+				),
+				array(
+					'source'   => 'form-save',
+					'form_id'  => $post_id ? $post_id : absint( $form_id ),
+					'function' => __FUNCTION__,
+					'post_id'  => $post_id,
+				)
+			);
+
+			$logger->success(
+				sprintf( '[Form #%d]  =============== ***Form save completed*** ===============', $post_id ? $post_id : absint( $form_id ) ) . "\n  ",
+				array(
+					'source'   => 'form-save',
+					'form_id'  => $post_id ? $post_id : absint( $form_id ),
+					'function' => __FUNCTION__,
+					'post_id'  => $post_id,
+				)
+			);
+
 			wp_send_json_success(
 				array(
 					'data'    => $post_data,
@@ -847,13 +998,21 @@ class UR_AJAX {
 				)
 			);
 		} catch ( Exception $e ) {
-			$logger->error( __( 'Form save failed: ' . $e->getMessage(), 'user-registration' ), array( 'source' => 'form-save' ) );
+			$logger->error(
+				sprintf( '[Form #%d] Form save failed', $form_id ) . "\n" . sprintf( 'Reason: %s', $e->getMessage() ) . "\n  ",
+				array(
+					'source'   => 'form-save',
+					'form_id'  => $form_id,
+					'function' => __FUNCTION__,
+				)
+			);
+
 			wp_send_json_error(
 				array(
 					'message' => $e->getMessage(),
 				)
 			);
-		}// End try().
+		}
 	}
 
 	public static function login_settings_save_action() {
@@ -1005,12 +1164,12 @@ class UR_AJAX {
 		$page_id  = empty( $_POST['page_id'] ) ? 0 : sanitize_text_field( absint( $_POST['page_id'] ) );
 		$form_id  = ! empty( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		$is_login = ! empty( $_POST['is_login'] ) ? sanitize_text_field( wp_unslash( $_POST['is_login'] ) ) : 'no';
-		
+
 		if ( empty( $page_id ) ) {
 
 			if ( ! current_user_can( 'publish_pages' ) ) {
 				wp_send_json_error( __( 'You do not have permission to create pages.', 'user-registration' ) );
-			}	
+			}
 
 			$url              = add_query_arg( 'post_type', 'page', admin_url( 'post-new.php' ) );
 			$meta             = array(
@@ -1570,7 +1729,7 @@ class UR_AJAX {
 		$install_status = install_plugin_install_status( $api );
 
 		if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
-			$current_page = isset( $_POST['page'] ) ? sanitize_text_field( wp_unslash( $_POST['page'] ) ) : '';
+			$current_page        = isset( $_POST['page'] ) ? sanitize_text_field( wp_unslash( $_POST['page'] ) ) : '';
 			$auto_activate_pages = array(
 				'user-registration-membership_page_add-new-registration',
 				'user-registration-membership_page_user-registration-settings',
@@ -1905,8 +2064,8 @@ class UR_AJAX {
 				)
 			);
 		}
-		$is_disabled = isset($form_data[ 'user_registration_' . $setting_id . '_enabled']) && !$form_data[ 'user_registration_' . $setting_id . '_enabled'];
-		if( $is_disabled ) {
+		$is_disabled = isset( $form_data[ 'user_registration_' . $setting_id . '_enabled' ] ) && ! $form_data[ 'user_registration_' . $setting_id . '_enabled' ];
+		if ( $is_disabled ) {
 			update_option( 'urm_' . $setting_id . '_updated_connection_status', true ); //to check if this setting has been updated at least once
 			update_option( 'urm_' . $setting_id . '_connection_status', false );
 		} else {
@@ -1922,8 +2081,8 @@ class UR_AJAX {
 
 		wp_send_json_success(
 			array(
-				'message' => $message,
-				'is_connected' => !$is_disabled
+				'message'      => $message,
+				'is_connected' => ! $is_disabled,
 			)
 		);
 	}
@@ -1956,7 +2115,7 @@ class UR_AJAX {
 			);
 		}
 		do_action( 'urm_save_captcha_settings', $form_data, $setting_id );
-		$message = ( 'captcha-settings' === $setting_id ) ? __( 'Captcha settings saved successfully.' ) : sprintf( __( 'Captcha Setting for %s has been saved successfully.', 'user-registration' ), $setting_id );
+		$message = ( 'captcha-settings' === $setting_id ) ? __( 'Captcha settings saved successfully.', 'user-registration' ) : sprintf( __( 'Captcha Setting for %s has been saved successfully.', 'user-registration' ), $setting_id );
 
 		wp_send_json_success(
 			array(
@@ -2179,7 +2338,7 @@ class UR_AJAX {
 		if ( ! $referer || $referer_host !== $allowed_host ) {
 			wp_send_json_error(
 				array(
-					__( 'Invalid form submission source.', 'user-registratifdeafon' ),
+					__( 'Invalid form submission source.', 'user-registration' ),
 				)
 			);
 		}
@@ -2295,19 +2454,19 @@ class UR_AJAX {
 
 		$post_content = $is_membership
 			? '[[[' .
-			  '{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
-			  '{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
-			  '{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
-			  '{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
-			  '],[' .
-			  '{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}' .
-			  ']]]'
+				'{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
+				'{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
+				'{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
+				'{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
+				'],[' .
+				'{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}' .
+				']]]'
 			: '[[[' .
-			  '{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
-			  '{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
-			  '{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
-			  '{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
-			  ']]]';
+				'{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
+				'{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
+				'{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
+				'{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
+				']]]';
 
 		$default_post_id = wp_insert_post(
 			array(
@@ -2621,17 +2780,17 @@ class UR_AJAX {
 	 *
 	 * @since 6.1.0
 	 */
-	public static function update_state_field(){
+	public static function update_state_field() {
 		check_ajax_referer( 'user_registration_update_state_field_nonce', 'security' );
 
 		$country = $_POST['country'];
 
 		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
-		$state_list = json_decode( $states_json, true );
+		$state_list  = json_decode( $states_json, true );
 
-		$states 	= isset( $state_list[ $country ] ) ? $state_list[ $country ] : '';
-		$option 	= '';
-		$has_state 	= false;
+		$states    = isset( $state_list[ $country ] ) ? $state_list[ $country ] : '';
+		$option    = '';
+		$has_state = false;
 		if ( is_array( $states ) ) {
 			foreach ( $states as $state_key => $state ) {
 				$option .= '<option value="' . $state_key . '">' . esc_html( $state ) . '</option>';
@@ -2641,8 +2800,8 @@ class UR_AJAX {
 
 		wp_send_json_success(
 			array(
-				'state' 	=> $option,
-				'has_state' => $has_state
+				'state'     => $option,
+				'has_state' => $has_state,
 			)
 		);
 	}

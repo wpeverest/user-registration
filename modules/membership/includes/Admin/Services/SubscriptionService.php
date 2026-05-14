@@ -16,6 +16,7 @@ use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 use WPEverest\URMembership\Admin\Services\CouponService;
+use WPEverest\URMembership\Admin\Services\Paypal\NewPaypalService;
 
 class SubscriptionService {
 
@@ -98,7 +99,7 @@ class SubscriptionService {
 			$status      = 'pending';
 		} elseif ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trail date
 			$expiry_date = self::get_expiry_date( $data['membership_data']['start_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
-			$status      = 'on' === $membership_meta['trial_status'] ? 'trial' : 'pending';
+			$status      = 'pending';
 		}
 
 		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
@@ -194,7 +195,7 @@ class SubscriptionService {
 	public function cancel_subscription( $order, $subscription ) {
 		switch ( $order['payment_method'] ) {
 			case 'paypal':
-				$paypal_service = new PaypalService();
+				$paypal_service = new NewPaypalService();
 
 				return $paypal_service->cancel_subscription( $order, $subscription );
 
@@ -218,8 +219,8 @@ class SubscriptionService {
 		$response = array( 'status' => false );
 		switch ( $order['payment_method'] ) {
 			case 'paypal':
-				$paypal_service = new PaypalService();
-				$logger->notice( 'Paypal reactivation Reached', array( 'source' => 'urm-reactivation-log' ) );
+				$paypal_service = new NewPaypalService();
+				$logger->notice( 'PayPal reactivation Reached', array( 'source' => 'urm-reactivation-log' ) );
 				return $paypal_service->reactivate_subscription( $subscription['subscription_id'] );
 				break;
 			case 'stripe':
@@ -795,6 +796,15 @@ class SubscriptionService {
 
 			return;
 		}
+
+		ur_get_logger()->debug(
+			'Delayed orders:' . "\n" . wp_json_encode(
+				$all_delayed_orders,
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-membership-crons' )
+		);
+
 		$updated_subscription_for_users = array();
 
 		foreach ( $all_delayed_orders as $data ) {
@@ -1109,11 +1119,16 @@ class SubscriptionService {
 				// Log the expiration
 				ur_get_logger()->notice(
 					sprintf(
-						__( 'Membership expired for user %1$s (ID: %2$d) - Subscription ID: %3$d', 'user-registration' ),
-						$subscription['username'],
-						$user_id,
-						$subscription_id
-					),
+						'[Member ID #%d] Membership expired for user',
+						$user_id
+					) . "\n" . wp_json_encode(
+						array(
+							'id'              => $user_id,
+							'username'        => $subscription['username'],
+							'subscription_id' => $subscription_id,
+						),
+						JSON_PRETTY_PRINT
+					) . "\n ",
 					array( 'source' => 'urm-membership-expiration' )
 				);
 
@@ -1143,10 +1158,12 @@ class SubscriptionService {
 
 		ur_get_logger()->notice(
 			sprintf(
-				__( 'Membership expiration check completed. %1$d memberships expired for users: %2$s', 'user-registration' ),
-				$expired_count,
-				implode( ', ', $expired_users )
-			),
+				'Membership expiration check completed. %1$d memberships expired for users:',
+				$expired_count
+			) . "\n" . wp_json_encode(
+				$expired_users,
+				JSON_PRETTY_PRINT
+			) . "\n ",
 			array( 'source' => 'urm-membership-expiration' )
 		);
 	}
@@ -1181,7 +1198,7 @@ class SubscriptionService {
 		update_user_meta( $subscription['member_id'], 'urm_is_payment_retrying', $retry_count + 1 );
 		switch ( $subscription['payment_method'] ) {
 			case 'paypal':
-				$paypal_service = new PaypalService();
+				$paypal_service = new NewPaypalService();
 				$paypal_service->retry_subscription( $subscription );
 				break;
 			case 'stripe':

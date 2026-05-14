@@ -145,10 +145,6 @@ class MembershipService {
 			$team_id = '';
 
 			if ( $subscription && $order ) {
-				$this->logger->info(
-					'Subscription and order created successfully for ' . $data['username'] . '.',
-					array( 'source' => 'urm-registration-logs' )
-				);
 
 				if ( ! empty( $members_data['team'] ) && ur_check_module_activation( 'team' ) ) {
 					$first_name      = get_user_meta( $member->ID, 'first_name', true );
@@ -220,7 +216,7 @@ class MembershipService {
 					'meta'            => array(),
 				);
 
-				if ( isset( $subscription_data['status'] ) && 'trial' === $subscription_data['status'] ) {
+				if ( ! empty( $subscription_data['trial_end_date'] ) ) {
 					// Register subscription trial started event.
 					$payload['event_type'] = 'trial_started';
 					$payload['meta']       = array(
@@ -1139,8 +1135,17 @@ class MembershipService {
 
 		$membership_group_repository = new MembershipGroupRepository();
 		$membership_group_service    = new MembershipGroupService();
-		$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
-		$user_membership_group_ids   = array();
+		$membership_id               = null;
+		if ( is_array( $membership ) && isset( $membership['ID'] ) ) {
+			$membership_id = $membership['ID'];
+		}
+
+		if ( empty( $membership_id ) ) {
+			return 'register';
+		}
+
+		$current_membership_group  = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
+		$user_membership_group_ids = array();
 
 		if ( empty( $user_membership_ids ) ) {
 			return 'register';
