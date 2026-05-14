@@ -15,11 +15,11 @@
 
 // Components
 @import "components/accordion", "components/badge", "components/button",
-	"components/card", "components/bulkactions", "components/tags",
-	"components/list-group", "components/modal", "components/nav",
-	"components/search", "components/typography", "components/scroll-ui",
-	"components/dropdown", "components/input", "components/toggle",
-	"components/navigation";
+"components/card", "components/bulkactions", "components/tags",
+"components/list-group", "components/modal", "components/nav",
+"components/search", "components/typography", "components/scroll-ui",
+"components/dropdown", "components/input", "components/toggle",
+"components/navigation";
 
 @import "border";
 @import "spacing";
@@ -50,9 +50,11 @@
 }
 
 body {
+
 	&.user-registration,
 	&.user-registration-page {
 		#wpbody-content {
+
 			.ur-admin-page-topnav,
 			.memberships,
 			.ur-registered-from,
@@ -68,6 +70,7 @@ body {
 					sans-serif;
 
 				table {
+
 					th,
 					td {
 						font-family:
@@ -107,6 +110,7 @@ body {
 
 	&[class*="user-registration-"],
 	&[class^="ur-"] {
+
 		/* Minimal WordPress Editor Styles */
 		.wp-editor-container {
 			border-radius: 8px !important;
@@ -127,7 +131,7 @@ body {
 				margin-bottom: 0 !important;
 				padding: 6px 8px !important;
 
-				&-grp > div {
+				&-grp>div {
 					padding: 0;
 				}
 
@@ -353,6 +357,7 @@ body {
 
 .user-registration {
 	&__wrap {
+
 		*,
 		::before,
 		::after {
@@ -556,6 +561,7 @@ body {
 			.plugin-card-bottom {
 				.action-buttons {
 					.button.updating-message {
+
 						&::before,
 						&::after {
 							margin-top: -1px;
@@ -1044,6 +1050,7 @@ body {
 		}
 
 		input {
+
 			&[type="radio"],
 			&[type="checkbox"] {
 				opacity: 1;
@@ -1079,6 +1086,7 @@ body {
 				}
 
 				input {
+
 					&[type="radio"],
 					&[type="checkbox"] {
 						display: none;
@@ -1291,10 +1299,7 @@ body {
 							}
 
 							&::after {
-								filter: brightness(0) saturate(100%) invert(35%)
-									sepia(13%) saturate(3079%)
-									hue-rotate(194deg) brightness(96%)
-									contrast(89%);
+								filter: brightness(0) saturate(100%) invert(35%) sepia(13%) saturate(3079%) hue-rotate(194deg) brightness(96%) contrast(89%);
 							}
 						}
 					}
@@ -1339,9 +1344,7 @@ body {
 							}
 
 							&::after {
-								filter: invert(36%) sepia(58%) saturate(767%)
-									hue-rotate(193deg) brightness(84%)
-									contrast(88%);
+								filter: invert(36%) sepia(58%) saturate(767%) hue-rotate(193deg) brightness(84%) contrast(88%);
 							}
 						}
 
@@ -1590,7 +1593,7 @@ body {
 					padding-bottom: $spacing_16px;
 					margin-bottom: 0;
 
-					~ hr {
+					~hr {
 						display: none;
 						border-top: 1px solid $border-color;
 						margin: 0;
@@ -1759,8 +1762,7 @@ body {
 
 					&:first-child {
 						border-radius: 0 0 0 $border_radius_4;
-						border-right: $border_width solid
-							transparentize($white, 0.8);
+						border-right: $border_width solid transparentize($white, 0.8);
 					}
 
 					&:nth-child(2) {
@@ -1870,8 +1872,7 @@ body {
 						}
 
 						&.ui-sortable-helper {
-							box-shadow: 0 0 10px 5px
-								transparentize($gray_base, 0.9);
+							box-shadow: 0 0 10px 5px transparentize($gray_base, 0.9);
 						}
 
 						&.ui-sortable-placeholder {
@@ -1976,7 +1977,7 @@ body {
 						}
 					}
 
-					> li.ur-item-dragged {
+					>li.ur-item-dragged {
 						list-style: none;
 						width: 100%;
 						text-align: center;
@@ -2433,6 +2434,7 @@ body {
 			}
 
 			.ur-multiple-choice .ur-subscription-plan {
+
 				.ur-regular-price,
 				.ur-selling-price {
 					display: grid;
@@ -2454,7 +2456,7 @@ body {
 					margin-right: 0;
 				}
 
-				> input[type="text"] {
+				>input[type="text"] {
 					width: 80%;
 				}
 
@@ -2554,7 +2556,7 @@ body {
 		flex-wrap: wrap;
 		margin-bottom: $spacing_8px;
 
-		> div {
+		>div {
 			margin-right: $spacing_8px;
 		}
 
@@ -2585,8 +2587,7 @@ body {
 		}
 	}
 
-	&:has(.collapsed) {
-	}
+	&:has(.collapsed) {}
 }
 
 /**
@@ -2906,8 +2907,7 @@ body {
 			&.entered {
 				display: block;
 				height: 50px;
-				animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1
-					normal both open-message;
+				animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1 normal both open-message;
 
 				.ur-error {
 					display: flex;
@@ -2928,8 +2928,7 @@ body {
 
 			&.exiting {
 				display: block;
-				animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both
-					close-message;
+				animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both close-message;
 			}
 
 			&:first-child {
@@ -3024,8 +3023,7 @@ body {
 }
 
 @media screen and (max-width: 600px) {
-	.user-registration-membership_page_add-new-registration
-		.major-publishing-actions {
+	.user-registration-membership_page_add-new-registration .major-publishing-actions {
 		clear: both;
 		padding: 10px 0 19px;
 		line-height: 28px;
@@ -3101,16 +3099,16 @@ body {
 			height: 22px;
 			width: 40px;
 
-			&:checked + .slider {
+			&:checked+.slider {
 				// background-color: $primary_color;
 			}
 
-			&:focus + .slider {
+			&:focus+.slider {
 				// box-shadow: 0 0 1px #2196f3;
 				box-shadow: none;
 			}
 
-			&:checked + .slider::before {
+			&:checked+.slider::before {
 				transform: translateX(16px);
 			}
 		}
@@ -3382,6 +3380,7 @@ body {
 				}
 
 				&.loading {
+
 					.ur-button,
 					.ur-button::before,
 					.ur-button::after {
@@ -3425,6 +3424,7 @@ body {
 					}
 
 					@-webkit-keyframes load1 {
+
 						0%,
 						80%,
 						100% {
@@ -3439,6 +3439,7 @@ body {
 					}
 
 					@keyframes load1 {
+
 						0%,
 						80%,
 						100% {
@@ -3537,8 +3538,7 @@ body {
 					margin-right: 0;
 					border-left: 3px solid #f27474;
 					justify-content: flex-start;
-					padding: $spacing_12px $spacing_6px $spacing_12px
-						$spacing_6px;
+					padding: $spacing_12px $spacing_6px $spacing_12px $spacing_6px;
 				}
 			}
 
@@ -3617,8 +3617,7 @@ body {
 								transform-origin: left top;
 								border-top: 2px solid $color_gray-lighten;
 								border-right: 2px solid $color_gray-lighten;
-								transform: scaleX(-1) rotate(135deg)
-									translate(-58%, -40%);
+								transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
 							}
 						}
 
@@ -4163,8 +4162,7 @@ a.button.ur-smart-tags-list-button {
 						font-size: 22px;
 						line-height: 130%;
 						color: $grey-500;
-						padding: $spacing_4px $spacing_8px $spacing_4px
-							$spacing_12px;
+						padding: $spacing_4px $spacing_8px $spacing_4px $spacing_12px;
 						margin: 0;
 						border: $border_width solid transparent;
 						border-radius: 0;
@@ -4337,6 +4335,7 @@ a.button.ur-smart-tags-list-button {
 							}
 
 							&.very-weak {
+
 								&:hover,
 								&.active {
 									label {
@@ -4348,6 +4347,7 @@ a.button.ur-smart-tags-list-button {
 							}
 
 							&.weak {
+
 								&:hover,
 								&.active {
 									label {
@@ -4359,6 +4359,7 @@ a.button.ur-smart-tags-list-button {
 							}
 
 							&.medium {
+
 								&:hover,
 								&.active {
 									label {
@@ -4370,6 +4371,7 @@ a.button.ur-smart-tags-list-button {
 							}
 
 							&.strong {
+
 								&:hover,
 								&.active {
 									label {
@@ -4381,6 +4383,7 @@ a.button.ur-smart-tags-list-button {
 							}
 
 							&.custom {
+
 								&:hover,
 								&.active {
 									label {
@@ -4674,15 +4677,12 @@ a.button.ur-smart-tags-list-button {
 
 														.ur-copy-shortcode {
 															box-shadow: none;
-															transition: all 0.3s
-																ease-in-out;
+															transition: all 0.3s ease-in-out;
 
 															svg {
 																path {
 																	fill: $primary_color;
-																	transition: all
-																		0.3s
-																		ease-in-out;
+																	transition: all 0.3s ease-in-out;
 																}
 															}
 
@@ -4736,8 +4736,7 @@ a.button.ur-smart-tags-list-button {
 
 										&:hover {
 											background-color: #f8f8fa;
-											border: $border_width dashed
-												$primary_color;
+											border: $border_width dashed $primary_color;
 
 											&::before {
 												content: "";
@@ -4747,8 +4746,7 @@ a.button.ur-smart-tags-list-button {
 												display: flex;
 												align-items: center;
 												justify-content: center;
-												border-radius: 0 0 0
-													$border_radius_7;
+												border-radius: 0 0 0 $border_radius_7;
 												background: #676f8a;
 												top: 0;
 												right: 0;
@@ -4784,26 +4782,17 @@ a.button.ur-smart-tags-list-button {
 		padding-left: 0;
 	}
 
-	.user-registration-membership_page_add-new-registration
-		.ur-form-container
-		#menu-management
-		.menu-edit {
+	.user-registration-membership_page_add-new-registration .ur-form-container #menu-management .menu-edit {
 		left: $spacing_36px !important;
 	}
 
-	.ur-registered-from
-		.ur-registered-inputs
-		.ur-tab-contents
-		button#ur-collapse {
+	.ur-registered-from .ur-registered-inputs .ur-tab-contents button#ur-collapse {
 		left: 448px;
 	}
 }
 
 @media screen and (max-width: 782px) {
-	.user-registration-membership_page_add-new-registration
-		.ur-form-container
-		#menu-management
-		.menu-edit {
+	.user-registration-membership_page_add-new-registration .ur-form-container #menu-management .menu-edit {
 		left: 0 !important;
 	}
 }
@@ -4835,7 +4824,7 @@ a.button.ur-smart-tags-list-button {
 								}
 
 								&-sub-details {
-									> p {
+									>p {
 										display: flex;
 										align-items: center;
 										gap: $spacing_8px;
@@ -4864,10 +4853,8 @@ a.button.ur-smart-tags-list-button {
 				td {
 					&:has(.user-registration-user-profile-info) {
 						display: grid;
-						grid-template-columns: repeat(
-							auto-fill,
-							minmax(160px, 1fr)
-						);
+						grid-template-columns: repeat(auto-fill,
+								minmax(160px, 1fr));
 						gap: $spacing_12px;
 						width: 760px;
 
@@ -4878,6 +4865,7 @@ a.button.ur-smart-tags-list-button {
 
 					.user-registration-user-profile-info {
 						input {
+
 							&[type="radio"],
 							&[type="checkbox"] {
 								display: none;
@@ -4933,7 +4921,7 @@ a.button.ur-smart-tags-list-button {
 
 						input[type="radio"],
 						input[type="checkbox"] {
-							&:checked ~ label {
+							&:checked~label {
 								color: #0693e3;
 								border-color: #0693e3;
 
@@ -4981,7 +4969,7 @@ a.button.ur-smart-tags-list-button {
 	padding: $spacing_14px 0px;
 	cursor: pointer;
 
-	& ~ .select2-container {
+	&~.select2-container {
 		visibility: hidden;
 		position: absolute;
 		right: 0;
@@ -5032,6 +5020,7 @@ a.button.ur-smart-tags-list-button {
 						}
 
 						li {
+
 							&.select2-results__option--highlighted,
 							&[data-selected="true"] {
 								background: #f8f8fa;
@@ -5257,7 +5246,7 @@ body.user-registration {
 
 				.user-registration-toggle-form {
 					input {
-						&:checked + .slider {
+						&:checked+.slider {
 							background-color: $green;
 						}
 					}
@@ -5306,7 +5295,7 @@ body.user-registration {
 			}
 		}
 
-		> .ur-button-primary {
+		>.ur-button-primary {
 			color: $grey-400;
 			font-size: 14px;
 			font-weight: $regular;
@@ -5607,7 +5596,7 @@ body.user-registration {
 			width: 275px;
 			position: relative;
 
-			> p {
+			>p {
 				display: none;
 			}
 
@@ -5720,6 +5709,7 @@ body.user-registration {
 		thead,
 		tfoot {
 			tr {
+
 				td,
 				th {
 					border-bottom-color: $border_color;
@@ -5839,7 +5829,7 @@ body.user-registration {
 					}
 
 					.row-actions {
-						> span {
+						>span {
 							font-weight: $regular;
 
 							a {
@@ -5853,6 +5843,7 @@ body.user-registration {
 
 		tfoot {
 			tr {
+
 				td,
 				th {
 					border-top-color: $border_color;
@@ -6165,6 +6156,7 @@ body.user-registration {
 					margin-top: 30px;
 
 					.button {
+
 						&-primary,
 						&-secondary {
 							min-height: 34px;
@@ -6521,10 +6513,8 @@ body.user-registration {
 
 					.icons-group {
 						display: grid;
-						grid-template-columns: repeat(
-							auto-fill,
-							minmax(100px, 1fr)
-						);
+						grid-template-columns: repeat(auto-fill,
+								minmax(100px, 1fr));
 						gap: 10px;
 						width: 100%;
 
@@ -6563,7 +6553,7 @@ body.user-registration {
 									&[type="radio"] {
 										display: none;
 
-										&:checked ~ .dashicons {
+										&:checked~.dashicons {
 											background: rgba(240, 242, 249, 1%);
 											border-color: $primary_color;
 										}
@@ -6741,12 +6731,10 @@ body {
 	font-family: "UserRegistration";
 	src: url("../fonts/UserRegistration.eot?v5p6f");
 	src:
-		url("../fonts/UserRegistration.eot?v5p6f#iefix")
-			format("embedded-opentype"),
+		url("../fonts/UserRegistration.eot?v5p6f#iefix") format("embedded-opentype"),
 		url("../fonts/UserRegistration.ttf?v5p6f") format("truetype"),
 		url("../fonts/UserRegistration.woff?v5p6f") format("woff"),
-		url("../fonts/UserRegistration.svg?v5p6f#UserRegistration")
-			format("svg");
+		url("../fonts/UserRegistration.svg?v5p6f#UserRegistration") format("svg");
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
@@ -6940,8 +6928,7 @@ body {
 										}
 									}
 
-									label[for="user_registration_login_options_prevent_core_login"]
-										span {
+									label[for="user_registration_login_options_prevent_core_login"] span {
 										bottom: 18px;
 										right: 20px;
 									}
@@ -7031,8 +7018,7 @@ body {
 										}
 
 										.ur-copy-shortcode {
-											border-radius: 0 $border_radius_4
-												$border_radius_4 0;
+											border-radius: 0 $border_radius_4 $border_radius_4 0;
 										}
 									}
 
@@ -7104,28 +7090,21 @@ body {
 		.ur--loading--animate {
 			margin-bottom: 10px;
 			background: #ececec;
-			background-image: -webkit-linear-gradient(
-				90deg,
-				#ddd 0px,
-				#e8e8e8 40px,
-				#ddd 80px
-			);
-			background-image: -o-linear-gradient(
-				90deg,
-				#ddd 0px,
-				#e8e8e8 40px,
-				#ddd 80px
-			);
-			background-image: linear-gradient(
-				90deg,
-				#ddd 0px,
-				#e8e8e8 40px,
-				#ddd 80px
-			);
+			background-image: -webkit-linear-gradient(90deg,
+					#ddd 0px,
+					#e8e8e8 40px,
+					#ddd 80px);
+			background-image: -o-linear-gradient(90deg,
+					#ddd 0px,
+					#e8e8e8 40px,
+					#ddd 80px);
+			background-image: linear-gradient(90deg,
+					#ddd 0px,
+					#e8e8e8 40px,
+					#ddd 80px);
 			background-size: 250px;
 			border-radius: 10px;
-			-webkit-animation: shine-loading-container-items 0.6s infinite
-				ease-out;
+			-webkit-animation: shine-loading-container-items 0.6s infinite ease-out;
 			animation: shine-loading-container-items 0.6s infinite ease-out;
 
 			&.loading-btn {
@@ -7140,31 +7119,24 @@ body {
 
 		.ur--loading--animate--long {
 			background: #f4f4f4;
-			background-image: -webkit-linear-gradient(
-				90deg,
-				#f4f4f4 0px,
-				#f8f8f8 40px,
-				#f8f8f8 70px,
-				#f4f4f4 80px
-			);
-			background-image: -o-linear-gradient(
-				90deg,
-				#f4f4f4 0px,
-				#f8f8f8 40px,
-				#f8f8f8 70px,
-				#f4f4f4 80px
-			);
-			background-image: linear-gradient(
-				90deg,
-				#f4f4f4 0px,
-				#f8f8f8 40px,
-				#f8f8f8 70px,
-				#f4f4f4 80px
-			);
+			background-image: -webkit-linear-gradient(90deg,
+					#f4f4f4 0px,
+					#f8f8f8 40px,
+					#f8f8f8 70px,
+					#f4f4f4 80px);
+			background-image: -o-linear-gradient(90deg,
+					#f4f4f4 0px,
+					#f8f8f8 40px,
+					#f8f8f8 70px,
+					#f4f4f4 80px);
+			background-image: linear-gradient(90deg,
+					#f4f4f4 0px,
+					#f8f8f8 40px,
+					#f8f8f8 70px,
+					#f4f4f4 80px);
 			background-size: 1400px;
 			border-radius: 10px;
-			-webkit-animation: shine-loading-container-items-long 1s infinite
-				ease-out;
+			-webkit-animation: shine-loading-container-items-long 1s infinite ease-out;
 			animation: shine-loading-container-items-long 1s infinite ease-out;
 
 			&.circular {
@@ -7237,6 +7209,7 @@ body {
 // For RTL Options CSS
 .user-registration {
 	&.rtl {
+
 		input,
 		textarea,
 		select {
@@ -7343,10 +7316,7 @@ body {
 		height: auto !important;
 	}
 
-	&.tooltipster-base
-		.tooltipster-arrow
-		.tooltipster-arrow-uncropped
-		.tooltipster-arrow-border {
+	&.tooltipster-base .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {
 		border-top-color: #fff !important;
 		border-bottom-color: #fff !important;
 	}
@@ -7786,8 +7756,7 @@ body.user-registration {
 								top: 0;
 								opacity: 0;
 								z-index: -1;
-								border-radius: $border_radius_3 0 0
-									$border_radius_3;
+								border-radius: $border_radius_3 0 0 $border_radius_3;
 								transition: all 0.3s ease-in-out;
 							}
 
@@ -8060,6 +8029,7 @@ body.user-registration {
 		.ur-info-wrap {
 			table {
 				tr {
+
 					th,
 					td {
 						padding: 5px;
@@ -8300,7 +8270,7 @@ body.user-registration {
 					padding: 0 16px;
 					border-radius: 4px;
 
-					> li {
+					>li {
 						padding-right: 0;
 						padding-bottom: 0;
 
@@ -8312,7 +8282,7 @@ body.user-registration {
 							flex-direction: column;
 						}
 
-						> p {
+						>p {
 							span {
 								font-weight: $regular;
 								color: #6b6b6b;
@@ -8322,7 +8292,7 @@ body.user-registration {
 						.ur-user-payment-multiple-choice {
 							padding-left: 12px;
 
-							> li {
+							>li {
 								padding: 0;
 								padding-bottom: 10px;
 
@@ -8369,11 +8339,7 @@ $border-top-color_1: #ff4f55;
 	flex-direction: row-reverse;
 }
 
-#user-registration-pro-single-user-view
-	#user-registration-user-sidebar
-	.sidebar-box
-	ul
-	li:has(a) {
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) {
 	a.active {
 		background: #505bbf;
 
@@ -8605,6 +8571,7 @@ $border-top-color_1: #ff4f55;
 
 .tablenav-pages {
 	.button {
+
 		&.tablenav-pages-navspan,
 		&.first-page,
 		&.prev-page,
@@ -8627,8 +8594,10 @@ body.user-registration-page {
 			Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
 		#your-profile {
+
 			table.form-table,
 			#application-passwords-section {
+
 				select,
 				input,
 				textarea {
@@ -8949,7 +8918,7 @@ body.user-registration-page {
 			width: 275px;
 			position: relative;
 
-			> p {
+			>p {
 				display: none;
 			}
 
@@ -9027,6 +8996,7 @@ body.user-registration-page {
 		thead,
 		tfoot {
 			tr {
+
 				td,
 				th {
 					border-bottom-color: $border_color;
@@ -9168,6 +9138,7 @@ body.user-registration-page {
 
 		tfoot {
 			tr {
+
 				td,
 				th {
 					border-top-color: $border_color;
@@ -9690,9 +9661,7 @@ body.user-registration-page {
 						border: 1px solid #e1e1e1;
 						border-radius: 4px;
 
-						&:has(
-							.ur-tax-country-checkbox[type="checkbox"]:checked
-						) {
+						&:has(.ur-tax-country-checkbox[type="checkbox"]:checked) {
 							border-color: #475bb2;
 						}
 
@@ -9801,9 +9770,7 @@ body.user-registration-page {
 										}
 									}
 
-									&:has(
-										.ur-tax-entire-country-checkbox:checked
-									) {
+									&:has(.ur-tax-entire-country-checkbox:checked) {
 										&::before {
 											background: none;
 											border-color: #4755b2;
