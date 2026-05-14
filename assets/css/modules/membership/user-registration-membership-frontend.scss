@@ -297,6 +297,7 @@ html {
 						flex: unset;
 						margin-left: 8px;
 					}
+
 				}
 			}
 
@@ -1171,23 +1172,29 @@ html {
 			.ur-membership-title-wrapper {
 				display: flex;
 				justify-content: space-between;
-				align-items: center;
+				align-items: flex-start;
 				width: 100%;
 
 				.ur-membership-title {
 					color: #1f1f1f;
 					font-weight: 600;
-					display: inline-block;
-					vertical-align: middle;
+					display: block;
 					font-size: 16px;
 					text-align: left;
 				}
 
 				.ur-membership-amount-wrapper {
 					display: flex;
-					align-items: center;
-					justify-content: center;
-					gap: 4px;
+					flex-direction: column;
+					align-items: flex-end;
+					justify-content: flex-start;
+					gap: 2px;
+
+					.ur-membership-price-row {
+						display: flex;
+						align-items: center;
+						gap: 4px;
+					}
 
 					.membership-amount {
 						font-weight: 700;
@@ -2027,4 +2034,51 @@ html {
 			text-wrap: unset;
 		}
 	}
+}
+
+.ur-membership-name-wrap,
+.ur-membership-period-wrap {
+	vertical-align: top;
+}
+
+.ur-membership-period-wrap {
+	text-align: right;
+}
+
+.ur-membership-title-text,
+.ur-membership-trial-label,
+.ur-membership-period-text,
+.ur-membership-trial-end {
+	display: block;
+}
+
+.ur-membership-title-text {
+	color: #1f1f1f;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 18px;
+}
+
+.ur-membership-period-text {
+	color: #1f1f1f;
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 18px;
+}
+
+.ur-membership-trial-label {
+	font-size: 12px;
+	font-style: italic;
+	font-weight: 400;
+	color: #6b6b6b;
+	margin-top: 3px;
+	line-height: 16px;
+}
+
+.ur-membership-trial-end {
+	font-size: 12px;
+	font-weight: 400;
+	color: #6b6b6b;
+	margin-top: 3px;
+	line-height: 16px;
 }

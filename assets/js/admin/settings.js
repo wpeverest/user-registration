@@ -1733,6 +1733,9 @@
 			var value;
 			if ($item.attr("type") === "checkbox") {
 				value = $item.is(":checked");
+			} else if ($item.attr("type") === "radio") {
+				if (!$item.is(":checked")) return;
+				value = $item.val();
 			} else if (
 				$item.is("textarea") &&
 				typeof tinymce !== "undefined" &&
@@ -1916,7 +1919,7 @@
 		license_activation_status === "pro_activated"
 	) {
 		ur_remove_cookie("urm_license_status");
-		$successModalHtml =
+		var $successModalHtml =
 			'<p style="margin: 10px 0 20px;">' +
 			user_registration_settings_params.i18n.pro_activated_success_text +
 			"</p>" +
@@ -1932,15 +1935,20 @@
 			'">' +
 			user_registration_settings_params.i18n.continue_to_dashboard_text +
 			"</button>";
+		var $successIcon =
+			'<svg width="28" height="28" viewBox="0 0 28 28" fill="none" style="flex-shrink:0" xmlns="http://www.w3.org/2000/svg">' +
+			'<circle cx="14" cy="14" r="13" stroke="#a5dc86" stroke-width="2"/>' +
+			'<path d="M8 14l4 4 8-8" stroke="#a5dc86" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+			"</svg>";
 		Swal.fire({
-			icon: "success",
-			title: user_registration_settings_params.i18n
-				.pro_activated_success_title,
+			title:
+				$successIcon +
+				user_registration_settings_params.i18n.pro_activated_success_title,
 			html: $successModalHtml,
 			showConfirmButton: false,
 			showCloseButton: true,
 			customClass:
-				"user-registration-swal2-modal user-registration user-registration-swal2-modal--center user-registration-info swal2-show",
+				"user-registration-swal2-modal user-registration user-registration-swal2-modal--center swal2-show",
 			width: 400,
 			didOpen: function () {
 				$("#dashboard-redirect-btn").on("click", function () {

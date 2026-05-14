@@ -67,11 +67,17 @@ class URCR_Frontend {
 	}
 
 	/**
-	 * Disable Elementor element caching to ensure dynamic content works
+	 * Disable Elementor element caching to ensure dynamic content works.
+	 * Only writes the option once — skips the DB write if already disabled.
 	 */
 	public function disable_elementor_element_cache() {
-		update_option( 'elementor_element_cache_ttl', 'disable' );
-		if ( class_exists( '\Elementor\Plugin' ) && method_exists( '\Elementor\Plugin::$instance->files_manager', 'clear_cache' ) ) {
+		if ( 'disable' !== get_option( 'elementor_element_cache_ttl' ) ) {
+			update_option( 'elementor_element_cache_ttl', 'disable' );
+		}
+
+		if ( class_exists( '\Elementor\Plugin' ) &&
+			isset( \Elementor\Plugin::$instance->files_manager ) &&
+			method_exists( \Elementor\Plugin::$instance->files_manager, 'clear_cache' ) ) {
 			\Elementor\Plugin::$instance->files_manager->clear_cache();
 		}
 	}
