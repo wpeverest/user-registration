@@ -1550,6 +1550,7 @@ class UR_Getting_Started {
 				'paypal_production_email'         => get_option( 'user_registration_global_paypal_live_email_address', get_option( 'user_registration_global_paypal_live_admin_email', get_option( 'user_registration_global_paypal_email_address', '' ) ) ),
 				'paypal_production_client_id'     => get_option( 'user_registration_global_paypal_live_client_id', get_option( 'user_registration_global_paypal_client_id', '' ) ),
 				'paypal_production_client_secret' => get_option( 'user_registration_global_paypal_live_client_secret', get_option( 'user_registration_global_paypal_client_secret', '' ) ),
+				'is_new_installation'             => ! ur_is_paypal_old_installation(),
 			),
 			array(
 				'id'                          => 'stripe',
@@ -1643,15 +1644,21 @@ class UR_Getting_Started {
 		$paypal_configured = true;
 		if ( $paypal ) {
 			if ( 'test' === $paypal_mode ) {
-				$paypal_configured = ! empty( $paypal_test_email ) && ! empty( $paypal_test_client_id ) && ! empty( $paypal_test_client_secret );
+				$has_rest_creds    = ! empty( $paypal_test_client_id ) && ! empty( $paypal_test_client_secret );
+				$paypal_configured = $has_rest_creds || ! empty( $paypal_test_email );
 			} else {
-				$paypal_configured = ! empty( $paypal_production_email ) && ! empty( $paypal_production_client_id ) && ! empty( $paypal_production_client_secret );
+				$has_rest_creds    = ! empty( $paypal_production_client_id ) && ! empty( $paypal_production_client_secret );
+				$paypal_configured = $has_rest_creds || ! empty( $paypal_production_email );
 			}
 
 			if ( ! $paypal_configured ) {
+				$message = ur_is_paypal_old_installation()
+					? __( 'PayPal requires either an email address or Client ID and Secret.', 'user-registration' )
+					: __( 'PayPal requires Client ID and Secret.', 'user-registration' );
+
 				$configuration_needed[] = array(
 					'gateway'      => 'paypal',
-					'message'      => __( 'PayPal requires an email address, client ID, and client secret.', 'user-registration' ),
+					'message'      => $message,
 					'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
 				);
 			}

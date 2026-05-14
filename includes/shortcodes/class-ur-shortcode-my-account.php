@@ -66,7 +66,9 @@ class UR_Shortcode_My_Account {
 			$redirect_url = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
 			$redirect_url = UR_Shortcodes::check_is_valid_redirect_url( $redirect_url );
 			$redirect_url = esc_url( $redirect_url );
-			$redirect_url      = ( isset( $_GET['redirect_to'] ) && empty( $redirect_url ) ) ? esc_url( wp_unslash( $_GET['redirect_to'] ) ) : $redirect_url; // @codingStandardsIgnoreLine
+			if ( isset( $_GET['redirect_to'] ) && empty( $redirect_url ) ) { // @codingStandardsIgnoreLine
+				$redirect_url = wp_validate_redirect( sanitize_url( wp_unslash( $_GET['redirect_to'] ) ), '' ); // @codingStandardsIgnoreLine
+			}
 			$form_id      = isset( $atts['form_id'] ) ? absint( $atts['form_id'] ) : 0;
 			$message      = apply_filters( 'user_registration_my_account_message', '' );
 
@@ -350,12 +352,17 @@ class UR_Shortcode_My_Account {
 		} elseif ( ! empty( $_GET['show-reset-form'] ) ) {
 			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
 				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
+				// Break taint chain: restrict $rp_key to alphanumeric chars only.
+				$rp_key                = preg_replace( '/[^a-zA-Z0-9]/', '', $rp_key );
 					$user                  = get_user_by( 'login', $rp_login );
-					$rp_login              = $user ? $user->user_login : $rp_login;
+					// Use DB-sourced user_login to break cookie taint chain.
+					$rp_login              = $user ? $user->user_login : '';
 
 				$user = self::check_password_reset_key( $rp_key, $rp_login );
 
 				if ( ! empty( $user ) ) {
+						// Re-assign from validated user object (DB value, breaks taint chain).
+						$rp_login                  = $user->user_login;
 						$form_id                   = ur_get_form_id_by_userid( $user->ID );
 						$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
 						$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
@@ -371,8 +378,8 @@ class UR_Shortcode_My_Account {
 					return ur_get_template(
 						'myaccount/form-reset-password.php',
 						array(
-							'key'                       => $rp_key,
-							'login'                     => $rp_login,
+							'key'                       => esc_attr( $rp_key ),
+							'login'                     => esc_attr( $rp_login ),
 							'enable_strong_password'    => $enable_strong_password,
 							'minimum_password_strength' => $minimum_password_strength,
 						)
@@ -494,12 +501,17 @@ class UR_Shortcode_My_Account {
 
 		if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
 			list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
+			// Break taint chain: restrict $rp_key to alphanumeric chars only.
+			$rp_key                    = preg_replace( '/[^a-zA-Z0-9]/', '', $rp_key );
 			$user                      = get_user_by( 'login', $rp_login );
-			$rp_login                  = isset( $user->user_login ) ? $user->user_login : $rp_login;
+			// Use DB-sourced user_login to break cookie taint chain.
+			$rp_login                  = isset( $user->user_login ) ? $user->user_login : '';
 
 			$user = self::check_password_reset_key( $rp_key, $rp_login );
 
 			if ( ! empty( $user ) ) {
+				// Re-assign from validated user object (DB value, breaks taint chain).
+				$rp_login                  = $user->user_login;
 				$form_id                   = ur_get_form_id_by_userid( $user->ID );
 				$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
 				$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
@@ -523,8 +535,8 @@ class UR_Shortcode_My_Account {
 				return ur_get_template(
 					'myaccount/form-reset-password.php',
 					array(
-						'key'                       => $rp_key,
-						'login'                     => $rp_login,
+						'key'                       => esc_attr( $rp_key ),
+						'login'                     => esc_attr( $rp_login ),
 						'enable_strong_password'    => $enable_strong_password,
 						'minimum_password_strength' => $minimum_password_strength,
 					)

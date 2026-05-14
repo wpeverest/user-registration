@@ -1126,9 +1126,12 @@
 				var $span = $membershipRadio.siblings(
 					".ur-membership-period-span"
 				);
+				var $periodText = $span.find(".ur-membership-period-text");
 
 				// Parse duration assuming text
-				var oldText = $span.text();
+				var oldText = $periodText.length
+					? $periodText.text()
+					: $span.text();
 				var durationPart = "";
 				var everyIndex = oldText.toLowerCase().indexOf(" every ");
 
@@ -1159,13 +1162,33 @@
 					}
 
 					if (urmf_data.curreny_pos === "left") {
-						$span.text(
-							symbol + newSubTotal.toFixed(2) + " " + durationPart
-						);
+						$periodText.length
+							? $periodText.text(
+									symbol +
+										newSubTotal.toFixed(2) +
+										" " +
+										durationPart
+								)
+							: $span.text(
+									symbol +
+										newSubTotal.toFixed(2) +
+										" " +
+										durationPart
+								);
 					} else {
-						$span.text(
-							newSubTotal.toFixed(2) + symbol + " " + durationPart
-						);
+						$periodText.length
+							? $periodText.text(
+									newSubTotal.toFixed(2) +
+										symbol +
+										" " +
+										durationPart
+								)
+							: $span.text(
+									newSubTotal.toFixed(2) +
+										symbol +
+										" " +
+										durationPart
+								);
 					}
 
 					$membershipRadio.data(
@@ -1192,19 +1215,33 @@
 					$membershipRadio.data("urm-converted-amount", 0);
 					if (urmf_data.curreny_pos === "left") {
 						if (upgradeType) {
-							$span.text(
-								urmf_data.currency_symbol +
-									membershipAmount.toFixed(2) +
-									" " +
-									durationPart
-							);
+							$periodText.length
+								? $periodText.text(
+										urmf_data.currency_symbol +
+											membershipAmount.toFixed(2) +
+											" " +
+											durationPart
+									)
+								: $span.text(
+										urmf_data.currency_symbol +
+											membershipAmount.toFixed(2) +
+											" " +
+											durationPart
+									);
 						} else if (subTotal) {
-							$span.text(
-								urmf_data.currency_symbol +
-									subTotal.toFixed(2) +
-									" " +
-									durationPart
-							);
+							$periodText.length
+								? $periodText.text(
+										urmf_data.currency_symbol +
+											subTotal.toFixed(2) +
+											" " +
+											durationPart
+									)
+								: $span.text(
+										urmf_data.currency_symbol +
+											subTotal.toFixed(2) +
+											" " +
+											durationPart
+									);
 						}
 						if ($membershipRadio.is(":checked")) {
 							taxAmount =
@@ -1220,19 +1257,33 @@
 						}
 					} else {
 						if (upgradeType) {
-							$span.text(
-								membershipAmount.toFixed(2) +
-									urmf_data.currency_symbol +
-									" " +
-									durationPart
-							);
+							$periodText.length
+								? $periodText.text(
+										membershipAmount.toFixed(2) +
+											urmf_data.currency_symbol +
+											" " +
+											durationPart
+									)
+								: $span.text(
+										membershipAmount.toFixed(2) +
+											urmf_data.currency_symbol +
+											" " +
+											durationPart
+									);
 						} else if (subTotal) {
-							$span.text(
-								subTotal.toFixed(2) +
-									urmf_data.currency_symbol +
-									" " +
-									durationPart
-							);
+							$periodText.length
+								? $periodText.text(
+										subTotal.toFixed(2) +
+											urmf_data.currency_symbol +
+											" " +
+											durationPart
+									)
+								: $span.text(
+										subTotal.toFixed(2) +
+											urmf_data.currency_symbol +
+											" " +
+											durationPart
+									);
 						}
 						if ($membershipRadio.is(":checked")) {
 							taxAmount =
@@ -1983,18 +2034,16 @@
 				$membership_registration_form.find("#stripe-errors").length > 0
 			) {
 				$membership_registration_form
-					.find("#stripe-errors")
-					.html(message)
+					.find('#stripe-errors')
+					.text(message)
 					.show();
 			} else {
-				var error_message =
-					'<label id="stripe-errors" class="user-registration-error" role="alert">' +
-					message +
-					"</label>";
+				var $errorLabel = $('<label id="stripe-errors" class="user-registration-error" role="alert"></label>');
+				$errorLabel.text(message);
 				$membership_registration_form
-					.find(".stripe-container")
-					.closest(".ur_membership_frontend_input_container")
-					.append(error_message);
+					.find('.stripe-container')
+					.closest('.ur_membership_frontend_input_container')
+					.append($errorLabel);
 			}
 		},
 		init: function (is_upgrading) {
@@ -2501,7 +2550,14 @@
 					authorize_container.addClass("urm-d-none");
 					authorize_error_container.remove();
 
-					elements = {};
+					var stripeAlreadyReady =
+						selected_method === "stripe" &&
+						elements &&
+						elements.card;
+					if (!stripeAlreadyReady) {
+						elements = {};
+					}
+
 					if (selected_method === "stripe") {
 						if (urmf_data.stripe_publishable_key.length == 0) {
 							ur_membership_frontend_utils.show_failure_message(
@@ -2511,7 +2567,9 @@
 							return;
 						}
 						stripe_container.removeClass("urm-d-none");
-						stripe_settings.init();
+						if (!stripeAlreadyReady) {
+							stripe_settings.init();
+						}
 					}
 					if (selected_method === "authorize") {
 						authorize_container.removeClass("urm-d-none");
@@ -2580,7 +2638,10 @@
 							.prop("checked", true)
 							.trigger("change");
 
-						if (urm_default_pg.toLowerCase() === "stripe") {
+						if (
+							urm_default_pg.toLowerCase() === "stripe" &&
+							!(elements && elements.card)
+						) {
 							stripe_settings.init();
 						}
 
@@ -3101,7 +3162,13 @@
 					authorize_container.addClass("urm-d-none");
 					authorize_error_container.remove();
 
-					elements = {};
+					var stripeAlreadyReady =
+						selected_method === "stripe" &&
+						elements &&
+						elements.card;
+					if (!stripeAlreadyReady) {
+						elements = {};
+					}
 					if (selected_method === "stripe") {
 						if (urmf_data.stripe_publishable_key.length == 0) {
 							ur_membership_frontend_utils.show_failure_message(
@@ -3326,8 +3393,13 @@
 							var $span = $membershipRadio.siblings(
 								".ur-membership-period-span"
 							);
+							var $periodText = $span.find(
+								".ur-membership-period-text"
+							);
 
-							var oldText = $span.text();
+							var oldText = $periodText.length
+								? $periodText.text()
+								: $span.text();
 							var parts = oldText.split("/");
 							var durationPart = parts[1]
 								? "/ " + parts[1].trim()
@@ -3352,19 +3424,33 @@
 								}
 
 								if (urmf_data.curreny_pos === "left") {
-									$span.text(
-										symbol +
-											newCalculatedValue +
-											" " +
-											durationPart
-									);
+									$periodText.length
+										? $periodText.text(
+												symbol +
+													newCalculatedValue +
+													" " +
+													durationPart
+											)
+										: $span.text(
+												symbol +
+													newCalculatedValue +
+													" " +
+													durationPart
+											);
 								} else {
-									$span.text(
-										newCalculatedValue +
-											symbol +
-											" " +
-											durationPart
-									);
+									$periodText.length
+										? $periodText.text(
+												newCalculatedValue +
+													symbol +
+													" " +
+													durationPart
+											)
+										: $span.text(
+												newCalculatedValue +
+													symbol +
+													" " +
+													durationPart
+											);
 								}
 
 								$membershipRadio.data(
@@ -3386,24 +3472,38 @@
 								);
 								total = total.toFixed(2);
 								if (urmf_data.curreny_pos === "left") {
-									$span.text(
-										urmf_data.currency_symbol +
-											total +
-											" " +
-											durationPart
-									);
+									$periodText.length
+										? $periodText.text(
+												urmf_data.currency_symbol +
+													total +
+													" " +
+													durationPart
+											)
+										: $span.text(
+												urmf_data.currency_symbol +
+													total +
+													" " +
+													durationPart
+											);
 									if ($membershipRadio.is(":checked")) {
 										ur_membership_ajax_utils.calculate_total(
 											$membershipRadio
 										);
 									}
 								} else {
-									$span.text(
-										total +
-											urmf_data.currency_symbol +
-											" " +
-											durationPart
-									);
+									$periodText.length
+										? $periodText.text(
+												total +
+													urmf_data.currency_symbol +
+													" " +
+													durationPart
+											)
+										: $span.text(
+												total +
+													urmf_data.currency_symbol +
+													" " +
+													durationPart
+											);
 									if ($membershipRadio.is(":checked")) {
 										ur_membership_ajax_utils.calculate_total(
 											$membershipRadio
