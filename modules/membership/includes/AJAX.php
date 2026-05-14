@@ -1784,6 +1784,11 @@ class AJAX {
 			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
 		}
 
+		if ( ! empty( $_POST['tax_rate'] ) ) {
+			$data['tax_rate']               = sanitize_text_field( $_POST['tax_rate'] );
+			$data['tax_calculation_method'] = ! empty( $_POST['tax_calculation_method'] ) ? sanitize_text_field( $_POST['tax_calculation_method'] ) : '1';
+		}
+
 		$subscription_service = new SubscriptionService();
 		$status               = $subscription_service->can_upgrade( $data );
 
@@ -1850,12 +1855,6 @@ class AJAX {
 					);
 
 					update_user_meta( $member_id, 'urm_membership_process', $membership_process );
-				} else {
-					wp_send_json_error(
-						array(
-							'message' => __( 'Membership upgrade process already initiated.', 'user-registration' ),
-						)
-					);
 				}
 			} else {
 				// Free upgrade completes immediately

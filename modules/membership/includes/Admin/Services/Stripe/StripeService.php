@@ -201,10 +201,10 @@ class StripeService {
 				\Stripe\Stripe::setApiKey( $secret_key );
 				$webhook = \Stripe\WebhookEndpoint::retrieve( $existing_webhook_id );
 				if ( $webhook && $webhook->id ) {
-					$required_events  = apply_filters( 'urm_stripe_webhook_enabled_events', self::get_handled_webhook_events(), $mode );
-					$current_events   = isset( $webhook->enabled_events ) ? (array) $webhook->enabled_events : array();
-					$is_catch_all     = in_array( '*', $current_events, true );
-					$missing_events   = array_diff( $required_events, $current_events );
+					$required_events = apply_filters( 'urm_stripe_webhook_enabled_events', self::get_handled_webhook_events(), $mode );
+					$current_events  = isset( $webhook->enabled_events ) ? (array) $webhook->enabled_events : array();
+					$is_catch_all    = in_array( '*', $current_events, true );
+					$missing_events  = array_diff( $required_events, $current_events );
 
 					if ( ! $is_catch_all && ! empty( $missing_events ) ) {
 						$updated_events = array_values( array_unique( array_merge( $current_events, $required_events ) ) );
@@ -505,12 +505,6 @@ class StripeService {
 			}
 		}
 
-		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
-			$tax_rate   = (float) $response_data['tax_rate'];
-			$tax_amount = $amount * $tax_rate / 100;
-			$amount     = $amount + $tax_amount;
-		}
-
 		PaymentGatewayLogging::log_transaction_start(
 			'stripe',
 			sprintf( ' [Member ID #%s] Processing Stripe payment', $member_id ) . "\n" . wp_json_encode(
@@ -539,6 +533,12 @@ class StripeService {
 				$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
 				$amount          = $amount - $discount_amount;
 			}
+		}
+
+		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
+			$tax_rate   = (float) $response_data['tax_rate'];
+			$tax_amount = $amount * $tax_rate / 100;
+			$amount     = $amount + $tax_amount;
 		}
 
 		if ( 'JPY' === $currency ) {
@@ -592,41 +592,66 @@ class StripeService {
 		}
 
 		try {
-			PaymentGatewayLogging::log_api_request(
-				'stripe',
-				sprintf( ' [Member ID #%s] Creating Stripe customer', $member_id ) . "\n" . wp_json_encode(
-					array(
-						'endpoint'  => 'Customer::create',
-						'email'     => $user_email,
-						'member_id' => $member_id,
-					),
-					JSON_PRETTY_PRINT
-				),
-			);
+			$existing_customer_id = get_user_meta( $member_id, 'ur_payment_customer', true );
 
-			$customer = \Stripe\Customer::create(
-				array(
-					'email' => $user_email,
-					'name'  => $username,
-				)
-			);
+			if ( ! empty( $existing_customer_id ) ) {
+				// Reuse the existing Stripe customer (e.g. during upgrades/renewals).
+				try {
+					$customer = \Stripe\Customer::retrieve( $existing_customer_id );
+					if ( isset( $customer->deleted ) && $customer->deleted ) {
+						$existing_customer_id = '';
+					}
+				} catch ( \Stripe\Exception\ApiErrorException $e ) {
+					$existing_customer_id = '';
+				}
+			}
+
+			if ( empty( $existing_customer_id ) ) {
+				PaymentGatewayLogging::log_api_request(
+					'stripe',
+					sprintf( ' [Member ID #%s] Creating Stripe customer', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'endpoint'  => 'Customer::create',
+							'email'     => $user_email,
+							'member_id' => $member_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+				);
+
+				$customer = \Stripe\Customer::create(
+					array(
+						'email' => $user_email,
+						'name'  => $username,
+					)
+				);
+
+				update_user_meta( $member_id, 'ur_payment_customer', $customer->id );
+
+				PaymentGatewayLogging::log_api_response(
+					'stripe',
+					sprintf( ' [Member ID #%s] Stripe customer created successfully.', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'customer_id' => $customer->id,
+							'member_id'   => $member_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+				);
+			} else {
+				PaymentGatewayLogging::log_api_response(
+					'stripe',
+					sprintf( ' [Member ID #%s] Reusing existing Stripe customer.', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'customer_id' => $customer->id,
+							'member_id'   => $member_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+				);
+			}
 
 			$response['stripe_cus_id'] = $customer->id;
-
-			PaymentGatewayLogging::log_api_response(
-				'stripe',
-				sprintf( ' [Member ID #%s] Stripe customer created successfully.', $member_id ) . "\n" . wp_json_encode(
-					array(
-						'customer_id' => $customer->id,
-						'member_id'   => $member_id,
-					),
-					JSON_PRETTY_PRINT
-				),
-			);
-
-			if ( ! empty( $customer ) ) {
-				update_user_meta( $member_id, 'ur_payment_customer', $customer->id );
-			}
 			if ( 'paid' === $membership_type ) {
 				PaymentGatewayLogging::log_api_request(
 					'stripe',
@@ -1196,6 +1221,8 @@ class StripeService {
 			$order_detail     = $this->orders_repository->get_order_detail( $member_order['ID'] );
 			$order_repository = new OrdersRepository();
 			$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
+			$tax_data_meta    = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'tax_data' );
+			$tax_data         = ! empty( $tax_data_meta['meta_value'] ) ? json_decode( $tax_data_meta['meta_value'], true ) : array();
 
 			$currency = ! empty( $local_currency['meta_value'] )
 				? strtoupper( $local_currency['meta_value'] )
@@ -1283,6 +1310,14 @@ class StripeService {
 				}
 			}
 
+			// Apply tax rate to Stripe subscription so tax is reflected in Stripe invoices.
+			if ( ! empty( $tax_data['tax_rate'] ) ) {
+				$stripe_tax_rate_id = $this->get_or_create_stripe_tax_rate( floatval( $tax_data['tax_rate'] ) );
+				if ( ! empty( $stripe_tax_rate_id ) ) {
+					$subscription_details['default_tax_rates'] = array( $stripe_tax_rate_id );
+				}
+			}
+
 			if ( $is_upgrading ) {
 				PaymentGatewayLogging::log_general(
 					'stripe',
@@ -1330,7 +1365,14 @@ class StripeService {
 										$amount = $current_price + $discount_amount;
 									}
 								} elseif ( 'pro-rata' === $upgrade_type ) {
-									$amount = $new_price - $first_month_price;
+									$proration_result = $membership_upgrade_service->handle_subscription_to_paid_or_subscription_membership_upgrade(
+										$previous_membership_metas,
+										$membership_metas,
+										$previous_subscription,
+										false
+									);
+									$chargeable       = isset( $proration_result['chargeable_amount'] ) ? floatval( $proration_result['chargeable_amount'] ) : floatval( $new_price );
+									$amount           = max( 0, $new_price - $chargeable );
 								}
 
 								$currency = get_option( 'user_registration_payment_currency', 'USD' );
@@ -3102,8 +3144,8 @@ class StripeService {
 			)
 		);
 
-		$total_found    = 0;
-		$total_updated  = 0;
+		$total_found   = 0;
+		$total_updated = 0;
 
 		foreach ( $events->autoPagingIterator() as $event ) {
 			$payment_intent = $event->data->object;
@@ -3118,7 +3160,7 @@ class StripeService {
 				continue;
 			}
 
-			$total_found++;
+			++$total_found;
 
 			$order = $this->orders_repository->get_order_by_transaction_id( $payment_intent_id );
 			if ( empty( $order ) ) {
@@ -3161,7 +3203,7 @@ class StripeService {
 				}
 			}
 
-			$total_updated++;
+			++$total_updated;
 			$logger->info(
 				sprintf( '[Backfill][Stripe][OneTime] Completed order %d for PaymentIntent %s', $order['ID'], $payment_intent_id ),
 				array( 'source' => 'urm-missed-payment-backfill' )
@@ -3219,7 +3261,7 @@ class StripeService {
 				continue;
 			}
 
-			$total_found++;
+			++$total_found;
 
 			$order = $this->orders_repository->get_order_by_transaction_id( $payment_intent_id );
 			if ( empty( $order ) ) {
@@ -3239,7 +3281,7 @@ class StripeService {
 			}
 
 			$this->orders_repository->update( $order['ID'], array( 'status' => 'refunded' ) );
-			$total_updated++;
+			++$total_updated;
 			$logger->info(
 				sprintf( '[Backfill][Stripe][Refunds] Marked order %d as refunded (PaymentIntent %s)', $order['ID'], $payment_intent_id ),
 				array( 'source' => 'urm-missed-payment-backfill' )
@@ -3258,5 +3300,42 @@ class StripeService {
 			array( 'source' => 'urm-missed-payment-backfill' )
 		);
 		$logger->info( '[Backfill][Stripe][Refunds] ---------- ENDED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+	}
+
+	/**
+	 * Returns an existing Stripe Tax Rate ID for the given percentage, creating one if needed.
+	 * IDs are cached per mode (test/live) in WordPress options to avoid duplicate Tax Rates in Stripe.
+	 */
+	private function get_or_create_stripe_tax_rate( $percentage ) {
+		$mode       = self::get_stripe_settings()['mode'] ?? 'test';
+		$option_key = 'urm_stripe_tax_rate_' . $mode . '_' . str_replace( '.', '_', (string) $percentage );
+		$tax_rate_id = get_option( $option_key );
+
+		if ( ! empty( $tax_rate_id ) ) {
+			return $tax_rate_id;
+		}
+
+		try {
+			$tax_rate = \Stripe\TaxRate::create(
+				array(
+					'display_name' => 'Tax',
+					'percentage'   => $percentage,
+					'inclusive'    => false,
+				)
+			);
+			update_option( $option_key, $tax_rate->id );
+			return $tax_rate->id;
+		} catch ( \Exception $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Failed to create Stripe Tax Rate',
+				array(
+					'error_code'  => 'TAX_RATE_CREATE_FAILED',
+					'percentage'  => $percentage,
+					'error_message' => $e->getMessage(),
+				)
+			);
+			return '';
+		}
 	}
 }

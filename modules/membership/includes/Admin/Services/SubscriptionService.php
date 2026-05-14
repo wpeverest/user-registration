@@ -239,10 +239,12 @@ class SubscriptionService {
 		}
 		$period        = get_option( 'user_registration_membership_renewal_reminder_period', 'weeks' );
 		$value_in_days = convert_to_days( $days_before_value, $period );
-		$date          = new \DateTime( 'today' );
-		$check_date    = $date->modify( "+$value_in_days day" )->format( 'Y-m-d H:i:s' );
+
+		$date       = new \DateTime( 'today' );
+		$check_date = $date->modify( "+$value_in_days day" )->format( 'Y-m-d H:i:s' );
 
 		$subscriptions = $this->members_subscription_repository->get_about_to_expire_subscriptions( $check_date );
+
 		if ( empty( $subscriptions ) ) {
 			return;
 		}
@@ -344,18 +346,23 @@ class SubscriptionService {
 			$data['transaction_id'] = ! empty( $member_order['transaction_id'] ) ? $member_order['transaction_id'] : '';
 		}
 
-		if ( ! empty( $order['coupon'] ) && 'bank' !== $order['payment_method'] && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'off' === $order['trial_status'] ) ) ) {
-			$coupon_meta = ur_get_coupon_meta_by_code( $order['coupon'] );
+		if ( ! empty( $order['coupon'] ) && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'off' === $order['trial_status'] ) ) ) {
+			$coupon_meta       = ur_get_coupon_meta_by_code( $order['coupon'] );
+			$order_coupon_meta = $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'coupon_data' );
 
-			if ( ! empty( $coupon_meta ) ) {
-				$coupon_discount = isset( $coupon_meta->coupon_discount ) ? (float) $coupon_meta->coupon_discount : 0;
-				$discount_amount = ( isset( $coupon_meta->coupon_discount_type ) && $coupon_meta->coupon_discount_type === 'fixed' ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
-				$total           = $order['total_amount'] - $discount_amount;
-			} else {
-				$coupon_discount = isset( $order['coupon_discount'] ) ? (float) $order['coupon_discount'] : 0;
-				$discount_amount = ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] === 'fixed' ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
-				$total           = $order['total_amount'] - $discount_amount;
+			if ( empty( $order_coupon_meta['meta_value'] ) && 'bank' !== $order['payment_method'] ) {
+				// Legacy order: total_amount stored pre-discount — recompute discounted total for display.
+				if ( ! empty( $coupon_meta ) ) {
+					$coupon_discount = isset( $coupon_meta->coupon_discount ) ? (float) $coupon_meta->coupon_discount : 0;
+					$discount_amount = ( isset( $coupon_meta->coupon_discount_type ) && 'fixed' === $coupon_meta->coupon_discount_type ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
+					$total           = $order['total_amount'] - $discount_amount;
+				} else {
+					$coupon_discount = isset( $order['coupon_discount'] ) ? (float) $order['coupon_discount'] : 0;
+					$discount_amount = ( isset( $order['coupon_discount_type'] ) && 'fixed' === $order['coupon_discount_type'] ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
+					$total           = $order['total_amount'] - $discount_amount;
+				}
 			}
+			// New orders have coupon_data meta — total_amount already reflects the actual paid amount.
 		}
 		$billing_cycle = ( 'subscription' === $membership_metas['type'] ) ? ( ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) ) : 'N/A';
 		$trial_period  = ( 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] ) ? ( $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] . ( $membership_metas['trial_data']['value'] > 1 ? 's' : '' ) ) : 'N/A';
@@ -390,19 +397,19 @@ class SubscriptionService {
 			'username'                          => esc_html( ucwords( isset( $data['username'] ) ? $data['username'] : '' ) ),
 			'membership_plan_name'              => esc_html( ucwords( $membership_metas['post_title'] ) ),
 			'membership_plan_type'              => esc_html( $membership_type ),
-			'membership_plan_payment_method'    => esc_html( ucwords( isset( $data['order']['payment_method'] ) ? $data['order']['payment_method'] : $data['payment_method'] ) ),
-			'membership_plan_trial_status'      => esc_html( ucwords( $order['trial_status'] ) ),
+			'membership_plan_payment_method'    => esc_html( ucwords( isset( $data['order']['payment_method'] ) ? $data['order']['payment_method'] : ( $data['payment_method'] ?? '' ) ) ),
+			'membership_plan_trial_status'      => esc_html( ucwords( $order['trial_status'] ?? '' ) ),
 			'membership_plan_trial_start_date'  => esc_html( $trial_start_date ),
 			'membership_plan_trial_end_date'    => esc_html( $trial_end_date ),
 			'membership_plan_trial_period'      => esc_html( $trial_period ),
 			'membership_plan_next_billing_date' => esc_html( $next_billing_date ),
 			'membership_plan_expiry_date'       => esc_html( $expiry_date ),
 			'membership_plan_status'            => isset( $subscription['status'] ) ? esc_html( ucwords( $subscription['status'] ) ) : '',
-			'membership_plan_payment_date'      => esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ),
+			'membership_plan_payment_date'      => ! empty( $order['created_at'] ) ? esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ) : '',
 			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
 			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $membership_metas['amount'], 2 ) : number_format( $membership_metas['amount'], 2 ) . $symbol,
-			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ) ),
-			'membership_plan_trial_amount'      => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ) : number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ) . $symbol,
+			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ?? '' ) ),
+			'membership_plan_trial_amount'      => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) : number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) . $symbol,
 			'membership_plan_coupon_discount'   => (
 				isset( $order['coupon_discount'] )
 					? (
@@ -500,6 +507,13 @@ class SubscriptionService {
 			'membership_data' => $selected_membership_details,
 		);
 
+		if ( ! empty( $data['tax_rate'] ) ) {
+			$members_data['tax_data'] = array(
+				'tax_rate'               => floatval( $data['tax_rate'] ),
+				'tax_calculation_method' => ur_string_to_bool( $data['tax_calculation_method'] ?? '1' ),
+			);
+		}
+
 		if ( ! empty( $data['coupon'] ) ) {
 			$members_data['coupon'] = $data['coupon'];
 			$coupon_service         = new CouponService();
@@ -550,6 +564,19 @@ class SubscriptionService {
 		$ur_authorize_net_data = isset( $data['ur_authorize_net'] ) ? $data['ur_authorize_net'] : array();
 		$coupon                = isset( $data['coupon'] ) ? $data['coupon'] : '';
 
+		if ( 'free' !== $payment_method ) {
+			$membership_process = urm_get_membership_process( $user->ID );
+			if ( ! isset( $membership_process['upgrade'][ $data['current_membership_id'] ] ) ) {
+				$membership_process['upgrade'][ $data['current_membership_id'] ] = array(
+					'from'            => $data['current_membership_id'],
+					'to'              => $data['selected_membership_id'],
+					'subscription_id' => $data['current_subscription_id'],
+				);
+
+				update_user_meta( $user->ID, 'urm_membership_process', $membership_process );
+			}
+		}
+
 		$data = array(
 			'membership'             => $data['selected_membership_id'],
 			'subscription_id'        => $subscription['ID'],
@@ -562,6 +589,8 @@ class SubscriptionService {
 			'selected_membership_id' => $data['selected_membership_id'],
 			'current_membership_id'  => $data['current_membership_id'],
 			'order_id'               => $order['ID'],
+			'tax_rate'               => ! empty( $data['tax_rate'] ) ? $data['tax_rate'] : '',
+			'tax_calculation_method' => ! empty( $data['tax_calculation_method'] ) ? $data['tax_calculation_method'] : '',
 		);
 
 		if ( ! empty( $coupon ) ) {
@@ -576,6 +605,12 @@ class SubscriptionService {
 			$response['status'] = true;
 
 		} else {
+			$membership_process = urm_get_membership_process( $user->ID );
+			if ( ! empty( $membership_process['upgrade'][ $data['current_membership_id'] ] ) ) {
+				unset( $membership_process['upgrade'][ $data['current_membership_id'] ] );
+				update_user_meta( $user->ID, 'urm_membership_process', $membership_process );
+			}
+
 			$this->orders_repository->delete( $order['ID'] );
 		}
 
@@ -609,11 +644,15 @@ class SubscriptionService {
 
 		$result['status'] = true;
 
-		if ( isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'] && ! empty( $subscription['trial_end_date'] ) ) {
-			$is_trial = $subscription['trial_end_date'] > date( 'Y-m-d H:i:s' );
-		} else {
-			$is_trial = isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'];
-		}
+		// Does the NEW plan have a trial? Drives the order's trial_status field.
+		$new_plan_has_trial = isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'];
+
+		// Is the CURRENT subscription still actively in its trial period?
+		// Proration is only skipped when the current sub hasn't been billed yet.
+		$current_sub_in_trial = ! empty( $subscription['trial_end_date'] ) && $subscription['trial_end_date'] > date( 'Y-m-d H:i:s' );
+
+		// Passed to the upgrade handler: controls whether proration is bypassed.
+		$is_trial = $current_sub_in_trial;
 
 		switch ( $upgrade_type ) {
 			case 'free->free':
@@ -648,8 +687,8 @@ class SubscriptionService {
 		}
 
 		return array(
-			'trial_status'                 => $is_trial ? 'on' : 'off',
-			'chargeable_amount'            => ! empty( $result['chargeable_amount'] ) ? $result['chargeable_amount'] : 0,
+			'trial_status'                 => $new_plan_has_trial ? 'on' : 'off',
+			'chargeable_amount'            => isset( $result['chargeable_amount'] ) ? $result['chargeable_amount'] : 0,
 			'remaining_subscription_value' => ! empty( $result['remaining_subscription_value'] ) ? $result['remaining_subscription_value'] : 0,
 			'delayed_until'                => ! empty( $result['delayed_until'] ) ? $result['delayed_until'] : '',
 		);
@@ -1061,6 +1100,7 @@ class SubscriptionService {
 		$date          = new \DateTime( 'today' );
 		$check_date    = $date->modify( '-1 day' )->format( 'Y-m-d H:i:s' );
 		$subscriptions = $this->members_subscription_repository->get_expired_subscriptions( $check_date );
+
 		if ( empty( $subscriptions ) ) {
 			return;
 		}

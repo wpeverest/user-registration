@@ -29,7 +29,7 @@
 	use WPEverest\URMembership\Local_Currency\Admin\Api;
 
 	$is_coupon_addon_activated        = ur_check_module_activation( 'coupon' );
-	$is_tax_calculation_enabled       = ur_check_module_activation( 'taxes' );
+	$is_tax_calculation_enabled       = ur_check_module_activation( 'taxes' ) && get_option( 'user_registration_tax_calculation_during_checkout', false );
 	$is_team_addon_activated          = UR_PRO_ACTIVE && ur_check_module_activation( 'team' );
 	$membership_ids_link_with_coupons = array();
 	if ( $is_coupon_addon_activated && function_exists( 'ur_get_membership_ids_link_with_coupons' ) ) :
@@ -503,7 +503,32 @@
 	<!--	total container-->
 	<div id="urm-total_container"
 		class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
+		<div class="urm-membership-proration-discount-value urm-d-none">
+			<label class="ur_membership_input_label ur-label"
+			for="ur-membership-proration-discount"><?php echo esc_html__( 'Proration Discount', 'user-registration' ); ?></label>
+			<span class="ur_membership_input_class"
+			id="ur-membership-proration-discount"
+			data-key-name="<?php echo esc_html__( 'Proration Discount', 'user-registration' ); ?>"
+			disabled
+			>
+			<?php echo ceil( 0 ); ?>
+		</span>
+		</div>
+		<?php if ( $is_coupon_addon_activated ) : ?>
+			<div class="urm-membership-coupons-value">
+				<label class="ur_membership_input_label ur-label"
+				for="ur-membership-coupons"><?php echo esc_html__( 'Coupons', 'user-registration' ); ?></label>
+				<span class="ur_membership_input_class"
+				id="ur-membership-coupons"
+				data-key-name="<?php echo esc_html__( 'Coupons', 'user-registration' ); ?>"
+				disabled
+				>
+				<?php echo ceil( 0 ); ?>
+			</span>
+		</div>
+		<?php endif; ?>
 		<?php if ( $is_coupon_addon_activated || $is_tax_calculation_enabled ) : ?>
+			<hr class="ur_membership_divider">
 			<div class="urm-membership-sub-total-value">
 				<label class="ur_membership_input_label ur-label"
 				for="ur-membership-subtotal"><?php echo esc_html__( 'Sub Total', 'user-registration' ); ?></label>
@@ -529,18 +554,8 @@
 			</span>
 		</div>
 		<?php endif; ?>
-		<?php if ( $is_coupon_addon_activated ) : ?>
-			<div class="urm-membership-coupons-value">
-				<label class="ur_membership_input_label ur-label"
-				for="ur-membership-coupons"><?php echo esc_html__( 'Coupons', 'user-registration' ); ?></label>
-				<span class="ur_membership_input_class"
-				id="ur-membership-coupons"
-				data-key-name="<?php echo esc_html__( 'Coupons', 'user-registration' ); ?>"
-				disabled
-				>
-				<?php echo ceil( 0 ); ?>
-			</span>
-		</div>
+		<?php if ( $is_coupon_addon_activated || $is_tax_calculation_enabled ) : ?>
+			<hr class="ur_membership_divider">
 		<?php endif; ?>
 		<div class="urm-membership-total-value">
 			<label class="ur_membership_input_label ur-label"
