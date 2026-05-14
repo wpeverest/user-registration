@@ -1253,16 +1253,32 @@ class SubscriptionService {
 	 */
 	public function membership_missed_payment_check() {
 
-		$last_synced = (int) get_option( 'urm_last_missed_payment_events_check_sync_time', 0 );
-		$now         = time();
-
-		if ( $last_synced <= 0 ) {
-			$last_synced = $now - 3 * MONTH_IN_SECONDS; // fallback to 3 months back if no previous sync time found, to avoid missing old events.
+		// Prevent concurrent runs: if another process is still executing, bail out.
+		if ( get_transient( 'urm_backfill_running' ) ) {
+			ur_get_logger()->info(
+				'[Backfill] Skipped — another backfill process is already running.',
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+			return;
 		}
 
-		$this->urm_backfill_missed_payment_events( $last_synced, $now );
+		// Lock for up to 10 minutes — long enough to cover all API calls.
+		set_transient( 'urm_backfill_running', true, 10 * MINUTE_IN_SECONDS );
 
-		update_option( 'urm_last_missed_payment_events_check_sync_time', $now );
+		try {
+			$last_synced = (int) get_option( 'urm_last_missed_payment_events_check_sync_time', 0 );
+			$now         = time();
+
+			if ( $last_synced <= 0 ) {
+				$last_synced = $now - 3 * MONTH_IN_SECONDS; // fallback to 3 months back if no previous sync time found, to avoid missing old events.
+			}
+
+			$this->urm_backfill_missed_payment_events( $last_synced, $now );
+
+			update_option( 'urm_last_missed_payment_events_check_sync_time', $now );
+		} finally {
+			delete_transient( 'urm_backfill_running' );
+		}
 	}
 
 	/**
@@ -1285,10 +1301,20 @@ class SubscriptionService {
 			foreach ( $payment_gateways as $gateway_key => $gateway_details ) {
 				switch ( $gateway_key ) {
 					case 'stripe':
+						$stripe_settings = StripeService::get_stripe_settings();
+						if ( empty( $stripe_settings['secret_key'] ) ) {
+							ur_get_logger()->info(
+								'[Backfill][Stripe] Skipped — Stripe secret key not configured.',
+								array( 'source' => 'urm-missed-payment-backfill' )
+							);
+							break;
+						}
 						try {
 							$stripe_service = new StripeService();
 							$stripe_service->run_missed_subscription_backfill( $last_synced );
 							$stripe_service->run_missed_payment_backfill( $last_synced );
+							$stripe_service->run_missed_onetime_payment_backfill( $last_synced );
+							$stripe_service->run_missed_refund_backfill( $last_synced );
 						} catch ( \Exception $e ) {
 							ur_get_logger()->error(
 								sprintf(
@@ -1297,7 +1323,24 @@ class SubscriptionService {
 								),
 								array( 'source' => 'urm-missed-payment-backfill' )
 							);
-							return;
+							break;
+						}
+						break;
+					case 'paypal':
+						try {
+							$paypal_service = new NewPaypalService();
+							$paypal_service->run_missed_subscription_backfill( $last_synced, $now );
+							$paypal_service->run_missed_payment_backfill( $last_synced, $now );
+							$paypal_service->run_missed_onetime_payment_backfill( $last_synced, $now );
+							$paypal_service->run_missed_refund_backfill( $last_synced, $now );
+						} catch ( \Exception $e ) {
+							ur_get_logger()->error(
+								sprintf(
+									__( 'Error fetching missed events for PayPal: %s', 'user-registration' ),
+									$e->getMessage()
+								),
+								array( 'source' => 'urm-missed-payment-backfill' )
+							);
 						}
 						break;
 					default:
