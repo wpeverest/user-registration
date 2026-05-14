@@ -99,6 +99,10 @@ if ( ! class_exists( 'UR_FORMBRICKS' ) ) {
 		 * @return void
 		 */
 		public function supported_screen_ids() {
+			if ( ! function_exists( 'ur_get_screen_ids' ) ) {
+				include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
+			}
+
 			$all_screen_id = ur_get_screen_ids();
 
 			return array_diff( $all_screen_id, array( 'profile', 'user-edit' ) );
