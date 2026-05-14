@@ -419,8 +419,6 @@ class URCR_Content_Access_Rules {
 		$saved_post = wp_insert_post( $content_rule );
 
 		if ( $saved_post ) {
-			do_action( 'urcr_content_access_rule_toggled', $saved_post, $enabled );
-
 			return new \WP_REST_Response(
 				array(
 					'success' => true,
@@ -632,7 +630,6 @@ class URCR_Content_Access_Rules {
 
 		if ( $new_rule_id ) {
 			update_post_meta( $new_rule_id, 'urcr_rule_type', 'custom' );
-			do_action( 'urcr_content_access_rule_duplicated', $new_rule_id );
 
 			return new \WP_REST_Response(
 				array(
@@ -713,9 +710,6 @@ class URCR_Content_Access_Rules {
 		}
 
 		if ( $result ) {
-			// Pass $rule_post (captured before deletion) so cache handlers can still read its target_contents.
-			do_action( 'urcr_content_access_rule_deleted', $rule_id, $rule_post );
-
 			return new \WP_REST_Response(
 				array(
 					'success' => true,
