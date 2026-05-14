@@ -204,7 +204,7 @@ class PaypalService {
 			$item_name            .= ' - ' . $currency_symbol . $final_amount . ' for ' . $subscription_value . ' ' . $subscription_duration;
 		}
 
-		//override with team subscription data
+		// override with team subscription data
 		if ( ! empty( $data['team_id'] ) && ! empty( $data['team_data'] ) && 'subscription' === $membership_type ) {
 			$subscription_value    = $data['team_data']['team_duration_value'];
 			$subscription_duration = $data['team_data']['team_duration_period'];
@@ -936,7 +936,7 @@ class PaypalService {
 		} elseif ( 'subscr_eot' == $txn_type ) {
 			// Verify further if eot is ever received for time specified subscriptions
 		}
-		if ( 'completed' === $payment_status && empty( $order_id ) ) {
+		if ( 'completed' === $payment_status && ! empty( $order_id ) ) {
 			PaymentGatewayLogging::log_transaction_success(
 				'paypal',
 				'Payment completed successfully',
@@ -980,7 +980,7 @@ class PaypalService {
 			$subscription_service->update_subscription_data_for_renewal( $subscription, $membership_metas );
 		}
 
-		//only send email if IPN is received for failed attempt.
+		// only send email if IPN is received for failed attempt.
 		if ( 1 === intval( get_user_meta( $member_id, 'urm_is_payment_retrying', true ) ) ) {
 			$email_service = new EmailService();
 			$email_data    = array(
@@ -1420,7 +1420,7 @@ class PaypalService {
 			$paypal_status = $subscription_data['status'] ?? '';
 
 			if ( in_array( $paypal_status, array( 'SUSPENDED', 'CANCELLED' ) ) ) {
-				//Only if the paypal status is suspended or cancelled.
+				// Only if the paypal status is suspended or cancelled.
 				PaymentGatewayLogging::log_general(
 					'paypal',
 					'Attempting to reactivate suspended/cancelled PayPal subscription',
