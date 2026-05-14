@@ -25,17 +25,9 @@ class UR_Cache_Helper {
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_wprocket_cache' ) );
 		add_action( 'template_redirect', array( __CLASS__, 'maybe_disable_cache_for_dynamic_pages' ), 0 );
 
-		// Flush full-page cache whenever a content restriction rule is created, updated, toggled, duplicated, or deleted.
-		add_action( 'urcr_post_create_content_access_rule', array( __CLASS__, 'flush_all_page_cache' ) );
-		add_action( 'urcr_post_save_content_access_rule', array( __CLASS__, 'flush_all_page_cache' ) );
-		add_action( 'urcr_content_access_rule_toggled', array( __CLASS__, 'flush_all_page_cache' ) );
-		add_action( 'urcr_content_access_rule_duplicated', array( __CLASS__, 'flush_all_page_cache' ) );
-		add_action( 'urcr_content_access_rule_deleted', array( __CLASS__, 'flush_all_page_cache' ) );
-
-		// Also flush when content restriction settings options change.
-		add_action( 'update_option_user_registration_content_restriction_enable', array( __CLASS__, 'flush_all_page_cache' ) );
-		add_action( 'update_option_user_registration_content_restriction_whole_site_access', array( __CLASS__, 'flush_all_page_cache' ) );
-		add_action( 'update_option_user_registration_content_restriction_message', array( __CLASS__, 'flush_all_page_cache' ) );
+		// Flush page cache for a post at the moment its content restriction is applied during frontend rendering.
+		// Mirrors the same pattern used for the registration form (user_registration_before_registration_form).
+		add_action( 'urcr_pre_content_restriction_applied', array( __CLASS__, 'flush_post_cache_on_restriction' ), 10, 2 );
 	}
 
 	/**
@@ -69,45 +61,33 @@ class UR_Cache_Helper {
 	}
 
 	/**
-	 * Flush the full-page HTML cache across all supported caching plugins.
+	 * Flush page cache for the post whose content restriction is being applied during frontend rendering.
+	 * Fires on urcr_pre_content_restriction_applied — mirrors flush_w3tc_cache/flush_wpsuper_cache/flush_wprocket_cache
+	 * which fire on user_registration_before_registration_form.
 	 *
-	 * Called whenever a content restriction rule or setting is saved so that
-	 * cached pages immediately reflect the new restriction state.
+	 * Uses direct function calls only (no do_action) — firing action-based cache hooks mid-render
+	 * can trigger handlers that manipulate output buffers and corrupt the page response.
+	 *
+	 * @param mixed   $restriction_rule The matched access rule data.
+	 * @param WP_Post $post             The post being restricted.
 	 */
-	public static function flush_all_page_cache() {
-		// W3 Total Cache.
-		if ( function_exists( 'w3tc_pgcache_flush' ) ) {
-			w3tc_pgcache_flush();
+	public static function flush_post_cache_on_restriction( $restriction_rule, $post ) {
+		$post_id = is_object( $post ) && isset( $post->ID ) ? $post->ID : absint( $post );
+		if ( ! $post_id ) {
+			return;
 		}
 
-		// WP Super Cache.
-		if ( function_exists( 'wp_cache_clear_cache' ) ) {
-			wp_cache_clear_cache();
+		if ( function_exists( 'w3tc_pgcache_flush_post' ) ) {
+			w3tc_pgcache_flush_post( $post_id );
 		}
 
-		// WP Rocket.
-		if ( function_exists( 'rocket_clean_domain' ) ) {
-			rocket_clean_domain();
+		if ( function_exists( 'wpsc_delete_post_cache' ) ) {
+			wpsc_delete_post_cache( $post_id );
 		}
 
-		// LiteSpeed Cache.
-		do_action( 'litespeed_purge_all' );
-
-		// WP Fastest Cache.
-		if ( class_exists( 'WpFastestCache' ) ) {
-			$wpfc = new WpFastestCache();
-			if ( method_exists( $wpfc, 'deleteCache' ) ) {
-				$wpfc->deleteCache( true );
-			}
+		if ( function_exists( 'rocket_clean_post' ) ) {
+			rocket_clean_post( $post_id );
 		}
-
-		// Breeze (Cloudways).
-		if ( class_exists( 'Breeze_Admin' ) && method_exists( 'Breeze_Admin', 'breeze_clear_all_cache' ) ) {
-			Breeze_Admin::breeze_clear_all_cache();
-		}
-
-		// Allow other plugins/themes to hook in.
-		do_action( 'ur_flush_all_page_cache' );
 	}
 
 	/**

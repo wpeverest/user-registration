@@ -713,7 +713,8 @@ class URCR_Content_Access_Rules {
 		}
 
 		if ( $result ) {
-			do_action( 'urcr_content_access_rule_deleted', $rule_id );
+			// Pass $rule_post (captured before deletion) so cache handlers can still read its target_contents.
+			do_action( 'urcr_content_access_rule_deleted', $rule_id, $rule_post );
 
 			return new \WP_REST_Response(
 				array(

@@ -383,7 +383,6 @@ class AJAX {
 			if ( $rule_data && function_exists( 'urcr_create_or_update_membership_rule' ) ) {
 				$_POST['urcr_membership_access_rule_data'] = wp_unslash( json_encode( $rule_data ) );
 				urcr_create_or_update_membership_rule( $new_membership_ID, $rule_data );
-				UR_Cache_Helper::flush_all_page_cache();
 			}
 
 			$response = array(
@@ -491,7 +490,6 @@ class AJAX {
 			// Create or update content access rule if rule data provided
 			if ( $rule_data && function_exists( 'urcr_create_or_update_membership_rule' ) ) {
 				urcr_create_or_update_membership_rule( $updated_ID, $rule_data );
-				UR_Cache_Helper::flush_all_page_cache();
 			}
 
 			$response = array(
