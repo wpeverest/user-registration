@@ -239,10 +239,12 @@ class SubscriptionService {
 		}
 		$period        = get_option( 'user_registration_membership_renewal_reminder_period', 'weeks' );
 		$value_in_days = convert_to_days( $days_before_value, $period );
-		$date          = new \DateTime( 'today' );
-		$check_date    = $date->modify( "+$value_in_days day" )->format( 'Y-m-d H:i:s' );
+
+		$date       = new \DateTime( 'today' );
+		$check_date = $date->modify( "+$value_in_days day" )->format( 'Y-m-d H:i:s' );
 
 		$subscriptions = $this->members_subscription_repository->get_about_to_expire_subscriptions( $check_date );
+
 		if ( empty( $subscriptions ) ) {
 			return;
 		}
@@ -395,19 +397,19 @@ class SubscriptionService {
 			'username'                          => esc_html( ucwords( isset( $data['username'] ) ? $data['username'] : '' ) ),
 			'membership_plan_name'              => esc_html( ucwords( $membership_metas['post_title'] ) ),
 			'membership_plan_type'              => esc_html( $membership_type ),
-			'membership_plan_payment_method'    => esc_html( ucwords( isset( $data['order']['payment_method'] ) ? $data['order']['payment_method'] : $data['payment_method'] ) ),
-			'membership_plan_trial_status'      => esc_html( ucwords( $order['trial_status'] ) ),
+			'membership_plan_payment_method'    => esc_html( ucwords( isset( $data['order']['payment_method'] ) ? $data['order']['payment_method'] : ( $data['payment_method'] ?? '' ) ) ),
+			'membership_plan_trial_status'      => esc_html( ucwords( $order['trial_status'] ?? '' ) ),
 			'membership_plan_trial_start_date'  => esc_html( $trial_start_date ),
 			'membership_plan_trial_end_date'    => esc_html( $trial_end_date ),
 			'membership_plan_trial_period'      => esc_html( $trial_period ),
 			'membership_plan_next_billing_date' => esc_html( $next_billing_date ),
 			'membership_plan_expiry_date'       => esc_html( $expiry_date ),
 			'membership_plan_status'            => isset( $subscription['status'] ) ? esc_html( ucwords( $subscription['status'] ) ) : '',
-			'membership_plan_payment_date'      => esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ),
+			'membership_plan_payment_date'      => ! empty( $order['created_at'] ) ? esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ) : '',
 			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
 			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $membership_metas['amount'], 2 ) : number_format( $membership_metas['amount'], 2 ) . $symbol,
-			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ) ),
-			'membership_plan_trial_amount'      => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ) : number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ) . $symbol,
+			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ?? '' ) ),
+			'membership_plan_trial_amount'      => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) : number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) . $symbol,
 			'membership_plan_coupon_discount'   => (
 				isset( $order['coupon_discount'] )
 					? (
@@ -1098,6 +1100,7 @@ class SubscriptionService {
 		$date          = new \DateTime( 'today' );
 		$check_date    = $date->modify( '-1 day' )->format( 'Y-m-d H:i:s' );
 		$subscriptions = $this->members_subscription_repository->get_expired_subscriptions( $check_date );
+
 		if ( empty( $subscriptions ) ) {
 			return;
 		}
