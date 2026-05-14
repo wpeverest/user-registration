@@ -200,7 +200,7 @@ importers:
         specifier: ^4.0.8
         version: 4.0.8
       postcss:
-        specifier: 8.5.10
+        specifier: ^8.5.10
         version: 8.5.10
       prettier:
         specifier: ^3.7.4
@@ -4084,6 +4084,7 @@ packages:
   basic-ftp@5.3.0:
     resolution: {integrity: sha512-5K9eNNn7ywHPsYnFwjKgYH8Hf8B5emh7JKcPaVjjrMJFQQwGpwowEnZNEtHs7DfR7hCZsmaK3VA4HUK0YarT+w==}
     engines: {node: '>=10.0.0'}
+    deprecated: Security vulnerability fixed in 5.2.1, please upgrade
 
   batch@0.6.1:
     resolution: {integrity: sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==}

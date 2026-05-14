@@ -2835,7 +2835,7 @@
 									.val()
 							); // Add username in disallowedList.
 
-							var strength = wp.passwordStrength.meter(
+							var strength = wp.passwordStrength?.meter(
 								$this.val(),
 								disallowedListArray
 							);

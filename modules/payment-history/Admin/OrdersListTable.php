@@ -424,10 +424,44 @@ class OrdersListTable extends \UR_List_Table {
 		} elseif ( ! empty( $item['currency'] ) ) {
 			$currency = $item['currency'];
 		}
-		$symbol           = ur_get_currency_symbol( $currency );
-		$trial_status     = $item['trial_status'] ?? 'off';
-		$display_amount   = 'on' === $trial_status ? 0 : $total_amount;
-		$formatted_amount = number_format( $display_amount, $decimals, $decimal_separator, $thousands_separator );
+		$symbol       = ur_get_currency_symbol( $currency );
+		$trial_status = $item['trial_status'] ?? 'off';
+
+		if ( 'on' === $trial_status ) {
+			$formatted_amount = number_format( 0, $decimals, $decimal_separator, $thousands_separator );
+			return 'right' === $symbol_pos ? $formatted_amount . ' ' . $symbol : $symbol . $formatted_amount;
+		}
+
+		$coupon_discount = 0;
+		if ( isset( $item['subscription_id'] ) ) {
+			$subscription = ( new MembersSubscriptionRepository() )->get_subscription_by_subscription_id( absint( $item['subscription_id'] ) );
+			if ( ! empty( $subscription ) && ! empty( $subscription['coupon'] ) ) {
+				$coupon = ur_get_coupon_details( $subscription['coupon'] );
+				if ( ! empty( $coupon ) ) {
+					$discount_value = null;
+					$discount_type  = 'fixed';
+
+					if ( isset( $coupon['coupon_discount'] ) && isset( $coupon['coupon_discount_type'] ) ) {
+						$discount_value = (float) $coupon['coupon_discount'];
+						$discount_type  = $coupon['coupon_discount_type'];
+					} elseif ( isset( $coupon['discount'] ) ) {
+						$discount_value = (float) $coupon['discount'];
+						$discount_type  = isset( $coupon['discount_type'] ) ? $coupon['discount_type'] : ( isset( $coupon['coupon_discount_type'] ) ? $coupon['coupon_discount_type'] : 'fixed' );
+					}
+
+					if ( null !== $discount_value && $total_amount ) {
+						if ( 'percent' === $discount_type ) {
+							$coupon_discount = $total_amount * ( $discount_value / 100 );
+						} else {
+							$coupon_discount = $discount_value;
+						}
+					}
+				}
+			}
+		}
+
+		$total_amount     = max( $total_amount - $coupon_discount, 0 );
+		$formatted_amount = number_format( $total_amount, $decimals, $decimal_separator, $thousands_separator );
 		return 'right' === $symbol_pos ? $formatted_amount . ' ' . $symbol : $symbol . $formatted_amount;
 	}
 

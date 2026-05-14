@@ -321,4 +321,26 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 
 		return $result ? $result : false;
 	}
+
+	/**
+	 * Get all subscriptions paid via PayPal REST that have a PayPal subscription ID stored.
+	 *
+	 * @return array
+	 */
+	public function get_paypal_subscriptions_for_backfill() {
+		$result = $this->wpdb()->get_results(
+			"SELECT DISTINCT wums.*
+			 FROM {$this->table} wums
+			 LEFT JOIN {$this->orders_table} wo ON wums.ID = wo.subscription_id
+			 WHERE (
+			     wo.payment_method = 'paypal'
+			     OR wums.subscription_id LIKE 'I-%'
+			 )
+			 AND wums.subscription_id != ''
+			 AND wums.subscription_id IS NOT NULL",
+			ARRAY_A
+		);
+
+		return $result ? $result : array();
+	}
 }
