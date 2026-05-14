@@ -6305,11 +6305,17 @@ if ( ! function_exists( 'ur_parse_and_update_hidden_field' ) ) {
 		);
 
 		foreach ( $form_data as $key => $value ) {
-			if ( 'user_email' === $value->field_name ) {
-				$values['email'] = ur_format_field_values( $value->field_name, $value->value );
+			if ( ! isset( $value->field_name ) ) {
+				continue;
 			}
 
-			$values[ $value->field_name ] = ur_format_field_values( $value->field_name, $value->value );
+			$field_value = $value->value ?? '';
+
+			if ( 'user_email' === $value->field_name ) {
+				$values['email'] = ur_format_field_values( $value->field_name, $field_value );
+			}
+
+			$values[ $value->field_name ] = ur_format_field_values( $value->field_name, $field_value );
 		}
 
 		foreach ( $form_data as $key => $value ) {
