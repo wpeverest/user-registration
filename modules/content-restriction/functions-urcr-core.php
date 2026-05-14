@@ -719,17 +719,6 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 				}
 			}
 
-			if ( $is_whole_site_restriction ) {
-				add_filter(
-					'body_class',
-					function ( $classes ) {
-						$classes[] = 'urcr-hide-page-title';
-
-						return $classes;
-					}
-				);
-			}
-
 			ob_start();
 			urcr_get_template(
 				'base-restriction-template.php',
@@ -750,7 +739,10 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 			add_filter( 'get_next_post', '__return_null', PHP_INT_MAX );
 			add_filter( 'get_previous_post', '__return_null', PHP_INT_MAX );
 			
-			if ( class_exists( 'Elementor\Plugin' ) ) {
+			$is_elementor_page = class_exists( 'Elementor\Plugin' )
+				&& 'builder' === get_post_meta( $target_post->ID, '_elementor_edit_mode', true );
+
+			if ( $is_elementor_page ) {
 				add_filter(
 					'elementor/frontend/the_content',
 					function () use ( $styled_content ) {

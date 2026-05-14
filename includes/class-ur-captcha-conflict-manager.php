@@ -29,35 +29,41 @@ class UR_Captcha_Conflict_Manager {
 	 */
 	private function init_hooks() {
 		if (
-			! get_option('urm_enable_no_conflict', true) ||
+			! get_option( 'urm_enable_no_conflict', false ) ||
 			! apply_filters( 'urm_apply_no_conflict', true )
 		) {
 			return;
 		}
 
-
 		// Add multiple hook points to catch scripts at different stages
-		add_action( 'wp_loaded', function () {
-			add_action( 'wp_footer', [ $this, 'enforce_no_conflict' ], 20 );
-			add_action( 'wp_enqueue_scripts', [ $this, 'enforce_no_conflict' ], 10000 );
-			add_action( 'wp_print_scripts', [ $this, 'enforce_no_conflict' ], PHP_INT_MAX );
-			add_action( 'wp_head', [ $this, 'enforce_no_conflict' ], PHP_INT_MAX );
-			add_action( 'wpforms_wp_footer', [ $this, 'enforce_no_conflict' ], 999 );
-			add_action( 'shutdown', [ $this, 'enforce_no_conflict' ], 1 );
-		}, PHP_INT_MAX );
+		add_action(
+			'wp_loaded',
+			function () {
+				add_action( 'wp_footer', array( $this, 'enforce_no_conflict' ), 20 );
+				add_action( 'wp_enqueue_scripts', array( $this, 'enforce_no_conflict' ), 10000 );
+				add_action( 'wp_print_scripts', array( $this, 'enforce_no_conflict' ), PHP_INT_MAX );
+				add_action( 'wp_head', array( $this, 'enforce_no_conflict' ), PHP_INT_MAX );
+				add_action( 'wpforms_wp_footer', array( $this, 'enforce_no_conflict' ), 999 );
+				add_action( 'shutdown', array( $this, 'enforce_no_conflict' ), 1 );
+			},
+			PHP_INT_MAX
+		);
 
 		// Check if current page contains User Registration content
-		add_action( 'wp', function() {
-			if ( $this->page_contains_user_registration_content() ) {
-				// Initialize plugin-specific restrictions only if UR content is present
-				$this->init_wpforms_restrictions();
-				$this->init_contact_form_7_restrictions();
-				$this->init_contact_form_7_simple_recaptcha_restrictions();
-				$this->init_gravity_forms_restrictions();
-				$this->init_woocommerce_restrictions();
-				$this->init_elementor_restrictions();
+		add_action(
+			'wp',
+			function () {
+				if ( $this->page_contains_user_registration_content() ) {
+					// Initialize plugin-specific restrictions only if UR content is present
+					$this->init_wpforms_restrictions();
+					$this->init_contact_form_7_restrictions();
+					$this->init_contact_form_7_simple_recaptcha_restrictions();
+					$this->init_gravity_forms_restrictions();
+					$this->init_woocommerce_restrictions();
+					$this->init_elementor_restrictions();
+				}
 			}
-		});
+		);
 	}
 
 	/**
@@ -80,14 +86,18 @@ class UR_Captcha_Conflict_Manager {
 	 */
 	private function init_contact_form_7_simple_recaptcha_restrictions() {
 		// Prevent Contact Form 7 Simple reCAPTCHA from enqueuing scripts
-		add_action( 'wp_footer', function() {
-			// Remove the hCaptcha script enqueue
-			remove_action( 'wp_footer', 'enqueue_cf7sr_hcaptcha_script' );
-			// Remove the reCAPTCHA script enqueue
-			remove_action( 'wp_footer', 'enqueue_cf7sr_recaptcha_script' );
-			// Remove the Turnstile script enqueue
-			remove_action( 'wp_footer', 'enqueue_cf7sr_turnstile_script' );
-		}, 1 );
+		add_action(
+			'wp_footer',
+			function () {
+				// Remove the hCaptcha script enqueue
+				remove_action( 'wp_footer', 'enqueue_cf7sr_hcaptcha_script' );
+				// Remove the reCAPTCHA script enqueue
+				remove_action( 'wp_footer', 'enqueue_cf7sr_recaptcha_script' );
+				// Remove the Turnstile script enqueue
+				remove_action( 'wp_footer', 'enqueue_cf7sr_turnstile_script' );
+			},
+			1
+		);
 	}
 
 	/**
@@ -117,7 +127,7 @@ class UR_Captcha_Conflict_Manager {
 	public function enforce_no_conflict() {
 
 		if (
-			! get_option('urm_enable_no_conflict', true) ||
+			! get_option( 'urm_enable_no_conflict', false ) ||
 			! apply_filters( 'urm_apply_no_conflict', true )
 		) {
 			return;
@@ -137,10 +147,10 @@ class UR_Captcha_Conflict_Manager {
 	 * Remove WPForms captcha scripts.
 	 */
 	private function remove_wpforms_scripts() {
-		$wpforms_handles = [
+		$wpforms_handles = array(
 			'wpforms-recaptcha',
-			'wpforms-captcha'
-		];
+			'wpforms-captcha',
+		);
 
 		foreach ( $wpforms_handles as $handle ) {
 			if ( wp_script_is( $handle, 'enqueued' ) ) {
@@ -158,10 +168,10 @@ class UR_Captcha_Conflict_Manager {
 	 * Remove Contact Form 7 captcha scripts.
 	 */
 	private function remove_contact_form_7_scripts() {
-		$cf7_handles = [
+		$cf7_handles = array(
 			'contact-form-7-recaptcha',
-			'cf7-recaptcha'
-		];
+			'cf7-recaptcha',
+		);
 
 		foreach ( $cf7_handles as $handle ) {
 			if ( wp_script_is( $handle, 'enqueued' ) ) {
@@ -179,11 +189,11 @@ class UR_Captcha_Conflict_Manager {
 	 * Remove Contact Form 7 Simple reCAPTCHA scripts.
 	 */
 	private function remove_contact_form_7_simple_recaptcha_scripts() {
-		$cf7sr_handles = [
+		$cf7sr_handles = array(
 			'cf7sr-hcaptcha',    // [cf7sr-hcaptcha] shortcode
 			'cf7sr-recaptcha',   // [cf7sr-recaptcha] shortcode
-			'cf7sr-turnstile'    // [cf7sr-turnstile] shortcode
-		];
+			'cf7sr-turnstile',    // [cf7sr-turnstile] shortcode
+		);
 
 		foreach ( $cf7sr_handles as $handle ) {
 			if ( wp_script_is( $handle, 'enqueued' ) ) {
@@ -201,10 +211,10 @@ class UR_Captcha_Conflict_Manager {
 	 * Remove Gravity Forms captcha scripts.
 	 */
 	private function remove_gravity_forms_scripts() {
-		$gf_handles = [
+		$gf_handles = array(
 			'gravity-forms-recaptcha',
-			'gf-recaptcha'
-		];
+			'gf-recaptcha',
+		);
 
 		foreach ( $gf_handles as $handle ) {
 			if ( wp_script_is( $handle, 'enqueued' ) ) {
@@ -222,10 +232,10 @@ class UR_Captcha_Conflict_Manager {
 	 * Remove WooCommerce captcha scripts.
 	 */
 	private function remove_woocommerce_scripts() {
-		$wc_handles = [
+		$wc_handles = array(
 			'woocommerce-recaptcha',
-			'wc-recaptcha'
-		];
+			'wc-recaptcha',
+		);
 
 		foreach ( $wc_handles as $handle ) {
 			if ( wp_script_is( $handle, 'enqueued' ) ) {
@@ -243,10 +253,10 @@ class UR_Captcha_Conflict_Manager {
 	 * Remove Elementor captcha scripts.
 	 */
 	private function remove_elementor_scripts() {
-		$elementor_handles = [
+		$elementor_handles = array(
 			'elementor-recaptcha',
-			'elementor-captcha'
-		];
+			'elementor-captcha',
+		);
 
 		foreach ( $elementor_handles as $handle ) {
 			if ( wp_script_is( $handle, 'enqueued' ) ) {
@@ -264,15 +274,15 @@ class UR_Captcha_Conflict_Manager {
 	 * Remove generic captcha scripts by URL pattern.
 	 */
 	private function remove_generic_captcha_scripts() {
-		$scripts = wp_scripts();
-		$captcha_urls = [
+		$scripts      = wp_scripts();
+		$captcha_urls = array(
 			'hcaptcha.com',
 			'google.com/recaptcha',
 			'gstatic.com/recaptcha',
 			'challenges.cloudflare.com/turnstile',
 			'api.recaptcha.net',
-			'js.hcaptcha.com'
-		];
+			'js.hcaptcha.com',
+		);
 
 		foreach ( $scripts->queue as $handle ) {
 			// Skip User Registration scripts
@@ -297,7 +307,7 @@ class UR_Captcha_Conflict_Manager {
 			foreach ( $captcha_urls as $url ) {
 				if ( false !== strpos( $script_src, $url ) ) {
 					ur_get_logger()->notice(
-						sprintf( __( 'Removing generic captcha script: %s (src: %s)', 'user-registration' ), $handle, $script_src ),
+						sprintf( __( 'Removing generic captcha script: %1$s (src: %2$s)', 'user-registration' ), $handle, $script_src ),
 						array( 'source' => 'ur-captcha-logs' )
 					);
 					wp_dequeue_script( $handle );
@@ -324,13 +334,13 @@ class UR_Captcha_Conflict_Manager {
 		$content = $post->post_content;
 
 		// Check for User Registration shortcodes
-		$ur_shortcodes = [
+		$ur_shortcodes = array(
 			'user_registration_form',
 			'user_registration_login',
 			'user_registration_my_account',
 			'user_registration_profile',
-			'user_registration_reset_password'
-		];
+			'user_registration_reset_password',
+		);
 
 		foreach ( $ur_shortcodes as $shortcode ) {
 			if ( has_shortcode( $content, $shortcode ) ) {
@@ -339,13 +349,13 @@ class UR_Captcha_Conflict_Manager {
 		}
 
 		// Check for User Registration blocks
-		$ur_blocks = [
+		$ur_blocks = array(
 			'user-registration/form',
 			'user-registration/login',
 			'user-registration/my-account',
 			'user-registration/profile',
-			'user-registration/reset-password'
-		];
+			'user-registration/reset-password',
+		);
 
 		foreach ( $ur_blocks as $block ) {
 			if ( has_block( $block, $content ) ) {

@@ -251,12 +251,14 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 				foreach ( $enabled_features as $slug ) {
 					if ( isset( $modules_by_slug[ $slug ] ) ) {
-						$module       = $modules_by_slug[ $slug ];
-						$product_slug = in_array( $slug, $addons_list_moved_into_module ) ? $slug . '/' . $slug . '.php' : $slug;
-						$addon_info   = array(
+						$module               = $modules_by_slug[ $slug ];
+						$is_moved_addon       = in_array( $slug, $addons_list_moved_into_module, true );
+						$is_standalone_active = $is_moved_addon && in_array( $slug . '/' . $slug . '.php', $active_plugins, true );
+						$product_slug         = $is_standalone_active ? $slug . '/' . $slug . '.php' : $slug;
+						$addon_info           = array(
 							'product_name'    => $module['name'],
 							'product_version' => UR()->version,
-							'product_type'    => in_array( $slug, $addons_list_moved_into_module ) ? 'plugin' : 'module',
+							'product_type'    => $is_standalone_active ? 'plugin' : 'module',
 							'product_slug'    => $product_slug,
 							'is_premium'      => $is_premium,
 						);

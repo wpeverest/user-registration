@@ -115,12 +115,18 @@ class PaymentGatewaysWebhookActions {
 	 * @throws \Exception
 	 */
 	public function handle_membership_paypal_ipn() {
-		if (
-			! isset( $_GET['ur-membership-listener'] ) || // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			'IPN' !== sanitize_text_field( wp_unslash( $_GET['ur-membership-listener'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		) {
+		if ( ! isset( $_GET['ur-membership-listener'] ) || 'IPN' !== $_GET['ur-membership-listener'] ) {
 			return;
 		}
+
+		PaymentGatewayLogging::log_webhook_received(
+			'paypal',
+			'PayPal IPN POST received at membership listener',
+			array(
+				'webhook_type' => 'ipn',
+				'raw_get'      => $_GET,
+			)
+		);
 
 		$data = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
@@ -242,6 +248,7 @@ class PaymentGatewaysWebhookActions {
 			);
 		}
 
+		$event           = json_decode( $body, true );
 		$subscription_id = isset( $event['data']['object']['subscription'] ) ? $event['data']['object']['subscription'] : null;
 
 		PaymentGatewayLogging::log_webhook_received(

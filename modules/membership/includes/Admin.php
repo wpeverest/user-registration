@@ -183,7 +183,6 @@ if ( ! class_exists( 'Admin' ) ) :
 		/**
 		 * Sends the member and admin registration emails.
 		 *
-		 *
 		 * @param array $data      Member data prepared during registration.
 		 * @param int   $member_id Newly created WP user ID.
 		 */
@@ -220,10 +219,10 @@ if ( ! class_exists( 'Admin' ) ) :
 			if ( isset( $_GET['post'] ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 				// Enqueue frontend scripts here.
 				$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-				wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url(). '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
+				wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url() . '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 				wp_enqueue_script( 'user-registration-membership-frontend-script' );
 				// Enqueue frontend styles here.
-				wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url(). '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
+				wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url() . '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
 				wp_enqueue_style( 'user-registration-membership-frontend-style' );
 			}
 		}
@@ -271,7 +270,7 @@ if ( ! class_exists( 'Admin' ) ) :
 		}
 
 		public function process_membership_after_registration( $success_params, $valid_form_data, $form_id, $user_id ) {
-		
+
 			// module active
 			if ( ! ur_check_module_activation( 'membership' ) ) {
 				return $success_params;

@@ -99,7 +99,7 @@ class SubscriptionService {
 			$status      = 'pending';
 		} elseif ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trail date
 			$expiry_date = self::get_expiry_date( $data['membership_data']['start_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
-			$status      = 'on' === $membership_meta['trial_status'] ? 'trial' : 'pending';
+			$status      = 'pending';
 		}
 
 		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
@@ -1124,7 +1124,7 @@ class SubscriptionService {
 					) . "\n" . wp_json_encode(
 						array(
 							'id'              => $user_id,
-							'username'        => $subcription['username'],
+							'username'        => $subscription['username'],
 							'subscription_id' => $subscription_id,
 						),
 						JSON_PRETTY_PRINT

@@ -9512,6 +9512,17 @@ body.user-registration-page {
 							font-size: 15px;
 							font-weight: $semi_bold;
 							line-height: 18px;
+							display: flex;
+							flex-direction: column;
+							align-items: flex-end;
+							text-align: right;
+
+							.ur-membership-trial-end {
+								font-weight: 400;
+								color: #3c434a;
+								font-size: 13px;
+								line-height: 1.4em;
+							}
 						}
 
 						&-description {
@@ -10172,5 +10183,16 @@ body.user-registration-page {
 
 	&--warning {
 		border-left-color: #ffc700;
+	}
+}
+
+#user-registration-base-list-table-page.ur-tax-region-layout {
+	.user-registration-base-list-table-heading {
+		position: relative;
+		margin-bottom: 16px;
+	}
+
+	.user-registration-base-list-table-form .tablenav.top {
+		margin-top: 0;
 	}
 }
