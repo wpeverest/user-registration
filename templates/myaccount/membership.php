@@ -91,7 +91,8 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 						$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
 						$symbol   = ur_get_currency_symbol( $currency );
 
-						$data['period'] = ! empty( $tax_data['total_after_tax'] ) ? preg_replace( '#^[^/]+#', $symbol . $tax_data['total_after_tax'], $data['period'] ) : $data['period'];
+						$is_proration_meta    = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'is_proration_upgrade' );
+						$is_proration_upgrade = ! empty( $is_proration_meta['meta_value'] );
 
 						?>
 							<tr class="ur-account-table__row">

@@ -47,30 +47,30 @@ $redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
 
 		<div class="ur-message">
 			<p>
-				<?php
-				$username = isset( $_GET['username'] ) ? $_GET['username'] : '';
+			<?php
+				$username = isset( $_GET['username'] ) ? sanitize_text_field( wp_unslash( $_GET['username'] ) ) : '';
 
 				$values = array();
 
-				if ( ! empty( $username ) ) {
-					$user                = get_user_by( 'login', sanitize_text_field( $username ) );
-					$values['member_id'] = $user->ID;
-					$values['email']     = $user->user_email;
-					$values['context']   = 'thank_you_page';
-					if ( ! empty( $transaction_id ) ) {
-						$values['transaction_id'] = $transaction_id;
-					}
-
-					$main_content = apply_filters( 'user_registration_process_smart_tags', $main_content, $values );
+			if ( ! empty( $username ) ) {
+				$user                = get_user_by( 'login', sanitize_text_field( $username ) );
+				$values['member_id'] = $user->ID;
+				$values['email']     = $user->user_email;
+				$values['context']   = 'thank_you_page';
+				if ( ! empty( $transaction_id ) ) {
+					$values['transaction_id'] = $transaction_id;
 				}
-				echo $main_content;
-				?>
+
+				$main_content = apply_filters( 'user_registration_process_smart_tags', $main_content, $values );
+			}
+				echo wp_kses_post( $main_content );
+			?>
 			</p>
 
 			<?php if ( $show_bank_data && $show_bank_details ) : ?>
 				<div class="ur-bank-details">
-					<p class="ur-bank-details-title" ><?php echo __( 'Bank Details :' ); ?></p>
-					<?php echo $bank_data; ?>
+					<p class="ur-bank-details-title" ><?php echo __( 'Bank Details :', 'user-registration' ); ?></p>
+					<?php echo wp_kses_post( $bank_data ); ?>
 				</div>
 			<?php endif; ?>
 		</div>

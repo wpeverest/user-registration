@@ -501,21 +501,21 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			if ( ! is_user_logged_in() && CourseAccessMode::NEED_REGISTRATION === $course_obj->get_access_mode() ) {
 
-				$text = __( 'Join Now', 'learning-management-system' );
+				$text = __( 'Join Now', 'user-registration' );
 
 				if ( masteriyo_is_single_course_page() ) {
-					$text = __( 'Sign Up', 'learning-management-system' );
+					$text = __( 'Sign Up', 'user-registration' );
 				}
 			}
 
 			if ( is_user_logged_in() && CourseAccessMode::NEED_REGISTRATION === $course_obj->get_access_mode() ) {
 
 				if ( ! Helper::check_course_access( $course_obj ) ) {
-					$text = __( 'Join Now', 'learning-management-system' );
+					$text = __( 'Join Now', 'user-registration' );
 				}
 
 				if ( masteriyo_is_single_course_page() && ! Helper::check_course_access( $course_obj ) ) {
-					$text = __( 'Upgrade Now', 'learning-management-system' );
+					$text = __( 'Upgrade Now', 'user-registration' );
 				}
 			}
 

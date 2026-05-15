@@ -24,6 +24,10 @@ class UR_Cache_Helper {
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_wpsuper_cache' ) );
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_wprocket_cache' ) );
 		add_action( 'template_redirect', array( __CLASS__, 'maybe_disable_cache_for_dynamic_pages' ), 0 );
+
+		// Flush page cache for a post at the moment its content restriction is applied during frontend rendering.
+		// Mirrors the same pattern used for the registration form (user_registration_before_registration_form).
+		add_action( 'urcr_pre_content_restriction_applied', array( __CLASS__, 'flush_post_cache_on_restriction' ), 10, 2 );
 	}
 
 	/**
@@ -52,6 +56,36 @@ class UR_Cache_Helper {
 	public static function flush_wprocket_cache() {
 		if ( function_exists( 'rocket_clean_post' ) ) {
 			$post_id = get_the_ID();
+			rocket_clean_post( $post_id );
+		}
+	}
+
+	/**
+	 * Flush page cache for the post whose content restriction is being applied during frontend rendering.
+	 * Fires on urcr_pre_content_restriction_applied — mirrors flush_w3tc_cache/flush_wpsuper_cache/flush_wprocket_cache
+	 * which fire on user_registration_before_registration_form.
+	 *
+	 * Uses direct function calls only (no do_action) — firing action-based cache hooks mid-render
+	 * can trigger handlers that manipulate output buffers and corrupt the page response.
+	 *
+	 * @param mixed   $restriction_rule The matched access rule data.
+	 * @param WP_Post $post             The post being restricted.
+	 */
+	public static function flush_post_cache_on_restriction( $restriction_rule, $post ) {
+		$post_id = is_object( $post ) && isset( $post->ID ) ? $post->ID : absint( $post );
+		if ( ! $post_id ) {
+			return;
+		}
+
+		if ( function_exists( 'w3tc_pgcache_flush_post' ) ) {
+			w3tc_pgcache_flush_post( $post_id );
+		}
+
+		if ( function_exists( 'wpsc_delete_post_cache' ) ) {
+			wpsc_delete_post_cache( $post_id );
+		}
+
+		if ( function_exists( 'rocket_clean_post' ) ) {
 			rocket_clean_post( $post_id );
 		}
 	}
