@@ -1768,7 +1768,7 @@ class NewPaypalService {
 			'BILLING.SUBSCRIPTION.CREATED'   => 'pending',
 			'BILLING.SUBSCRIPTION.ACTIVATED' => 'active',
 			'BILLING.SUBSCRIPTION.UPDATED'   => isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'active',
-			'BILLING.SUBSCRIPTION.SUSPENDED' => 'pending',
+			'BILLING.SUBSCRIPTION.SUSPENDED' => 'canceled',
 			'BILLING.SUBSCRIPTION.CANCELLED' => 'canceled',
 			'BILLING.SUBSCRIPTION.EXPIRED'   => 'expired',
 		);
@@ -2781,7 +2781,7 @@ class NewPaypalService {
 	private function map_paypal_subscription_status( $paypal_status ) {
 		$map = array(
 			'ACTIVE'           => 'active',
-			'SUSPENDED'        => 'pending',
+			'SUSPENDED'        => 'canceled',
 			'CANCELLED'        => 'canceled',
 			'EXPIRED'          => 'expired',
 			'APPROVAL_PENDING' => 'pending',

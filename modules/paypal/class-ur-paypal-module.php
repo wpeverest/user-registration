@@ -281,7 +281,8 @@ class User_Registration_Paypal_Module {
 			return $response;
 		}
 
-		if ( ! empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_id' ] ) && ! empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_secret' ] ) && $changed ) {
+		$webhook_stored = ! empty( get_option( 'user_registration_global_paypal_' . $mode . '_webhook_id' ) );
+		if ( ! empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_id' ] ) && ! empty( $form_data[ 'user_registration_global_paypal_' . $mode . '_client_secret' ] ) && ( $changed || ! $webhook_stored ) ) {
 			$client_id      = $form_data[ 'user_registration_global_paypal_' . $mode . '_client_id' ];
 			$client_secret  = $form_data[ 'user_registration_global_paypal_' . $mode . '_client_secret' ];
 			$url            = ( 'production' === $form_data['user_registration_global_paypal_mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';
@@ -302,9 +303,44 @@ class User_Registration_Paypal_Module {
 				'client_id'  => $client_id,
 				'secret_key' => $client_secret,
 			);
+
+			ur_get_logger()->info(
+				'[PayPal][Webhook] Registration triggered.' . "\n" . wp_json_encode(
+					array(
+						'trigger'         => $changed ? 'credentials_changed' : 'webhook_id_missing',
+						'mode'            => $form_data['user_registration_global_paypal_mode'],
+						'webhook_stored'  => $webhook_stored,
+					),
+					JSON_PRETTY_PRINT
+				),
+				array( 'source' => 'urm-pg-paypal' )
+			);
+
 			$webhook_result = $new_paypal_service->register_or_update_webhook( $paypal_options );
+
 			if ( ! is_wp_error( $webhook_result ) ) {
 				update_option( 'user_registration_global_paypal_' . $mode . '_webhook_id', $webhook_result );
+				ur_get_logger()->info(
+					'[PayPal][Webhook] Webhook ID saved to options.' . "\n" . wp_json_encode(
+						array(
+							'webhook_id'  => $webhook_result,
+							'option_key'  => 'user_registration_global_paypal_' . $mode . '_webhook_id',
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-pg-paypal' )
+				);
+			} else {
+				ur_get_logger()->error(
+					'[PayPal][Webhook] Registration failed — webhook ID not saved.' . "\n" . wp_json_encode(
+						array(
+							'error'      => $webhook_result->get_error_message(),
+							'error_code' => $webhook_result->get_error_code(),
+						),
+						JSON_PRETTY_PRINT
+					),
+					array( 'source' => 'urm-pg-paypal' )
+				);
 			}
 		}
 		return $response;
