@@ -28,12 +28,13 @@ export const showNotice = (message, type = "info", duration = 5000) => {
 	
 	toast.innerHTML = `
 		<div class="urcr-toast__icon">${icon}</div>
-		<div class="urcr-toast__message">${message}</div>
+		<div class="urcr-toast__message"></div>
 		<button type="button" class="urcr-toast__close" aria-label="Dismiss">
 			<span class="dashicons dashicons-no-alt"></span>
 		</button>
 	`;
-	
+	toast.querySelector(".urcr-toast__message").textContent = message;
+
 	container.appendChild(toast);
 	
 	requestAnimationFrame(() => {

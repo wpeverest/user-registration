@@ -67,12 +67,23 @@ class OrderService {
 			$total      = number_format( $membership_meta['amount'], 2, '.', '' );
 		}
 
+		$coupon_discount_amount = 0;
+
 		if ( isset( $membership_meta['trial_status'] ) && 'on' == $membership_meta['trial_status'] ) {
 			$total = 0;
-		} elseif ( 'bank' === $data['membership_data']['payment_method'] && ur_check_module_activation( 'coupon' ) && ! empty( $data['coupon_data'] ) ) {
+		} elseif ( ur_check_module_activation( 'coupon' ) && ! empty( $data['coupon_data'] ) ) {
+			$coupon_discount_amount = ( isset( $data['coupon_data']['coupon_discount_type'] ) && 'fixed' === $data['coupon_data']['coupon_discount_type'] )
+				? floatval( $data['coupon_data']['coupon_discount'] )
+				: $total * floatval( $data['coupon_data']['coupon_discount'] ) / 100;
+			$total                  = max( 0, $total - $coupon_discount_amount );
+		}
 
-				$discount_amount = ( isset( $data['coupon_data']['coupon_discount_type'] ) && 'fixed' === $data['coupon_data']['coupon_discount_type'] ) ? $data['coupon_data']['coupon_discount'] : $total * $data['coupon_data']['coupon_discount'] / 100;
-				$total           = $total - $discount_amount;
+		// For upgrades, replace $total with the pre-tax prorated amount so that
+		// tax and total_amount are both calculated on the correct base.
+		$is_proration_upgrade_order = false;
+		if ( ! empty( $upgrade_details ) && isset( $upgrade_details['chargeable_amount'] ) ) {
+			$total                      = floatval( $upgrade_details['chargeable_amount'] );
+			$is_proration_upgrade_order = true;
 		}
 
 		$local_currency_converted_amount = 0;
@@ -119,7 +130,7 @@ class OrderService {
 			'created_by'      => isset( $current_user ) && $current_user->ID != 0 ? $current_user->ID : absint( $member_id ),
 			'transaction_id'  => $transaction_id,
 			'payment_method'  => ( $data['membership_data']['payment_method'] ) ? sanitize_text_field( $data['membership_data']['payment_method'] ) : '',
-			'total_amount'    => ! empty( $upgrade_details ) ? $upgrade_details['chargeable_amount'] : $total,
+			'total_amount'    => number_format( $total, 2, '.', '' ),
 			'status'          => ( 'free' === $membership_meta['type'] || $is_admin ) ? 'completed' : 'pending',
 			'order_type'      => $order_type,
 			'trial_status'    => ( ! empty( $upgrade_details ) && ( 'on' === $upgrade_details['trial_status'] ) ) ? 'on' : ( isset( $membership_meta['trial_status'] ) ? sanitize_text_field( $membership_meta['trial_status'] ) : 'off' ),
@@ -137,6 +148,27 @@ class OrderService {
 			$orders_meta[] = array(
 				'meta_key'   => 'tax_data',
 				'meta_value' => json_encode( $tax_details ),
+			);
+		}
+
+		if ( $is_proration_upgrade_order ) {
+			$orders_meta[] = array(
+				'meta_key'   => 'is_proration_upgrade',
+				'meta_value' => '1',
+			);
+		}
+
+		if ( ! empty( $data['coupon_data'] ) && $coupon_discount_amount > 0 ) {
+			$orders_meta[] = array(
+				'meta_key'   => 'coupon_data',
+				'meta_value' => json_encode(
+					array(
+						'coupon_code'          => isset( $data['coupon_data']['coupon_code'] ) ? $data['coupon_data']['coupon_code'] : '',
+						'coupon_discount_type' => isset( $data['coupon_data']['coupon_discount_type'] ) ? $data['coupon_data']['coupon_discount_type'] : '',
+						'coupon_discount'      => isset( $data['coupon_data']['coupon_discount'] ) ? $data['coupon_data']['coupon_discount'] : 0,
+						'discount_amount'      => number_format( $coupon_discount_amount, 2, '.', '' ),
+					)
+				),
 			);
 		}
 

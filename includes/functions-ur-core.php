@@ -265,11 +265,13 @@ function ur_bool_to_string( $bool ) {
  * @param string $default_path Default path of template provided(default: '').
  */
 function ur_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
-	if ( ! empty( $args ) && is_array( $args ) ) {
-		extract( $args ); // phpcs:ignore.
-	}
+	// NOTE: extract() is intentionally deferred to the isolated closure below to prevent
+	// $args from overriding $template_name or other path-related variables.
 
 	$located = ur_locate_template( $template_name, $template_path, $default_path );
+
+	// Snapshot the trusted resolved path BEFORE the filter can modify it.
+	$trusted_located = realpath( $located );
 
 	/** Allow 3rd party plugin filter template file from their plugin.
 	 *
@@ -281,41 +283,93 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 	 */
 	$located = apply_filters( 'ur_get_template', $located, $template_name, $args, $template_path, $default_path );
 
-	if ( ! file_exists( $located ) ) {
-		_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', esc_html( $located ) ), '1.0' );
+	// Use realpath() to resolve symlinks and '..' components before validation.
+	$real_located = realpath( $located );
 
+	// Derive the plugin's templates/ root from the pre-filter trusted path.
+	// This works for every plugin/addon without needing any *_ABSPATH constant.
+	$templates_marker = DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
+	$templates_pos    = ( false !== $trusted_located ) ? strpos( $trusted_located, $templates_marker ) : false;
+	$real_plugin_path = ( false !== $templates_pos )
+		? realpath( substr( $trusted_located, 0, $templates_pos + strlen( $templates_marker ) - 1 ) )
+		: false;
+
+	// Theme override directories (child + parent) — only if /user-registration/ subfolder exists.
+	$real_child_path  = realpath( get_stylesheet_directory() . '/user-registration' );
+	$real_parent_path = realpath( get_template_directory() . '/user-registration' );
+
+	$path_allowed = false;
+
+	if ( false !== $real_located && false !== $real_plugin_path && 0 === strpos( $real_located, $real_plugin_path . DIRECTORY_SEPARATOR ) ) {
+		$path_allowed = true;
+	}
+	if ( ! $path_allowed && false !== $real_located && false !== $real_child_path && 0 === strpos( $real_located, $real_child_path . DIRECTORY_SEPARATOR ) ) {
+		$path_allowed = true;
+	}
+	if ( ! $path_allowed && false !== $real_located && false !== $real_parent_path && 0 === strpos( $real_located, $real_parent_path . DIRECTORY_SEPARATOR ) ) {
+		$path_allowed = true;
+	}
+
+	if ( ! $path_allowed ) {
+		_doing_it_wrong(
+			__FUNCTION__,
+			esc_html__( 'Template path is not allowed.', 'user-registration' ),
+			'1.0'
+		);
+		return;
+	}
+
+	if ( ! file_exists( $located ) ) {
+		_doing_it_wrong(
+			__FUNCTION__,
+			sprintf( '<code>%s</code> does not exist.', esc_html( $located ) ),
+			'1.0'
+		);
 		return;
 	}
 
 	ob_start();
+
 	/**
 	 * Executes an action before including a template part.
 	 *
 	 * @param string $template_name Name of the template part.
 	 * @param string $template_path Path to the template part.
-	 * @param string $located Path to the located template file.
-	 * @param array $args Additional arguments passed to the template part.
+	 * @param string $located       Path to the located template file.
+	 * @param array  $args          Additional arguments passed to the template part.
 	 */
 	do_action( 'user_registration_before_template_part', $template_name, $template_path, $located, $args );
 
-	include $located;
+	// Isolated closure: extract() runs inside a separate scope so it cannot override
+	// $located or any other path-related variable in the outer function.
+	// EXTR_SKIP prevents the closure's own parameters from being overridden.
+	( function ( $ur_template_file, $ur_template_args ) {
+		if ( ! empty( $ur_template_args ) && is_array( $ur_template_args ) ) {
+			extract( $ur_template_args, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+		}
+		include $ur_template_file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+	} )( $located, $args );
+
 	/**
 	 * Executes an action after including a template part.
 	 *
 	 * @param string $template_name Name of the template part.
 	 * @param string $template_path Path to the template part.
-	 * @param string $located Path to the located template file.
-	 * @param array $args Additional arguments passed to the template part.
+	 * @param string $located       Path to the located template file.
+	 * @param array  $args          Additional arguments passed to the template part.
 	 */
 	do_action( 'user_registration_after_template_part', $template_name, $template_path, $located, $args );
+
 	$template_content = ob_get_clean();
+
 	/**
 	 * Filter hook to process the smart tags in the template content.
 	 *
 	 * @param string $template_content The template content.
 	 */
 	$template_content = apply_filters( 'user_registration_process_smart_tags', $template_content, array(), array() );
-	echo $template_content;  // phpcs:ignore.
+
+	echo $template_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -542,9 +596,12 @@ function ur_doing_it_wrong( $function, $message, $version ) {
  * @param integer $expire Expiry of the cookie.
  * @param string  $secure Whether the cookie should be served only over https.
  */
-function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
+function ur_setcookie( $name, $value, $expire = 0, $secure = null, $httponly = true ) {
+	if ( null === $secure ) {
+		$secure = is_ssl();
+	}
 	if ( ! headers_sent() ) {
-		setcookie( $name, $value, $expire, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, $secure );
+		setcookie( $name, $value, $expire, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, $secure, $httponly );
 	} elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		headers_sent( $file, $line );
 		trigger_error( "{$name} cookie cannot be set - headers already sent by {$file} on line {$line}", E_USER_NOTICE ); //phpcs:ignore.
@@ -1192,6 +1249,12 @@ function ur_load_form_field_class( $class_key ) {
 	$class_path = apply_filters( 'user_registration_form_field_' . $class_key . '_path', $class_path );
 	/* Backward Compat since 1.4.0 */
 	if ( null != $class_path && file_exists( $class_path ) ) {
+		// Validate the resolved path to prevent directory traversal.
+		$real_class_path = realpath( $class_path );
+		$real_base_path  = realpath( UR_FORM_PATH );
+		if ( false === $real_class_path || false === $real_base_path || 0 !== strpos( $real_class_path, $real_base_path . DIRECTORY_SEPARATOR ) ) {
+			return null;
+		}
 		$class_name = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
 		if ( ! class_exists( $class_name ) ) {
 			include_once $class_path;
@@ -3413,7 +3476,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 					if ( 'user-registration-pro/user-registration.php' === $install_status['file'] ) {
 						$status['plugin'] = 'user-registration-pro/user-registration.php';
 						if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-							setcookie( 'urm_license_status', 'pro_activated', time() + 300, '/', '', false, false );
+							setcookie( 'urm_license_status', 'pro_activated', time() + 300, '/', '', is_ssl(), false );
 						}
 						activate_plugin( $install_status['file'] );
 					}
@@ -4259,6 +4322,13 @@ if ( ! function_exists( 'ur_upload_profile_pic' ) ) {
 				}
 			}
 		} else {
+			// A numeric value is sent when the user keeps their existing profile picture
+			// (the template pre-populates the hidden field with the stored attachment ID).
+			// Only allow it if the attachment actually belongs to this user; a bare numeric
+			// ID referencing another user's media must be rejected.
+			if ( (int) get_post_field( 'post_author', $upload_file ) !== (int) $user_id ) {
+				return;
+			}
 			$attachment_id = $upload_file;
 		}
 		$attachment_id = ! empty( $attachment_id ) ? $attachment_id : '';
@@ -4964,7 +5034,7 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 						$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
 						$settings['sections']['premium_setting_section']['before_desc'] = $description;
 						$upgradable_plans                                        = implode( 'plan, ', $detail['plan'] );
-						$settings['sections']['premium_setting_section']['desc'] = sprintf( __( 'To unlock this setting, consider upgrading to %s', 'user-registration ' ), $upgradable_plans );
+						$settings['sections']['premium_setting_section']['desc'] = sprintf( __( 'To unlock this setting, consider upgrading to %s', 'user-registration' ), $upgradable_plans );
 					} else {
 						$plugin_name = $detail['name'];
 						$action      = '';
@@ -5202,55 +5272,56 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['empty_username'] );
 			}
 
-			if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
-				$user = get_user_by( 'email', $username );
+			$login_option = get_option( 'user_registration_general_setting_login_options_with', '' );
 
-				if ( isset( $user->user_login ) ) {
-					$login_data['user_login'] = $user->user_login;
-				} else {
-					$user = get_user_by( 'login', $username );
-
-					if ( isset( $user->user_login ) ) {
-						$login_data['user_login'] = $user->user_login;
-					} elseif ( empty( $user ) ) {
-
-						if ( empty( $messages['unknown_email'] ) ) {
-							$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
-						}
-
-						throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
-					}
+			// Validate login format and resolve user_login before attempting authentication.
+			if ( 'email' === $login_option ) {
+				if ( ! is_email( $username ) ) {
+					throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . esc_html__( 'Please enter a valid email address to log in.', 'user-registration' ) );
 				}
+				$user_by_email = get_user_by( 'email', $username );
+				if ( empty( $user_by_email ) ) {
+					if ( empty( $messages['unknown_email'] ) ) {
+						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+					}
+					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+				}
+				$login_data['user_login'] = $user_by_email->user_login;
+			} elseif ( 'username' === $login_option ) {
+				if ( is_email( $username ) ) {
+					throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . esc_html__( 'Please enter your username to log in.', 'user-registration' ) );
+				}
+				$user_by_login            = get_user_by( 'login', $username );
+				$login_data['user_login'] = isset( $user_by_login->user_login ) ? $user_by_login->user_login : $username;
 			} else {
-				$login_data['user_login'] = $username;
+				// Both username and email are allowed.
+				if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
+					$user_by_email = get_user_by( 'email', $username );
+					if ( isset( $user_by_email->user_login ) ) {
+						$login_data['user_login'] = $user_by_email->user_login;
+					} else {
+						$user_by_login = get_user_by( 'login', $username );
+						if ( isset( $user_by_login->user_login ) ) {
+							$login_data['user_login'] = $user_by_login->user_login;
+						} else {
+							if ( empty( $messages['unknown_email'] ) ) {
+								$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+							}
+							throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+						}
+					}
+				} else {
+					$login_data['user_login'] = $username;
+				}
 			}
 
 			// On multisite, ensure user exists on current site, if not add them before allowing login.
 			if ( is_multisite() ) {
-				$user_data = get_user_by( 'login', $username );
+				$user_data = get_user_by( 'login', $login_data['user_login'] );
 
 				if ( $user_data && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) {
 					add_user_to_blog( get_current_blog_id(), $user_data->ID, 'customer' );
 				}
-			}
-
-			// To check the specific login.
-			if ( 'email' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
-				$user_data = get_user_by( 'email', $username );
-				if ( empty( $user_data ) ) {
-					if ( empty( $messages['unknown_email'] ) ) {
-						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
-					}
-
-					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
-				} else {
-					$login_data['user_login'] = $username;
-				}
-			} elseif ( 'username' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
-				$user_data                = get_user_by( 'login', $username );
-				$login_data['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : ! is_email( $username );
-			} else {
-				$login_data['user_login'] = $username;
 			}
 
 			// Perform the login.
@@ -6241,11 +6312,17 @@ if ( ! function_exists( 'ur_parse_and_update_hidden_field' ) ) {
 		);
 
 		foreach ( $form_data as $key => $value ) {
-			if ( 'user_email' === $value->field_name ) {
-				$values['email'] = ur_format_field_values( $value->field_name, $value->value );
+			if ( ! isset( $value->field_name ) ) {
+				continue;
 			}
 
-			$values[ $value->field_name ] = ur_format_field_values( $value->field_name, $value->value );
+			$field_value = $value->value ?? '';
+
+			if ( 'user_email' === $value->field_name ) {
+				$values['email'] = ur_format_field_values( $value->field_name, $field_value );
+			}
+
+			$values[ $value->field_name ] = ur_format_field_values( $value->field_name, $field_value );
 		}
 
 		foreach ( $form_data as $key => $value ) {
@@ -6621,7 +6698,7 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 	 * @since 3.1.5
 	 */
 	function ur_automatic_user_login( $user ) {
-		delete_user_meta( $user->ID, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $user->ID );
 		wp_clear_auth_cookie();
 		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 		wp_set_auth_cookie( $user->ID, $remember );
@@ -10135,11 +10212,11 @@ if ( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 		if ( ! class_exists( 'SitePress' ) ) {
 			return $url;
 		}
-		$site_press = new SitePress();
 		remove_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10 );
 
 		$translated_endpoint = ur_get_endpoint_translation( $endpoint );
-		$url                 = ur_get_endpoint_url( $translated_endpoint, $value, $site_press->convert_url( $permalink ) );
+		$converted_permalink = apply_filters( 'wpml_permalink', $permalink );
+		$url                 = ur_get_endpoint_url( $translated_endpoint, $value, $converted_permalink );
 		add_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10, 4 );
 
 		return $url;
@@ -10716,6 +10793,34 @@ if ( ! function_exists( 'ur_get_payment_setup_handled_status' ) ) {
 		$is_skipped = get_option( 'user_registration_payment_setup_skipped', false );
 
 		return $all_payments_connected || $is_skipped;
+	}
+}
+
+if ( ! function_exists( 'ur_is_paypal_old_installation' ) ) {
+	/**
+	 * Determines if the current site has legacy PayPal (IPN/NVP) data.
+	 *
+	 * Checks for the presence of actual legacy option values in the DB as the
+	 * source of truth, avoiding reliance on urm_is_new_installation which can
+	 * be incorrectly set for users who upgrade from an older version.
+	 *
+	 * @return bool True for old/legacy PayPal installations, false for new ones.
+	 */
+	function ur_is_paypal_old_installation() {
+		$has_live_legacy_data = '' !== get_option( 'user_registration_global_paypal_email_address', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_test_email_address', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_live_email_address', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_cancel_url', '' )
+			|| '' !== get_option( 'user_registration_global_paypal_return_url', '' );
+
+		if ( $has_live_legacy_data ) {
+			if ( ! ur_string_to_bool( get_option( 'urm_is_legacy_paypal_user', false ) ) ) {
+				update_option( 'urm_is_legacy_paypal_user', 1 );
+			}
+			return true;
+		}
+
+		return ur_string_to_bool( get_option( 'urm_is_legacy_paypal_user', false ) );
 	}
 }
 

@@ -916,6 +916,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
 					$state_list  = json_decode( $states_json, true );
+					$state_list  = is_array( $state_list ) ? $state_list : array();
 
 					$states = isset( $state_list[ $country ] ) ? $state_list[ $country ] : '';
 

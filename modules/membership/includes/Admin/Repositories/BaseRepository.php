@@ -76,8 +76,14 @@ class BaseRepository implements \WPEverest\URMembership\Admin\Interfaces\BaseInt
 	 * @return bool|int|\mysqli_result|void|null
 	 */
 	public function delete_multiple( $ids ) {
+		$id_array     = array_map( 'absint', explode( ',', $ids ) );
+		$id_array     = array_filter( $id_array );
+		if ( empty( $id_array ) ) {
+			return false;
+		}
+		$placeholders = implode( ',', array_fill( 0, count( $id_array ), '%d' ) );
 
-		return $this->wpdb()->query( "DELETE FROM $this->table WHERE ID IN (" . $ids . ')' );
+		return $this->wpdb()->query( $this->wpdb()->prepare( "DELETE FROM $this->table WHERE ID IN ($placeholders)", $id_array ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	}
 
 	/**

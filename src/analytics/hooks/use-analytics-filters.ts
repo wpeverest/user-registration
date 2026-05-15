@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { getDaysDiff, getUnitsForDayRange } from "../constants/configs";
 import { DateUnit } from "../types/analytics";
 import useSearchParams from "./use-search-params";
@@ -82,7 +82,7 @@ export function useAnalyticsFilters() {
 		return validUnits.length > 0 ? validUnits : ["day"];
 	}, [filters.dateFrom, filters.dateTo]);
 
-	const validUnits = getValidUnits();
+	const validUnits = useMemo(() => getValidUnits(), [getValidUnits]);
 
 	useEffect(() => {
 		if (!filters.unit || !validUnits.includes(filters.unit)) {

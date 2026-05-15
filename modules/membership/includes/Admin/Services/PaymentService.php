@@ -7,6 +7,7 @@ use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URM\Mollie\Services\PaymentService as MollieService;
+use WPEverest\URMembership\Admin\Services\Paypal\NewPaypalService;
 
 class PaymentService {
 	/**
@@ -88,7 +89,7 @@ class PaymentService {
 
 			if ( 'bank' === $this->payment_method || ! empty( $response_data['delayed_until'] ) ) {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
-			} elseif ( 'paypal' === $this->payment_method ) {
+			} elseif ( 'paypal' === $this->payment_method || 'mollie' === $this->payment_method ) {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
 			} else {
 				$subscription_repository->update( $response_data['subscription_id'], $subscription_data );
@@ -142,10 +143,18 @@ class PaymentService {
 	 * @return array
 	 */
 	public function build_paypal_response( $data, $subscription_id, $member_id, $response_data = array() ) {
-		$paypal_service = new PaypalService();
+		$paypal_service = new NewPaypalService();
+		$url            = $paypal_service->build_url( $data, $this->membership, $this->member_email, $subscription_id, $member_id, $response_data );
+
+		if ( is_wp_error( $url ) ) {
+			return array(
+				'payment_url'   => '',
+				'payment_error' => $url->get_error_message(),
+			);
+		}
 
 		return array(
-			'payment_url' => $paypal_service->build_url( $data, $this->membership, $this->member_email, $subscription_id, $member_id, $response_data ),
+			'payment_url' => $url,
 		);
 	}
 
@@ -172,7 +181,35 @@ class PaymentService {
 	public function build_mollie_response( $data, $subscription_id, $member_id, $response_data = array() ) {
 		$success_params    = array();
 		$data['plan_name'] = 'membership';
-		$mollie            = new MollieService();
+
+		// Apply coupon discount before tax, mirroring Stripe's approach in process_stripe_payment.
+		// Skip for upgrades: SubscriptionService already bakes the coupon into chargeable_amount.
+		$coupon_discount = 0;
+		if ( ur_check_module_activation( 'coupon' ) && ! empty( $data['coupon'] ) && empty( $data['upgrade'] ) ) {
+			$coupon_details = ur_get_coupon_details( $data['coupon'] );
+			if ( ! empty( $coupon_details['coupon_discount_type'] ) && isset( $coupon_details['coupon_discount'] ) ) {
+				$coupon_discount = ( 'fixed' === $coupon_details['coupon_discount_type'] )
+					? floatval( $coupon_details['coupon_discount'] )
+					: floatval( $data['amount'] ) * floatval( $coupon_details['coupon_discount'] ) / 100;
+				$data['amount']  = max( 0, floatval( $data['amount'] ) - $coupon_discount );
+			}
+		}
+
+		// Apply tax to the discounted amount, mirroring Stripe's approach in process_stripe_payment.
+		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
+			$tax_rate         = (float) $response_data['tax_rate'];
+			$base_amount      = floatval( $data['amount'] );
+			$tax_amount       = round( $base_amount * $tax_rate / 100, 2 );
+			$data['amount']   = round( $base_amount + $tax_amount, 2 );
+			$data['tax_info'] = array(
+				'base_amount'     => $base_amount,
+				'tax_rate'        => $tax_rate,
+				'tax_amount'      => $tax_amount,
+				'coupon_discount' => $coupon_discount,
+			);
+		}
+
+		$mollie = new MollieService();
 
 		if ( 'subscription' === $data['type'] ) {
 			$success_params = $mollie->mollie_process_subscription_payment( $data, $member_id, $success_params, true, $response_data );

@@ -232,7 +232,7 @@ html {
 .ur-multi-device-form-preview .membership-upgrade-container .ur_membership_divider,
 #pg-container .ur_membership_registration_container .ur_membership_divider,
 #pg-container .membership-upgrade-container .ur_membership_divider {
-  margin: 16px 0 24px;
+  margin: 8px 0 12px;
   background: #e1e1e1;
   border: 0;
   height: 1px;
@@ -1063,7 +1063,16 @@ html {
   border-radius: 4px;
   border: 1px dashed #475bb2;
   background: #f8f8fa;
-  gap: 20px;
+  gap: 10px;
+}
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-proration-discount-value,
+.user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-proration-discount-value,
+.ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container .urm-membership-proration-discount-value,
+.ur-multi-device-form-preview .membership-upgrade-container #urm-total_container .urm-membership-proration-discount-value,
+#pg-container .ur_membership_registration_container #urm-total_container .urm-membership-proration-discount-value,
+#pg-container .membership-upgrade-container #urm-total_container .urm-membership-proration-discount-value {
+  display: flex;
+  justify-content: space-between;
 }
 .user-registration-page .ur_membership_registration_container #urm-total_container::before,
 .user-registration-page .membership-upgrade-container #urm-total_container::before,
@@ -1853,21 +1862,26 @@ html {
 .ur-membership-container.layout-list .membership-block .ur-membership-title-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
 }
 .ur-membership-container.layout-list .membership-block .ur-membership-title-wrapper .ur-membership-title {
   color: #1f1f1f;
   font-weight: 600;
-  display: inline-block;
-  vertical-align: middle;
+  display: block;
   font-size: 16px;
   text-align: left;
 }
 .ur-membership-container.layout-list .membership-block .ur-membership-title-wrapper .ur-membership-amount-wrapper {
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 2px;
+}
+.ur-membership-container.layout-list .membership-block .ur-membership-title-wrapper .ur-membership-amount-wrapper .ur-membership-price-row {
+  display: flex;
   align-items: center;
-  justify-content: center;
   gap: 4px;
 }
 .ur-membership-container.layout-list .membership-block .ur-membership-title-wrapper .ur-membership-amount-wrapper .membership-amount {
@@ -2488,4 +2502,51 @@ html {
   font-weight: 400;
   letter-spacing: 0.15px;
   text-wrap: unset;
+}
+
+.ur-membership-name-wrap,
+.ur-membership-period-wrap {
+  vertical-align: top;
+}
+
+.ur-membership-period-wrap {
+  text-align: right;
+}
+
+.ur-membership-title-text,
+.ur-membership-trial-label,
+.ur-membership-period-text,
+.ur-membership-trial-end {
+  display: block;
+}
+
+.ur-membership-title-text {
+  color: #1f1f1f;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.ur-membership-period-text {
+  color: #1f1f1f;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+.ur-membership-trial-label {
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 400;
+  color: #6b6b6b;
+  margin-top: 3px;
+  line-height: 16px;
+}
+
+.ur-membership-trial-end {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6b6b6b;
+  margin-top: 3px;
+  line-height: 16px;
 }

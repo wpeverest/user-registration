@@ -34,10 +34,10 @@ jQuery(function ($) {
 
 			$.post( ur_widget_params.ajax_url, data, function( response ) {
 
-				$('.ur-today-users').html('').html( response.user_report.today_users );
-				$('.ur-last-week-users').html('').html( response.user_report.last_week_users );
-				$('.ur-last-month-users').html('').html( response.user_report.last_month_users );
-				$('.ur-total-users').html('').html( response.user_report.total_users );
+				$('.ur-today-users').text( response.user_report.today_users );
+				$('.ur-last-week-users').text( response.user_report.last_week_users );
+				$('.ur-last-month-users').text( response.user_report.last_month_users );
+				$('.ur-total-users').text( response.user_report.total_users );
 
 			}).fail( function( xhr ) {
 				window.console.log( xhr.responseText );
