@@ -93,6 +93,31 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		}
 
 		/**
+		 * Get membership payment gateway usage statistics.
+		 *
+		 * Retrieves the total number of orders grouped by payment method
+		 * from the membership orders table.
+		 *
+		 * @since 1.0.0
+		 * 
+		 * @return array An array of payment methods and their corresponding order counts.
+		 */
+		public function get_membership_gateway_usage() {
+			global $wpdb;
+
+			$table = $wpdb->prefix . 'ur_membership_orders';
+
+			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+				return array();
+			}
+
+			return $wpdb->get_results(
+				"SELECT payment_method, COUNT(*) AS total FROM {$table} GROUP BY payment_method ORDER BY total DESC",
+				ARRAY_A
+			);
+		}
+
+		/**
 		 * @param $type
 		 *
 		 * @return string|null
@@ -204,8 +229,9 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					'license_key'           => $is_premium ? $license_key : '',
 					'total_form_count'      => $this->get_form_count(),
 					'total_user_count'      => $this->get_user_count(),
-					'membership_form_users' => $form_wise_users['membership_form_users'],
-					'normal_form_users'     => $form_wise_users['normal_form_users'],
+					'membership_form_users'   => $form_wise_users['membership_form_users'],
+					'normal_form_users'       => $form_wise_users['normal_form_users'],
+					'membership_gateway_usage' => $this->get_membership_gateway_usage(),
 				),
 			);
 
