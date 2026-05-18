@@ -254,6 +254,15 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 							'default'     => $test_admin_email,
 							'placeholder' => $test_admin_email,
 						),
+						array(
+							'type'        => 'text',
+							'title'       => __( 'PayPal Email Address', 'user-registration' ),
+							'desc'        => __( 'Enter your PayPal email address.', 'user-registration' ),
+							'desc_tip'    => true,
+							'id'          => 'user_registration_global_paypal_live_email_address',
+							'default'     => $live_admin_email,
+							'placeholder' => $live_admin_email,
+						),
 					) : array(),
 					array(
 						array(
@@ -271,15 +280,6 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 							'desc_tip' => true,
 							'id'       => 'user_registration_global_paypal_test_client_secret',
 							'default'  => $test_client_secret,
-						),
-						array(
-							'type'        => 'text',
-							'title'       => __( 'PayPal Email Address', 'user-registration' ),
-							'desc'        => __( 'Enter your PayPal email address.', 'user-registration' ),
-							'desc_tip'    => true,
-							'id'          => 'user_registration_global_paypal_live_email_address',
-							'default'     => $live_admin_email,
-							'placeholder' => $live_admin_email,
 						),
 						array(
 							'type'     => 'text',
