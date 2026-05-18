@@ -320,7 +320,7 @@ if ( ! function_exists( 'ur_membership_redirect_to_thank_you_page' ) ) {
 		$params         = array(
 			'username'       => $user->user_login,
 			'transaction_id' => empty( $member_order['transaction_id'] ) ? $member_order['ID'] : $member_order['transaction_id'],
-			'payment_type'   => 'paid',
+			'payment_type'   => isset( $member_order['order_type'] ) ? $member_order['order_type'] : 'paid',
 		);
 		$url            = $thank_you_page . '?' . http_build_query( $params );
 
