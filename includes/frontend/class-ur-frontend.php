@@ -662,11 +662,15 @@ class UR_Frontend {
 					$currency   = empty( $currency ) ? get_option( 'user_registration_payment_currency', 'USD' ) : $currency;
 
 					$amount = $membership['billing_amount'] ?? '';
-					if ( isset( $membership['post_content']['type'] ) && 'subscription' === $membership['post_content']['type'] && isset( $membership['post_content']['amount'] ) ) {
-						$amount = (float) $membership['post_content']['amount'];
+
+					if ( isset( $membership['post_content']['type'] ) && 'subscription' === $membership['post_content']['type'] ) {
+
+						if ( isset( $membership['post_content']['amount'] ) ) {
+							$amount = (float) $membership['post_content']['amount'];
+						}
 
 						$subscription_last_order = $orders_repository->get_order_by_subscription( $membership['subscription_id'] );
-						if ( ! empty( $subscription_last_order['ID'] ) ) {
+						if ( ! empty( $subscription_last_order['ID'] ) && 'authorize' !== $subscription_last_order['payment_method'] ) {
 							$tax_order_meta = $orders_repository->get_order_meta_by_order_id_and_meta_key( $subscription_last_order['ID'], 'tax_data' );
 							$tax_data       = ! empty( $tax_order_meta['meta_value'] ) ? json_decode( $tax_order_meta['meta_value'], true ) : array();
 							$tax_rate       = ! empty( $tax_data['tax_rate'] ) ? (float) $tax_data['tax_rate'] : 0;

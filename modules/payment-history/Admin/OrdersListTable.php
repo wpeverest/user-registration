@@ -437,26 +437,26 @@ class OrdersListTable extends \UR_List_Table {
 			$subscription = ( new MembersSubscriptionRepository() )->get_subscription_by_subscription_id( absint( $item['subscription_id'] ) );
 			if ( ! empty( $subscription ) && ! empty( $subscription['coupon'] ) ) {
 				$coupon = ur_get_coupon_details( $subscription['coupon'] );
-				if ( ! empty( $coupon ) ) {
-					$discount_value = null;
-					$discount_type  = 'fixed';
+				// if ( ! empty( $coupon ) ) {
+				// $discount_value = null;
+				// $discount_type  = 'fixed';
 
-					if ( isset( $coupon['coupon_discount'] ) && isset( $coupon['coupon_discount_type'] ) ) {
-						$discount_value = (float) $coupon['coupon_discount'];
-						$discount_type  = $coupon['coupon_discount_type'];
-					} elseif ( isset( $coupon['discount'] ) ) {
-						$discount_value = (float) $coupon['discount'];
-						$discount_type  = isset( $coupon['discount_type'] ) ? $coupon['discount_type'] : ( isset( $coupon['coupon_discount_type'] ) ? $coupon['coupon_discount_type'] : 'fixed' );
-					}
+				// if ( isset( $coupon['coupon_discount'] ) && isset( $coupon['coupon_discount_type'] ) ) {
+				// $discount_value = (float) $coupon['coupon_discount'];
+				// $discount_type  = $coupon['coupon_discount_type'];
+				// } elseif ( isset( $coupon['discount'] ) ) {
+				// $discount_value = (float) $coupon['discount'];
+				// $discount_type  = isset( $coupon['discount_type'] ) ? $coupon['discount_type'] : ( isset( $coupon['coupon_discount_type'] ) ? $coupon['coupon_discount_type'] : 'fixed' );
+				// }
 
-					if ( null !== $discount_value && $total_amount ) {
-						if ( 'percent' === $discount_type ) {
-							$coupon_discount = $total_amount * ( $discount_value / 100 );
-						} else {
-							$coupon_discount = $discount_value;
-						}
-					}
-				}
+				// if ( null !== $discount_value && $total_amount ) {
+				// if ( 'percent' === $discount_type ) {
+				// $coupon_discount = $total_amount * ( $discount_value / 100 );
+				// } else {
+				// $coupon_discount = $discount_value;
+				// }
+				// }
+				// }
 			}
 		}
 
