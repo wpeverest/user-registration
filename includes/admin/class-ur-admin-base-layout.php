@@ -59,7 +59,7 @@ class UR_Base_Layout {
 		$search_param = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
 		$is_searching = '' !== trim( $search_param );
 
-		$show_search = ( $total_items > 10 ) || $is_searching;
+		$show_search = ( $total_items > 0 ) || $is_searching;
 
 		$is_membership_page = isset( $_GET['page'] ) && 'user-registration-membership' == $_GET['page'] && ! isset( $_GET['action'] ) ? true : false;
 
