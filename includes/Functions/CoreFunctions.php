@@ -417,14 +417,14 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
 
-				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
-
-					if ( $is_new_installation ) {
-						if ( ! urm_is_payment_gateway_configured( $key ) ) {
-							continue;
-						}
+				if ( $is_new_installation ) {
+					// Get all active gateways.
+					$all_active_gateways = urm_get_all_active_payment_gateways( $membership_type ?: 'paid' );
+					foreach ( $all_active_gateways as $key => $label ) {
 						$active_payment_gateways[ $key ] = true;
-					} else {
+					}
+				} else {
+					foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
 						if ( isset( $gateways['status'] ) && 'on' !== $gateways['status'] ) {
 							continue;
 						}
