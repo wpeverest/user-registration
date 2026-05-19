@@ -409,7 +409,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'type'              => $membership_type,
 				'amount'            => ! empty( $membership_meta_value ) ? $membership['meta_value']['amount'] : 0,
 				'currency_symbol'   => $symbol,
-				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? round( $membership_meta_value['amount'] ) : 0 ),
+				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? (float) $membership_meta_value['amount'] : 0 ),
 				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : $subscription_period,
 				'trial_status'      => ! empty( $membership['meta_value']['trial_status'] ) ? $membership['meta_value']['trial_status'] : 'off',
 				'trial_data'        => ( ! empty( $membership['meta_value']['trial_data'] ) && is_array( $membership['meta_value']['trial_data'] ) ) ? $membership['meta_value']['trial_data'] : array(),
