@@ -1491,7 +1491,7 @@ class StripeService {
 				)
 			);
 
-			$payments_data  = ! empty( $subscription->latest_invoice->payments->data ) ? $subscription->latest_invoice->payments->data : array();
+			$payments_data  = isset( $subscription->latest_invoice->payments->data ) ? (array) $subscription->latest_invoice->payments->data : array();
 			$payment_intent = ! empty( $payments_data ) ? ( $payments_data[0]->payment->payment_intent ?? null ) : null;
 
 			$three_ds2_source = '';
@@ -1717,15 +1717,33 @@ class StripeService {
 			'notice'
 		);
 
-		$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
-		if ( $stripe_subscription ) {
-			$deleted_sub = \Stripe\Subscription::update(
-				$subscription['subscription_id'],
-				array(
-					'cancel_at_period_end' => true,
+		try {
+			$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
+			if ( $stripe_subscription ) {
+				$deleted_sub = \Stripe\Subscription::update(
+					$subscription['subscription_id'],
+					array(
+						'cancel_at_period_end' => true,
+					)
+				);
+			}
+		} catch ( \Stripe\Exception\ApiErrorException $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Failed to cancel Stripe subscription' . "\n" . wp_json_encode(
+					array(
+						'error_code'      => 'STRIPE_CANCELLATION_ERROR',
+						'subscription_id' => $subscription['subscription_id'],
+						'error_message'   => $e->getMessage(),
+						'order_id'        => $order['ID'] ?? 'unknown',
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
+
+			return $response;
 		}
+
 		if ( isset( $deleted_sub['canceled_at'] ) && '' !== $deleted_sub['canceled_at'] ) {
 			$response['status'] = true;
 
@@ -3307,8 +3325,8 @@ class StripeService {
 	 * IDs are cached per mode (test/live) in WordPress options to avoid duplicate Tax Rates in Stripe.
 	 */
 	private function get_or_create_stripe_tax_rate( $percentage ) {
-		$mode       = self::get_stripe_settings()['mode'] ?? 'test';
-		$option_key = 'urm_stripe_tax_rate_' . $mode . '_' . str_replace( '.', '_', (string) $percentage );
+		$mode        = self::get_stripe_settings()['mode'] ?? 'test';
+		$option_key  = 'urm_stripe_tax_rate_' . $mode . '_' . str_replace( '.', '_', (string) $percentage );
 		$tax_rate_id = get_option( $option_key );
 
 		if ( ! empty( $tax_rate_id ) ) {
@@ -3330,8 +3348,8 @@ class StripeService {
 				'stripe',
 				'Failed to create Stripe Tax Rate',
 				array(
-					'error_code'  => 'TAX_RATE_CREATE_FAILED',
-					'percentage'  => $percentage,
+					'error_code'    => 'TAX_RATE_CREATE_FAILED',
+					'percentage'    => $percentage,
 					'error_message' => $e->getMessage(),
 				)
 			);
