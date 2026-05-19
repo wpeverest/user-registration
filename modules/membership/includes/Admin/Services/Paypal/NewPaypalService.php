@@ -1470,14 +1470,6 @@ class NewPaypalService {
 				JSON_PRETTY_PRINT
 			)
 		);
-
-		ur_membership_redirect_now(
-			ur_get_my_account_url() . '/ur-membership',
-			array(
-				'is_upgraded' => 'true',
-				'message'     => __( 'Membership Upgraded successfully', 'user-registration' ),
-			)
-		);
 	}
 
 	/**
