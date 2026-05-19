@@ -1420,13 +1420,56 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 
 			$actions = apply_filters( 'user_registration_pro_user_actions', $actions, $user_id );
 
+			$post_allowed                            = wp_kses_allowed_html( 'post' );
+			$post_allowed['a']['data-wp-delete-url'] = true;
+			$post_allowed['div']['data-nonce']       = true;
+
+			$allowed = array_merge(
+				$post_allowed,
+				array(
+					'svg'      => array(
+						'class'           => true,
+						'aria-hidden'     => true,
+						'aria-labelledby' => true,
+						'role'            => true,
+						'xmlns'           => true,
+						'width'           => true,
+						'height'          => true,
+						'viewbox'         => true, // <= Must be lower case!
+						'fill'            => true,
+					),
+					'g'        => array(
+						'fill'      => true,
+						'clip-path' => true,
+					),
+					'path'     => array(
+						'd'               => true,
+						'fill'            => true,
+						'fill-rule'       => true,
+						'clip-rule'       => true,
+						'stroke'          => true,
+						'stroke-width'    => true,
+						'stroke-linecap'  => true,
+						'stroke-linejoin' => true,
+					),
+					'title'    => array( 'title' => true ),
+					'defs'     => array(),
+					'clippath' => array( 'id' => true ),
+					'rect'     => array(
+						'width'  => true,
+						'height' => true,
+						'fill'   => true,
+					),
+				)
+			);
+
 			if ( ! empty( $actions ) ) {
 				?>
 				<div class="sidebar-box" id="user-registration-user-view-user-actions">
 					<ul>
 						<?php
 						foreach ( $actions as $key => $action_link ) {
-							echo '<li id="user-registration-user-action-' . esc_attr( $key ) . '">' . wp_kses_post( $action_link ) . '</li>';
+							echo '<li id="user-registration-user-action-' . esc_attr( $key ) . '">' . wp_kses( $action_link, $allowed ) . '</li>';
 						}
 						?>
 					</ul>
