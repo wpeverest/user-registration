@@ -1578,8 +1578,18 @@ class NewPaypalService {
 	 */
 	private function handle_order_webhook_event( $event_type, $resource ) {
 		$custom_id = isset( $resource['purchase_units'][0]['custom_id'] ) ? $resource['purchase_units'][0]['custom_id'] : '';
+
 		if ( empty( $custom_id ) ) {
-			return false;
+			// No custom_id (e.g. PAYMENT.CAPTURE.COMPLETED capture resource).
+			// Delegate to non-membership handlers if any are registered.
+			return apply_filters(
+				'user_registration_paypal_webhook_event_fallback',
+				false,
+				array(
+					'event_type' => $event_type,
+					'resource'   => $resource,
+				)
+			);
 		}
 
 		$parsed = $this->parse_custom_id( $custom_id );
@@ -1589,8 +1599,18 @@ class NewPaypalService {
 
 		$member_id    = absint( $parsed['member_id'] );
 		$member_order = $this->members_orders_repository->get_member_orders( $member_id );
+
 		if ( empty( $member_order ) ) {
-			return false;
+			// No membership order for this member_id — may be a normal-registration event.
+			// Delegate to non-membership handlers if any are registered.
+			return apply_filters(
+				'user_registration_paypal_webhook_event_fallback',
+				false,
+				array(
+					'event_type' => $event_type,
+					'resource'   => $resource,
+				)
+			);
 		}
 
 		$transaction_id       = '';
