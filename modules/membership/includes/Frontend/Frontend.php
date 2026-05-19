@@ -37,10 +37,31 @@ class Frontend {
 	 */
 	private function init_hooks() {
 		add_action( 'wp_enqueue_membership_scripts', array( $this, 'load_scripts' ), 10, 2 );
+		add_action( 'user_registration_enqueue_scripts', array( $this, 'maybe_load_scripts_for_form' ), 10, 2 );
 
 		add_action( 'template_redirect', array( $this, 'set_thank_you_transient' ) );
 		add_action( 'wp_loaded', array( $this, 'clear_upgrade_data' ) );
 		add_action( 'user_registration_before_register_user_action', array( $this, 'validate_stripe_card_before_register' ), 10, 2 );
+	}
+
+	public function maybe_load_scripts_for_form( $form_data_array, $form_id ) {
+		if ( wp_script_is( 'user-registration-membership-frontend-script', 'enqueued' ) ) {
+			return;
+		}
+		if ( empty( $form_data_array ) || ! is_iterable( $form_data_array ) ) {
+			return;
+		}
+		foreach ( $form_data_array as $row ) {
+			foreach ( $row as $grid ) {
+				foreach ( $grid as $field ) {
+					$field_key = isset( $field->field_key ) ? $field->field_key : '';
+					if ( 'membership' === $field_key ) {
+						$this->load_scripts();
+						return;
+					}
+				}
+			}
+		}
 	}
 
 	/**

@@ -3105,38 +3105,49 @@
 			$(document).on(
 				"user_registration_frontend_validate_before_form_submit",
 				function (e, $form) {
-					var stripe_selected = false;
-					$('input[name="urm_payment_method"]:visible').each(
-						function () {
-							if (
-								$(this).val() === "stripe" &&
-								$(this).is(":checked")
-							) {
-								stripe_selected = true;
-							}
-						}
+					// Detect Stripe by presence of a visible card container — works
+					// even when there is only one payment method and no radio button.
+					var $stripeContainer = $form.find(
+						".stripe-input-container"
 					);
-					// console.log('[URM Stripe Debug] stripe_selected:', stripe_selected, '| stripe_mode_validated:', stripe_mode_validated, '| elements.card:', !!elements.card, '| elements.stripe:', !!elements.stripe);
-					if (!stripe_selected) return;
-
-					if (stripe_mode_validated) return;
-
-					var stripeEmpty = $(".ur-frontend-form").find(
-						".stripe-input-container .StripeElement--empty"
-					).length;
-					// console.log('[URM Stripe Debug] elements.card:', !!elements.card, '| StripeElement--empty found:', stripeEmpty);
 					if (
-						!elements ||
-						!elements.stripe ||
-						!elements.card ||
-						stripeEmpty
+						!$stripeContainer.length ||
+						!$stripeContainer.is(":visible")
 					) {
-						// console.log('[URM Stripe Debug] Early return — skipping pre-validation');
 						return;
 					}
 
-					stripe_settings.show_stripe_error(
-						urmf_data.labels.i18n_validating_stripe_card
+					if (stripe_mode_validated) {
+						return;
+					}
+
+					// Remove any stale error label from a previous attempt.
+					$form.find("#stripe-errors.user-registration-error").remove();
+
+					var stripeEmpty = $stripeContainer.find(
+						".StripeElement--empty"
+					).length;
+
+					if (stripeEmpty) {
+						// Show inline label directly in the form — no dependency on
+						// stripe_settings or $membership_registration_form.
+						$stripeContainer.append(
+							'<label id="stripe-errors" class="user-registration-error" role="alert">' +
+							urmf_data.labels.i18n_empty_card_details +
+							"</label>"
+						);
+						return;
+					}
+
+					// Card has content: run async API validation.
+					if (!elements || !elements.stripe || !elements.card) {
+						return;
+					}
+
+					$stripeContainer.append(
+						'<label id="stripe-errors" class="user-registration-error" role="alert">' +
+						urmf_data.labels.i18n_validating_stripe_card +
+						"</label>"
 					);
 
 					elements.stripe
@@ -3146,9 +3157,9 @@
 						})
 						.then(function (pmResult) {
 							if (pmResult.error) {
-								stripe_settings.show_stripe_error(
-									pmResult.error.message
-								);
+								$form
+									.find("#stripe-errors")
+									.text(pmResult.error.message);
 								return;
 							}
 
@@ -3157,11 +3168,12 @@
 								{
 									action: "user_registration_membership_validate_stripe_card_mode",
 									_nonce: urmf_data._nonce,
-									payment_method_id: pmResult.paymentMethod.id
+									payment_method_id:
+										pmResult.paymentMethod.id
 								},
 								function (response) {
 									if (response.success) {
-										$membership_registration_form
+										$form
 											.find("#stripe-errors")
 											.remove();
 										validated_stripe_pm_id =
@@ -3174,13 +3186,15 @@
 											$form.submit();
 										}
 									} else {
-										stripe_settings.show_stripe_error(
-											response.data &&
-												response.data.message
-												? response.data.message
-												: urmf_data.labels
-														.i18n_stripe_mode_error
-										);
+										$form
+											.find("#stripe-errors")
+											.text(
+												response.data &&
+													response.data.message
+													? response.data.message
+													: urmf_data.labels
+															.i18n_stripe_mode_error
+											);
 									}
 								}
 							);
@@ -3838,6 +3852,16 @@
 					.not(seatInput)
 					.prop("disabled", true);
 			});
+
+			// If Stripe is already selected on page load, initialize it so elements.card
+			// is ready before the first submit attempt.
+			var $initialMethod = $('input[name="urm_payment_method"]:checked');
+			if ($initialMethod.length && $initialMethod.val() === "stripe") {
+				if (!elements || !elements.card) {
+					$(".stripe-container").removeClass("urm-d-none");
+					stripe_settings.init();
+				}
+			}
 		},
 		validateSwitchCurrency: function (paymentMethod) {
 			var $select = $("#ur-local-currency-switch-currency");
