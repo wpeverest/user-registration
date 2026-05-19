@@ -422,10 +422,6 @@ if ( ! class_exists( 'Admin' ) ) :
 				$ur_authorize_net = array( 'ur_authorize_net' => ! empty( $_POST['ur_authorize_net'] ) ? (array) $_POST['ur_authorize_net'] : array() );
 				$data             = array_merge( $data, $ur_authorize_net );
 
-				if ( 'authorize' === $data['payment_method'] ) {
-					sleep( 20 );
-				}
-
 				$pg_data = $payment_service->build_response( $data );
 				if ( is_wp_error( $pg_data['payment_url'] ?? null ) ) {
 					$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while registering the user.', 'user-registration' );
