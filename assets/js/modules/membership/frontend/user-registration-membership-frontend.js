@@ -3167,7 +3167,7 @@
 								urmf_data.ajax_url,
 								{
 									action: "user_registration_membership_validate_stripe_card_mode",
-									_nonce: urmf_data._nonce,
+									security: urmf_data._nonce,
 									payment_method_id:
 										pmResult.paymentMethod.id
 								},
