@@ -1077,10 +1077,10 @@ class UR_Getting_Started {
 			$meta['type'] = 'free';
 		} elseif ( 'one-time' === $type_input ) {
 			$meta['type']             = 'paid';
-			$meta['payment_gateways'] = get_option( 'ur_membership_payment_gateways' );
+			$meta['payment_gateways'] = self::get_wizard_payment_gateways();
 		} elseif ( 'subscription' === $type_input ) {
 			$meta['type']             = 'subscription';
-			$meta['payment_gateways'] = get_option( 'ur_membership_payment_gateways' );
+			$meta['payment_gateways'] = self::get_wizard_payment_gateways();
 			$meta['subscription']     = array(
 				'value'    => $billing_count,
 				'duration' => $billing_cycle,
@@ -1138,6 +1138,32 @@ class UR_Getting_Started {
 		self::sync_membership_access_rule( $membership_id, $access_rules );
 
 		return $membership_id;
+	}
+
+	/**
+	 * Build the payment_gateways meta for wizard-created plans.
+	 *
+	 * Returns every available gateway (via the runtime filter) with status 'on',
+	 * matching the structure used by manually-created plans so both new and
+	 * legacy installations display all configured gateways correctly.
+	 *
+	 * @return array
+	 */
+	protected static function get_wizard_payment_gateways() {
+		$available = apply_filters(
+			'user_registration_membership_payment_gateways',
+			array(
+				'paypal' => __( 'PayPal', 'user-registration' ),
+				'stripe' => __( 'Stripe', 'user-registration' ),
+				'bank'   => __( 'Bank', 'user-registration' ),
+			)
+		);
+
+		$gateways = array();
+		foreach ( $available as $key => $label ) {
+			$gateways[ $key ] = array( 'status' => 'on' );
+		}
+		return $gateways;
 	}
 
 	/**

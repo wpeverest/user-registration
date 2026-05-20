@@ -386,6 +386,10 @@ class PaymentGatewaysWebhookActions {
 
 		$result = $this->paypal_service->handle_webhook_event( $event );
 
+		if ( ! $result ) {
+			$result = apply_filters( 'user_registration_paypal_webhook_event_fallback', false, $event );
+		}
+
 		if ( false === $result ) {
 			return new WP_REST_Response(
 				array(

@@ -108,6 +108,11 @@
   border-color: #475bb2;
   box-shadow: 0 1px 0 #475bb2;
   text-shadow: none;
+  min-height: 30px !important;
+  line-height: 2.15 !important;
+  font-size: 13px;
+  font-weight: 400;
+  border-radius: 3px;
 }
 .user-registration .button-primary:hover, .user-registration .button-primary:active, .user-registration .button-primary:focus,
 .ur-form-container .button-primary:hover,
@@ -129,6 +134,11 @@
   background: rgb(222.4984029851, 224.3717109905, 232.8015970149);
   border-color: rgb(222.4984029851, 224.3717109905, 232.8015970149);
   box-shadow: 0 1px 0 rgb(222.4984029851, 224.3717109905, 232.8015970149);
+  min-height: 30px !important;
+  line-height: 20px !important;
+  font-size: 13px;
+  font-weight: 400;
+  border-radius: 3px;
 }
 .user-registration .button-secondary:hover, .user-registration .button-secondary:active, .user-registration .button-secondary:focus,
 .ur-form-container .button-secondary:hover,
@@ -143,6 +153,11 @@
   background: #ffffff;
   color: #2d3559;
   border: 1px solid #e1e1e1;
+  min-height: 30px;
+  line-height: 2.15;
+  font-size: 13px;
+  font-weight: 400;
+  border-radius: 3px;
 }
 .user-registration .button-tertiary:hover, .user-registration .button-tertiary:active, .user-registration .button-tertiary:focus,
 .ur-form-container .button-tertiary:hover,
@@ -157,6 +172,11 @@
   background: #ff4f55;
   border-color: #ff4f55;
   box-shadow: 0 1px 0 #ff4f55;
+  min-height: 30px;
+  line-height: 2.15;
+  font-size: 13px;
+  font-weight: 400;
+  border-radius: 3px;
 }
 .user-registration .button-danger:hover, .user-registration .button-danger:active, .user-registration .button-danger:focus,
 .ur-form-container .button-danger:hover,
@@ -214,6 +234,22 @@
 }
 .select2-container .ur-unselect-all-countries-button {
   margin: 6px 3px 4px;
+}
+
+.user-registration-settings-wrapper .user-registration-settings-container .user-registration-options-container .user-registration-card .urm-btn-comp-v7,
+.user-registration-settings-wrapper .user-registration-settings-container .user-registration-options-container .user-registration-card .ur-reset-content-button,
+.user-registration-settings-wrapper .user-registration-settings-container .user-registration-options-container .user-registration-card .add_media,
+.user-registration-settings-wrapper .user-registration-settings-container .user-registration-options-container .user-registration-card .user_registration_send_email_test,
+.user-registration-settings-wrapper .user-registration-settings-container .user-registration-options-container .urcma-account-management-box .urm-btn-comp-v7,
+.user-registration-settings-wrapper .user-registration-settings-container .user-registration-options-container .urcma-account-management-box .ur-reset-content-button,
+.user-registration-settings-wrapper .user-registration-settings-container .user-registration-options-container .urcma-account-management-box .add_media,
+.user-registration-settings-wrapper .user-registration-settings-container .user-registration-options-container .urcma-account-management-box .user_registration_send_email_test {
+  min-height: 30px !important;
+  border-radius: 3px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 2.15 !important;
+  padding: 0 10px;
 }
 
 #payment-detail-modal h2 {

@@ -127,9 +127,9 @@ $paid_amount     = ! empty( $tax_data['total_after_tax'] ) ? (float) $tax_data['
 $recurring_label = '-';
 if ( 'subscription' === $membership_type ) {
 	if ( $team ) {
-		$recurring_label = ! empty( $team['meta']['urm_team_data']['team_duration_period'] ) ? ( 'day' === $team['meta']['urm_team_data']['team_duration_period'] ? 'Daily' : ucfirst( $team['meta']['urm_team_data']['team_duration_period'] ) . 'ly' ) : '';
+		$recurring_label = ! empty( $team['meta']['urm_team_data']['team_duration_period'] ) ? ( 'day' === $team['meta']['urm_team_data']['team_duration_period'] ? __( 'Daily', 'user-registration' ) : ucfirst( $team['meta']['urm_team_data']['team_duration_period'] ) . 'ly' ) : '';
 	} elseif ( isset( $plan_details['subscription']['duration'] ) ) {
-		$recurring_label = ucfirst( $plan_details['subscription']['duration'] ) . 'ly';
+		$recurring_label = 'day' === $plan_details['subscription']['duration'] ? __( 'Daily', 'user-registration' ) : ucfirst( $plan_details['subscription']['duration'] ) . 'ly';
 	} else {
 		$recurring_label = __( 'Recurring', 'user-registration' );
 	}
