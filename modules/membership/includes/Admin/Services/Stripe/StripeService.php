@@ -542,9 +542,9 @@ class StripeService {
 		}
 
 		if ( 'JPY' === $currency ) {
-			$amount = abs( $amount );
+			$amount = (int) round( abs( $amount ) );
 		} else {
-			$amount = abs( $amount ) * 100;
+			$amount = (int) round( abs( $amount ) * 100 );
 		}
 
 		if ( $amount < 1 ) {
@@ -1376,7 +1376,7 @@ class StripeService {
 								}
 
 								$currency = get_option( 'user_registration_payment_currency', 'USD' );
-								$amount   = ( 'JPY' === $currency ) ? $amount : $amount * 100;
+								$amount   = ( 'JPY' === $currency ) ? (int) round( $amount ) : (int) round( $amount * 100 );
 
 								PaymentGatewayLogging::log_general(
 									'stripe',
@@ -1639,7 +1639,7 @@ class StripeService {
 		$coupon_exists    = false;
 		$stripe_coupon_id = '';
 		foreach ( $all_coupon->data as $key => $coupon ) {
-			if ( $coupon->metadata->coupon === strtolower( $data['post_data']['post_content'] ) ) {
+			if ( isset( $coupon->metadata->coupon ) && $coupon->metadata->coupon === strtolower( $data['post_data']['post_content'] ) ) {
 				$coupon_exists    = true;
 				$stripe_coupon_id = $coupon->id;
 			}
@@ -1651,9 +1651,9 @@ class StripeService {
 		}
 		$amount = $data['post_meta_data']['coupon_discount'];
 		if ( 'JPY' === $currency ) {
-			$amount = abs( $amount );
+			$amount = (int) round( abs( $amount ) );
 		} else {
-			$amount = abs( $amount ) * 100;
+			$amount = (int) round( abs( $amount ) * 100 );
 		}
 
 		$coupon_details = array(
@@ -2474,7 +2474,7 @@ class StripeService {
 
 		try {
 			// Calculate amount in cents (or leave as-is for JPY).
-			$amount = ( 'JPY' === $currency ) ? abs( $meta_data['amount'] ) : abs( $meta_data['amount'] ) * 100;
+			$amount = ( 'JPY' === $currency ) ? (int) round( abs( $meta_data['amount'] ) ) : (int) round( abs( $meta_data['amount'] ) * 100 );
 
 			// Prepare price data.
 			$price_details = array(

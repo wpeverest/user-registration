@@ -346,7 +346,7 @@ class SubscriptionService {
 			$data['transaction_id'] = ! empty( $member_order['transaction_id'] ) ? $member_order['transaction_id'] : '';
 		}
 
-		if ( ! empty( $order['coupon'] ) && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'off' === $order['trial_status'] ) ) ) {
+		if ( ! empty( $order['coupon'] ) && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'on' !== ( $order['trial_status'] ?? '' ) ) ) ) {
 			$coupon_meta       = ur_get_coupon_meta_by_code( $order['coupon'] );
 			$order_coupon_meta = $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'coupon_data' );
 
