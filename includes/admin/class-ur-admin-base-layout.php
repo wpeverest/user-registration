@@ -111,7 +111,7 @@ class UR_Base_Layout {
 
 					if ( empty( $membership_groups ) ) {
 						?>
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-membership&action=add_groups' ) ); ?>" class="page-title-action button-secondary urm-create-group-btn">
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-membership&action=add_groups' ) ); ?>" class="page-title-action urm-create-group-btn">
 							<?php echo esc_html( 'Create Group' ); ?>
 						</a>
 						<?php

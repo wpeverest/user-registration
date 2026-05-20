@@ -90,7 +90,7 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 			$login_icon = '<span class="dashicons dashicons-migrate" style="line-height:25px; font-size:16px"></span>';
 
 			printf(
-				'<a href="#" class="button ur-insert-form-button" data-editor="%s" title="%s">%s %s</a>',
+				'<a href="#" class="button ur-insert-form-button urm-btn-comp-v7" data-editor="%s" title="%s">%s %s</a>',
 				esc_attr( $editor_id ),
 				esc_attr__( 'Add User Registration & Membership Form', 'user-registration' ),
 				wp_kses_post( $icon ),
