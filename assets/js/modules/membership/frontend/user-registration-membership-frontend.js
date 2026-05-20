@@ -980,11 +980,16 @@
 				subTotalInput.text(
 					currency + parseFloat(totalDetails.subTotal).toFixed(2)
 				);
-				taxInput.text(
-					"+" +
-						currency +
-						parseFloat(totalDetails.taxAmount).toFixed(2)
-				);
+				if (parseFloat(totalDetails.taxAmount) > 0) {
+					taxInput.closest(".urm-membership-tax-value").show();
+					taxInput.text(
+						"+" +
+							currency +
+							parseFloat(totalDetails.taxAmount).toFixed(2)
+					);
+				} else {
+					taxInput.closest(".urm-membership-tax-value").hide();
+				}
 				if (totalDetails.discountAmount > 0) {
 					couponInput.closest(".urm-membership-coupons-value").show();
 
@@ -1006,11 +1011,16 @@
 				subTotalInput.text(
 					parseFloat(totalDetails.subTotal).toFixed(2) + currency
 				);
-				taxInput.text(
-					"+" +
-						parseFloat(totalDetails.taxAmount).toFixed(2) +
-						currency
-				);
+				if (parseFloat(totalDetails.taxAmount) > 0) {
+					taxInput.closest(".urm-membership-tax-value").show();
+					taxInput.text(
+						"+" +
+							parseFloat(totalDetails.taxAmount).toFixed(2) +
+							currency
+					);
+				} else {
+					taxInput.closest(".urm-membership-tax-value").hide();
+				}
 
 				if (totalDetails.discountAmount > 0) {
 					couponInput.closest(".urm-membership-coupons-value").show();
@@ -1027,6 +1037,15 @@
 					"-" + parseFloat(proratedDiscount).toFixed(2) + currency
 				);
 			}
+
+			var hasDiscount =
+				totalDetails.discountAmount > 0 || proratedDiscount > 0;
+			var hasAdjustment =
+				hasDiscount || parseFloat(totalDetails.taxAmount) > 0;
+
+			$(".urm-pre-subtotal-divider").toggle(hasDiscount);
+			$(".urm-membership-sub-total-value").toggle(hasAdjustment);
+			$(".urm-pre-total-divider").toggle(hasAdjustment);
 		},
 		upgrade_membership: function (
 			data,

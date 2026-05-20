@@ -278,6 +278,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - Update success message icon and cookie settings for pro version activation.
 * Fix      - Emails not being sent if the registration success state is not broadcasted properly.
 * Fix      - Stripe Credit card details reset when switching membership plans in registration forms.
+* Fix      - Members table showing Membership and Subscription status even when membership is not used.
 * Fix      - Prevented PayPal payment status from being changed from pending to completed without a successful payment.
 * Fix      - Content restriction only applied to the main content area, leaving page titles and featured images visible in Elementor.
 

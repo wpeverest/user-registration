@@ -542,9 +542,9 @@ class StripeService {
 		}
 
 		if ( 'JPY' === $currency ) {
-			$amount = abs( $amount );
+			$amount = (int) round( abs( $amount ) );
 		} else {
-			$amount = abs( $amount ) * 100;
+			$amount = (int) round( abs( $amount ) * 100 );
 		}
 
 		if ( $amount < 1 ) {
@@ -682,13 +682,10 @@ class StripeService {
 					sprintf( ' [Member ID #%s] Payment intent created successfully.', $member_id ) . "\n" . wp_json_encode(
 						array(
 							'payment_intent_id' => $intent->id,
-							'amount'            => $amount / 100,
-							'currency'          => $currency,
-							'member_id'         => $member_id,
 							'membership_type'   => $membership_type,
+							JSON_PRETTY_PRINT,
 						),
-						JSON_PRETTY_PRINT
-					),
+					)
 				);
 			}
 
@@ -1044,6 +1041,8 @@ class StripeService {
 					),
 					'success'
 				);
+
+				$response = $this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response, $is_upgrading );
 			}
 		}
 
@@ -1376,7 +1375,7 @@ class StripeService {
 								}
 
 								$currency = get_option( 'user_registration_payment_currency', 'USD' );
-								$amount   = ( 'JPY' === $currency ) ? $amount : $amount * 100;
+								$amount   = ( 'JPY' === $currency ) ? (int) round( $amount ) : (int) round( $amount * 100 );
 
 								PaymentGatewayLogging::log_general(
 									'stripe',
@@ -1491,7 +1490,7 @@ class StripeService {
 				)
 			);
 
-			$payments_data  = ! empty( $subscription->latest_invoice->payments->data ) ? $subscription->latest_invoice->payments->data : array();
+			$payments_data  = isset( $subscription->latest_invoice->payments->data ) ? (array) $subscription->latest_invoice->payments->data : array();
 			$payment_intent = ! empty( $payments_data ) ? ( $payments_data[0]->payment->payment_intent ?? null ) : null;
 
 			$three_ds2_source = '';
@@ -1639,7 +1638,7 @@ class StripeService {
 		$coupon_exists    = false;
 		$stripe_coupon_id = '';
 		foreach ( $all_coupon->data as $key => $coupon ) {
-			if ( $coupon->metadata->coupon === strtolower( $data['post_data']['post_content'] ) ) {
+			if ( isset( $coupon->metadata->coupon ) && $coupon->metadata->coupon === strtolower( $data['post_data']['post_content'] ) ) {
 				$coupon_exists    = true;
 				$stripe_coupon_id = $coupon->id;
 			}
@@ -1651,9 +1650,9 @@ class StripeService {
 		}
 		$amount = $data['post_meta_data']['coupon_discount'];
 		if ( 'JPY' === $currency ) {
-			$amount = abs( $amount );
+			$amount = (int) round( abs( $amount ) );
 		} else {
-			$amount = abs( $amount ) * 100;
+			$amount = (int) round( abs( $amount ) * 100 );
 		}
 
 		$coupon_details = array(
@@ -1717,15 +1716,33 @@ class StripeService {
 			'notice'
 		);
 
-		$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
-		if ( $stripe_subscription ) {
-			$deleted_sub = \Stripe\Subscription::update(
-				$subscription['subscription_id'],
-				array(
-					'cancel_at_period_end' => true,
+		try {
+			$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
+			if ( $stripe_subscription ) {
+				$deleted_sub = \Stripe\Subscription::update(
+					$subscription['subscription_id'],
+					array(
+						'cancel_at_period_end' => true,
+					)
+				);
+			}
+		} catch ( \Stripe\Exception\ApiErrorException $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Failed to cancel Stripe subscription' . "\n" . wp_json_encode(
+					array(
+						'error_code'      => 'STRIPE_CANCELLATION_ERROR',
+						'subscription_id' => $subscription['subscription_id'],
+						'error_message'   => $e->getMessage(),
+						'order_id'        => $order['ID'] ?? 'unknown',
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
+
+			return $response;
 		}
+
 		if ( isset( $deleted_sub['canceled_at'] ) && '' !== $deleted_sub['canceled_at'] ) {
 			$response['status'] = true;
 
@@ -2456,7 +2473,7 @@ class StripeService {
 
 		try {
 			// Calculate amount in cents (or leave as-is for JPY).
-			$amount = ( 'JPY' === $currency ) ? abs( $meta_data['amount'] ) : abs( $meta_data['amount'] ) * 100;
+			$amount = ( 'JPY' === $currency ) ? (int) round( abs( $meta_data['amount'] ) ) : (int) round( abs( $meta_data['amount'] ) * 100 );
 
 			// Prepare price data.
 			$price_details = array(
@@ -3307,8 +3324,8 @@ class StripeService {
 	 * IDs are cached per mode (test/live) in WordPress options to avoid duplicate Tax Rates in Stripe.
 	 */
 	private function get_or_create_stripe_tax_rate( $percentage ) {
-		$mode       = self::get_stripe_settings()['mode'] ?? 'test';
-		$option_key = 'urm_stripe_tax_rate_' . $mode . '_' . str_replace( '.', '_', (string) $percentage );
+		$mode        = self::get_stripe_settings()['mode'] ?? 'test';
+		$option_key  = 'urm_stripe_tax_rate_' . $mode . '_' . str_replace( '.', '_', (string) $percentage );
 		$tax_rate_id = get_option( $option_key );
 
 		if ( ! empty( $tax_rate_id ) ) {
@@ -3330,8 +3347,8 @@ class StripeService {
 				'stripe',
 				'Failed to create Stripe Tax Rate',
 				array(
-					'error_code'  => 'TAX_RATE_CREATE_FAILED',
-					'percentage'  => $percentage,
+					'error_code'    => 'TAX_RATE_CREATE_FAILED',
+					'percentage'    => $percentage,
 					'error_message' => $e->getMessage(),
 				)
 			);

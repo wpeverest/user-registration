@@ -8,6 +8,7 @@
         "url": "https://github.com/wpeverest/user-registration.git"
     },
     "license": "GPL-3.0+",
+    "packageManager": "pnpm@9.15.9",
     "main": "Gruntfile.js",
     "scripts": {
         "build": "pnpm exec grunt && pnpm run makepot && wp-scripts build --node-env=production --mode=production",

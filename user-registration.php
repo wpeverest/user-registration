@@ -206,15 +206,6 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		}
 
 		/**
-		 * Instantiate WPML compatibility class when WPML is active.
-		 */
-		public function init_wpml_compat() {
-			if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
-				new UR_WPML();
-			}
-		}
-
-		/**
 		 * Define FT Constants.
 		 */
 		private function define_constants() {
@@ -234,7 +225,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_ASSET_PATH', plugins_url( 'assets/', UR_PLUGIN_FILE ) );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
-			$this->define( 'UR_PRO_ACTIVE', true );
+			$this->define( 'UR_PRO_ACTIVE', false );
 			$this->define( 'UR_DEV', false );
 		}
 
@@ -349,7 +340,6 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-privacy.php';
 			include_once UR_ABSPATH . 'includes/class-ur-form-block.php';
 			include_once UR_ABSPATH . 'includes/class-ur-cache-helper.php';
-			include_once UR_ABSPATH . 'includes/class-ur-wpml.php';
 
 			/**
 			 * Block classes.

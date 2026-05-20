@@ -3210,6 +3210,7 @@
 				$( document ).find( '.ur-front-spinner' ).remove();
 
 				$stateWrapper.append($stateElement);
+				$stateElement.trigger('change');
 			}
 		});
 	});

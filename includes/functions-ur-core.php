@@ -6291,7 +6291,7 @@ if ( ! function_exists( 'ur_email_preview_link' ) ) {
 			home_url()
 		);
 
-		return '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '" class="button user-registration-email-preview " style="min-width:70px;">' . esc_html( $label ) . '</a>';
+		return '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '" class="button user-registration-email-preview urm-btn-comp-v7 " style="min-width:70px; ">' . esc_html( $label ) . '</a>';
 	}
 }
 
@@ -7548,9 +7548,10 @@ if ( ! function_exists( 'ur_get_coupon_details' ) ) {
 		);
 
 		if ( $posts->post_count > 0 ) {
-			$posts_meta               = get_post_meta( $posts->post->ID, 'ur_coupon_meta', true );
-			$coupon_data              = json_decode( $posts_meta, true );
-			$coupon_data['coupon_id'] = $posts->post->ID;
+			$posts_meta                 = get_post_meta( $posts->post->ID, 'ur_coupon_meta', true );
+			$coupon_data                = json_decode( $posts_meta, true );
+			$coupon_data['coupon_id']   = $posts->post->ID;
+			$coupon_data['coupon_name'] = $posts->post->post_title;
 
 			return $coupon_data;
 		}

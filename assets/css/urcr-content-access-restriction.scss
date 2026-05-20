@@ -80,9 +80,11 @@ $border-left-color_3: #0073aa;
 				cursor: pointer;
 
 				&:hover {
-					background: rgb(56.4578313253,
-							72.3614457831,
-							141.5421686747);
+					background: rgb(
+						56.4578313253,
+						72.3614457831,
+						141.5421686747
+					);
 				}
 
 				&:focus {
@@ -2191,6 +2193,7 @@ $not-tag: #fcdddd;
 		.urcr-checkbox-radio-input {
 			margin: 0;
 			margin-right: 8px;
+			background: none;
 
 			&:focus {
 				outline: none;
@@ -2720,7 +2723,7 @@ $not-tag: #fcdddd;
 		border: 1px solid transparent;
 		cursor: pointer;
 		box-shadow: none !important;
-		transition: all .3s ease-in-out;
+		transition: all 0.3s ease-in-out;
 
 		@media screen and (max-width: 600px) {
 			margin-left: 0;
@@ -2751,12 +2754,12 @@ $not-tag: #fcdddd;
 		background: #fff;
 		border: 1px solid #d1d5db;
 		border-radius: 4px;
-		box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 		z-index: 999;
 		box-sizing: border-box;
-		transition: all .15s ease;
+		transition: all 0.15s ease;
 
-		>span {
+		> span {
 			display: none;
 		}
 	}
@@ -2789,7 +2792,7 @@ $not-tag: #fcdddd;
 		box-shadow: none !important;
 		margin: 0 !important;
 		cursor: pointer;
-		transition: all .3s ease-in-out;
+		transition: all 0.3s ease-in-out;
 
 		&:focus {
 			outline: none;
