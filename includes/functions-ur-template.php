@@ -899,7 +899,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					if ( $is_json ) {
 						$value = json_decode( $value, true );
 					}
-					$country = is_array( $value ) && ! empty( $value['country'] ) ? $value['country'] : $value;
+					$country = is_array( $value ) ? ( ! empty( $value['country'] ) ? $value['country'] : '' ) : $value;
 
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
