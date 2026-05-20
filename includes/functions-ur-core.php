@@ -7548,9 +7548,10 @@ if ( ! function_exists( 'ur_get_coupon_details' ) ) {
 		);
 
 		if ( $posts->post_count > 0 ) {
-			$posts_meta               = get_post_meta( $posts->post->ID, 'ur_coupon_meta', true );
-			$coupon_data              = json_decode( $posts_meta, true );
-			$coupon_data['coupon_id'] = $posts->post->ID;
+			$posts_meta                 = get_post_meta( $posts->post->ID, 'ur_coupon_meta', true );
+			$coupon_data                = json_decode( $posts_meta, true );
+			$coupon_data['coupon_id']   = $posts->post->ID;
+			$coupon_data['coupon_name'] = $posts->post->post_title;
 
 			return $coupon_data;
 		}

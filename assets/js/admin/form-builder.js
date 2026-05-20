@@ -548,6 +548,9 @@
 						$(".ur_save_form_action_button")
 							.find(".ur-spinner")
 							.remove();
+						if (!response.responseJSON) {
+							return;
+						}
 						if (response.responseJSON.success === true) {
 							var success_message =
 								user_registration_form_builder_data.i18n_admin

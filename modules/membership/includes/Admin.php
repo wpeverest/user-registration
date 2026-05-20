@@ -314,13 +314,15 @@ if ( ! class_exists( 'Admin' ) ) :
 					wp_delete_user( absint( $member_id ) );
 					wp_send_json_error( array( 'message' => sanitize_text_field( $data['stripe_pm_error'] ) ) );
 				}
-				if ( ! empty( $data['payment_method_id'] ) ) {
-					$stripe_service = new StripeService();
-					$mode_result    = $stripe_service->validate_card_mode( sanitize_text_field( $data['payment_method_id'] ) );
-					if ( ! $mode_result['valid'] ) {
-						wp_delete_user( absint( $member_id ) );
-						wp_send_json_error( array( 'message' => $mode_result['message'] ) );
-					}
+				if ( empty( $data['payment_method_id'] ) ) {
+					wp_delete_user( absint( $member_id ) );
+					wp_send_json_error( array( 'message' => __( 'Please enter your card details.', 'user-registration' ) ) );
+				}
+				$stripe_service = new StripeService();
+				$mode_result    = $stripe_service->validate_card_mode( sanitize_text_field( $data['payment_method_id'] ) );
+				if ( ! $mode_result['valid'] ) {
+					wp_delete_user( absint( $member_id ) );
+					wp_send_json_error( array( 'message' => $mode_result['message'] ) );
 				}
 			}
 
@@ -421,9 +423,11 @@ if ( ! class_exists( 'Admin' ) ) :
 				$payment_service  = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 				$ur_authorize_net = array( 'ur_authorize_net' => ! empty( $_POST['ur_authorize_net'] ) ? (array) $_POST['ur_authorize_net'] : array() );
 				$data             = array_merge( $data, $ur_authorize_net );
-				$pg_data          = $payment_service->build_response( $data );
+
+				$pg_data = $payment_service->build_response( $data );
 				if ( is_wp_error( $pg_data['payment_url'] ?? null ) ) {
 					$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while registering the user.', 'user-registration' );
+					wp_delete_user( absint( $member_id ) );
 					wp_send_json_error( array( 'message' => $message ) );
 				}
 			}
@@ -460,6 +464,7 @@ if ( ! class_exists( 'Admin' ) ) :
 
 			} else {
 				$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while registering the user.', 'user-registration' );
+				wp_delete_user( absint( $member_id ) );
 				wp_send_json_error( array( 'message' => $message ) );
 			}
 		}
