@@ -1041,6 +1041,8 @@ class StripeService {
 					),
 					'success'
 				);
+
+				$response = $this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response, $is_upgrading );
 			}
 		}
 
