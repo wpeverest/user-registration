@@ -25,39 +25,19 @@
 	padding: 0 10px;
 }
 
-// Broad button baseline reset for all plugin admin/frontend contexts.
-.user-registration,
-.ur-form-container,
-.user-registration-settings-wrapper,
-body.user-registration,
-body.user-registration-page {
-	button:not(.select2-search__field),
-	input[type="submit"],
-	input[type="button"],
-	.button {
-		min-height: 30px;
-		line-height: 2.15;
-		font-size: 13px;
-		font-weight: 400;
-		border-radius: 3px;
-	}
-}
-
-// Checkbox and radio background reset.
-// WP 7.0 adds background-color to :checked states on these elements.
-.user-registration,
-body.user-registration,
-body.user-registration-page {
-	input[type="checkbox"],
-	input[type="radio"] {
-		background: none;
-
-		&:checked {
+.ur-membership-selection-container {
+	.ur-input-type-select {
+		input[type="checkbox"],
+		input[type="radio"] {
 			background: none;
-		}
 
-		&:focus {
-			box-shadow: none;
+			&:checked {
+				background: none;
+			}
+
+			&:focus {
+				box-shadow: none;
+			}
 		}
 	}
 }
