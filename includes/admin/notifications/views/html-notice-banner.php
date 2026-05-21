@@ -33,7 +33,7 @@ switch ( $notice_type ) {
 				<?php
 				if ( 'allow_usage' !== $notice_type ) {
 					?>
-					<a href="#" class="close-btn notice-dismiss notice-dismiss-temporarily">&times;</a>
+					<a href="#" class="close-btn ur-notice-dismiss ur-notice-dismiss-temporarily">&times;</a>
 					<?php
 				}
 				?>

@@ -157,13 +157,22 @@ class UR_Admin_Notices
 		$valid_notice = array();
 
 		foreach ($notices as $key => $notice) {
+			$notice_id    = $notice['type'] . '_' . $notice['id'];
+			$reopen_days  = isset( $notice['reopen_days'] ) ? $notice['reopen_days'] : 0;
+			$reopen_times = isset( $notice['reopen_times'] ) ? $notice['reopen_times'] : 0;
+
+			if ( true === $notice['conditions_to_display'] ) {
+				if ( current_user_can( 'manage_options' ) ) {
+					$valid_notice = $notice;
+					break;
+				}
+				continue;
+			}
+
 			$conditions      = $notice['conditions_to_display'][0];
 			$operator        = 'AND';
 			$valid_condition = array();
 
-			$notice_id    = $notice['type'] . '_' . $notice['id'];
-			$reopen_days  = $notice['reopen_days'];
-			$reopen_times = $notice['reopen_times'];
 			foreach ($conditions as $key => $value) {
 
 				if ('operator' == $key) {
@@ -343,14 +352,14 @@ class UR_Admin_Notices
 								'title'  => __('I already did!', 'user-registration'),
 								'icon'   => 'dashicons-smiley',
 								'link'   => '#',
-								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
+								'class'  => 'button-secondary ur-notice-dismiss ur-notice-dismiss-permanently',
 								'target' => '',
 							),
 							array(
 								'title'  => __('Maybe later', 'user-registration'),
 								'icon'   => 'dashicons-dismiss',
 								'link'   => '#',
-								'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
+								'class'  => 'button-secondary ur-notice-dismiss ur-notice-dismiss-temporarily',
 								'target' => '',
 							),
 							array(
@@ -403,14 +412,14 @@ class UR_Admin_Notices
 								'title'  => __('I already did!', 'user-registration'),
 								'icon'   => 'dashicons-smiley',
 								'link'   => '#',
-								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
+								'class'  => 'button-secondary ur-notice-dismiss ur-notice-dismiss-permanently',
 								'target' => '',
 							),
 							array(
 								'title'  => __('Maybe later', 'user-registration'),
 								'icon'   => 'dashicons-dismiss',
 								'link'   => '#',
-								'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
+								'class'  => 'button-secondary ur-notice-dismiss ur-notice-dismiss-temporarily',
 								'target' => '',
 							),
 							array(
@@ -466,14 +475,14 @@ class UR_Admin_Notices
 								'title'  => __('I already did!', 'user-registration'),
 								'icon'   => 'dashicons-smiley',
 								'link'   => '#',
-								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
+								'class'  => 'button-secondary ur-notice-dismiss ur-notice-dismiss-permanently',
 								'target' => '',
 							),
 							array(
 								'title'  => __('Maybe later', 'user-registration'),
 								'icon'   => 'dashicons-dismiss',
 								'link'   => '#',
-								'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
+								'class'  => 'button-secondary ur-notice-dismiss ur-notice-dismiss-temporarily',
 								'target' => '',
 							),
 							array(

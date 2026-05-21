@@ -624,7 +624,7 @@ function promotional_notice_links( $notice_target_links, $is_permanent_dismiss )
 	if ( $is_permanent_dismiss ) {
 
 		?>
-			<a href="#" class="notice-dismiss notice-nsa notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
+			<a href="#" class="ur-notice-dismiss ur-notice-nsa ur-notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
 		<?php
 	}
 }
