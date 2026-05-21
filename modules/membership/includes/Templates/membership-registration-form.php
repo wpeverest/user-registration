@@ -554,16 +554,20 @@
 			</span>
 		</div>
 		<?php endif; ?>
-		<?php if ( $is_coupon_addon_activated || $is_tax_calculation_enabled ) :; ?>
+		<?php if ( $is_coupon_addon_activated || $is_tax_calculation_enabled ) : ?>
 			<hr class="ur_membership_divider urm-pre-total-divider" style="display:none;">
-					for="ur-membership-total"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_total', esc_html__( 'Total', 'user-registration' ) ); ?></label>
-					id="ur-membership-total"
-					data-key-name="<?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_total', esc_html__( 'Total', 'user-registration' ) ); ?>"
-					disabled
+			<div class="urm-membership-total-value" style="display:none;">
+				<label class="ur_membership_input_label ur-label"
+				for="ur-membership-total"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_total', esc_html__( 'Total', 'user-registration' ) ); ?></label>
+				<span class="ur_membership_input_class"
+				id="ur-membership-total"
+				data-key-name="<?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_total', esc_html__( 'Total', 'user-registration' ) ); ?>"
+				disabled
 			>
 				<?php echo ceil( 0 ); ?>
 			</span>
 		</div>
+		<?php endif; ?>
 		<span id="total-input-notice">
 		</span>
 	</div>
