@@ -320,7 +320,7 @@ if ( ! function_exists( 'ur_membership_redirect_to_thank_you_page' ) ) {
 		$params         = array(
 			'username'       => $user->user_login,
 			'transaction_id' => empty( $member_order['transaction_id'] ) ? $member_order['ID'] : $member_order['transaction_id'],
-			'payment_type'   => 'paid',
+			'payment_type'   => isset( $member_order['order_type'] ) ? $member_order['order_type'] : 'paid',
 		);
 		$url            = $thank_you_page . '?' . http_build_query( $params );
 
@@ -409,7 +409,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'type'              => $membership_type,
 				'amount'            => ! empty( $membership_meta_value ) ? $membership['meta_value']['amount'] : 0,
 				'currency_symbol'   => $symbol,
-				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? round( $membership_meta_value['amount'] ) : 0 ),
+				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? (float) $membership_meta_value['amount'] : 0 ),
 				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : $subscription_period,
 				'trial_status'      => ! empty( $membership['meta_value']['trial_status'] ) ? $membership['meta_value']['trial_status'] : 'off',
 				'trial_data'        => ( ! empty( $membership['meta_value']['trial_data'] ) && is_array( $membership['meta_value']['trial_data'] ) ) ? $membership['meta_value']['trial_data'] : array(),
@@ -417,14 +417,14 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
 
-				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
-
-					if ( $is_new_installation ) {
-						if ( ! urm_is_payment_gateway_configured( $key ) ) {
-							continue;
-						}
+				if ( $is_new_installation ) {
+					// Get all active gateways.
+					$all_active_gateways = urm_get_all_active_payment_gateways( $membership_type ?: 'paid' );
+					foreach ( $all_active_gateways as $key => $label ) {
 						$active_payment_gateways[ $key ] = true;
-					} else {
+					}
+				} else {
+					foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
 						if ( isset( $gateways['status'] ) && 'on' !== $gateways['status'] ) {
 							continue;
 						}

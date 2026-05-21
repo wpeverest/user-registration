@@ -539,11 +539,12 @@ class Orders {
 				$pct                   = min( (float) $discount_value, 100 );
 				$post_proration_amount = $pct < 100 ? round( $invoice_pre_tax / ( 1 - $pct / 100 ), 4 ) : $plan_amount;
 				$coupon_raw            = round( $post_proration_amount * $pct / 100, 2 );
-				$coupon_label          = 'Coupon (' . $pct . '%)';
+				$coupon_label          = 'Coupon ( ' . $pct . '% )';
 			} else {
 				$coupon_raw            = round( $discount_value, 2 );
 				$post_proration_amount = round( $invoice_pre_tax + $coupon_raw, 4 );
-				$coupon_label          = 'Coupon (' . $coupon_code . ')';
+				$coupon_name           = ! empty( $coupon_data['coupon_name'] ) ? $coupon_data['coupon_name'] : $coupon_code;
+				$coupon_label          = 'Coupon ( ' . $coupon_name . ' )';
 			}
 		} else {
 			$post_proration_amount = $invoice_pre_tax;

@@ -1,13 +1,14 @@
 {
     "name": "user-registration",
     "title": "User Registration",
-    "version": "5.1.6",
+    "version": "5.2.0",
     "homepage": "https://wpuserregistration.com/",
     "repository": {
         "type": "git",
         "url": "https://github.com/wpeverest/user-registration.git"
     },
     "license": "GPL-3.0+",
+    "packageManager": "pnpm@9.15.9",
     "main": "Gruntfile.js",
     "scripts": {
         "build": "pnpm exec grunt && pnpm run makepot && wp-scripts build --node-env=production --mode=production",

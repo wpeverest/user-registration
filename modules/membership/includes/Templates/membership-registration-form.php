@@ -515,7 +515,7 @@
 		</span>
 		</div>
 		<?php if ( $is_coupon_addon_activated ) : ?>
-			<div class="urm-membership-coupons-value">
+			<div class="urm-membership-coupons-value" style="display:none;">
 				<label class="ur_membership_input_label ur-label"
 				for="ur-membership-coupons"><?php echo esc_html__( 'Coupons', 'user-registration' ); ?></label>
 				<span class="ur_membership_input_class"
@@ -528,8 +528,8 @@
 		</div>
 		<?php endif; ?>
 		<?php if ( $is_coupon_addon_activated || $is_tax_calculation_enabled ) : ?>
-			<hr class="ur_membership_divider">
-			<div class="urm-membership-sub-total-value">
+			<hr class="ur_membership_divider urm-pre-subtotal-divider" style="display:none;">
+			<div class="urm-membership-sub-total-value" style="display:none;">
 				<label class="ur_membership_input_label ur-label"
 				for="ur-membership-subtotal"><?php echo esc_html__( 'Sub Total', 'user-registration' ); ?></label>
 				<span class="ur_membership_input_class"
@@ -542,7 +542,7 @@
 		</div>
 		<?php endif; ?>
 		<?php if ( $is_tax_calculation_enabled ) : ?>
-			<div class="urm-membership-tax-value">
+			<div class="urm-membership-tax-value" style="display:none;">
 				<label class="ur_membership_input_label ur-label"
 				for="ur-membership-tax"><?php echo esc_html__( 'Tax', 'user-registration' ); ?></label>
 				<span class="ur_membership_input_class"
@@ -554,13 +554,9 @@
 			</span>
 		</div>
 		<?php endif; ?>
-		<?php if ( $is_coupon_addon_activated || $is_tax_calculation_enabled ) : ?>
-			<hr class="ur_membership_divider">
-		<?php endif; ?>
-		<div class="urm-membership-total-value">
-			<label class="ur_membership_input_label ur-label"
+		<?php if ( $is_coupon_addon_activated || $is_tax_calculation_enabled ) :; ?>
+			<hr class="ur_membership_divider urm-pre-total-divider" style="display:none;">
 					for="ur-membership-total"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_total', esc_html__( 'Total', 'user-registration' ) ); ?></label>
-			<span class="ur_membership_input_class"
 					id="ur-membership-total"
 					data-key-name="<?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_total', esc_html__( 'Total', 'user-registration' ) ); ?>"
 					disabled

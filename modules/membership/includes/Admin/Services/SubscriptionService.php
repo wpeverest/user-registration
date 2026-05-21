@@ -328,15 +328,15 @@ class SubscriptionService {
 		$membership_id = isset( $data['membership'] ) ? $data['membership'] : ( isset( $subscription['item_id'] ) ? $subscription['item_id'] : 0 );
 		$membership    = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 
-		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
-		$membership_metas['post_title'] = $membership['post_title'];
+		$membership_metas               = ! empty( $membership['meta_value'] ) ? wp_unslash( json_decode( $membership['meta_value'], true ) ) : array();
+		$membership_metas['post_title'] = $membership['post_title'] ?? '';
 		$member_order                   = $member_order ? $member_order : $this->members_orders_repository->get_member_orders( $data['member_id'] );
 		$order                          = ! empty( $member_order['ID'] ) ? $this->orders_repository->get_order_detail( $member_order['ID'] ) : array();
-		$total                          = $order['total_amount'];
+		$total                          = $order['total_amount'] ?? 0;
 		$membership_tab_url             = esc_url( ur_get_my_account_url() . 'ur-membership' );
 
 		$order_repository = new OrdersRepository();
-		$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'local_currency' );
+		$local_currency   = ! empty( $order['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'local_currency' ) : array();
 
 		$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
 		$symbol   = ur_get_currency_symbol( $currency );
@@ -346,7 +346,7 @@ class SubscriptionService {
 			$data['transaction_id'] = ! empty( $member_order['transaction_id'] ) ? $member_order['transaction_id'] : '';
 		}
 
-		if ( ! empty( $order['coupon'] ) && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'off' === $order['trial_status'] ) ) ) {
+		if ( ! empty( $order['coupon'] ) && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'on' !== ( $order['trial_status'] ?? '' ) ) ) ) {
 			$coupon_meta       = ur_get_coupon_meta_by_code( $order['coupon'] );
 			$order_coupon_meta = $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'coupon_data' );
 
@@ -364,14 +364,14 @@ class SubscriptionService {
 			}
 			// New orders have coupon_data meta — total_amount already reflects the actual paid amount.
 		}
-		$billing_cycle = ( 'subscription' === $membership_metas['type'] ) ? ( ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) ) : 'N/A';
-		$trial_period  = ( 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] ) ? ( $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] . ( $membership_metas['trial_data']['value'] > 1 ? 's' : '' ) ) : 'N/A';
+		$billing_cycle = ( 'subscription' === ( $membership_metas['type'] ?? '' ) ) ? ( ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) ) : 'N/A';
+		$trial_period  = ( 'subscription' === ( $membership_metas['type'] ?? '' ) && 'on' === $order['trial_status'] ) ? ( $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] . ( $membership_metas['trial_data']['value'] > 1 ? 's' : '' ) ) : 'N/A';
 
-		$next_billing_date = 'subscription' === $membership_metas['type'] && ! empty( $subscription['next_billing_date'] ) ? date( 'Y, F d', strtotime( $subscription['next_billing_date'] ) ) : 'N/A';
-		$expiry_date       = 'subscription' === $membership_metas['type'] && ! empty( $subscription['expiry_date'] ) ? date( 'Y, F d', strtotime( $subscription['expiry_date'] ) ) : 'N/A';
-		$trial_start_date  = 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] && ! empty( $subscription['trial_start_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_start_date'] ) ) : 'N/A';
-		$trial_end_date    = 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] && ! empty( $subscription['trial_end_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_end_date'] ) ) : 'N/A';
-		$membership_type   = ucwords( $membership_metas['type'] ) == 'Paid' ? __( 'One-Time Payment', 'user-registration' ) : ucwords( $membership_metas['type'] );
+		$next_billing_date = 'subscription' === ( $membership_metas['type'] ?? '' ) && ! empty( $subscription['next_billing_date'] ) ? date( 'Y, F d', strtotime( $subscription['next_billing_date'] ) ) : 'N/A';
+		$expiry_date       = 'subscription' === ( $membership_metas['type'] ?? '' ) && ! empty( $subscription['expiry_date'] ) ? date( 'Y, F d', strtotime( $subscription['expiry_date'] ) ) : 'N/A';
+		$trial_start_date  = 'subscription' === ( $membership_metas['type'] ?? '' ) && 'on' === $order['trial_status'] && ! empty( $subscription['trial_start_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_start_date'] ) ) : 'N/A';
+		$trial_end_date    = 'subscription' === ( $membership_metas['type'] ?? '' ) && 'on' === $order['trial_status'] && ! empty( $subscription['trial_end_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_end_date'] ) ) : 'N/A';
+		$membership_type   = ucwords( $membership_metas['type'] ?? '' ) == 'Paid' ? __( 'One-Time Payment', 'user-registration' ) : ucwords( $membership_metas['type'] ?? '' );
 
 		$team_data  = null;
 		$team_seats = null;
@@ -407,7 +407,7 @@ class SubscriptionService {
 			'membership_plan_status'            => isset( $subscription['status'] ) ? esc_html( ucwords( $subscription['status'] ) ) : '',
 			'membership_plan_payment_date'      => ! empty( $order['created_at'] ) ? esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ) : '',
 			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
-			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $membership_metas['amount'], 2 ) : number_format( $membership_metas['amount'], 2 ) . $symbol,
+			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $membership_metas['amount'] ?? 0, 2 ) : number_format( $membership_metas['amount'] ?? 0, 2 ) . $symbol,
 			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ?? '' ) ),
 			'membership_plan_trial_amount'      => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) : number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) . $symbol,
 			'membership_plan_coupon_discount'   => (
