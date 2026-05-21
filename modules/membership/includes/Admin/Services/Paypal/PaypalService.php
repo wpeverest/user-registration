@@ -932,7 +932,7 @@ class PaypalService {
 			curl_close( $ch );
 
 			return array(
-				'access_token' => $result->access_token,
+				'access_token' => isset( $result->access_token ) ? $result->access_token : null,
 				'status_code'  => $status_code,
 			);
 		} catch ( \Exception $e ) {
