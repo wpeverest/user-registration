@@ -1210,11 +1210,48 @@ class NewPaypalService {
 
 			$new_status = 'ACTIVE' === strtoupper( isset( $subscription_details['status'] ) ? $subscription_details['status'] : '' ) ? 'active' : 'pending';
 
+			// Try to get the real transaction ID from PayPal's subscription transactions API.
+			$transaction_id     = $paypal_subscription_id;
+			$transaction_source = 'subscription_id_placeholder';
+
+			$txn_response = $this->get_paypal_subscription_transactions(
+				$paypal_subscription_id,
+				$this->get_paypal_rest_credentials()
+			);
+
+			if ( ! is_wp_error( $txn_response ) && ! empty( $txn_response['transactions'] ) ) {
+				foreach ( $txn_response['transactions'] as $txn ) {
+					if ( ! empty( $txn['id'] ) && 'Completed' === ( isset( $txn['status'] ) ? $txn['status'] : '' ) ) {
+						$transaction_id     = sanitize_text_field( $txn['id'] );
+						$transaction_source = 'subscription_transactions_api';
+						break;
+					}
+				}
+			}
+
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				sprintf(
+					'[Member ID #%s] Subscription transaction ID resolution on redirect.',
+					$member_id
+				) . "\n" . wp_json_encode(
+					array(
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'transaction_id'         => $transaction_id,
+						'source'                 => $transaction_source,
+						'api_error'              => is_wp_error( $txn_response ) ? $txn_response->get_error_message() : null,
+						'transactions_found'     => ! is_wp_error( $txn_response ) ? count( isset( $txn_response['transactions'] ) ? $txn_response['transactions'] : array() ) : 0,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'subscription_id_placeholder' === $transaction_source ? 'notice' : 'info'
+			);
+
 			$this->members_orders_repository->update(
 				$member_order['ID'],
 				array(
 					'status'         => 'completed',
-					'transaction_id' => sanitize_text_field( $paypal_subscription_id ),
+					'transaction_id' => $transaction_id,
 				)
 			);
 
@@ -1239,7 +1276,8 @@ class NewPaypalService {
 				) . "\n" . wp_json_encode(
 					array(
 						'paypal_subscription_id' => $paypal_subscription_id,
-						'transaction_id'         => $paypal_subscription_id,
+						'transaction_id'         => $transaction_id,
+						'transaction_source'     => $transaction_source,
 						'paypal_status'          => isset( $subscription_details['status'] ) ? $subscription_details['status'] : '',
 						'subscription_status'    => $resolved_status,
 						'member_id'              => $member_id,
@@ -1523,6 +1561,10 @@ class NewPaypalService {
 			case 'BILLING.SUBSCRIPTION.CANCELLED':
 			case 'BILLING.SUBSCRIPTION.EXPIRED':
 				$result = $this->handle_subscription_webhook_event( $event_type, $resource );
+				break;
+
+			case 'PAYMENT.SALE.COMPLETED':
+				$result = $this->handle_subscription_sale_webhook_event( $resource );
 				break;
 
 			default:
@@ -1934,6 +1976,142 @@ class NewPaypalService {
 				JSON_PRETTY_PRINT
 			),
 			'success'
+		);
+
+		return true;
+	}
+
+	/**
+	 * Handle PAYMENT.SALE.COMPLETED webhook for subscription payments.
+	 * Stores the real PayPal sale/transaction ID, replacing any subscription-ID placeholder.
+	 *
+	 * @param array $resource Webhook resource payload.
+	 *
+	 * @return bool
+	 */
+	private function handle_subscription_sale_webhook_event( $resource ) {
+		$transaction_id         = sanitize_text_field( isset( $resource['id'] ) ? $resource['id'] : '' );
+		$paypal_subscription_id = sanitize_text_field( isset( $resource['billing_agreement_id'] ) ? $resource['billing_agreement_id'] : '' );
+
+		if ( empty( $transaction_id ) || empty( $paypal_subscription_id ) ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[PAYMENT.SALE.COMPLETED] Skipped — missing transaction_id or billing_agreement_id.' . "\n" . wp_json_encode(
+					array(
+						'transaction_id'         => $transaction_id ?: null,
+						'paypal_subscription_id' => $paypal_subscription_id ?: null,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
+			);
+			return false;
+		}
+
+		// Already have an order for this exact sale — nothing to update.
+		$existing = $this->orders_repository->get_order_by_transaction_id( $transaction_id );
+		if ( ! empty( $existing ) ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[PAYMENT.SALE.COMPLETED] Order already exists for this transaction — skipped.' . "\n" . wp_json_encode(
+					array(
+						'transaction_id' => $transaction_id,
+						'order_id'       => $existing['ID'],
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
+			);
+			return true;
+		}
+
+		// Find local subscription record by PayPal subscription ID.
+		$membership_subscription = $this->members_subscription_repository->get_subscription_by_subscription_id_meta( $paypal_subscription_id );
+		if ( empty( $membership_subscription ) ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[PAYMENT.SALE.COMPLETED] No local subscription found for PayPal subscription ID.' . "\n" . wp_json_encode(
+					array(
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'transaction_id'         => $transaction_id,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
+			);
+			return false;
+		}
+
+		$local_sub_id = $membership_subscription['ID'];
+		$user_id      = $membership_subscription['user_id'];
+
+		// Replace placeholder order whose transaction_id is the subscription ID (not a real sale ID).
+		$placeholder = $this->orders_repository->get_order_by_transaction_id( $paypal_subscription_id );
+		if ( ! empty( $placeholder ) && ! empty( $placeholder['ID'] ) ) {
+			$this->orders_repository->update(
+				$placeholder['ID'],
+				array(
+					'status'         => 'completed',
+					'transaction_id' => $transaction_id,
+				)
+			);
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[PAYMENT.SALE.COMPLETED] Placeholder order updated with real transaction ID.' . "\n" . wp_json_encode(
+					array(
+						'order_id'               => $placeholder['ID'],
+						'member_id'              => $user_id,
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'transaction_id'         => $transaction_id,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'success'
+			);
+			return true;
+		}
+
+		// Update a pending order that has no transaction_id yet.
+		$pending_order = $this->orders_repository->get_order_by_subscription( $local_sub_id );
+		if (
+			! empty( $pending_order['ID'] ) &&
+			'pending' === ( $pending_order['status'] ?? '' ) &&
+			'' === (string) ( $pending_order['transaction_id'] ?? '' )
+		) {
+			$this->orders_repository->update(
+				$pending_order['ID'],
+				array(
+					'status'         => 'completed',
+					'transaction_id' => $transaction_id,
+				)
+			);
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[PAYMENT.SALE.COMPLETED] Pending order completed with real transaction ID.' . "\n" . wp_json_encode(
+					array(
+						'order_id'               => $pending_order['ID'],
+						'member_id'              => $user_id,
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'transaction_id'         => $transaction_id,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'success'
+			);
+			return true;
+		}
+
+		// No matching order found — likely a renewal payment handled by the backfill job.
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'[PAYMENT.SALE.COMPLETED] No matching order found for transaction — skipped (backfill will handle renewals).' . "\n" . wp_json_encode(
+				array(
+					'paypal_subscription_id' => $paypal_subscription_id,
+					'transaction_id'         => $transaction_id,
+				),
+				JSON_PRETTY_PRINT
+			),
+			'info'
 		);
 
 		return true;
@@ -2434,6 +2612,26 @@ class NewPaypalService {
 		return $this->paypal_rest_request(
 			'GET',
 			'/v1/billing/subscriptions/' . rawurlencode( $subscription_id ),
+			null,
+			$paypal_options
+		);
+	}
+
+	/**
+	 * Fetch transaction list for a PayPal subscription.
+	 *
+	 * @param string $subscription_id
+	 * @param array  $paypal_options
+	 *
+	 * @return array|WP_Error
+	 */
+	private function get_paypal_subscription_transactions( $subscription_id, $paypal_options ) {
+		$start_time = gmdate( 'Y-m-d\TH:i:s\Z', strtotime( '-1 hour' ) );
+		$end_time   = gmdate( 'Y-m-d\TH:i:s\Z' );
+
+		return $this->paypal_rest_request(
+			'GET',
+			'/v1/billing/subscriptions/' . rawurlencode( $subscription_id ) . '/transactions?start_time=' . $start_time . '&end_time=' . $end_time,
 			null,
 			$paypal_options
 		);
