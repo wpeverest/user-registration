@@ -566,6 +566,7 @@
 		</div>
 		<span id="total-input-notice">
 		</span>
+		<?php endif; ?>
 	</div>
 
 	<!--	payment gateway container -->
