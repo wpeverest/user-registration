@@ -1250,9 +1250,12 @@ function ur_load_form_field_class( $class_key ) {
 	/* Backward Compat since 1.4.0 */
 	if ( null != $class_path && file_exists( $class_path ) ) {
 		// Validate the resolved path to prevent directory traversal.
-		$real_class_path = realpath( $class_path );
-		$real_base_path  = realpath( UR_FORM_PATH );
-		if ( false === $real_class_path || false === $real_base_path || 0 !== strpos( $real_class_path, $real_base_path . DIRECTORY_SEPARATOR ) ) {
+		$real_class_path   = realpath( $class_path );
+		$real_base_path    = realpath( UR_FORM_PATH );
+		$real_plugins_path = realpath( WP_PLUGIN_DIR );
+		$in_form_path      = false !== $real_base_path && 0 === strpos( $real_class_path, $real_base_path . DIRECTORY_SEPARATOR );
+		$in_plugins_path   = false !== $real_plugins_path && 0 === strpos( $real_class_path, $real_plugins_path . DIRECTORY_SEPARATOR );
+		if ( false === $real_class_path || ( ! $in_form_path && ! $in_plugins_path ) ) {
 			return null;
 		}
 		$class_name = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
@@ -4022,9 +4025,13 @@ if ( ! function_exists( 'ur_get_license_plan' ) ) {
 				);
 
 				if ( ! empty( $license_data->item_name ) ) {
-					$license_data->item_plan = strtolower( str_replace( 'LifeTime', '', str_replace( 'User Registration', '', $license_data->item_name ) ) );
+					$license_data->item_plan = trim( strtolower( str_replace( 'LifeTime', '', str_replace( 'User Registration', '', $license_data->item_name ) ) ) );
 					set_transient( 'ur_pro_license_plan', $license_data, WEEK_IN_SECONDS );
 				}
+			}
+
+			if ( ! empty( $license_data->item_plan ) ) {
+				$license_data->item_plan = trim( $license_data->item_plan );
 			}
 
 			return isset( $license_data ) ? $license_data : false;
