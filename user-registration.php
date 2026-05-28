@@ -4,7 +4,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 5.2.0
+ * Version: 5.2.1
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -37,7 +37,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '5.2.0';
+		public $version = '5.2.1';
 
 		/**
 		 * Session instance.
@@ -225,7 +225,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_ASSET_PATH', plugins_url( 'assets/', UR_PLUGIN_FILE ) );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
-			$this->define( 'UR_PRO_ACTIVE', false );
+			$this->define( 'UR_PRO_ACTIVE', true );
 			$this->define( 'UR_DEV', false );
 		}
 

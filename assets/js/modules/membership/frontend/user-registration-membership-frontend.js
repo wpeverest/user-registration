@@ -1036,6 +1036,21 @@
 				proratedDiscountInput.text(
 					"-" + parseFloat(proratedDiscount).toFixed(2) + currency
 				);
+
+				if (totalDetails.discountAmount > 0) {
+					couponInput.closest(".urm-membership-coupons-value").show();
+
+					couponInput.text(
+						"-" +
+							parseFloat(totalDetails.discountAmount).toFixed(2) +
+							currency
+					);
+				} else {
+					couponInput.closest(".urm-membership-coupons-value").hide();
+				}
+				proratedDiscountInput.text(
+					"-" + parseFloat(proratedDiscount).toFixed(2) + currency
+				);
 			}
 
 			var hasDiscount =

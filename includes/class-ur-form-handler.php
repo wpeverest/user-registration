@@ -758,7 +758,7 @@ class UR_Form_Handler {
 			}
 
 			if ( $posted_fields['password_1'] !== $posted_fields['password_2'] ) {
-				$err_msg = apply_filters( 'user_registration_reset_password_error_message', __( 'New password must not be same as old password.', 'user-registration' ) );
+				$err_msg = apply_filters( 'user_registration_reset_password_error_message', __( 'New passwords do not match.', 'user-registration' ) );
 				ur_add_notice( $err_msg, 'error' );
 			}
 

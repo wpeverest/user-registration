@@ -51,7 +51,7 @@ class User_Registration_Paypal_Module {
 		$paypal_enabled = get_option( 'user_registration_paypal_enabled', '' );
 
 		if ( false === get_option( 'urm_global_paypal_settings_migrated_', false ) ) {
-			//runs for backward compatibility, could be removed in future versions.
+			// runs for backward compatibility, could be removed in future versions.
 			if ( 'test' === $paypal_mode ) {
 				$test_admin_email   = get_option( 'admin_email', '' );
 				$test_client_id     = get_option( 'user_registration_global_paypal_client_id', '' );
@@ -207,7 +207,7 @@ class User_Registration_Paypal_Module {
 		if ( isset( $form_data['user_registration_paypal_enabled'] ) && ! $form_data['user_registration_paypal_enabled'] ) {
 			return $response;
 		}
-		//check if any value has changed
+		// check if any value has changed
 		foreach ( $form_data as $k => $data ) {
 			$last_data = get_option( $k );
 			if ( $last_data !== $data ) {
@@ -307,9 +307,9 @@ class User_Registration_Paypal_Module {
 			ur_get_logger()->info(
 				'[PayPal][Webhook] Registration triggered.' . "\n" . wp_json_encode(
 					array(
-						'trigger'         => $changed ? 'credentials_changed' : 'webhook_id_missing',
-						'mode'            => $form_data['user_registration_global_paypal_mode'],
-						'webhook_stored'  => $webhook_stored,
+						'trigger'        => $changed ? 'credentials_changed' : 'webhook_id_missing',
+						'mode'           => $form_data['user_registration_global_paypal_mode'],
+						'webhook_stored' => $webhook_stored,
 					),
 					JSON_PRETTY_PRINT
 				),
@@ -323,8 +323,8 @@ class User_Registration_Paypal_Module {
 				ur_get_logger()->info(
 					'[PayPal][Webhook] Webhook ID saved to options.' . "\n" . wp_json_encode(
 						array(
-							'webhook_id'  => $webhook_result,
-							'option_key'  => 'user_registration_global_paypal_' . $mode . '_webhook_id',
+							'webhook_id' => $webhook_result,
+							'option_key' => 'user_registration_global_paypal_' . $mode . '_webhook_id',
 						),
 						JSON_PRETTY_PRINT
 					),
