@@ -1249,15 +1249,6 @@ function ur_load_form_field_class( $class_key ) {
 	$class_path = apply_filters( 'user_registration_form_field_' . $class_key . '_path', $class_path );
 	/* Backward Compat since 1.4.0 */
 	if ( null != $class_path && file_exists( $class_path ) ) {
-		// Validate the resolved path to prevent directory traversal.
-		$real_class_path   = realpath( $class_path );
-		$real_base_path    = realpath( UR_FORM_PATH );
-		$real_plugins_path = realpath( WP_PLUGIN_DIR );
-		$in_form_path      = false !== $real_base_path && 0 === strpos( $real_class_path, $real_base_path . DIRECTORY_SEPARATOR );
-		$in_plugins_path   = false !== $real_plugins_path && 0 === strpos( $real_class_path, $real_plugins_path . DIRECTORY_SEPARATOR );
-		if ( false === $real_class_path || ( ! $in_form_path && ! $in_plugins_path ) ) {
-			return null;
-		}
 		$class_name = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
 		if ( ! class_exists( $class_name ) ) {
 			include_once $class_path;
