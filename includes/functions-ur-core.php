@@ -5513,7 +5513,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			);
 		}
 
-		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) && empty( $_POST['ur_fallback_submit'] ) ) {
+		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) ) {
 			$logger->error(
 				sprintf( '[Form #%d] AJAX nonce verification failed for form submission.', $form_id ) . "\n   ",
 				array(
