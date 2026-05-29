@@ -58,7 +58,7 @@ var createDedicatedHcaptchaLoader = function() {
 				};
 
 				var script = document.createElement('script');
-				script.src = 'https://js.hcaptcha.com/1/api.js?render=explicit&onload=' + callbackName;
+				script.src = 'https://js.hcaptcha.com/1/api.js?render=explicit&onload=' + callbackName + '&recaptchacompat=off';
 				script.onload = function() {
 					setTimeout(function() {
 						if (window.hcaptcha && window.hcaptcha.render && element) {
@@ -232,7 +232,7 @@ var loadHcaptchaWithCallback = function(element, options) {
 		};
 
 		var script = document.createElement('script');
-		script.src = 'https://js.hcaptcha.com/1/api.js?render=explicit&onload=' + callbackName;
+		script.src = 'https://js.hcaptcha.com/1/api.js?render=explicit&onload=' + callbackName + '&recaptchacompat=off';
 		script.onload = function() {
 			setTimeout(function() {
 				if (window.hcaptcha && window.hcaptcha.render && window.hcaptcha !== window.grecaptcha && element) {
