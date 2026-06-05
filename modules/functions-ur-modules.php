@@ -618,9 +618,13 @@ if ( ! function_exists( 'urm_get_form_user_payments' ) ) {
 	 * @param array $args Arguments.
 	 */
 	function urm_get_form_user_payments( $args ) {
-		$args['meta_key']               = 'ur_payment_status';
-		$args['meta_compare']           = 'EXISTS';
-		$args['meta_query']['relation'] = 'AND';
+		if ( ! isset( $args['meta_query'] ) ) {
+			$args['meta_query'] = array( 'relation' => 'AND' );
+		}
+		$args['meta_query'][] = array(
+			'key'     => 'ur_payment_status',
+			'compare' => 'EXISTS',
+		);
 
 		$user_query = new \WP_User_Query( $args );
 		$users      = $user_query->get_results();

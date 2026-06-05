@@ -16,8 +16,13 @@ use WPEverest\URMembership\Admin\Members\Members;
 use WPEverest\URMembership\Admin\Membership\Membership;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
+use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Admin\Services\MembersService;
+use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
 use WPEverest\URMembership\Admin\Services\PaymentGatewaysWebhookActions;
+use WPEverest\URMembership\Admin\Services\PaymentService;
+use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Subscriptions\Subscriptions;
 use WPEverest\URMembership\Frontend\Frontend;
 
@@ -146,6 +151,15 @@ if ( ! class_exists( 'Admin' ) ) :
 				10,
 				4
 			);
+			add_filter(
+				'user_registration_success_params_before_send_json',
+				array(
+					$this,
+					'process_membership_after_registration',
+				),
+				20,
+				4
+			);
 
 			register_deactivation_hook( UR_MEMBERSHIP_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
 			register_activation_hook( UR_MEMBERSHIP_PLUGIN_FILE, array( $this, 'on_activation' ) );
@@ -162,16 +176,53 @@ if ( ! class_exists( 'Admin' ) ) :
 			add_action( 'plugins_loaded', array( __CLASS__, 'ur_membership_maybe_run_migrations' ), 20 );
 
 			add_action( 'user_registration_single_user_details_content', array( $this, 'render_user_membership_details' ), 10, 2 );
+
+			add_action( 'urm_member_registered', array( $this, 'send_registration_emails' ), 10, 2 );
+		}
+
+		/**
+		 * Sends the member and admin registration emails.
+		 *
+		 * @param array $data      Member data prepared during registration.
+		 * @param int   $member_id Newly created WP user ID.
+		 */
+		public function send_registration_emails( $data, $member_id ) {
+			add_action(
+				'shutdown',
+				function () use ( $data, $member_id ) {
+					// Flush the response to the client and close the connection.
+					// PHP keeps running so emails can be sent without the user waiting.
+					if ( function_exists( 'fastcgi_finish_request' ) ) {
+						fastcgi_finish_request();
+					} elseif ( function_exists( 'litespeed_finish_request' ) ) {
+						litespeed_finish_request();
+					}
+
+					try {
+						$email_service = new EmailService();
+						$email_service->send_email( $data, 'user_register_user' );
+						$email_service->send_email( $data, 'user_register_admin' );
+					} catch ( \Throwable $e ) {
+						// Registrant already received their success response — log and move on.
+						if ( function_exists( 'ur_get_logger' ) ) {
+							ur_get_logger()->error(
+								sprintf( 'urm_member_registered email send failed for member %d: %s', $member_id, $e->getMessage() ),
+								array( 'source' => 'user-registration-membership' )
+							);
+						}
+					}
+				}
+			);
 		}
 
 		public function register_membership_admin_scripts() {
 			if ( isset( $_GET['post'] ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 				// Enqueue frontend scripts here.
 				$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-				wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url(). '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
+				wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url() . '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 				wp_enqueue_script( 'user-registration-membership-frontend-script' );
 				// Enqueue frontend styles here.
-				wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url(). '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
+				wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url() . '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
 				wp_enqueue_style( 'user-registration-membership-frontend-style' );
 			}
 		}
@@ -216,6 +267,202 @@ if ( ! class_exists( 'Admin' ) ) :
 			$success_params['registration_type'] = 'membership';
 
 			return $success_params;
+		}
+
+		public function process_membership_after_registration( $success_params, $valid_form_data, $form_id, $user_id ) {
+
+			// module active
+			if ( ! ur_check_module_activation( 'membership' ) ) {
+				return $success_params;
+			}
+			// membership POST signals present
+			if ( empty( $_POST['is_membership_active'] ) && empty( $_POST['membership_type'] ) ) {
+				return $success_params;
+			}
+			// Guard 3: form has a membership field
+			$has_membership_field = false;
+			foreach ( $valid_form_data as $field_data ) {
+				if ( isset( $field_data->extra_params['field_key'] ) && 'membership' === $field_data->extra_params['field_key'] ) {
+					$has_membership_field = true;
+					break;
+				}
+			}
+			if ( ! $has_membership_field ) {
+				return $success_params;
+			}
+
+			$data = apply_filters(
+				'user_registration_membership_before_register_member',
+				isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array()
+			);
+			if ( empty( $data ) || empty( $data['payment_method'] ) || empty( $data['membership'] ) ) {
+				return $success_params;
+			}
+
+			// Inject user identity from the just-created user
+			$member    = get_userdata( $user_id );
+			$member_id = $user_id;
+			if ( ! $member ) {
+				return $success_params;
+			}
+			$data['username'] = $member->user_login;
+			$data['email']    = $member->user_email;
+
+			// Stripe validation
+			if ( 'stripe' === $data['payment_method'] ) {
+				if ( ! empty( $data['stripe_pm_error'] ) ) {
+					wp_delete_user( absint( $member_id ) );
+					wp_send_json_error( array( 'message' => sanitize_text_field( $data['stripe_pm_error'] ) ) );
+				}
+				if ( ! empty( $data['payment_method_id'] ) ) {
+					$stripe_service = new StripeService();
+					$mode_result    = $stripe_service->validate_card_mode( sanitize_text_field( $data['payment_method_id'] ) );
+					if ( ! $mode_result['valid'] ) {
+						wp_delete_user( absint( $member_id ) );
+						wp_send_json_error( array( 'message' => $mode_result['message'] ) );
+					}
+				}
+			}
+
+			// Get membership type for logging
+			$membership_repository = new MembershipRepository();
+			$membership_data       = $membership_repository->get_single_membership_by_ID( $data['membership'] );
+			$membership_meta       = json_decode( wp_unslash( $membership_data['meta_value'] ), true );
+			$membership_type       = $membership_meta['type'] ?? 'unknown';
+			$payment_gateway       = $data['payment_method'] ?? 'unknown';
+
+			// PaymentGatewayLogging — session start + form submission
+			if ( class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
+				PaymentGatewayLogging::log_general(
+					$payment_gateway,
+					sprintf( ' [Member ID #%s] ========== ***NEW PAYMENT SESSION*** ==========', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'timestamp'       => current_time( 'mysql' ),
+							'membership_type' => $membership_type,
+							'username'        => $member->user_login,
+						),
+						JSON_PRETTY_PRINT
+					),
+					'notice'
+				);
+				PaymentGatewayLogging::log_general(
+					$payment_gateway,
+					sprintf( ' [Member ID #%s] Membership registration form submitted.', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'event_type'      => 'form_submission',
+							'member_id'       => $member_id,
+							'username'        => $member->user_login,
+							'email'           => $member->user_email,
+							'membership_id'   => $data['membership'] ?? 'N/A',
+							'payment_method'  => $payment_gateway,
+							'membership_type' => $membership_type,
+						),
+						JSON_PRETTY_PRINT
+					),
+					'info'
+				);
+			}
+
+			// Create order + subscription
+			$membership_service = new MembershipService();
+			$response           = $membership_service->create_membership_order_and_subscription( $data );
+
+			// PaymentGatewayLogging — order creation + free activation
+			if ( $response['status'] && class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
+				$initial_status = ( 'free' === $payment_gateway ) ? 'active' : 'pending';
+				PaymentGatewayLogging::log_general(
+					$payment_gateway,
+					sprintf( ' [Member ID #%s] Order and subscription created - Status: %s', $member_id, $initial_status ) . "\n" . wp_json_encode(
+						array(
+							'event_type'      => 'status_change',
+							'member_id'       => $member_id,
+							'subscription_id' => $response['subscription_id'] ?? 'N/A',
+							'transaction_id'  => $response['transaction_id'] ?? 'N/A',
+							'status'          => $initial_status,
+							'membership_id'   => $data['membership'] ?? 'N/A',
+							'membership_type' => $membership_type,
+						),
+						JSON_PRETTY_PRINT
+					),
+					'info'
+				);
+				if ( 'free' === $payment_gateway ) {
+					PaymentGatewayLogging::log_general(
+						$payment_gateway,
+						sprintf( ' [Member ID #%s] Subscription activated successfully.', $member_id ) . "\n" . wp_json_encode(
+							array(
+								'member_id'       => $member_id,
+								'subscription_id' => $response['subscription_id'] ?? 'N/A',
+								'status'          => 'active',
+								'payment_method'  => $payment_gateway,
+								'membership_type' => $membership_type,
+								'auto_activated'  => true,
+							),
+							JSON_PRETTY_PRINT
+						) . "\n  ",
+						'info'
+					);
+				}
+			}
+
+			// Set data fields from response
+			$transaction_id          = isset( $response['transaction_id'] ) ? $response['transaction_id'] : 0;
+			$data['member_id']       = $member_id;
+			$data['subscription_id'] = isset( $response['subscription_id'] ) ? $response['subscription_id'] : 0;
+			if ( ur_check_module_activation( 'team' ) ) {
+				$data['team_id'] = ! empty( $response['team_id'] ) ? $response['team_id'] : 0;
+			}
+			$data['email']    = $response['member_email'];
+			$data['order_id'] = $response['order_id'];
+
+			// Build payment gateway data
+			$pg_data = array();
+			if ( 'free' !== $data['payment_method'] && $response['status'] ) {
+				$payment_service  = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
+				$ur_authorize_net = array( 'ur_authorize_net' => ! empty( $_POST['ur_authorize_net'] ) ? (array) $_POST['ur_authorize_net'] : array() );
+				$data             = array_merge( $data, $ur_authorize_net );
+
+				$pg_data = $payment_service->build_response( $data );
+				if ( is_wp_error( $pg_data['payment_url'] ?? null ) ) {
+					$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while registering the user.', 'user-registration' );
+					wp_send_json_error( array( 'message' => $message ) );
+				}
+			}
+
+			if ( $response['status'] ) {
+				// Auto-login for free memberships
+				if ( ! empty( $success_params['auto_login'] ) && 'free' === $data['payment_method'] ) {
+					$members_service = new MembersService();
+					$password        = isset( $data['password'] ) ? $data['password'] : '';
+					$logged_in       = $members_service->login_member( $member_id, true, $password );
+					if ( ! $logged_in ) {
+						wp_send_json_error( array( 'message' => __( 'Invalid User', 'user-registration' ) ) );
+					}
+				}
+
+				do_action( 'urm_member_registered', $data, $member_id );
+
+				$response_data = apply_filters(
+					'user_registration_membership_after_register_member',
+					array(
+						'member_id'      => absint( $member_id ),
+						'transaction_id' => esc_html( $transaction_id ),
+						'order_id'       => esc_html( $data['order_id'] ),
+						'message'        => esc_html__( 'New member has been successfully created.', 'user-registration' ),
+					)
+				);
+				if ( ur_check_module_activation( 'team' ) ) {
+					$response_data['team_id'] = absint( $data['team_id'] );
+				}
+				if ( 'free' !== $data['payment_method'] ) {
+					$response_data['pg_data'] = $pg_data;
+				}
+				return array_merge( $success_params, $response_data );
+
+			} else {
+				$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while registering the user.', 'user-registration' );
+				wp_send_json_error( array( 'message' => $message ) );
+			}
 		}
 
 		public function update_redirect_url_for_membership( $redirect_url, $form_id ) {

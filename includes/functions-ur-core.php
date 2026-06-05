@@ -1249,12 +1249,6 @@ function ur_load_form_field_class( $class_key ) {
 	$class_path = apply_filters( 'user_registration_form_field_' . $class_key . '_path', $class_path );
 	/* Backward Compat since 1.4.0 */
 	if ( null != $class_path && file_exists( $class_path ) ) {
-		// Validate the resolved path to prevent directory traversal.
-		$real_class_path = realpath( $class_path );
-		$real_base_path  = realpath( UR_FORM_PATH );
-		if ( false === $real_class_path || false === $real_base_path || 0 !== strpos( $real_class_path, $real_base_path . DIRECTORY_SEPARATOR ) ) {
-			return null;
-		}
 		$class_name = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
 		if ( ! class_exists( $class_name ) ) {
 			include_once $class_path;
@@ -6291,7 +6285,7 @@ if ( ! function_exists( 'ur_email_preview_link' ) ) {
 			home_url()
 		);
 
-		return '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '" class="button user-registration-email-preview " style="min-width:70px;">' . esc_html( $label ) . '</a>';
+		return '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '" class="button user-registration-email-preview urm-btn-comp-v7 " style="min-width:70px; ">' . esc_html( $label ) . '</a>';
 	}
 }
 
@@ -6698,7 +6692,7 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 	 * @since 3.1.5
 	 */
 	function ur_automatic_user_login( $user ) {
-		delete_user_meta( $user->ID, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $user->ID );
 		wp_clear_auth_cookie();
 		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 		wp_set_auth_cookie( $user->ID, $remember );
@@ -7548,9 +7542,10 @@ if ( ! function_exists( 'ur_get_coupon_details' ) ) {
 		);
 
 		if ( $posts->post_count > 0 ) {
-			$posts_meta               = get_post_meta( $posts->post->ID, 'ur_coupon_meta', true );
-			$coupon_data              = json_decode( $posts_meta, true );
-			$coupon_data['coupon_id'] = $posts->post->ID;
+			$posts_meta                 = get_post_meta( $posts->post->ID, 'ur_coupon_meta', true );
+			$coupon_data                = json_decode( $posts_meta, true );
+			$coupon_data['coupon_id']   = $posts->post->ID;
+			$coupon_data['coupon_name'] = $posts->post->post_title;
 
 			return $coupon_data;
 		}
@@ -10212,11 +10207,11 @@ if ( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 		if ( ! class_exists( 'SitePress' ) ) {
 			return $url;
 		}
-		$site_press = new SitePress();
 		remove_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10 );
 
 		$translated_endpoint = ur_get_endpoint_translation( $endpoint );
-		$url                 = ur_get_endpoint_url( $translated_endpoint, $value, $site_press->convert_url( $permalink ) );
+		$converted_permalink = apply_filters( 'wpml_permalink', $permalink );
+		$url                 = ur_get_endpoint_url( $translated_endpoint, $value, $converted_permalink );
 		add_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10, 4 );
 
 		return $url;

@@ -660,7 +660,20 @@
 					ur_membership_frontend_utils.show_success_message(
 						response.data.message
 					);
-					window.location.replace(response.data.pg_data.payment_url);
+					if (
+						response.data.pg_data &&
+						response.data.pg_data.payment_url
+					) {
+						window.location.replace(
+							response.data.pg_data.payment_url
+						);
+					} else {
+						ur_membership_frontend_utils.show_failure_message(
+							(response.data.pg_data &&
+								response.data.pg_data.payment_error) ||
+								"PayPal redirect failed. Please check your PayPal configuration."
+						);
+					}
 					break;
 				case "bank":
 					ur_membership_frontend_utils.show_success_message(
@@ -908,6 +921,7 @@
 			var subTotalInput = $("#ur-membership-subtotal");
 			var taxInput = $("#ur-membership-tax");
 			var couponInput = $("#ur-membership-coupons");
+			var proratedDiscountInput = $("#ur-membership-proration-discount");
 			var localCurrency = "";
 			var currency = urmf_data.currency_symbol;
 
@@ -928,40 +942,27 @@
 						: urm_calculated_total,
 				upgrade_type = $this.data("urm-upgrade-type");
 
-			var total_label = $(".urm-membership-total-value").find(
-				".ur_membership_input_label"
-			);
-
-			if ($(".urm-membership-sub-total-value").length > 0) {
-				var sub_total_label = $(".urm-membership-sub-total-value").find(
-					".ur_membership_input_label"
+			var membershipAmount =
+				parseFloat($this.data("urm-membership-amount")) || 0;
+			var proratedDiscount = 0;
+			if (upgrade_type) {
+				proratedDiscount =
+					membershipAmount - parseFloat(urm_calculated_total);
+				$(".urm-membership-proration-discount-value").removeClass(
+					"urm-d-none"
 				);
-
-				if (
-					sub_total_label.find(".user-registration-badge").length > 0
-				) {
-					sub_total_label.find(".user-registration-badge").remove();
-				}
-
-				if (upgrade_type) {
-					sub_total_label.append(
-						'<span class="user-registration-badge">' +
-							upgrade_type +
-							"</span>"
-					);
-				}
 			} else {
-				if (total_label.find(".user-registration-badge").length > 0) {
-					total_label.find(".user-registration-badge").remove();
-				}
-				if (upgrade_type) {
-					total_label.append(
-						'<span class="user-registration-badge">' +
-							upgrade_type +
-							"</span>"
-					);
-				}
+				$(".urm-membership-proration-discount-value").addClass(
+					"urm-d-none"
+				);
 			}
+
+			$(".urm-membership-sub-total-value")
+				.find(".user-registration-badge")
+				.remove();
+			$(".urm-membership-total-value")
+				.find(".user-registration-badge")
+				.remove();
 
 			var totalDetails =
 				ur_membership_ajax_utils.convert_currency_and_calculate_tax(
@@ -979,12 +980,29 @@
 				subTotalInput.text(
 					currency + parseFloat(totalDetails.subTotal).toFixed(2)
 				);
-				taxInput.text(
-					currency + parseFloat(totalDetails.taxAmount).toFixed(2)
-				);
-				couponInput.text(
-					currency +
-						parseFloat(totalDetails.discountAmount).toFixed(2)
+				if (parseFloat(totalDetails.taxAmount) > 0) {
+					taxInput.closest(".urm-membership-tax-value").show();
+					taxInput.text(
+						"+" +
+							currency +
+							parseFloat(totalDetails.taxAmount).toFixed(2)
+					);
+				} else {
+					taxInput.closest(".urm-membership-tax-value").hide();
+				}
+				if (totalDetails.discountAmount > 0) {
+					couponInput.closest(".urm-membership-coupons-value").show();
+
+					couponInput.text(
+						"-" +
+							currency +
+							parseFloat(totalDetails.discountAmount).toFixed(2)
+					);
+				} else {
+					couponInput.closest(".urm-membership-coupons-value").hide();
+				}
+				proratedDiscountInput.text(
+					"-" + currency + parseFloat(proratedDiscount).toFixed(2)
 				);
 			} else {
 				total_input.text(
@@ -993,14 +1011,56 @@
 				subTotalInput.text(
 					parseFloat(totalDetails.subTotal).toFixed(2) + currency
 				);
-				taxInput.text(
-					parseFloat(totalDetails.taxAmount).toFixed(2) + currency
+				if (parseFloat(totalDetails.taxAmount) > 0) {
+					taxInput.closest(".urm-membership-tax-value").show();
+					taxInput.text(
+						"+" +
+							parseFloat(totalDetails.taxAmount).toFixed(2) +
+							currency
+					);
+				} else {
+					taxInput.closest(".urm-membership-tax-value").hide();
+				}
+
+				if (totalDetails.discountAmount > 0) {
+					couponInput.closest(".urm-membership-coupons-value").show();
+
+					couponInput.text(
+						"-" +
+							parseFloat(totalDetails.discountAmount).toFixed(2) +
+							currency
+					);
+				} else {
+					couponInput.closest(".urm-membership-coupons-value").hide();
+				}
+				proratedDiscountInput.text(
+					"-" + parseFloat(proratedDiscount).toFixed(2) + currency
 				);
-				couponInput.text(
-					parseFloat(totalDetails.discountAmount).toFixed(2) +
-						currency
+
+				if (totalDetails.discountAmount > 0) {
+					couponInput.closest(".urm-membership-coupons-value").show();
+
+					couponInput.text(
+						"-" +
+							parseFloat(totalDetails.discountAmount).toFixed(2) +
+							currency
+					);
+				} else {
+					couponInput.closest(".urm-membership-coupons-value").hide();
+				}
+				proratedDiscountInput.text(
+					"-" + parseFloat(proratedDiscount).toFixed(2) + currency
 				);
 			}
+
+			var hasDiscount =
+				totalDetails.discountAmount > 0 || proratedDiscount > 0;
+			var hasAdjustment =
+				hasDiscount || parseFloat(totalDetails.taxAmount) > 0;
+
+			$(".urm-pre-subtotal-divider").toggle(hasDiscount);
+			$(".urm-membership-sub-total-value").toggle(hasAdjustment);
+			$(".urm-pre-total-divider").toggle(hasAdjustment);
 		},
 		upgrade_membership: function (
 			data,
@@ -1022,6 +1082,7 @@
 					btn
 				);
 			} else {
+				var taxDetailsEl = $(document).find("#ur-tax-details");
 				this.send_data(
 					{
 						_wpnonce: urmf_data.upgrade_membership_nonce,
@@ -1032,7 +1093,13 @@
 						selected_membership_id: selected_membership_id,
 						current_subscription_id: current_subscription_id,
 						selected_pg: selected_pg,
-						coupon: data.coupon
+						coupon: data.coupon,
+						tax_rate: taxDetailsEl.length
+							? taxDetailsEl.data("tax-rate")
+							: "",
+						tax_calculation_method: taxDetailsEl.length
+							? taxDetailsEl.data("tax-calculation-method")
+							: ""
 					},
 					{
 						success: function (response) {
@@ -1521,6 +1588,7 @@
 				coupon: submittedData.coupon
 			};
 
+			var taxDetailsElAuth = $(document).find("#ur-tax-details");
 			$(document).trigger("urm_before_upgrade_membership_submit", {
 				data: data,
 				onComplete: function (data) {
@@ -1535,7 +1603,15 @@
 							selected_pg: data.selected_pg,
 							ur_authorize_data: data.ur_authorize_data,
 							form_data: submittedData.form_data,
-							coupon: submittedData.coupon
+							coupon: submittedData.coupon,
+							tax_rate: taxDetailsElAuth.length
+								? taxDetailsElAuth.data("tax-rate")
+								: "",
+							tax_calculation_method: taxDetailsElAuth.length
+								? taxDetailsElAuth.data(
+										"tax-calculation-method"
+									)
+								: ""
 						},
 						{
 							success: function (response) {
@@ -1907,7 +1983,20 @@
 					ur_membership_frontend_utils.show_success_message(
 						response.data.message
 					);
-					window.location.replace(response.data.pg_data.payment_url);
+					if (
+						response.data.pg_data &&
+						response.data.pg_data.payment_url
+					) {
+						window.location.replace(
+							response.data.pg_data.payment_url
+						);
+					} else {
+						ur_membership_frontend_utils.show_failure_message(
+							(response.data.pg_data &&
+								response.data.pg_data.payment_error) ||
+								"PayPal redirect failed. Please check your PayPal configuration."
+						);
+					}
 					break;
 				case "stripe":
 					stripe_settings.handle_stripe_response(
@@ -1951,7 +2040,20 @@
 					ur_membership_frontend_utils.show_success_message(
 						response.data.message
 					);
-					window.location.replace(response.data.pg_data.payment_url);
+					if (
+						response.data.pg_data &&
+						response.data.pg_data.payment_url
+					) {
+						window.location.replace(
+							response.data.pg_data.payment_url
+						);
+					} else {
+						ur_membership_frontend_utils.show_failure_message(
+							(response.data.pg_data &&
+								response.data.pg_data.payment_error) ||
+								"PayPal redirect failed. Please check your PayPal configuration."
+						);
+					}
 					break;
 				case "stripe":
 					stripe_settings.handle_stripe_response(
@@ -3107,12 +3209,16 @@
 						$(pointer).find("#ur-membership-registration").length >
 						0
 					) {
-						data["is_membership_active"] = $(pointer)
-							.find('input[name="urm_membership"]:checked')
-							.val();
-						data["membership_type"] = $(
-							'input[name="urm_membership"]:checked'
-						).val();
+						var membersData = ur_membership_ajax_utils.prepare_members_data();
+						if (validated_stripe_pm_id) {
+							membersData.payment_method_id = validated_stripe_pm_id;
+						}
+						data["members_data"] = JSON.stringify(membersData);
+						data["is_membership_active"] = membersData.membership;
+						data["membership_type"] = membersData.membership;
+						if (typeof ur_authorize_net !== "undefined") {
+							data["ur_authorize_net"] = ur_authorize_net;
+						}
 					}
 					if (validated_stripe_pm_id) {
 						data["urm_stripe_pm_id"] = validated_stripe_pm_id;
@@ -3142,7 +3248,9 @@
 
 						if (!membership_is_hidden) {
 							flag = false;
-							ur_membership_ajax_utils.create_member(required_data);
+							var membersData = ur_membership_ajax_utils.prepare_members_data();
+							membersData.username = response.data.username;
+							ur_membership_ajax_utils.handle_response(response, membersData, required_data);
 						} else {
 							// Membership field was hidden by conditional logic.
 							// Strip registration_type so the main JS shows the normal success message and redirect.

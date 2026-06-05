@@ -118,6 +118,11 @@
 			}
 
 			.user-registration-profile-fields {
+				p {
+					input[name="save_account_details"] {
+						border-style: none;
+					}
+				}
 			}
 		}
 	}

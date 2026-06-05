@@ -59,7 +59,7 @@ class UR_Base_Layout {
 		$search_param = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
 		$is_searching = '' !== trim( $search_param );
 
-		$show_search = ( $total_items > 10 ) || $is_searching;
+		$show_search = ( $total_items > 0 ) || $is_searching;
 
 		$is_membership_page = isset( $_GET['page'] ) && 'user-registration-membership' == $_GET['page'] && ! isset( $_GET['action'] ) ? true : false;
 
@@ -111,7 +111,7 @@ class UR_Base_Layout {
 
 					if ( empty( $membership_groups ) ) {
 						?>
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-membership&action=add_groups' ) ); ?>" class="page-title-action button-secondary urm-create-group-btn">
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-membership&action=add_groups' ) ); ?>" class="page-title-action urm-create-group-btn">
 							<?php echo esc_html( 'Create Group' ); ?>
 						</a>
 						<?php

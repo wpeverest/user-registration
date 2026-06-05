@@ -30,6 +30,7 @@ html {
 }
 
 // Membership Addon Frontend CSS
+body,
 .user-registration-page,
 .ur-multi-device-form-preview,
 #pg-container {
@@ -207,7 +208,7 @@ html {
 		}
 
 		.ur_membership_divider {
-			margin: $spacing_16px 0 $spacing_24px;
+			margin: $spacing_8px 0 $spacing_12px;
 			background: $border-color;
 			border: 0;
 			height: 1px;
@@ -504,7 +505,12 @@ html {
 			border-radius: $border_radius_4;
 			border: $border_width dashed $primary_color;
 			background: #f8f8fa;
-			gap: $spacing_20px;
+			gap: $spacing_10px;
+
+			.urm-membership-proration-discount-value {
+				display: flex;
+				justify-content: space-between;
+			}
 
 			&::before {
 				content: "";

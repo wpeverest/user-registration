@@ -189,10 +189,12 @@ class PaypalService {
 			)
 		);
 
+		$tax_rate   = 0.0;
+		$tax_amount = 0.0;
 		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
-			$tax_rate     = floatval( $response_data['tax_rate'] );
-			$tax_amount   = $final_amount * $tax_rate / 100;
-			$final_amount = $final_amount + $tax_amount;
+			$tax_rate   = floatval( $response_data['tax_rate'] );
+			$tax_amount = round( $final_amount * $tax_rate / 100, 2 );
+			// $final_amount stays pre-tax; PayPal Standard adds tax via 'tax'/'tax_rate' params.
 		}
 
 		// Build item name with pricing information
@@ -236,7 +238,7 @@ class PaypalService {
 			'custom'        => $membership . '-' . $member_id . '-' . $data['current_membership_id'] . '-' . $subscription_id,
 			'return'        => $return_url,
 			'rm'            => '2',
-			'tax'           => 0,
+			'tax'           => $tax_amount,
 			'upload'        => '1',
 			'sra'           => '1',
 			'src'           => '1',
@@ -254,7 +256,11 @@ class PaypalService {
 				$paypal_args['t3'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p3'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
 			}
-			$paypal_args['a3']          = floatval( user_registration_sanitize_amount( $final_amount ) );
+			$paypal_args['a3'] = floatval( user_registration_sanitize_amount( $final_amount ) );
+			if ( $tax_rate > 0 ) {
+				$paypal_args['tax_rate'] = number_format( $tax_rate, 2, '.', '' );
+				unset( $paypal_args['tax'] );
+			}
 			$new_subscription_data      = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
 			$previous_subscription_data = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
 
@@ -367,7 +373,7 @@ class PaypalService {
 			$password       = isset( $data['password'] ) ? $data['password'] : '';
 			$member_service->login_member( $member_id, true, $password );
 		}
-		delete_user_meta( $member_id, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $member_id );
 		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 	}
 
@@ -473,13 +479,6 @@ class PaypalService {
 				'event_type'          => 'upgrade_completed',
 				'member_id'           => $member_id,
 				'new_subscription_id' => $subscription_id,
-			)
-		);
-		ur_membership_redirect_now(
-			ur_get_my_account_url() . '/ur-membership',
-			array(
-				'is_upgraded' => 'true',
-				'message'     => __( 'Membership Upgraded successfully', 'user-registration' ),
 			)
 		);
 	}
@@ -903,7 +902,7 @@ class PaypalService {
 			);
 			$email_service->send_email( $email_data, 'payment_retry_failed' );
 		}
-		delete_user_meta( $member_id, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $member_id );
 	}
 
 	/**
@@ -933,7 +932,7 @@ class PaypalService {
 			curl_close( $ch );
 
 			return array(
-				'access_token' => $result->access_token,
+				'access_token' => isset( $result->access_token ) ? $result->access_token : null,
 				'status_code'  => $status_code,
 			);
 		} catch ( \Exception $e ) {
