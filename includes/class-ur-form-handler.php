@@ -42,6 +42,15 @@ class UR_Form_Handler {
 	 */
 	public static function redirect_reset_password_link() {
 		global $wp;
+
+		// CDN-proof reset handoff: some managed hosts / CDNs (e.g. Flywheel behind Fastly)
+		// strip the wp-resetpass-* cookie at the edge, so the reset form below never sees it
+		// and every user gets "invalid or expired". When the cookie is missing on the
+		// reset-form request, rebuild it from the server-side transient that step 1 stashed.
+		// Runs before the lost_password() / reset_password_form() shortcodes read the cookie,
+		// and is a no-op on hosts that deliver the cookie normally (cookie-first).
+		self::maybe_restore_reset_password_cookie();
+
 		if ( isset( $wp->query_vars['ur-lost-password'] ) && empty( $wp->query_vars['ur-lost-password'] ) ) {
 			return;
 		}
@@ -55,9 +64,71 @@ class UR_Form_Handler {
 			$value = sprintf( '%s:%s', sanitize_text_field( wp_unslash( $_GET['login'] ) ), sanitize_text_field( wp_unslash( $_GET['key'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			UR_Shortcode_My_Account::set_reset_password_cookie( $value );
 
-			wp_safe_redirect( add_query_arg( 'show-reset-form', 'true', ur_resetpassword_url() ) );
+			$redirect_url = add_query_arg( 'show-reset-form', 'true', ur_resetpassword_url() );
+
+			// Step 1 of the CDN-proof handoff: mirror login:key into a short-lived transient
+			// keyed by an opaque token and carry the token through the redirect. The cookie
+			// set above stays the primary path; this only rescues hosts that strip it.
+			$token = wp_generate_password( 32, false );
+			set_transient( 'ur_rp_' . $token, $value, HOUR_IN_SECONDS );
+			$redirect_url = add_query_arg( 'urt', $token, $redirect_url );
+
+			wp_safe_redirect( $redirect_url );
 			exit;
 		}
+	}
+
+	/**
+	 * Repopulate the reset-password cookie from the transient handoff token when the cookie
+	 * was stripped before reaching the browser (managed hosts / CDNs). Cookie-first: a
+	 * cookie that actually arrived is always left untouched.
+	 */
+	private static function maybe_restore_reset_password_cookie() {
+		$token = self::get_reset_password_handoff_token();
+
+		if ( '' === $token ) {
+			return;
+		}
+
+		// The opaque token lands in the URL, so keep it out of the Referer header.
+		if ( ! headers_sent() ) {
+			header( 'Referrer-Policy: no-referrer' );
+		}
+
+		$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
+
+		if ( ! empty( $_COOKIE[ $rp_cookie ] ) ) {
+			return;
+		}
+
+		$value = get_transient( 'ur_rp_' . $token );
+
+		if ( false !== $value ) {
+			$_COOKIE[ $rp_cookie ] = $value;
+
+			// Re-stash so a slow user or a validation-error re-render still resolves while the
+			// 24h key is valid; the transient is deleted for good once the reset succeeds.
+			set_transient( 'ur_rp_' . $token, $value, HOUR_IN_SECONDS );
+		}
+	}
+
+	/**
+	 * Read and validate the opaque reset handoff token from the current request.
+	 *
+	 * wp_generate_password( 32, false ) emits [A-Za-z0-9] only, so anything else is rejected.
+	 *
+	 * @return string Validated token, or '' when absent/invalid.
+	 */
+	private static function get_reset_password_handoff_token() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only transient lookup key; the reset key it maps to is validated by check_password_reset_key().
+		if ( empty( $_GET['show-reset-form'] ) || empty( $_GET['urt'] ) ) {
+			return '';
+		}
+
+		$token = sanitize_text_field( wp_unslash( $_GET['urt'] ) );
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		return ctype_alnum( $token ) ? $token : '';
 	}
 	/**
 	 * Save and update a profie fields if the form was submitted through the user account page.
@@ -788,6 +859,12 @@ class UR_Form_Handler {
 				 * @param object $user      The user object for whom the password has been reset.
 				 */
 				do_action( 'user_registration_reset_password', $user );
+
+				// Single-use: drop the CDN-proof transient handoff token now the reset succeeded.
+				$handoff_token = self::get_reset_password_handoff_token();
+				if ( '' !== $handoff_token ) {
+					delete_transient( 'ur_rp_' . $handoff_token );
+				}
 
 				$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
 				$ur_login_or_account_page = ur_get_page_permalink( 'myaccount' );
