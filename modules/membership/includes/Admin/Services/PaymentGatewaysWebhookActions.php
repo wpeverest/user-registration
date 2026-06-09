@@ -67,7 +67,7 @@ class PaymentGatewaysWebhookActions {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'handle_paypal_webhook' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( $this, 'verify_paypal_webhook_signature' ),
 			)
 		);
 	}
