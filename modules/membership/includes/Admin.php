@@ -331,6 +331,24 @@ if ( ! class_exists( 'Admin' ) ) :
 			$membership_type       = $membership_meta['type'] ?? 'unknown';
 			$payment_gateway       = $data['payment_method'] ?? 'unknown';
 
+			// Reject attacker-supplied payment_method values that don't match the membership.
+			// A paid/subscription membership must use one of its configured gateways; 'free'
+			// is never a valid gateway for a non-free membership.
+			if ( 'free' !== $membership_type ) {
+				$configured_gateways = array();
+				if ( ! empty( $membership_meta['payment_gateways'] ) && is_array( $membership_meta['payment_gateways'] ) ) {
+					foreach ( $membership_meta['payment_gateways'] as $gw_key => $gw_data ) {
+						if ( isset( $gw_data['status'] ) && 'on' === $gw_data['status'] ) {
+							$configured_gateways[] = $gw_key;
+						}
+					}
+				}
+				if ( ! empty( $configured_gateways ) && ! in_array( $data['payment_method'], $configured_gateways, true ) ) {
+					wp_delete_user( absint( $member_id ) );
+					wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
+				}
+			}
+
 			// PaymentGatewayLogging — session start + form submission
 			if ( class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
 				PaymentGatewayLogging::log_general(
