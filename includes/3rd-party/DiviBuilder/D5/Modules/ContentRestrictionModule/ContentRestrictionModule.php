@@ -2,6 +2,11 @@
 /**
  * DiviBuilder D5: Content Restriction Module
  *
+ * Registered for D5 block rendering only — intentionally excluded from the
+ * VB module-library JS so new users cannot insert it. Existing D4 pages
+ * that used the urm-content-restriction module continue to render correctly
+ * on the frontend via this render callback.
+ *
  * @package UserRegistration
  * @since   xx.xx.xx
  */
@@ -42,31 +47,22 @@ class ContentRestrictionModule implements DependencyInterface {
 	 *
 	 * @param array    $attrs   Block attributes.
 	 * @param string   $content Inner block content (unused).
-	 * @param WP_Block $block   Block instance.
+	 * @param WP_Block $block   Block instance (unused).
 	 * @return string Rendered HTML.
 	 */
 	public static function render_callback( array $attrs, string $content, WP_Block $block ): string {
-		if ( ! ur_check_module_activation( 'content-restriction' ) ) {
-			return sprintf(
-				'<div class="user-registration ur-frontend-form"><div class="user-registration-info">%s</div></div>',
-				esc_html__( 'Please activate the content restriction module.', 'user-registration' )
-			);
+		if ( ! class_exists( 'URCR_Shortcodes' ) ) {
+			return '';
 		}
 
 		$d5_values        = $attrs['content']['innerContent']['desktop']['value'] ?? array();
-		$user_role        = sanitize_text_field( $d5_values['userRole'] ?? 'subscriber' );
+		$user_role        = sanitize_text_field( $d5_values['userRole'] ?? '' );
 		$restrict_content = wp_kses_post( $d5_values['restrictContent'] ?? '' );
 
-		// Use the block's post context for the current post ID.
-		$post_id = $block->context['postId'] ?? ( isset( $_POST['current_page']['id'] ) ? absint( $_POST['current_page']['id'] ) : 0 ); // phpcs:ignore WordPress.Security.NonceVerification
-
-		$shortcode = sprintf(
-			'[urcr_restrict access_role="%s" post_id="%s"]%s[/urcr_restrict]',
-			esc_attr( $user_role ),
-			absint( $post_id ),
-			$restrict_content
+		return do_shortcode(
+			'[urcr_restrict access_role="' . esc_attr( $user_role ) . '"]'
+			. $restrict_content
+			. '[/urcr_restrict]'
 		);
-
-		return do_shortcode( $shortcode );
 	}
 }

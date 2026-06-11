@@ -63,6 +63,9 @@ class Builder {
 				new EditPasswordModule(),
 				new MembershipGroupsModule(),
 				new MembershipThankYouModule(),
+				// Registered for rendering only — excluded from the VB insert panel
+				// (no JS registerModule call) so new users cannot add it, but existing
+				// D4 pages that used urm-content-restriction continue to render correctly.
 				new ContentRestrictionModule(),
 			)
 		);
@@ -97,18 +100,8 @@ class Builder {
 			$form_options[ (string) $id ] = array( 'label' => $label );
 		}
 
-		// Build user role options for divi/select.
-		$role_options = array(
-			'all_logged_in_users' => array( 'label' => __( 'All logged users', 'user-registration' ) ),
-			'guest'               => array( 'label' => __( 'Guest User', 'user-registration' ) ),
-		);
-		foreach ( wp_roles()->roles as $key => $role ) {
-			$role_options[ $key ] = array( 'label' => $role['name'] );
-		}
-
 		$vb_data = array(
 			'forms'        => $form_options,
-			'roles'        => $role_options,
 			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
 			'previewNonce' => wp_create_nonce( 'urm_d5_preview' ),
 		);

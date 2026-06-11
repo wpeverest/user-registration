@@ -232,12 +232,4 @@
 
 	register( 'urm/membership-thank-you', 'urm-membership-thank-you', 'URM Membership Thank You', null );
 
-	register(
-		'urm/content-restriction', 'urm-content-restriction', 'URM Content Restriction',
-		[
-			{ key: 'userRole',        label: 'User Role', desc: 'User role required to view the restricted content.', options: vbData.roles || {} },
-			{ key: 'restrictContent', label: 'Content',   desc: 'HTML content visible only to users with the required role.' },
-		]
-	);
-
 } )();
