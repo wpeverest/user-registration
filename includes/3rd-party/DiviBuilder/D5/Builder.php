@@ -15,7 +15,6 @@ use WPEverest\URM\DiviBuilder\D5\Modules\EditProfileModule\EditProfileModule;
 use WPEverest\URM\DiviBuilder\D5\Modules\EditPasswordModule\EditPasswordModule;
 use WPEverest\URM\DiviBuilder\D5\Modules\MembershipGroupsModule\MembershipGroupsModule;
 use WPEverest\URM\DiviBuilder\D5\Modules\MembershipThankYouModule\MembershipThankYouModule;
-use WPEverest\URM\DiviBuilder\D5\Modules\ContentRestrictionModule\ContentRestrictionModule;
 use ET\Builder\Framework\DependencyManagement\DependencyTree;
 
 defined( 'ABSPATH' ) || exit;
@@ -63,10 +62,6 @@ class Builder {
 				new EditPasswordModule(),
 				new MembershipGroupsModule(),
 				new MembershipThankYouModule(),
-				// Registered for rendering only — excluded from the VB insert panel
-				// (no JS registerModule call) so new users cannot add it, but existing
-				// D4 pages that used urm-content-restriction continue to render correctly.
-				new ContentRestrictionModule(),
 			)
 		);
 
@@ -140,7 +135,6 @@ class Builder {
 			'urm/edit-password'        => array( EditPasswordModule::class, 'render_callback' ),
 			'urm/membership-groups'    => array( MembershipGroupsModule::class, 'render_callback' ),
 			'urm/membership-thank-you' => array( MembershipThankYouModule::class, 'render_callback' ),
-			'urm/content-restriction'  => array( ContentRestrictionModule::class, 'render_callback' ),
 		);
 	}
 
