@@ -1,0 +1,84 @@
+{
+  "name": "urm/content-restriction",
+  "d4Shortcode": "urm-content-restriction",
+  "title": "URM Content Restriction",
+  "moduleIcon": "divi/module",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "settings": {
+        "meta": {
+          "meta": {}
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "into-multiple-groups",
+          "groups": {
+            "userRole": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "contentRestrictionSettings",
+                "priority": 10,
+                "render": true,
+                "subName": "userRole",
+                "label": "Access Role",
+                "description": "User role required to view the content (e.g. subscriber).",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            },
+            "restrictContent": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "contentRestrictionSettings",
+                "priority": 20,
+                "render": true,
+                "subName": "restrictContent",
+                "label": "Restricted Content",
+                "description": "HTML content to show only to users with the required role.",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "content": "auto",
+    "groups": {
+      "contentRestrictionSettings": {
+        "panel": "content",
+        "priority": 10,
+        "groupName": "restrictionSettings",
+        "multiElements": true,
+        "component": {
+          "name": "divi/composite",
+          "props": {
+            "groupLabel": "Restriction Settings"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "name": "urm/registration-form",
+  "d4Shortcode": "urm-registration-form",
+  "title": "URM Registration Form",
+  "moduleIcon": "divi/module",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "settings": {
+        "meta": {
+          "meta": {}
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "into-multiple-groups",
+          "groups": {
+            "formId": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "contentFormSettings",
+                "priority": 10,
+                "render": true,
+                "subName": "formId",
+                "label": "Form ID",
+                "description": "Enter the ID of the registration form to display.",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            },
+            "userState": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "contentFormSettings",
+                "priority": 20,
+                "render": true,
+                "subName": "userState",
+                "label": "Visibility",
+                "description": "Who should see this form: logged_out, logged_in, or both.",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "content": "auto",
+    "groups": {
+      "contentFormSettings": {
+        "panel": "content",
+        "priority": 10,
+        "groupName": "formSettings",
+        "multiElements": true,
+        "component": {
+          "name": "divi/composite",
+          "props": {
+            "groupLabel": "Form Settings"
+          }
+        }
+      }
+    }
+  }
+}

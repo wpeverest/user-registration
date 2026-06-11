@@ -61,6 +61,32 @@ class Builder {
 			return;
 		}
 
+		/*
+		 * ET_BUILDER_5_DIR is defined by the Divi theme's functions.php.
+		 * WordPress loads plugins before themes, so the constant is not
+		 * available yet when this method runs. Defer the D4/D5 decision
+		 * to after_setup_theme (priority 20), which fires after the theme
+		 * has fully loaded and defined its constants.
+		 */
+		add_action( 'after_setup_theme', array( $this, 'init_divi_integration' ), 20 );
+	}
+
+	/**
+	 * Route to D4 or D5 registration once the theme constants are available.
+	 *
+	 * In Divi 5, both registrations are needed:
+	 * - D5 registration: native blocks (no "Legacy" badge in VB)
+	 * - D4 registration: required so the VB Insert dialog includes our modules
+	 *   (Divi 5 populates its module list from ET_Builder_Module subclasses)
+	 *
+	 * In Divi 4, only D4 registration is used.
+	 *
+	 * @since xx.xx.xx
+	 */
+	public function init_divi_integration() {
+		if ( urm_is_divi5_active() ) {
+			D5\Builder::init();
+		}
 		add_action( 'et_builder_ready', array( $this, 'register_divi_builder' ) );
 	}
 
