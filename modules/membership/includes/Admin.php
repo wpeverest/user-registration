@@ -346,7 +346,7 @@ if ( ! class_exists( 'Admin' ) ) :
 					}
 				}
 
-				if ( ! empty( $allowed_membership_ids ) && ! in_array( absint( $data['membership'] ), $allowed_membership_ids, true ) ) {
+				if ( empty( $allowed_membership_ids ) || ! in_array( absint( $data['membership'] ), $allowed_membership_ids, true ) ) {
 					wp_delete_user( absint( $member_id ) );
 					wp_send_json_error( array( 'message' => esc_html__( 'Invalid membership selection.', 'user-registration' ) ) );
 				}
