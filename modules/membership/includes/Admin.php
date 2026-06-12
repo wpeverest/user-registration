@@ -381,6 +381,10 @@ if ( ! class_exists( 'Admin' ) ) :
 			// A paid/subscription membership must use one of its configured gateways; 'free'
 			// is never a valid gateway for a non-free membership.
 			if ( 'free' !== $membership_type ) {
+				if ( 'free' === $data['payment_method'] ) {
+					wp_delete_user( absint( $member_id ) );
+					wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
+				}
 				$configured_gateways = array();
 				if ( ! empty( $membership_meta['payment_gateways'] ) && is_array( $membership_meta['payment_gateways'] ) ) {
 					foreach ( $membership_meta['payment_gateways'] as $gw_key => $gw_data ) {
