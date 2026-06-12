@@ -43,12 +43,6 @@ class UR_Form_Handler {
 	public static function redirect_reset_password_link() {
 		global $wp;
 
-		// CDN-proof reset handoff: some managed hosts / CDNs (e.g. Flywheel behind Fastly)
-		// strip the wp-resetpass-* cookie at the edge, so the reset form below never sees it
-		// and every user gets "invalid or expired". When the cookie is missing on the
-		// reset-form request, rebuild it from the server-side transient that step 1 stashed.
-		// Runs before the lost_password() / reset_password_form() shortcodes read the cookie,
-		// and is a no-op on hosts that deliver the cookie normally (cookie-first).
 		self::maybe_restore_reset_password_cookie();
 
 		if ( isset( $wp->query_vars['ur-lost-password'] ) && empty( $wp->query_vars['ur-lost-password'] ) ) {
@@ -66,9 +60,6 @@ class UR_Form_Handler {
 
 			$redirect_url = add_query_arg( 'show-reset-form', 'true', ur_resetpassword_url() );
 
-			// Step 1 of the CDN-proof handoff: mirror login:key into a short-lived transient
-			// keyed by an opaque token and carry the token through the redirect. The cookie
-			// set above stays the primary path; this only rescues hosts that strip it.
 			$token = wp_generate_password( 32, false );
 			set_transient( 'ur_rp_' . $token, $value, HOUR_IN_SECONDS );
 			$redirect_url = add_query_arg( 'urt', $token, $redirect_url );
@@ -79,9 +70,7 @@ class UR_Form_Handler {
 	}
 
 	/**
-	 * Repopulate the reset-password cookie from the transient handoff token when the cookie
-	 * was stripped before reaching the browser (managed hosts / CDNs). Cookie-first: a
-	 * cookie that actually arrived is always left untouched.
+	 * Restore the reset-password cookie from a transient when a CDN strips it at the edge.
 	 */
 	private static function maybe_restore_reset_password_cookie() {
 		$token = self::get_reset_password_handoff_token();
@@ -106,21 +95,15 @@ class UR_Form_Handler {
 		if ( false !== $value ) {
 			$_COOKIE[ $rp_cookie ] = $value;
 
-			// Re-stash so a slow user or a validation-error re-render still resolves while the
-			// 24h key is valid; the transient is deleted for good once the reset succeeds.
 			set_transient( 'ur_rp_' . $token, $value, HOUR_IN_SECONDS );
 		}
 	}
 
 	/**
-	 * Read and validate the opaque reset handoff token from the current request.
-	 *
-	 * wp_generate_password( 32, false ) emits [A-Za-z0-9] only, so anything else is rejected.
-	 *
-	 * @return string Validated token, or '' when absent/invalid.
+	 * @return string Validated [A-Za-z0-9] token from the current request, or ''.
 	 */
 	private static function get_reset_password_handoff_token() {
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only transient lookup key; the reset key it maps to is validated by check_password_reset_key().
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only lookup; key is validated by check_password_reset_key().
 		if ( empty( $_GET['show-reset-form'] ) || empty( $_GET['urt'] ) ) {
 			return '';
 		}
