@@ -205,18 +205,19 @@ class NewPaypalService {
 		$paypal_options['return_url'] = apply_filters( 'urm_paypal_override_return_url', '' === $return_url ? wp_login_url() : $return_url );
 
 		// REST credentials.
+		$mode_key                     = $this->get_paypal_mode_key();
 		$paypal_options['client_id']  = get_option(
-			sprintf( 'user_registration_global_paypal_%s_client_id', $mode ),
+			sprintf( 'user_registration_global_paypal_%s_client_id', $mode_key ),
 			isset( $paypal_options['client_id'] ) ? $paypal_options['client_id'] : get_option( 'user_registration_global_paypal_client_id', '' )
 		);
 		$paypal_options['secret_key'] = get_option(
-			sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ),
+			sprintf( 'user_registration_global_paypal_%s_client_secret', $mode_key ),
 			isset( $paypal_options['secret_key'] ) ? $paypal_options['secret_key'] : get_option( 'user_registration_global_paypal_client_secret', '' )
 		);
 
 		// Optional fallback email for compatibility and validation.
 		$paypal_options['email'] = get_option(
-			sprintf( 'user_registration_global_paypal_%s_email_address', $mode ),
+			sprintf( 'user_registration_global_paypal_%s_email_address', $mode_key ),
 			get_option( 'user_registration_global_paypal_email_address', '' )
 		);
 
@@ -1976,11 +1977,12 @@ class NewPaypalService {
 			return true;
 		}
 
-		$mode = $this->get_paypal_mode();
+		$mode     = $this->get_paypal_mode();
+		$mode_key = $this->get_paypal_mode_key();
 
 		$required = array(
-			'client_id'     => get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id', '' ) ),
-			'client_secret' => get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret', '' ) ),
+			'client_id'     => get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode_key ), get_option( 'user_registration_global_paypal_client_id', '' ) ),
+			'client_secret' => get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode_key ), get_option( 'user_registration_global_paypal_client_secret', '' ) ),
 		);
 
 		// Keep compatibility with old one-time standard/email validation if needed by your UI.
@@ -2242,18 +2244,29 @@ class NewPaypalService {
 	}
 
 	/**
+	 * Get the option key segment for the current PayPal mode.
+	 * Options are stored under _live_ / _test_ keys, but the mode value is 'production' / 'test'.
+	 *
+	 * @return string 'live' or 'test'
+	 */
+	private function get_paypal_mode_key() {
+		return 'production' === $this->get_paypal_mode() ? 'live' : 'test';
+	}
+
+	/**
 	 * Get PayPal REST credentials.
 	 *
 	 * @return array
 	 */
 	private function get_paypal_rest_credentials() {
-		$mode = $this->get_paypal_mode();
+		$mode     = $this->get_paypal_mode();
+		$mode_key = $this->get_paypal_mode_key();
 
 		return array(
 			'mode'       => $mode,
-			'client_id'  => get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id', '' ) ),
-			'secret_key' => get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret', '' ) ),
-			'email'      => get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address', '' ) ),
+			'client_id'  => get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode_key ), get_option( 'user_registration_global_paypal_client_id', '' ) ),
+			'secret_key' => get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode_key ), get_option( 'user_registration_global_paypal_client_secret', '' ) ),
+			'email'      => get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode_key ), get_option( 'user_registration_global_paypal_email_address', '' ) ),
 		);
 	}
 
