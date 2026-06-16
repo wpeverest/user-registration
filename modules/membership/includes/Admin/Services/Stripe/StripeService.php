@@ -1490,6 +1490,24 @@ class StripeService {
 			$payments_data  = isset( $subscription->latest_invoice->payments->data ) ? (array) $subscription->latest_invoice->payments->data : array();
 			$payment_intent = ! empty( $payments_data ) ? ( $payments_data[0]->payment->payment_intent ?? null ) : null;
 
+			if ( empty( $payment_intent ) && isset( $subscription->latest_invoice->payment_intent ) ) {
+				$payment_intent = $subscription->latest_invoice->payment_intent;
+			}
+
+			// Retrieve the PaymentIntent (newer Stripe API returns only an id) and expose it on the
+			// invoice so the front-end can run 3D Secure / SCA.
+			if ( ! empty( $payment_intent ) && is_string( $payment_intent ) ) {
+				try {
+					$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent );
+				} catch ( \Exception $e ) {
+					$payment_intent = null;
+				}
+			}
+
+			if ( ! empty( $payment_intent ) && ! is_string( $payment_intent ) && isset( $subscription->latest_invoice ) ) {
+				$subscription->latest_invoice->payment_intent = $payment_intent;
+			}
+
 			$three_ds2_source = '';
 			if ( ! empty( $payment_intent ) && ! is_string( $payment_intent ) ) {
 				$three_ds2_source = $payment_intent->next_action->use_stripe_sdk->three_d_secure_2_source ?? '';
