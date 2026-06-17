@@ -2227,6 +2227,9 @@ class AJAX {
 					'updated_membership_title' => $added_membership_title,
 					'message'                  => $message,
 					'selected_membership_id'   => $data['selected_membership_id'],
+					// Include order_id so the Stripe confirmation step can identify this order
+					// (matches the upgrade response); without it the payment stays pending.
+					'order_id'                 => $data['order_id'],
 				)
 			);
 		}

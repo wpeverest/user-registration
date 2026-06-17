@@ -382,8 +382,11 @@ if ( ! class_exists( 'Admin' ) ) :
 			}
 
 			// Create order + subscription
-			$membership_service = new MembershipService();
-			$response           = $membership_service->create_membership_order_and_subscription( $data );
+			// UR-4573: This is a fresh membership registration, so the membership role should
+			// replace the default role the registration assigned (not stack on top of it).
+			$data['is_initial_registration'] = true;
+			$membership_service              = new MembershipService();
+			$response                        = $membership_service->create_membership_order_and_subscription( $data );
 
 			// PaymentGatewayLogging — order creation + free activation
 			if ( $response['status'] && class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
