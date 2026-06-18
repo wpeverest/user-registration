@@ -315,7 +315,7 @@ class NewPaypalService {
 				array(
 					'ur-membership-return' => base64_encode( $query_args ),
 				),
-				apply_filters( 'user_registration_paypal_return_url', $paypal_options['return_url'], array() )
+				apply_filters( 'user_registration_paypal_return_url', home_url( '/' ), array() )
 			)
 		);
 
@@ -800,7 +800,11 @@ class NewPaypalService {
 		}
 
 		$payload = array(
-			'plan_id' => sanitize_text_field( $new_plan_id ),
+			'plan_id'             => sanitize_text_field( $new_plan_id ),
+			'application_context' => array(
+				'return_url' => $context['return_url'],
+				'cancel_url' => $context['cancel_url'],
+			),
 		);
 
 		if ( ! empty( $context['team_quantity'] ) ) {
@@ -1112,9 +1116,12 @@ class NewPaypalService {
 		$paypal_subscription_id = sanitize_text_field( isset( $_GET['subscription_id'] ) ? $_GET['subscription_id'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$member_subscription    = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
 		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'], true );
+		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $url_params['current_membership_id'] ?? '' ] );
 		// Also treat as one-time if PayPal returned a token with no subscription_id (proration upgrade).
 		$is_rest_one_time_payment = ( 'paid' === $member_order['order_type'] || 'one-time' === $membership_type )
 			|| ( ! empty( $order_token ) && empty( $paypal_subscription_id ) );
+
+		$payment_verified = false;
 
 		// if buyer already returned and internal order is completed, just redirect .
 		// if ( 'completed' === ( isset( $member_order['status'] ) ? $member_order['status'] : '' ) ) {
@@ -1179,6 +1186,7 @@ class NewPaypalService {
 					JSON_PRETTY_PRINT
 				)
 			);
+			$payment_verified = true;
 		}
 
 		// REST subscription return.
@@ -1247,6 +1255,18 @@ class NewPaypalService {
 					JSON_PRETTY_PRINT
 				)
 			);
+			$payment_verified = true;
+		}
+
+		if ( ! $payment_verified && ! $is_upgrading ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				sprintf(
+					'[Member ID #%s] PayPal redirect aborted: no token or subscription_id present — possible forged return URL.',
+					$member_id
+				)
+			);
+			return;
 		}
 
 		// Reload local subscription after any update.
@@ -1258,8 +1278,6 @@ class NewPaypalService {
 		}
 
 		$this->send_payment_success_email( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $membership_id );
-
-		$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $url_params['current_membership_id'] ] );
 
 		if ( $is_upgrading && ! empty( $member_subscription['ID'] ) ) {
 			PaymentGatewayLogging::log_general(
