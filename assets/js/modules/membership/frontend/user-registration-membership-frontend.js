@@ -2518,59 +2518,85 @@
 			ur_membership_frontend_utils.show_payment_processing_overlay();
 
 			return new Promise(function (resolve, reject) {
+				var subscription = data.subscription || {};
+				var resolvePayload = {
+					subscription: subscription,
+					response_data: data.response_data,
+					message: data.message,
+					prepare_members_data: data.prepare_members_data,
+					form_response: data.form_response
+				};
+
 				if (
-					data.subscription &&
-					(data.subscription.status === "active" ||
-						data.subscription.status === "trialing")
+					subscription.status === "active" ||
+					subscription.status === "trialing"
 				) {
-					resolve({
-						subscription: data.subscription,
-						response_data: data.response_data,
-						message: data.message,
-						prepare_members_data: data.prepare_members_data,
-						form_response: data.form_response
-					});
 					ur_membership_frontend_utils.hide_payment_processing_overlay();
+					resolve(resolvePayload);
+					return;
 				}
 
-				var paymentIntent =
-					data.subscription.latest_invoice.payment_intent;
+				// Only an expanded PaymentIntent with a client_secret allows SCA / 3D Secure on the client.
+				var latestInvoice = subscription.latest_invoice || {};
+				var paymentIntent = latestInvoice.payment_intent;
+				var clientSecret =
+					paymentIntent && typeof paymentIntent === "object"
+						? paymentIntent.client_secret
+						: null;
+				var piStatus =
+					paymentIntent && typeof paymentIntent === "object"
+						? paymentIntent.status
+						: null;
+				var needsAction =
+					piStatus === "requires_action" ||
+					piStatus === "requires_source_action" ||
+					piStatus === "requires_confirmation";
 
-				if ("trialing" !== data.subscription.status) {
-					if ("requires_action" === paymentIntent.status) {
-						data.paymentElements.stripe
-							.confirmCardPayment(paymentIntent.client_secret, {
-								payment_method: data.paymentMethodId
-							})
-							.then(function (result) {
-								if (result.error) {
-									var message = result.error.message;
-									reject(message, data);
-									return;
-								}
+				if (clientSecret && needsAction) {
+					data.paymentElements.stripe
+						.confirmCardPayment(clientSecret)
+						.then(function (result) {
+							ur_membership_frontend_utils.hide_payment_processing_overlay();
+							if (result.error) {
+								reject(result.error.message, data);
+								return;
+							}
 
-								if (
-									"succeeded" === result.paymentIntent.status
-								) {
-									data.subscription.status = "active";
-									resolve({
-										subscription: data.subscription,
-										form_id: data.form_response.form_id,
-										response_data: data.response_data,
-										prepare_members_data:
-											data.prepare_members_data,
-										form_response: data.form_response,
-										three_d_secure: true
-									});
-								} else {
-									var message =
-										"Unable to complete the payment.";
-									reject(message, data);
-								}
-								ur_membership_frontend_utils.hide_payment_processing_overlay();
-							});
-					}
+							if (
+								result.paymentIntent &&
+								"succeeded" === result.paymentIntent.status
+							) {
+								subscription.status = "active";
+								resolve({
+									subscription: subscription,
+									form_id: data.form_response.form_id,
+									response_data: data.response_data,
+									prepare_members_data:
+										data.prepare_members_data,
+									form_response: data.form_response,
+									three_d_secure: true
+								});
+							} else {
+								reject(
+									"Unable to complete the payment.",
+									data
+								);
+							}
+						})
+						.catch(function (error) {
+							ur_membership_frontend_utils.hide_payment_processing_overlay();
+							reject(
+								error && error.message
+									? error.message
+									: "Unable to complete the payment.",
+								data
+							);
+						});
+					return;
 				}
+
+				ur_membership_frontend_utils.hide_payment_processing_overlay();
+				resolve(resolvePayload);
 			});
 		},
 
