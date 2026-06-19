@@ -4,7 +4,7 @@ Tags: membership, subscription, content restriction, user profile, user registra
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 5.2.1
+Stable tag: 5.2.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -251,6 +251,20 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 9. Subscription Management
 
 == Changelog ==
+
+= 5.2.2    - 19/06/2026 =
+* Dev      - Add UR_WPML compatibility service class.
+* Fix      - Password reset link shows "invalid or expired" error.
+* Fix      - Membership subscriptions stuck pending on 3D Secure (SCA) cards.
+* Fix      - Hardcoded database table names causing failures on custom table prefixes.
+* Fix      - Checkbox visibility issue on WP user profile/edit page  caused by CSS conflict.
+* Fix      - PayPal credentials not detected during registration despite valid saved settings.
+* Fix      - Password reset link shows invalid or expired on hosts that do not support PHP cookies.
+* Fix      - Webhook not configured but still can bypass PayPal payments.
+* Fix      - Payment Method Bypass Allows Free Access to Paid Memberships via Tampered Registration Request.
+* Fix      - Payment method field during registration could be manipulated to bypass payment for paid memberships.
+* Fix      - Authenticated users could modify other members' subscriptions by supplying an arbitrary subscription ID during upgrade.
+* Fix      - Membership tier submitted during registration was not validated against the memberships configured on the form, allowing substitution with an off-form tier.
 
 = 5.2.1    - 28/05/2026 =
 * Fix      - Stripe order validation issue.
