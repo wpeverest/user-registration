@@ -280,10 +280,12 @@ if ( ! class_exists( 'Admin' ) ) :
 				return $success_params;
 			}
 			// Guard 3: form has a membership field
-			$has_membership_field = false;
+			$has_membership_field  = false;
+			$membership_field_data = null;
 			foreach ( $valid_form_data as $field_data ) {
 				if ( isset( $field_data->extra_params['field_key'] ) && 'membership' === $field_data->extra_params['field_key'] ) {
-					$has_membership_field = true;
+					$has_membership_field  = true;
+					$membership_field_data = $field_data;
 					break;
 				}
 			}
@@ -304,6 +306,50 @@ if ( ! class_exists( 'Admin' ) ) :
 			$member_id = $user_id;
 			if ( ! $member ) {
 				return $success_params;
+			}
+
+			// Validate that the submitted membership ID is one the form is actually configured to offer.
+			// This prevents an attacker from supplying an off-form tier (e.g. Administrator-role) in members_data.
+			if ( $membership_field_data ) {
+				$listing_option         = isset( $membership_field_data->general_setting->membership_listing_option )
+					? $membership_field_data->general_setting->membership_listing_option
+					: 'all';
+				$allowed_membership_ids = array();
+
+				if ( 'group' === $listing_option ) {
+					$group_id = isset( $membership_field_data->general_setting->membership_group )
+						? absint( $membership_field_data->general_setting->membership_group )
+						: 0;
+					if ( $group_id ) {
+						$group_service     = new MembershipGroupService();
+						$group_memberships = $group_service->get_group_memberships( $group_id );
+						foreach ( $group_memberships as $m ) {
+							$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
+							if ( $id ) {
+								$allowed_membership_ids[] = $id;
+							}
+						}
+					}
+				} elseif ( 'selected' === $listing_option ) {
+					$selected_ids           = isset( $membership_field_data->general_setting->membership_active_memberships )
+						? $membership_field_data->general_setting->membership_active_memberships
+						: array();
+					$selected_ids           = is_array( $selected_ids ) ? $selected_ids : (array) maybe_unserialize( $selected_ids );
+					$allowed_membership_ids = array_values( array_filter( array_map( 'absint', $selected_ids ) ) );
+				} else {
+					$membership_service_temp = new MembershipService();
+					foreach ( $membership_service_temp->list_active_memberships() as $m ) {
+						$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
+						if ( $id ) {
+							$allowed_membership_ids[] = $id;
+						}
+					}
+				}
+
+				if ( empty( $allowed_membership_ids ) || ! in_array( absint( $data['membership'] ), $allowed_membership_ids, true ) ) {
+					wp_delete_user( absint( $member_id ) );
+					wp_send_json_error( array( 'message' => esc_html__( 'Invalid membership selection.', 'user-registration' ) ) );
+				}
 			}
 			$data['username'] = $member->user_login;
 			$data['email']    = $member->user_email;
@@ -335,6 +381,10 @@ if ( ! class_exists( 'Admin' ) ) :
 			// A paid/subscription membership must use one of its configured gateways; 'free'
 			// is never a valid gateway for a non-free membership.
 			if ( 'free' !== $membership_type ) {
+				if ( 'free' === $data['payment_method'] ) {
+					wp_delete_user( absint( $member_id ) );
+					wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
+				}
 				$configured_gateways = array();
 				if ( ! empty( $membership_meta['payment_gateways'] ) && is_array( $membership_meta['payment_gateways'] ) ) {
 					foreach ( $membership_meta['payment_gateways'] as $gw_key => $gw_data ) {
