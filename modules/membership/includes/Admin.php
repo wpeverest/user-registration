@@ -802,9 +802,11 @@ if ( ! class_exists( 'Admin' ) ) :
 
 			$installed_version = get_option( 'ur_membership_db_version', '0.0.0' );
 
-			if ( version_compare( $installed_version, '1.0.0', '<' ) ) {
+			if ( version_compare( $installed_version, '1.0.0', '<' ) || ! Database::tables_exist() ) {
 				self::on_activation();
-				update_option( 'ur_membership_db_version', '1.0.0' );
+				if ( Database::tables_exist() ) {
+					update_option( 'ur_membership_db_version', '1.0.0' );
+				}
 			}
 
 			if ( version_compare( $installed_version, '1.0.1', '<' ) ) {
