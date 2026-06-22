@@ -806,6 +806,11 @@ if ( ! class_exists( 'Admin' ) ) :
 				self::on_activation();
 				update_option( 'ur_membership_db_version', '1.0.0' );
 			}
+
+			if ( version_compare( $installed_version, '1.0.1', '<' ) ) {
+				self::on_activation();
+				update_option( 'ur_membership_db_version', '1.0.1' );
+			}
 		}
 
 		public function render_user_membership_details( $user_id, $form_id ) {
