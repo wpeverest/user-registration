@@ -516,7 +516,7 @@ if ( ! class_exists( 'Admin' ) ) :
 						'member_id'      => absint( $member_id ),
 						'transaction_id' => esc_html( $transaction_id ),
 						'order_id'       => esc_html( $data['order_id'] ),
-						'message'        => esc_html__( 'New member has been successfully created.', 'user-registration' ),
+						'message'        => get_option( 'user_registration_successful_membership_creation_message', esc_html__( 'New member has been successfully created.', 'user-registration' ) ),
 					)
 				);
 				if ( ur_check_module_activation( 'team' ) ) {
