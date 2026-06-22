@@ -130,6 +130,16 @@ if ( ! class_exists( 'UR_Settings_Registration_Login' ) ) {
 									'css'      => 'min-width: 350px; min-height: 100px;',
 									'default'  => __( 'User registered. Wait until admin approves your registration.', 'user-registration' ),
 								),
+
+								array(
+									'title'    => __( 'Membership Registration', 'user-registration' ),
+									'desc'     => __( 'Enter the text message that appears after successful membership registration.', 'user-registration' ),
+									'id'       => 'user_registration_successful_membership_creation_message',
+									'type'     => 'textarea',
+									'desc_tip' => true,
+									'css'      => 'min-width: 350px; min-height: 100px;',
+									'default'  => __( 'New member has been successfully created.', 'user-registration' ),
+								),
 							),
 						),
 						'frontend_error_message_messages_settings' => array(
