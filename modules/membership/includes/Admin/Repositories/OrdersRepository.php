@@ -31,8 +31,10 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	 * @return array|object|\stdClass[]
 	 */
 	public function get_all( $args ) {
-		$table_exists = $this->wpdb()->get_var(
-			$this->wpdb()->prepare( 'SHOW TABLES LIKE %s', $this->table )
+		global $wpdb;
+
+		$table_exists = $wpdb->get_var(
+			$wpdb->prepare( 'SHOW TABLES LIKE %s', $this->table )
 		);
 
 		if ( $table_exists !== $this->table ) {
@@ -41,7 +43,7 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 				'total'        => 0,
 				'total_pages'  => 0,
 				'current_page' => 1,
-				'per_page'     => absint( $args['per_page'] ?? 20 ),
+				'per_page'     => absint( $args['per_page'] ?? 20),
 			);
 		}
 
@@ -64,29 +66,28 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 					WHERE 1 = 1
 				";
 		if ( isset( $args['membership_id'] ) ) {
-			$sql .= $this->wpdb()->prepare( ' AND wpp.ID = %d', absint( $args['membership_id'] ) );
+			$sql .= $wpdb->prepare( ' AND wpp.ID = %d', $args['membership_id'] );
 		}
 		if ( isset( $args['s'] ) ) {
-			$like = '%' . $this->wpdb()->esc_like( $args['s'] ) . '%';
-			$sql .= $this->wpdb()->prepare(
+			$search = '%' . $wpdb->esc_like( $args['s'] ) . '%';
+			$sql   .= $wpdb->prepare(
 				' AND (wpu.display_name LIKE %s OR wpu.user_email LIKE %s OR urmo.transaction_id LIKE %s)',
-				$like,
-				$like,
-				$like
+				$search,
+				$search,
+				$search
 			);
 		}
 		if ( isset( $args['payment_method'] ) ) {
-			$sql .= $this->wpdb()->prepare( ' AND urmo.payment_method = %s', $args['payment_method'] );
+			$sql .= $wpdb->prepare( ' AND urmo.payment_method = %s', $args['payment_method'] );
 		}
 		if ( isset( $args['status'] ) ) {
-			$sql .= $this->wpdb()->prepare( ' AND urmo.status = %s', $args['status'] );
+			$sql .= $wpdb->prepare( ' AND urmo.status = %s', $args['status'] );
 		}
 
-		$allowed_orderby = array( 'created_at', 'status' );
-		$allowed_order   = array( 'ASC', 'DESC' );
+		$allowed_orderby = array( 'created_at', 'status', 'ID' );
 		$orderby         = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'created_at';
-		$order           = in_array( strtoupper( $args['order'] ), $allowed_order, true ) ? strtoupper( $args['order'] ) : 'DESC';
-		$sql            .= " ORDER BY $orderby $order"; // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$order           = 'ASC' === strtoupper( $args['order'] ) ? 'ASC' : 'DESC';
+		$sql            .= sprintf( ' ORDER BY %s %s', $orderby, $order );
 
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
 
@@ -110,7 +111,7 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 			foreach ( $data['orders_meta_data'] as $order_meta ) {
 				$order_meta['order_id'] = $order_id;
 				$this->wpdb()->insert(
-					$this->orders_meta_table,
+					TableList::order_meta_table(),
 					$order_meta
 				);
 			}
@@ -186,12 +187,14 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	}
 
 	public function get_order_metas( $order_id ) {
+		$ordermeta_table = $this->wpdb()->prefix . 'ur_membership_ordermeta';
+
 		$result = $this->wpdb()->get_row(
 			$this->wpdb()->prepare(
 				"
 				SELECT wpom.*
 				FROM $this->table urmo
-				JOIN $this->orders_meta_table wpom ON urmo.ID = wpom.order_id
+				JOIN $ordermeta_table wpom ON urmo.ID = wpom.order_id
 				WHERE urmo.ID = %d
 				AND wpom.meta_key = 'delayed_until'
 				AND wpom.meta_value > NOW()
@@ -250,18 +253,17 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	}
 
 	public function get_all_delayed_orders( $date ) {
-		$usermeta_table = $this->wpdb()->prefix . 'usermeta';
-		$sql            = $this->wpdb()->prepare(
+		$sql = sprintf(
 			"
 					SELECT
 					       wpum.meta_value as sub_data
-					FROM $this->table urmo
-					         JOIN $this->orders_meta_table wpom ON urmo.ID = wpom.order_id
-					         JOIN $usermeta_table wpum ON urmo.user_id = wpum.user_id
+					FROM wp_ur_membership_orders urmo
+					         JOIN wp_ur_membership_ordermeta wpom ON urmo.ID = wpom.order_id
+					         JOIN wp_usermeta wpum ON urmo.user_id = wpum.user_id
 					WHERE wpom.meta_key = 'delayed_until'
-					  AND wpom.meta_value = %s
+					  AND wpom.meta_value = '%s'
 					  AND wpum.meta_key = 'urm_next_subscription_data'
-				", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				",
 			$date
 		);
 
@@ -276,11 +278,13 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	}
 
 	public function get_order_meta_by_order_id_and_meta_key( $order_id, $meta_key ) {
+		$ordermeta_table = $this->wpdb()->prefix . 'ur_membership_ordermeta';
+
 		$result = $this->wpdb()->get_row(
 			$this->wpdb()->prepare(
 				"
 				SELECT *
-				FROM $this->orders_meta_table
+				FROM {$ordermeta_table}
 				WHERE order_id = %d
 				AND meta_key = %s
 				LIMIT 1
@@ -295,15 +299,9 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	}
 
 	public function update_order_meta( $order_meta ) {
-		$this->wpdb()->update(
-			$this->orders_meta_table,
-			array( 'meta_value' => $order_meta['meta_value'] ),
-			array(
-				'order_id' => $order_meta['order_id'],
-				'meta_key' => $order_meta['meta_key'],
-			),
-			array( '%s' ),
-			array( '%d', '%s' )
+		$this->wpdb()->insert(
+			TableList::order_meta_table(),
+			$order_meta
 		);
 	}
 }
