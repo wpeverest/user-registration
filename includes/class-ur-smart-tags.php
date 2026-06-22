@@ -88,6 +88,7 @@ class UR_Smart_Tags {
 			'{{unique_id}}'        => esc_html__( 'Unique ID', 'user-registration' ),
 			'{{sign_up}}'          => esc_html__( 'Sign Up', 'user-registration' ),
 			'{{log_in}}'           => esc_html__( 'Log In', 'user-registration' ),
+			'{{urm_bank_details}}' => esc_html__( 'Bank Details', 'user-registration' ),
 		);
 
 		/**
@@ -168,12 +169,12 @@ class UR_Smart_Tags {
 			$user_data = UR_Emailer::user_data_smart_tags( $values['email'] );
 
 			if ( ! empty( $values['context'] ) && 'thank_you_page' == $values['context'] ) {
-				$subscription_service = new SubscriptionService();
-				$user_data['member_id']       = $values['member_id'];
+				$subscription_service        = new SubscriptionService();
+				$user_data['member_id']      = $values['member_id'];
 				$user_data['context']        = $values['context'];
 				$user_data['transaction_id'] = ! empty( $values['transaction_id'] ) ? $values['transaction_id'] : '';
-				$values      = array(
-					'membership_tags' => $subscription_service->get_membership_plan_details( $user_data )
+				$values                      = array(
+					'membership_tags' => $subscription_service->get_membership_plan_details( $user_data ),
 				);
 			}
 
@@ -630,12 +631,14 @@ class UR_Smart_Tags {
 						break;
 					case 'manage_membership_link':
 						$endpoint               = 'ur-membership';
-						$manage_membership_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'Manage Membership', 'user-registration' ) . '</a>';
+						$my_account_url         = ur_get_page_id( 'myaccount' ) > 0 ? ur_get_page_permalink( 'myaccount' ) : ur_get_page_permalink( 'login' );
+						$manage_membership_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint, '', $my_account_url ) ) . '">' . esc_html__( 'Manage Membership', 'user-registration' ) . '</a>';
 						$content                = str_replace( '{{' . $tag . '}}', wp_kses_post( $manage_membership_link ), $content );
 						break;
 					case 'reactivation_link':
 						$endpoint           = 'ur-membership';
-						$membership_tab_url = esc_url( ur_get_endpoint_url( $endpoint ) );
+						$my_account_url     = ur_get_page_id( 'myaccount' ) > 0 ? ur_get_page_permalink( 'myaccount' ) : ur_get_page_permalink( 'login' );
+						$membership_tab_url = esc_url( ur_get_endpoint_url( $endpoint, '', $my_account_url ) );
 						$reactivation_link  = '<a href="' . $membership_tab_url . '">' . esc_html__( 'Reactivate Membership', 'user-registration' ) . '</a>';
 						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $reactivation_link ), $content );
 						break;
@@ -849,11 +852,11 @@ class UR_Smart_Tags {
 						$content    = str_replace( '{{' . $other_tag . '}}', $first_name, $content );
 						break;
 					case 'last_name':
-						$username   = $values[ 'username' ] ?? $values[ 'membership_tags' ][ 'username' ] ?? null;
-						$user       = get_user_by( 'login', $username );
-						$user_id    = isset( $user->ID ) ? $user->ID : get_current_user_id();
+						$username  = $values['username'] ?? $values['membership_tags']['username'] ?? null;
+						$user      = get_user_by( 'login', $username );
+						$user_id   = isset( $user->ID ) ? $user->ID : get_current_user_id();
 						$last_name = get_user_meta( $user_id, 'last_name', true );
-						$content    = str_replace( '{{' . $other_tag . '}}', $last_name, $content );
+						$content   = str_replace( '{{' . $other_tag . '}}', $last_name, $content );
 						break;
 					case 'membership_end_date':
 						$membership_end_date = ( isset( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_expiry_date'] ) ) ? $values['membership_tags']['membership_plan_expiry_date'] : '';
@@ -1146,6 +1149,37 @@ class UR_Smart_Tags {
 						}
 						$content = str_replace( '{{' . $other_tag . '}}', $password, $content );
 						break;
+
+					case 'urm_bank_details':
+						$bank_details_content = '';
+						$payment_method       = '';
+
+						// Resolve payment method from available value sources.
+						if ( ! empty( $values['payment_method'] ) ) {
+							$payment_method = $values['payment_method'];
+						} elseif ( ! empty( $values['membership_tags']['membership_plan_payment_method'] ) ) {
+							$payment_method = $values['membership_tags']['membership_plan_payment_method'];
+						} else {
+							$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
+							if ( $user_id && class_exists( '\WPEverest\URMembership\Admin\Repositories\MembersOrderRepository' ) ) {
+								$members_order_repository = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
+								$latest_order             = $members_order_repository->get_member_orders( $user_id );
+								if ( ! empty( $latest_order ) && isset( $latest_order['ID'] ) ) {
+									$orders_repository = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
+									$order_detail      = $orders_repository->get_order_detail( $latest_order['ID'] );
+									if ( ! empty( $order_detail['payment_method'] ) ) {
+										$payment_method = $order_detail['payment_method'];
+									}
+								}
+							}
+						}
+
+						if ( 'bank' === strtolower( $payment_method ) ) {
+							$bank_details_content = get_option( 'user_registration_global_bank_details', '' );
+						}
+
+						$content = str_replace( '{{' . $other_tag . '}}', wp_kses_post( $bank_details_content ), $content );
+						break;
 				}
 			}
 		}
@@ -1347,7 +1381,7 @@ class UR_Smart_Tags {
 
 	private function handle_invoices_tags( $tag, $content, $values, $key ) {
 		global $wpdb;
-		$detail = '';
+		$detail        = '';
 		$tag_processed = false;
 
 		// List of invoice-related tags that this method handles
@@ -1376,12 +1410,12 @@ class UR_Smart_Tags {
 
 		$membership_enabled = get_user_meta( get_current_user_id(), 'ur_registration_source', true );
 		if ( $membership_enabled ) {
-			$transaction_id = $_GET[ 'transaction_id' ]; //one time payment.
-			$order_detail = $wpdb->get_row( $wpdb->prepare( "SELECT ID, item_id, updated_at, status  FROM {$wpdb->prefix}ur_membership_orders WHERE user_id=%d AND transaction_id=%s", get_current_user_id(), $transaction_id ), ARRAY_A );
-			$membership = get_post( $order_detail[ 'item_id' ], ARRAY_A );
+			$transaction_id = $_GET['transaction_id']; // one time payment.
+			$order_detail   = $wpdb->get_row( $wpdb->prepare( "SELECT ID, item_id, updated_at, status  FROM {$wpdb->prefix}ur_membership_orders WHERE user_id=%d AND transaction_id=%s", get_current_user_id(), $transaction_id ), ARRAY_A );
+			$membership     = get_post( $order_detail['item_id'], ARRAY_A );
 		}
-		switch( $tag ) {
-			//merchant details:
+		switch ( $tag ) {
+			// merchant details:
 			case 'business_name':
 			case 'business_address_line_1':
 			case 'business_address_line_2':
@@ -1390,30 +1424,30 @@ class UR_Smart_Tags {
 			case 'business_address_postal':
 			case 'business_email':
 			case 'business_phone':
-				$detail = get_option( 'urm_' . $tag, '' );
-				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$detail        = get_option( 'urm_' . $tag, '' );
+				$content       = str_replace( '{{' . $tag . '}}', $detail, $content );
 				$tag_processed = true;
 				break;
 			case 'invoice_title':
-				$detail = $membership[ 'post_title' ] ?? '';
-				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$detail        = $membership['post_title'] ?? '';
+				$content       = str_replace( '{{' . $tag . '}}', $detail, $content );
 				$tag_processed = true;
 				break;
 			case 'invoice_short_desc':
-				$detail = $membership[ 'post_description' ] ?? '';
-				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$detail        = $membership['post_description'] ?? '';
+				$content       = str_replace( '{{' . $tag . '}}', $detail, $content );
 				$tag_processed = true;
 				break;
 			case 'invoice_period':
 			case 'invoice_amount':
 			case 'total_amount':
 			case 'tax_amount':
-				$detail = get_user_meta( $order_detail[ 'user_id' ], "urm_$tag", true ) ?? '';
-				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$detail        = get_user_meta( $order_detail['user_id'], "urm_$tag", true ) ?? '';
+				$content       = str_replace( '{{' . $tag . '}}', $detail, $content );
 				$tag_processed = true;
 				break;
 			case 'invoice_status':
-				$content = str_replace( '{{' . $tag . '}}', $order_detail[ 'status' ], $content);
+				$content       = str_replace( '{{' . $tag . '}}', $order_detail['status'], $content );
 				$tag_processed = true;
 				break;
 		}

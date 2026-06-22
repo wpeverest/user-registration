@@ -94,7 +94,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 									for="ur-input-type-membership-group-name"><?php esc_html_e( 'Group Name', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 									<span class="user-registration-help-tip tooltipstered"
-											data-tip="<?php echo esc_attr__( 'Title for the group.' ); ?>"></span>
+											data-tip="<?php echo esc_attr__( 'Title for the group.', 'user-registration' ); ?>"></span>
 								</label>
 							</div>
 							<div class="ur-input-type-membership-group-name ur-admin-template" style="width: 100%">
@@ -117,7 +117,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 								<label for="ur-input-type-membership-group-description">
 									Group Description
 									<span class="user-registration-help-tip tooltipstered"
-											data-tip="<?php echo esc_attr__( 'Describe the group.' ); ?>"></span>
+											data-tip="<?php echo esc_attr__( 'Describe the group.', 'user-registration' ); ?>"></span>
 								</label>
 							</div>
 							<div class="ur-field" data-field-key="textarea" style="width: 100%">
@@ -171,7 +171,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 										for="ur-membership-group-multiple-memberships">
 										<?php esc_html_e( 'Allow multiple memberships', 'user-registration' ); ?>
 										<span class="user-registration-help-tip tooltipstered"
-										data-tip="<?php echo esc_attr__( 'When enabled, users can hold multiple memberships from this group simultaneously.' ); ?>"></span>
+										data-tip="<?php echo esc_attr__( 'When enabled, users can hold multiple memberships from this group simultaneously.', 'user-registration' ); ?>"></span>
 									</label>
 							</div>
 							<div class="ur-toggle-section m1-auto " style="width:100%">
@@ -199,7 +199,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 										<label class="ur-membership-group-enable-upgrade"
 												for="ur-membership-group-upgrade"><?php esc_html_e( 'Upgrade action', 'user-registration' ); ?>
 											<span class="user-registration-help-tip tooltipstered"
-													data-tip="<?php echo esc_attr__( 'Enable automatic upgrade paths between memberships in this group.' ); ?>"></span>
+													data-tip="<?php echo esc_attr__( 'Enable automatic upgrade paths between memberships in this group.', 'user-registration' ); ?>"></span>
 										</label>
 								</div>
 								<div class="ur-toggle-section m1-auto" style="width:100%">

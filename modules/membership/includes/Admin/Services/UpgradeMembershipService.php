@@ -109,15 +109,17 @@ class UpgradeMembershipService {
 		$tz       = new \DateTimeZone( $timezone );
 		$dateTime = \DateTime::createFromFormat( 'Y-m-d', date( 'Y-m-d' ), $tz );
 
+		$prorate_discount = 0;
+
 		if ( 'full' === $upgrade_type ) {
 			$chargeable_amount = $selected_membership_amount;
 		} elseif ( $selected_membership_amount > $current_membership_amount ) {
-				$start_date                          = new \DateTime( $subscription['start_date'], $tz );
-				$days_passed                         = $dateTime->diff( $start_date )->format( '%a' );
-				$current_membership_duration_in_days = convert_to_days( $current_membership_details['subscription']['value'], $current_membership_details['subscription']['duration'] );
-				$price_per_day                       = $current_membership_amount / $current_membership_duration_in_days;
-				$prorate_discount                    = $current_membership_amount - ( $price_per_day * $days_passed );
-				$chargeable_amount                   = ( $is_trial ) ? $selected_membership_amount : ( $selected_membership_amount - $prorate_discount );
+			$start_date                          = new \DateTime( $subscription['start_date'], $tz );
+			$days_passed                         = $dateTime->diff( $start_date )->format( '%a' );
+			$current_membership_duration_in_days = convert_to_days( $current_membership_details['subscription']['value'], $current_membership_details['subscription']['duration'] );
+			$price_per_day                       = $current_membership_amount / $current_membership_duration_in_days;
+			$prorate_discount                    = round( $current_membership_amount - ( $price_per_day * $days_passed ), 2 );
+			$chargeable_amount                   = ( $is_trial ) ? $selected_membership_amount : round( $selected_membership_amount - $prorate_discount, 2 );
 		} else {
 			$chargeable_amount = $selected_membership_amount;
 			$delayed_until     = $subscription['expiry_date'];
@@ -134,6 +136,7 @@ class UpgradeMembershipService {
 		return array(
 			'status'                       => true,
 			'chargeable_amount'            => $chargeable_amount,
+			'prorate_discount'             => $prorate_discount,
 			'remaining_subscription_value' => $remaining_subscription_value,
 			'delayed_until'                => $delayed_until,
 		);

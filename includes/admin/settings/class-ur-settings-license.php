@@ -5,7 +5,7 @@
  * Handles the scaffold related settings for the User Registration & Membership plugin.
  *
  * This class is responsible for:
- * 
+ *
  * @package   UserRegistration\Admin
  * @version   5.0.0
  * @since     5.0.0
@@ -15,44 +15,44 @@ if ( ! class_exists( 'UR_Settings_License' ) ) {
 	 * UR_Settings_License Class
 	 */
 	class UR_Settings_License extends UR_Settings_Page {
-        private static $_instance = null;
+		private static $_instance = null;
 		/**
 		 * Constructor.
 		 */
-		private function __construct() {            
+		private function __construct() {
 			$this->id    = 'license';
 			$this->label = __( 'License', 'user-registration' );
-            parent::__construct();
-            $this->handle_hooks();
+			parent::__construct();
+			$this->handle_hooks();
 		}
-        public static function get_instance() {
-            if ( null === self::$_instance ) {
-                self::$_instance = new self();
-            }
-            return self::$_instance;
-        }
-        /**
-         * Register hooks for submenus and section UI.
-         * @return void
-         */
-        public function handle_hooks() {
-            add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
-        
+		public static function get_instance() {
+			if ( null === self::$_instance ) {
+				self::$_instance = new self();
+			}
+			return self::$_instance;
+		}
+		/**
+		 * Register hooks for submenus and section UI.
+		 * @return void
+		 */
+		public function handle_hooks() {
+			add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
+
 			if ( isset( $_GET['tab'] ) && 'license' === $_GET['tab'] ) { // phpcs:ignore
 				add_filter( 'user_registration_setting_save_label', array( $this, 'user_registration_license_setting_label' ) );
 				add_filter( 'user_registration_admin_field_license_options', array( $this, 'license_options_settings' ), 10, 2 );
 				add_filter( 'user_registration_setting_save_button_classes', array( $this, 'user_registration_license_setting_classes' ) );
 			}
 		}
-        /**
-         * Filter to provide sections UI for scaffold settings.
-         */
-        public function get_settings_callback( $settings ) {
-            return $this->get_license_settings();   
-        }
+		/**
+		 * Filter to provide sections UI for scaffold settings.
+		 */
+		public function get_settings_callback( $settings ) {
+			return $this->get_license_settings();
+		}
 		public function get_license_settings() {
 			$settings = array(
-				'title' => '',
+				'title'    => '',
 				'sections' => array(
 					'license_options_settings' => array(
 						'title'    => __( 'License Activation', 'user-registration' ),
@@ -73,23 +73,21 @@ if ( ! class_exists( 'UR_Settings_License' ) ) {
 								'type'   => 'nonce',
 							),
 						),
-					)
-				)
+					),
+				),
 			);
 			//only show the content on free version.
-			if( is_plugin_active( 'user-registration/user-registration.php' ) ) {
+			if ( is_plugin_active( 'user-registration/user-registration.php' ) ) {
 				if ( get_option( 'user-registration_license_key' ) ) {
-					$settings['sections']['license_options_settings']['desc'] = '';
-					$settings['sections']['license_options_settings']['before_desc'] = wp_kses_post( '<div class="urm_license_setting_notice urm_install_pro_notice"><h3><span class="dashicons dashicons-info-outline notice-icon"></span>' . __('Complete Your Pro Setup', 'user-registration' ) . '</h3><p>' . __('Your license is activated, but User Registration & Membership pro plugin needs to be installed to unlock all features. This is a one-time setup that takes less than a minute.', 'user-registration' ) . '</p><button class="button install_pro_version_button">' . __( 'Install Pro Version', 'user-registration' ) . '</button></div>');
+					$settings['sections']['license_options_settings']['desc']        = '';
+					$settings['sections']['license_options_settings']['before_desc'] = wp_kses_post( '<div class="urm_license_setting_notice urm_install_pro_notice"><h3><span class="dashicons dashicons-info-outline notice-icon"></span>' . __( 'Complete Your Pro Setup', 'user-registration' ) . '</h3><p>' . __( 'Your license is activated, but User Registration & Membership pro plugin needs to be installed to unlock all features. This is a one-time setup that takes less than a minute.', 'user-registration' ) . '</p><button class="button install_pro_version_button">' . __( 'Install Pro Version', 'user-registration' ) . '</button></div>' );
 				} else {
-					$settings[ 'sections' ][ 'license_options_settings' ][ 'before_desc' ] = sprintf( __( 'You\'re currently using the free version of User Registration & Membership.<br>You can continue using all free features without any limitations.<br><br>Want more? <a target="_blank" href="%s">Upgrade to Pro</a> to unlock advanced features and premium support.<br>Already purchased Pro? Enter your license key below and we\'ll automatically upgrade you to Pro.', 'user-registration' ), esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=ur-license-setting&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign ) );
+					$settings['sections']['license_options_settings']['before_desc'] = sprintf( __( 'You\'re currently using the free version of User Registration & Membership.<br>You can continue using all free features without any limitations.<br><br>Want more? <a target="_blank" href="%s">Upgrade to Pro</a> to unlock advanced features and premium support.<br>Already purchased Pro? Enter your license key below and we\'ll automatically upgrade you to Pro.', 'user-registration' ), esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=ur-license-setting&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign ) );
 				}
-			} else {
-				if ( get_option( 'user-registration_license_key' ) ) {
+			} elseif ( get_option( 'user-registration_license_key' ) ) {
 					$settings['sections']['license_options_settings']['before_desc'] = __( 'Your Pro license is active! Enjoy all premium features and priority support.', 'user-registration' );
-				} else {
-					$settings['sections']['license_options_settings']['before_desc'] = __( 'You\'re using the Pro version, but your license needs to be activated.<br>Enter your license key below to unlock Pro features and receive updates.', 'user-registration' );
-				}
+			} else {
+				$settings['sections']['license_options_settings']['before_desc'] = __( 'You\'re using the Pro version, but your license needs to be activated.<br>Enter your license key below to unlock Pro features and receive updates.', 'user-registration' );
 			}
 
 			// Replace license input box and display deactivate license button when license is activated.
@@ -106,7 +104,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) {
 							array(
 								'title' => __( 'Deactivate License', 'user-registration' ),
 								'href'  => wp_nonce_url( remove_query_arg( array( 'deactivated_license', 'activated_license' ), add_query_arg( 'user-registration_deactivate_license', 1 ), ), '_ur_license_nonce' ),
-								'class' => 'user_registration-deactivate-license-key',
+								'class' => 'ur-button user_registration-deactivate-license-key',
 							),
 						),
 					),
@@ -115,7 +113,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) {
 						'id'   => 'user_registration_license_section_settings',
 					),
 				);
-				$GLOBALS[ 'hide_save_button' ] = true;
+				$GLOBALS['hide_save_button']                                  = true;
 			}
 			return $settings;
 		}
@@ -147,7 +145,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) {
 			$classes[] = 'license_setting_save_button';
 			return $classes;
 		}
-    }
+	}
 }
 
 //Backward Compatibility.
