@@ -85,7 +85,7 @@ class Database {
 						created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 						updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     					PRIMARY KEY (ID),
-    					KEY idx_user_id (user_id)
+				    FOREIGN KEY (user_id) REFERENCES $users_table(ID) ON DELETE CASCADE ON UPDATE NO ACTION
     					) $collate
                     "
 		);
@@ -109,7 +109,9 @@ class Database {
 					  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     				  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 					  PRIMARY KEY (ID),
+					  FOREIGN KEY (user_id) REFERENCES $users_table(ID) ON DELETE CASCADE ON UPDATE NO ACTION,
 					  FOREIGN KEY (subscription_id) REFERENCES $subscriptions_table(ID) ON DELETE CASCADE ON UPDATE NO ACTION,
+					  FOREIGN KEY (created_by) REFERENCES $users_table(ID) ON UPDATE NO ACTION,
 					  INDEX idx_user_id (user_id),
 					  INDEX idx_created_by (created_by),
 					  INDEX idx_order_type (order_type),
