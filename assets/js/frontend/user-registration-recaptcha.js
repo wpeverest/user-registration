@@ -58,7 +58,7 @@ var createDedicatedHcaptchaLoader = function() {
 				};
 
 				var script = document.createElement('script');
-				script.src = 'https://js.hcaptcha.com/1/api.js?render=explicit&onload=' + callbackName;
+				script.src = 'https://js.hcaptcha.com/1/api.js?render=explicit&onload=' + callbackName + '&recaptchacompat=off';
 				script.onload = function() {
 					setTimeout(function() {
 						if (window.hcaptcha && window.hcaptcha.render && element) {
@@ -232,7 +232,7 @@ var loadHcaptchaWithCallback = function(element, options) {
 		};
 
 		var script = document.createElement('script');
-		script.src = 'https://js.hcaptcha.com/1/api.js?render=explicit&onload=' + callbackName;
+		script.src = 'https://js.hcaptcha.com/1/api.js?render=explicit&onload=' + callbackName + '&recaptchacompat=off';
 		script.onload = function() {
 			setTimeout(function() {
 				if (window.hcaptcha && window.hcaptcha.render && window.hcaptcha !== window.grecaptcha && element) {
@@ -340,12 +340,18 @@ var monitorScriptLoading = function() {
 		isolatedGrecaptcha2 = JSON.parse(JSON.stringify(window.grecaptcha));
 	}
 
-	// If they're the same object, we have a conflict - try to load fresh reCAPTCHA
+	// If they're the same object, hCaptcha's api.js has set window.grecaptcha as a
+	// reCAPTCHA-compat shim pointing at the same object as window.hcaptcha. Only load
+	// Google's api.js when reCAPTCHA is actually configured on the page — otherwise
+	// Google's api.js mutates the shared object and replaces hCaptcha's render/reset/
+	// execute with reCAPTCHA's, which then renders Google's widget with the hCaptcha
+	// site key ("ERROR for site owner: Invalid site key").
 	if (typeof window.grecaptcha !== 'undefined' && typeof window.hcaptcha !== 'undefined' &&
 		window.grecaptcha === window.hcaptcha) {
-		// This means hCaptcha has overwritten grecaptcha
-		// Try to load fresh reCAPTCHA if we don't have a valid backup
-		if (!originalGrecaptcha || originalGrecaptcha === window.hcaptcha) {
+		var recaptchaConfigured =
+			(typeof ur_recaptcha_code !== 'undefined' && ur_recaptcha_code.site_key) ||
+			(typeof ur_v3_recaptcha_code !== 'undefined' && ur_v3_recaptcha_code.site_key);
+		if (recaptchaConfigured && (!originalGrecaptcha || originalGrecaptcha === window.hcaptcha)) {
 			loadFreshRecaptcha();
 		}
 	}
@@ -388,6 +394,12 @@ var immediateCapture = function() {
 immediateCapture();
 
 var protectGrecaptcha = function() {
+	// Skip protection when hCaptcha is the configured captcha type —
+	// hCaptcha's api.js needs to write to window.grecaptcha and will crash
+	// if it is locked as non-writable/non-configurable.
+	if ( typeof ur_hcaptcha_recaptcha_code !== 'undefined' && ur_hcaptcha_recaptcha_code.site_key ) {
+		return;
+	}
 	if (originalGrecaptcha && typeof window.grecaptcha !== 'undefined') {
 		try {
 			var grecaptchaProxy = new Proxy(originalGrecaptcha, {
