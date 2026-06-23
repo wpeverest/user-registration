@@ -69,19 +69,22 @@ class OrdersListTable extends \UR_List_Table {
 
 		$total_items = array();
 		if ( '' === $payment_for ) {
-			$args_forms = $this->prepare_query_args( 'forms', 999999, 1 );
-			$form_items = $this->get_user_payments( $args_forms );
+			$args_forms       = $this->prepare_query_args( 'forms', 999999, 1 );
+			$form_items       = $this->get_user_payments( $args_forms );
 			$membership_items = array();
 			if ( $this->is_membership_active && $this->orders_repository ) {
 				$args_memberships = $this->prepare_query_args( 'memberships', 999999, 1 );
 				$membership_items = $this->orders_repository->get_all( $args_memberships );
 			}
 			$total_items = array_merge( $form_items, is_array( $membership_items ) ? $membership_items : array() );
-			usort( $total_items, function ( $a, $b ) {
-				$t_a = ! empty( $a['created_at'] ) ? strtotime( $a['created_at'] ) : 0;
-				$t_b = ! empty( $b['created_at'] ) ? strtotime( $b['created_at'] ) : 0;
-				return $t_b - $t_a;
-			} );
+			usort(
+				$total_items,
+				function ( $a, $b ) {
+					$t_a = ! empty( $a['created_at'] ) ? strtotime( $a['created_at'] ) : 0;
+					$t_b = ! empty( $b['created_at'] ) ? strtotime( $b['created_at'] ) : 0;
+					return $t_b - $t_a;
+				}
+			);
 			$total_count = count( $total_items );
 			$this->items = array_slice( $total_items, ( $current_page - 1 ) * $per_page, $per_page );
 			$this->set_pagination_args(
@@ -222,7 +225,7 @@ class OrdersListTable extends \UR_List_Table {
 	public function column_transaction_id( $row ) {
 		return sprintf(
 			'<strong><div class="ur-edit-title"><a href="%s" class="row-title">%s</a></div></strong>%s',
-			esc_url( isset($row['order_id']) ? admin_url( "admin.php?page=member-payment-history&action=edit&id={$row['order_id']}" ) : '' ),
+			esc_url( isset( $row['order_id'] ) ? admin_url( "admin.php?page=member-payment-history&action=edit&id={$row['order_id']}" ) : '' ),
 			esc_html( isset( $row['transaction_id'] ) && ! empty( $row['transaction_id'] ) ? $row['transaction_id'] : ( $row['order_id'] ?? '' ) ),
 			$this->row_actions( $this->get_row_actions( $row ) )
 		);
@@ -289,19 +292,34 @@ class OrdersListTable extends \UR_List_Table {
 		$edit_id   = $order_id ? $order_id : $user_id;
 		$edit_type = $order_id ? 'order' : 'form';
 
-		return array(
+		$actions = array(
 			'id'     => sprintf(
 				/* translators: %d: Item id */
-				__( 'ID: %d', 'user-registration-file-downloads' ),
+				__( 'ID: %d', 'user-registration' ),
 				$order_id ?: $user_id
 			),
 			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( admin_url( 'admin.php?page=member-payment-history&action=edit&id=' . $edit_id . '&type=' . $edit_type ) ),
-				esc_html__( 'Edit', 'user-registration-file-downloads' )
+				esc_html__( 'Edit', 'user-registration' )
 			),
 			'delete' => '<a data-user-id=' . esc_attr( $user_id ) . ' data-order-id = ' . esc_attr( $order_id ) . ' class="single-delete-order" style="cursor:pointer" >' . esc_html__( 'Trash', 'user-registration' ) . '</a>',
 		);
+
+		if ( $order_id && ur_check_module_activation( 'pdf-invoice' ) ) {
+			$actions['download_invoice'] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						admin_url( 'admin-post.php?action=ur_admin_download_invoice&order_id=' . $order_id ),
+						'ur_admin_download_invoice'
+					)
+				),
+				esc_html__( 'Download Invoice', 'user-registration' )
+			);
+		}
+
+		return $actions;
 	}
 
 	public function get_delete_links( $row ) {
@@ -347,8 +365,14 @@ class OrdersListTable extends \UR_List_Table {
 	public function show_column_membership_type( $orders ) {
 
 		if ( isset( $orders['order_id'] ) ) {
-			$data = json_decode( wp_unslash( $orders['post_content'] ), true );
-			$type = $data['type'];
+			// Use the order_type stored at payment time so it never changes if the
+			// membership type is later edited. Fall back to post_content only when missing.
+			if ( ! empty( $orders['order_type'] ) ) {
+				$type = $orders['order_type'];
+			} else {
+				$data = json_decode( wp_unslash( $orders['post_content'] ), true );
+				$type = $data['type'] ?? '';
+			}
 		} else {
 			$type = $orders['type'];
 		}
@@ -388,45 +412,51 @@ class OrdersListTable extends \UR_List_Table {
 		$thousands_separator = isset( $currency_info['thousands_separator'] ) ? $currency_info['thousands_separator'] : ',';
 		$decimal_separator   = isset( $currency_info['decimal_separator'] ) ? $currency_info['decimal_separator'] : '.';
 		$decimals            = isset( $currency_info['decimals'] ) ? (int) $currency_info['decimals'] : 2;
-		$coupon_discount     = 0;
-
-		$order_id = $item['order_id'] ?? 0;
+		$order_id            = $item['order_id'] ?? 0;
 		if ( ! empty( $order_id ) && $this->orders_repository ) {
-			$order_detail   = $this->orders_repository->get_order_detail( $order_id );
-			$order_repository = new OrdersRepository();
-			$local_currency = ! empty( $order_detail['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' ) : null;
+			$order_detail         = $this->orders_repository->get_order_detail( $order_id );
+			$item['trial_status'] = $order_detail['trial_status'] ?? 'off';
+			$order_repository     = new OrdersRepository();
+			$local_currency       = ! empty( $order_detail['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' ) : null;
 			if ( ! empty( $local_currency['meta_value'] ) ) {
 				$currency = $local_currency['meta_value'];
 			}
 		} elseif ( ! empty( $item['currency'] ) ) {
 			$currency = $item['currency'];
 		}
-		$symbol = ur_get_currency_symbol( $currency );
+		$symbol       = ur_get_currency_symbol( $currency );
+		$trial_status = $item['trial_status'] ?? 'off';
 
+		if ( 'on' === $trial_status ) {
+			$formatted_amount = number_format( 0, $decimals, $decimal_separator, $thousands_separator );
+			return 'right' === $symbol_pos ? $formatted_amount . ' ' . $symbol : $symbol . $formatted_amount;
+		}
+
+		$coupon_discount = 0;
 		if ( isset( $item['subscription_id'] ) ) {
 			$subscription = ( new MembersSubscriptionRepository() )->get_subscription_by_subscription_id( absint( $item['subscription_id'] ) );
 			if ( ! empty( $subscription ) && ! empty( $subscription['coupon'] ) ) {
 				$coupon = ur_get_coupon_details( $subscription['coupon'] );
-				if ( ! empty( $coupon ) ) {
-					$discount_value = null;
-					$discount_type  = 'fixed';
+				// if ( ! empty( $coupon ) ) {
+				// $discount_value = null;
+				// $discount_type  = 'fixed';
 
-					if ( isset( $coupon['coupon_discount'] ) && isset( $coupon['coupon_discount_type'] ) ) {
-						$discount_value = (float) $coupon['coupon_discount'];
-						$discount_type  = $coupon['coupon_discount_type'];
-					} elseif ( isset( $coupon['discount'] ) ) {
-						$discount_value = (float) $coupon['discount'];
-						$discount_type  = isset( $coupon['discount_type'] ) ? $coupon['discount_type'] : ( isset( $coupon['coupon_discount_type'] ) ? $coupon['coupon_discount_type'] : 'fixed' );
-					}
+				// if ( isset( $coupon['coupon_discount'] ) && isset( $coupon['coupon_discount_type'] ) ) {
+				// $discount_value = (float) $coupon['coupon_discount'];
+				// $discount_type  = $coupon['coupon_discount_type'];
+				// } elseif ( isset( $coupon['discount'] ) ) {
+				// $discount_value = (float) $coupon['discount'];
+				// $discount_type  = isset( $coupon['discount_type'] ) ? $coupon['discount_type'] : ( isset( $coupon['coupon_discount_type'] ) ? $coupon['coupon_discount_type'] : 'fixed' );
+				// }
 
-					if ( null !== $discount_value && $total_amount ) {
-						if ( 'percent' === $discount_type ) {
-							$coupon_discount = $total_amount * ( $discount_value / 100 );
-						} else {
-							$coupon_discount = $discount_value;
-						}
-					}
-				}
+				// if ( null !== $discount_value && $total_amount ) {
+				// if ( 'percent' === $discount_type ) {
+				// $coupon_discount = $total_amount * ( $discount_value / 100 );
+				// } else {
+				// $coupon_discount = $discount_value;
+				// }
+				// }
+				// }
 			}
 		}
 
@@ -443,7 +473,7 @@ class OrdersListTable extends \UR_List_Table {
 			$this,
 			array(
 				'page'           => $this->page,
-				'title' 		 => esc_html__( 'Payments', 'user-registration' ),
+				'title'          => esc_html__( 'Payments', 'user-registration' ),
 				'add_new_action' => 'add_new_payment',
 				'search_id'      => 'user-registration-payment-history-search',
 				'skip_query_key' => 'add-new-membership',
@@ -471,12 +501,12 @@ class OrdersListTable extends \UR_List_Table {
 	}
 
 	/**
-		 * Generates the table navigation above or below the table
-		 *
-		 * @since 4.1
-		 *
-		 * @param string $which
-		 */
+	 * Generates the table navigation above or below the table
+	 *
+	 * @since 4.1
+	 *
+	 * @param string $which
+	 */
 	protected function display_tablenav( $which ) {
 		if ( 'top' === $which ) {
 			wp_nonce_field( 'bulk-' . $this->_args['plural'] );
@@ -711,7 +741,7 @@ class OrdersListTable extends \UR_List_Table {
 			return;
 		}
 		echo '<select name="action' . esc_attr( $two ) . '" id="bulk-action-selector-' . esc_attr( $which ) . '">' . "\n";
-		echo '<option value="-1">' . esc_html__( 'Bulk actions' ) . "</option>\n";
+		echo '<option value="-1">' . esc_html__( 'Bulk actions', 'user-registration' ) . "</option>\n";
 
 		foreach ( $this->_actions as $key => $value ) {
 			if ( is_array( $value ) ) {
@@ -732,7 +762,7 @@ class OrdersListTable extends \UR_List_Table {
 
 		echo "</select>\n";
 
-		submit_button( __( 'Apply' ), 'action', '', false, array( 'id' => "doaction-orders$two" ) );
+		submit_button( __( 'Apply', 'user-registration' ), 'action', '', false, array( 'id' => "doaction-orders$two" ) );
 		echo "\n";
 	}
 
@@ -815,7 +845,7 @@ class OrdersListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( remove_query_arg( 'paged', $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'First page' ),
+				__( 'First page', 'user-registration' ),
 				'&laquo;'
 			);
 		}
@@ -830,7 +860,7 @@ class OrdersListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Previous page' ),
+				__( 'Previous page', 'user-registration' ),
 				'&lsaquo;'
 			);
 		}
@@ -842,7 +872,7 @@ class OrdersListTable extends \UR_List_Table {
 				'<span id="table-paging" class="paging-input">' .
 				'<span class="tablenav-paging-text">',
 				/* translators: Hidden accessibility text. */
-				__( 'Current Page' )
+				__( 'Current Page', 'user-registration' )
 			);
 		} else {
 			$html_current_page = sprintf(
@@ -851,7 +881,7 @@ class OrdersListTable extends \UR_List_Table {
 					name='paged' value='%s' size='%d' aria-describedby='table-paging' />" .
 				"<span class='tablenav-paging-text'>",
 				/* translators: Hidden accessibility text. */
-				__( 'Current Page' ),
+				__( 'Current Page', 'user-registration' ),
 				$current,
 				strlen( $total_pages )
 			);
@@ -861,7 +891,7 @@ class OrdersListTable extends \UR_List_Table {
 
 		$page_links[] = $total_pages_before . sprintf(
 			/* translators: 1: Current page, 2: Total pages. */
-			_x( '%1$s of %2$s', 'paging' ),
+			_x( '%1$s of %2$s', 'paging', 'user-registration' ),
 			$html_current_page,
 			$html_total_pages
 		) . $total_pages_after;
@@ -876,7 +906,7 @@ class OrdersListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Next page' ),
+				__( 'Next page', 'user-registration' ),
 				'&rsaquo;'
 			);
 		}
@@ -891,7 +921,7 @@ class OrdersListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Last page' ),
+				__( 'Last page', 'user-registration' ),
 				'&raquo;'
 			);
 		}

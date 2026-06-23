@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: membership, subscription, content restriction, user profile, user registration
 Requires at least: 5.5
 Requires PHP: 7.4
-Tested up to: 6.9.4
-Stable tag: 5.1.6
+Tested up to: 7.0
+Stable tag: 5.2.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -252,10 +252,60 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
- = 5.1.6   - 27/04/2026 =
+= 5.2.2    - 19/06/2026 =
+* Dev      - Add UR_WPML compatibility service class.
+* Fix      - Password reset link shows "invalid or expired" error.
+* Fix      - Membership subscriptions stuck pending on 3D Secure (SCA) cards.
+* Fix      - Hardcoded database table names causing failures on custom table prefixes.
+* Fix      - Checkbox visibility issue on WP user profile/edit page  caused by CSS conflict.
+* Fix      - PayPal credentials not detected during registration despite valid saved settings.
+* Fix      - Password reset link shows invalid or expired on hosts that do not support PHP cookies.
+* Fix      - Webhook not configured but still can bypass PayPal payments.
+* Fix      - Payment Method Bypass Allows Free Access to Paid Memberships via Tampered Registration Request.
+* Fix      - Payment method field during registration could be manipulated to bypass payment for paid memberships.
+* Fix      - Authenticated users could modify other members' subscriptions by supplying an arbitrary subscription ID during upgrade.
+* Fix      - Membership tier submitted during registration was not validated against the memberships configured on the form, allowing substitution with an off-form tier.
 
+= 5.2.1    - 28/05/2026 =
+* Fix      - Stripe order validation issue.
+* Fix      - Membership upgrade action not available after disabling group add-on.
+* Fix      - Custom emails addon cannot be enabled with plus plan even available in personal.
+* Fix      - Nav menu items disappear for logged-out users when logout endpoint set to slash.
+* Fix      - File upload addon shows upgrade to premium prompt despite user having an active plan.
+* Fix      - Ensure meta_query is initialized before adding payment status condition in user payments query.
+
+= 5.2.0    - 20/05/2026 =
+* Refactor - Members registration process.
+* Refactor - Migrated PayPal integration from PayPal Standard to PayPal APIs.
+* Feature  - Membership pricing widget for Elementor.
+* Enhance  - Added new {{urm_bank_details}} smart tags for emails.
+* Enhance  - Improved Content Restriction compatibility with  Object Caching.
+* Enhance  - Validate payment gateways test api key before updating the settings.
+* Enhance  - Payment backfill cron for missed payment and subscription updates for PayPal.
+* Enhance  - Check "Login Methods" setting before validating the provided detail by user while login.
+* Dev      - Updated Stripe SDK version to 19.4.0.
+* Dev      - Updated vulnerable packages dependencies.
+* Dev 	   - Security audit to identify vulnerabilities and resolve them.
+* Fix      - Coupon, Tax and Upgrade Conflicts.
+* Fix      - Hide label not working in Login form.
+* Fix      - Cookie and error message handling on lost password.
+* Fix      - Wrong smart tag used in membership expiring soon email.
+* Fix      - User Export Not Ordered by Date When Using Date Range Filter.
+* Fix      - Content Restriction message not rendering smart tags properly.
+* Fix      - Update subscription status handling for manually created orders.
+* Fix      - Missing or incorrect text-domain for improving translation support.
+* Fix      - Validate user ownership before deleting profile picture attachments.
+* Fix      - Properly store Paypal transaction id and subscription id in database.
+* Fix      - Content Restriction Message Appears in UAE Header and Footer Templates.
+* Fix      - Update success message icon and cookie settings for pro version activation.
+* Fix      - Emails not being sent if the registration success state is not broadcasted properly.
+* Fix      - Stripe Credit card details reset when switching membership plans in registration forms.
+* Fix      - Members table showing Membership and Subscription status even when membership is not used.
+* Fix      - Prevented PayPal payment status from being changed from pending to completed without a successful payment.
+* Fix      - Content restriction only applied to the main content area, leaving page titles and featured images visible in Elementor.
+
+= 5.1.6   - 27/04/2026 =
 * Enhance  - Logger structure.
-
 * Fix      - Stripe payment bypass.
 * Fix      - Admin approval bypass.
 * Fix      - Hide comments for restricted posts.

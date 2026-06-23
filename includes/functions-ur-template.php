@@ -899,7 +899,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					if ( $is_json ) {
 						$value = json_decode( $value, true );
 					}
-					$country = is_array( $value ) && ! empty( $value['country'] ) ? $value['country'] : $value;
+					$country = is_array( $value ) ? ( ! empty( $value['country'] ) ? $value['country'] : '' ) : $value;
 
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
@@ -909,21 +909,27 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						}
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . $selected_attribute . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
-					$state_enabled = ! empty( $args['enable_state'] ) && '1' == $args['enable_state'];
-					$field        .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="ur-field-address-country select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '" data-state-enabled="' . $state_enabled . '">
+					$state_enabled    = ! empty( $args['enable_state'] ) && '1' == $args['enable_state'];
+					$is_country_field = isset( $args['field_key'] ) && 'country' === $args['field_key'];
+					$select_class     = $is_country_field ? 'ur-field-address-country select ' : 'select ';
+					$field           .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="' . $select_class . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '" data-state-enabled="' . $state_enabled . '">
 					' . $options . '
 					</select>';
 
 					$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
 					$state_list  = json_decode( $states_json, true );
+					$state_list  = is_array( $state_list ) ? $state_list : array();
 
 					$states = isset( $state_list[ $country ] ) ? $state_list[ $country ] : '';
 
 					if ( $state_enabled ) {
+						$is_state_disabled = isset( $args['custom_attributes']['disabled'] ) && 'disabled' === $args['custom_attributes']['disabled'] ? true : false;
+						$is_state_readonly = isset( $args['custom_attributes']['readonly'] ) && 'readonly' === $args['custom_attributes']['readonly'] ? true : false;
+
 						$field .= '<label for="' . $args['id'] . '" class="ur-label ur-state-label">' . __( 'State', 'user-registration' ) . '</label>';
 						$field .= '<span class="input-wrapper ur-field-address-state-outer-wrapper">';
 						if ( isset( $value['state'], $states[ $value['state'] ] ) ) {
-							$field .= '<select id="' . esc_attr( $args['id'] ) . '_state" class="ur-field-address-state select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state">';
+							$field .= '<select id="' . esc_attr( $args['id'] ) . '_state" class="ur-field-address-state select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state" ' . ( $is_state_disabled ? 'disabled' : '' ) . ' ' . ( $is_state_readonly ? 'readonly' : '' ) . '>';
 							foreach ( $states as $state_key => $state_name ) {
 								$state_selected_attribute = '';
 								if ( '' !== $value['state'] ) {

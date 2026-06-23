@@ -548,6 +548,9 @@
 						$(".ur_save_form_action_button")
 							.find(".ur-spinner")
 							.remove();
+						if (!response.responseJSON) {
+							return;
+						}
 						if (response.responseJSON.success === true) {
 							var success_message =
 								user_registration_form_builder_data.i18n_admin
@@ -6750,7 +6753,7 @@
 			handle_add_image_captcha_group: function ($this, $wrapper) {
 				var this_index = parseInt($this.attr("data-last-group")),
 					next_index = this_index + 1;
-				(captcha_unique = $this
+				((captcha_unique = $this
 					.closest("ul")
 					.attr("data-unique-captcha")),
 					(cloning_element = $this
@@ -6758,7 +6761,7 @@
 						.find('li[data-group="' + this_index + '"]')
 						.clone(true, true)),
 					(cloning_element_icons =
-						cloning_element.find(".icon-wrap"));
+						cloning_element.find(".icon-wrap")));
 
 				cloning_element.attr("data-group", next_index);
 				cloning_element

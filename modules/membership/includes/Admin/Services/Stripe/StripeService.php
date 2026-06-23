@@ -75,10 +75,12 @@ class StripeService {
 		} catch ( \Exception $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Failed to initialize Stripe service',
-				array(
-					'error_code'    => 'INITIALIZATION_FAILED',
-					'error_message' => $e->getMessage(),
+				'Failed to initialize Stripe service' . "\n" . wp_json_encode(
+					array(
+						'error_code'    => 'INITIALIZATION_FAILED',
+						'error_message' => $e->getMessage(),
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 		}
@@ -120,12 +122,14 @@ class StripeService {
 		$mode            = $stripe_settings['mode'];
 
 		try {
-			$payment_method = \Stripe\PaymentMethod::retrieve( $payment_method_id );
-			$ur_log         = new PaymentGatewayLogging();
+			$payment_method    = \Stripe\PaymentMethod::retrieve( $payment_method_id );
+			$current_member_id = get_current_user_id();
+			$ur_log            = new PaymentGatewayLogging();
 			$ur_log->log(
 				'stripe',
-				'Payment method retrieved.' . "\n" . wp_json_encode(
+				'[Member ID #' . $current_member_id . '] Payment method retrieved.' . "\n" . wp_json_encode(
 					array(
+						'member_id'      => $current_member_id,
 						'payment_method' => $payment_method,
 					),
 					JSON_PRETTY_PRINT
@@ -166,6 +170,7 @@ class StripeService {
 			'invoice.payment_succeeded',
 			'invoice.payment_failed',
 			'payment_intent.payment_failed',
+			'charge.refunded',
 		);
 	}
 
@@ -196,6 +201,19 @@ class StripeService {
 				\Stripe\Stripe::setApiKey( $secret_key );
 				$webhook = \Stripe\WebhookEndpoint::retrieve( $existing_webhook_id );
 				if ( $webhook && $webhook->id ) {
+					$required_events = apply_filters( 'urm_stripe_webhook_enabled_events', self::get_handled_webhook_events(), $mode );
+					$current_events  = isset( $webhook->enabled_events ) ? (array) $webhook->enabled_events : array();
+					$is_catch_all    = in_array( '*', $current_events, true );
+					$missing_events  = array_diff( $required_events, $current_events );
+
+					if ( ! $is_catch_all && ! empty( $missing_events ) ) {
+						$updated_events = array_values( array_unique( array_merge( $current_events, $required_events ) ) );
+						\Stripe\WebhookEndpoint::update(
+							$webhook->id,
+							array( 'enabled_events' => $updated_events )
+						);
+					}
+
 					return array(
 						'success'    => true,
 						'message'    => 'Webhook already exists for ' . $mode . ' mode',
@@ -273,12 +291,14 @@ class StripeService {
 		if ( ! empty( $result['success'] ) ) {
 			PaymentGatewayLogging::log_general(
 				'stripe',
-				'Webhook created on first payment',
-				'notice',
-				array(
-					'event_type' => 'webhook_ensure',
-					'mode'       => $mode,
-				)
+				'Webhook created on first payment' . "\n" . wp_json_encode(
+					array(
+						'event_type' => 'webhook_ensure',
+						'mode'       => $mode,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'notice'
 			);
 		}
 	}
@@ -409,11 +429,13 @@ class StripeService {
 				if ( $team_seats <= 0 ) {
 					PaymentGatewayLogging::log_error(
 						'stripe',
-						'Payment stopped - Invalid team seats',
-						array(
-							'error_code' => 'INVALID_TEAM_SEATS',
-							'amount'     => $amount,
-							'member_id'  => $member_id,
+						'Payment stopped - Invalid team seats' . "\n" . wp_json_encode(
+							array(
+								'error_code' => 'INVALID_TEAM_SEATS',
+								'amount'     => $amount,
+								'member_id'  => $member_id,
+							),
+							JSON_PRETTY_PRINT
 						)
 					);
 					if ( empty( $payment_data['upgrade'] ) ) {
@@ -436,11 +458,13 @@ class StripeService {
 					if ( ! $tier ) {
 						PaymentGatewayLogging::log_error(
 							'stripe',
-							'Payment stopped - Invalid pricing tier',
-							array(
-								'error_code' => 'INVALID_TIER',
-								'amount'     => $amount,
-								'member_id'  => $member_id,
+							'Payment stopped - Invalid pricing tier' . "\n" . wp_json_encode(
+								array(
+									'error_code' => 'INVALID_TIER',
+									'amount'     => $amount,
+									'member_id'  => $member_id,
+								),
+								JSON_PRETTY_PRINT
 							)
 						);
 						if ( empty( $payment_data['upgrade'] ) ) {
@@ -481,12 +505,6 @@ class StripeService {
 			}
 		}
 
-		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
-			$tax_rate   = (float) $response_data['tax_rate'];
-			$tax_amount = $amount * $tax_rate / 100;
-			$amount     = $amount + $tax_amount;
-		}
-
 		PaymentGatewayLogging::log_transaction_start(
 			'stripe',
 			sprintf( ' [Member ID #%s] Processing Stripe payment', $member_id ) . "\n" . wp_json_encode(
@@ -517,20 +535,28 @@ class StripeService {
 			}
 		}
 
+		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
+			$tax_rate   = (float) $response_data['tax_rate'];
+			$tax_amount = $amount * $tax_rate / 100;
+			$amount     = $amount + $tax_amount;
+		}
+
 		if ( 'JPY' === $currency ) {
-			$amount = abs( $amount );
+			$amount = (int) round( abs( $amount ) );
 		} else {
-			$amount = abs( $amount ) * 100;
+			$amount = (int) round( abs( $amount ) * 100 );
 		}
 
 		if ( $amount < 1 ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Payment stopped - Amount less than minimum',
-				array(
-					'error_code' => 'AMOUNT_TOO_LOW',
-					'amount'     => $amount,
-					'member_id'  => $member_id,
+				'Payment stopped - Amount less than minimum' . "\n" . wp_json_encode(
+					array(
+						'error_code' => 'AMOUNT_TOO_LOW',
+						'amount'     => $amount,
+						'member_id'  => $member_id,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			if ( empty( $payment_data['upgrade'] ) ) {
@@ -546,11 +572,13 @@ class StripeService {
 		if ( empty( $amount ) || user_registration_sanitize_amount( 0, $currency ) == $amount ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Payment stopped - Invalid or empty amount',
-				array(
-					'error_code' => 'INVALID_AMOUNT',
-					'amount'     => $amount,
-					'member_id'  => $member_id,
+				'Payment stopped - Invalid or empty amount' . "\n" . wp_json_encode(
+					array(
+						'error_code' => 'INVALID_AMOUNT',
+						'amount'     => $amount,
+						'member_id'  => $member_id,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			if ( empty( $payment_data['upgrade'] ) ) {
@@ -564,41 +592,66 @@ class StripeService {
 		}
 
 		try {
-			PaymentGatewayLogging::log_api_request(
-				'stripe',
-				sprintf( ' [Member ID #%s] Creating Stripe customer', $member_id ) . "\n" . wp_json_encode(
-					array(
-						'endpoint'  => 'Customer::create',
-						'email'     => $user_email,
-						'member_id' => $member_id,
-					),
-					JSON_PRETTY_PRINT
-				),
-			);
+			$existing_customer_id = get_user_meta( $member_id, 'ur_payment_customer', true );
 
-			$customer = \Stripe\Customer::create(
-				array(
-					'email' => $user_email,
-					'name'  => $username,
-				)
-			);
+			if ( ! empty( $existing_customer_id ) ) {
+				// Reuse the existing Stripe customer (e.g. during upgrades/renewals).
+				try {
+					$customer = \Stripe\Customer::retrieve( $existing_customer_id );
+					if ( isset( $customer->deleted ) && $customer->deleted ) {
+						$existing_customer_id = '';
+					}
+				} catch ( \Stripe\Exception\ApiErrorException $e ) {
+					$existing_customer_id = '';
+				}
+			}
+
+			if ( empty( $existing_customer_id ) ) {
+				PaymentGatewayLogging::log_api_request(
+					'stripe',
+					sprintf( ' [Member ID #%s] Creating Stripe customer', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'endpoint'  => 'Customer::create',
+							'email'     => $user_email,
+							'member_id' => $member_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+				);
+
+				$customer = \Stripe\Customer::create(
+					array(
+						'email' => $user_email,
+						'name'  => $username,
+					)
+				);
+
+				update_user_meta( $member_id, 'ur_payment_customer', $customer->id );
+
+				PaymentGatewayLogging::log_api_response(
+					'stripe',
+					sprintf( ' [Member ID #%s] Stripe customer created successfully.', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'customer_id' => $customer->id,
+							'member_id'   => $member_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+				);
+			} else {
+				PaymentGatewayLogging::log_api_response(
+					'stripe',
+					sprintf( ' [Member ID #%s] Reusing existing Stripe customer.', $member_id ) . "\n" . wp_json_encode(
+						array(
+							'customer_id' => $customer->id,
+							'member_id'   => $member_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+				);
+			}
 
 			$response['stripe_cus_id'] = $customer->id;
-
-			PaymentGatewayLogging::log_api_response(
-				'stripe',
-				sprintf( ' [Member ID #%s] Stripe customer created successfully.', $member_id ) . "\n" . wp_json_encode(
-					array(
-						'customer_id' => $customer->id,
-						'member_id'   => $member_id,
-					),
-					JSON_PRETTY_PRINT
-				),
-			);
-
-			if ( ! empty( $customer ) ) {
-				update_user_meta( $member_id, 'ur_payment_customer', $customer->id );
-			}
 			if ( 'paid' === $membership_type ) {
 				PaymentGatewayLogging::log_api_request(
 					'stripe',
@@ -636,7 +689,7 @@ class StripeService {
 				);
 			}
 
-			return $response;
+							return $response;
 		} catch ( ApiErrorException $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
@@ -793,9 +846,6 @@ class StripeService {
 		$payment_status = $intent->status;
 
 		$latest_order = $this->orders_repository->get_order_by_transaction_id( $intent->id );
-		if ( empty( $latest_order ) ) {
-			$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
-		}
 		$latest_order = is_array( $latest_order ) ? $latest_order : ( $latest_order ? (array) $latest_order : array() );
 
 		if ( empty( $latest_order ) || (int) $member_id !== (int) $latest_order['user_id'] ) {
@@ -813,7 +863,7 @@ class StripeService {
 		if ( ! empty( $latest_order ) && 'stripe' !== $latest_order['payment_method'] ) {
 			return $this->update_order_error(
 				$response,
-				__( 'Payment method mismatch: order payment method is not stripe' ),
+				__( 'Payment method mismatch: order payment method is not stripe', 'user-registration' ),
 				'Payment method mismatch: order payment method is not stripe',
 				array(
 					'error_code'     => 'PAYMENT_METHOD_MISMATCH',
@@ -939,49 +989,57 @@ class StripeService {
 				if ( $is_upgrading ) {
 					PaymentGatewayLogging::log_general(
 						'stripe',
-						'Upgrade payment completed - Order status changed to completed',
-						'success',
-						array(
-							'event_type'      => 'upgrade_payment_completed',
-							'old_status'      => $member_order['status'] ?? 'unknown',
-							'new_status'      => 'completed',
-							'order_id'        => $member_order['ID'],
-							'member_id'       => $member_id,
-							'transaction_id'  => $transaction_id,
-							'membership_type' => $membership_type,
-						)
+						'Upgrade payment completed - Order status changed to completed' . "\n" . wp_json_encode(
+							array(
+								'event_type'      => 'upgrade_payment_completed',
+								'old_status'      => $member_order['status'] ?? 'unknown',
+								'new_status'      => 'completed',
+								'order_id'        => $member_order['ID'],
+								'member_id'       => $member_id,
+								'transaction_id'  => $transaction_id,
+								'membership_type' => $membership_type,
+							),
+							JSON_PRETTY_PRINT
+						),
+						'success'
 					);
 				} else {
 					PaymentGatewayLogging::log_general(
 						'stripe',
-						'Order status changed to completed',
-						'success',
-						array(
-							'event_type'      => 'status_change',
-							'old_status'      => $member_order['status'] ?? 'unknown',
-							'new_status'      => 'completed',
-							'order_id'        => $member_order['ID'],
-							'member_id'       => $member_id,
-							'transaction_id'  => $transaction_id,
-							'membership_type' => $membership_type,
-						)
+						'Order status changed to completed' . "\n" . wp_json_encode(
+							array(
+								'event_type'      => 'status_change',
+								'old_status'      => $member_order['status'] ?? 'unknown',
+								'new_status'      => 'completed',
+								'order_id'        => $member_order['ID'],
+								'member_id'       => $member_id,
+								'transaction_id'  => $transaction_id,
+								'membership_type' => $membership_type,
+							),
+							JSON_PRETTY_PRINT
+						),
+						'success'
 					);
 				}
 
 				PaymentGatewayLogging::log_general(
 					'stripe',
-					'Subscription status changed to active',
-					'success',
-					array(
-						'event_type'      => $is_upgrading ? 'upgrade_subscription_activated' : 'status_change',
-						'old_status'      => $member_subscription['status'] ?? 'unknown',
-						'new_status'      => 'active',
-						'subscription_id' => $member_subscription['ID'],
-						'member_id'       => $member_id,
-						'membership_type' => $membership_type,
-						'is_upgrade'      => $is_upgrading,
-					)
+					'Subscription status changed to active' . "\n" . wp_json_encode(
+						array(
+							'event_type'      => $is_upgrading ? 'upgrade_subscription_activated' : 'status_change',
+							'old_status'      => $member_subscription['status'] ?? 'unknown',
+							'new_status'      => 'active',
+							'subscription_id' => $member_subscription['ID'],
+							'member_id'       => $member_id,
+							'membership_type' => $membership_type,
+							'is_upgrade'      => $is_upgrading,
+						),
+						JSON_PRETTY_PRINT
+					),
+					'success'
 				);
+
+				$response = $this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response, $is_upgrading );
 			}
 		}
 
@@ -1022,11 +1080,13 @@ class StripeService {
 		if ( ! $mail_send ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Payment email could not be sent',
-				array(
-					'error_code' => 'EMAIL_SEND_FAILED',
-					'member_id'  => $member_id,
-					'order_id'   => $ID,
+				'Payment email could not be sent' . "\n" . wp_json_encode(
+					array(
+						'error_code' => 'EMAIL_SEND_FAILED',
+						'member_id'  => $member_id,
+						'order_id'   => $ID,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 		}
@@ -1070,10 +1130,12 @@ class StripeService {
 			if ( ! $team_data ) {
 				PaymentGatewayLogging::log_error(
 					'stripe',
-					'Invalid team data',
-					array(
-						'error_code' => 'INVALID_TEAM_DATA',
-						'member_id'  => $member_id,
+					'Invalid team data' . "\n" . wp_json_encode(
+						array(
+							'error_code' => 'INVALID_TEAM_DATA',
+							'member_id'  => $member_id,
+						),
+						JSON_PRETTY_PRINT
 					)
 				);
 
@@ -1084,10 +1146,12 @@ class StripeService {
 				$membership_type = 'paid';
 				PaymentGatewayLogging::log_error(
 					'stripe',
-					'Not a subscription membership',
-					array(
-						'error_code' => 'NOT_SUBSCRIPTION',
-						'member_id'  => $member_id,
+					'Not a subscription membership' . "\n" . wp_json_encode(
+						array(
+							'error_code' => 'NOT_SUBSCRIPTION',
+							'member_id'  => $member_id,
+						),
+						JSON_PRETTY_PRINT
 					)
 				);
 
@@ -1117,10 +1181,12 @@ class StripeService {
 		if ( empty( $member_subscription ) ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Subscription not found for member',
-				array(
-					'error_code' => 'SUBSCRIPTION_NOT_FOUND',
-					'member_id'  => $member_id,
+				'Subscription not found for member' . "\n" . wp_json_encode(
+					array(
+						'error_code' => 'SUBSCRIPTION_NOT_FOUND',
+						'member_id'  => $member_id,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -1129,11 +1195,30 @@ class StripeService {
 
 		$stripe_product_details = $membership_metas['payment_gateways']['stripe'] ?? array();
 
+		if ( ! is_array( $stripe_product_details ) || empty( $stripe_product_details['price_id'] ) ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Stripe product details missing or invalid for membership' . "\n" . wp_json_encode(
+					array(
+						'error_code'     => 'STRIPE_PRODUCT_NOT_CONFIGURED',
+						'member_id'      => $member_id,
+						'stripe_details' => is_array( $stripe_product_details ) ? $stripe_product_details : gettype( $stripe_product_details ),
+					),
+					JSON_PRETTY_PRINT
+				)
+			);
+			$response['status']  = false;
+			$response['message'] = __( 'Stripe is not properly configured for this membership. Please save the membership settings to re-sync with Stripe.', 'user-registration' );
+			return $response;
+		}
+
 		try {
 
 			$order_detail     = $this->orders_repository->get_order_detail( $member_order['ID'] );
 			$order_repository = new OrdersRepository();
 			$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
+			$tax_data_meta    = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'tax_data' );
+			$tax_data         = ! empty( $tax_data_meta['meta_value'] ) ? json_decode( $tax_data_meta['meta_value'], true ) : array();
 
 			$currency = ! empty( $local_currency['meta_value'] )
 				? strtoupper( $local_currency['meta_value'] )
@@ -1177,41 +1262,70 @@ class StripeService {
 					),
 				)
 			);
+
+			// For team subscriptions the total amount differs from the base membership price,
+			// so resolve a Stripe price that matches the actual charged amount.
+			if ( $team_id && $total_amount > 0 ) {
+				$effective_price_id = $this->ensure_price_in_stripe(
+					'subscription',
+					$stripe_product_details['product_id'] ?? '',
+					$stripe_product_details['price_id'] ?? '',
+					$total_amount,
+					$currency,
+					array(
+						'subscription_duration' => $subscription_duration,
+						'subscription_value'    => $subscription_value,
+					)
+				);
+			} else {
+				$effective_price_id = $stripe_product_details['price_id'];
+			}
+
 			$subscription_details = array(
 				'customer' => $customer->id,
 				'items'    => array(
 					array(
-						'price' => $stripe_product_details['price_id'],
+						'price' => $effective_price_id,
 					),
 				),
 			);
+
+			$subscription_details['expand'] = array( 'latest_invoice.payments' );
 
 			// Handle trial period.
 			if ( isset( $membership_metas['trial_status'] ) && 'on' === $membership_metas['trial_status'] && ! $team_id ) {
 				$trail_period                      = strtotime( date( 'Y-m-d H:i:s', strtotime( '+' . $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] ) ) );
 				$subscription_details['trial_end'] = $trail_period;
-			} else {
-				$subscription_details['expand'] = array( 'latest_invoice.payment_intent' );
 			}
 
 			// Handle coupon section.
 			if ( ! empty( $order_detail['coupon'] ) ) {
 				$coupon_details = ur_get_coupon_details( $order_detail['coupon'] );
 				if ( ! empty( $coupon_details['stripe_coupon_id'] ) ) {
-					$subscription_details['coupon'] = $coupon_details['stripe_coupon_id'];
+					$subscription_details['discounts'] = array( array( 'coupon' => $coupon_details['stripe_coupon_id'] ) );
+				}
+			}
+
+			// Apply tax rate to Stripe subscription so tax is reflected in Stripe invoices.
+			if ( ! empty( $tax_data['tax_rate'] ) ) {
+				$stripe_tax_rate_id = $this->get_or_create_stripe_tax_rate( floatval( $tax_data['tax_rate'] ) );
+				if ( ! empty( $stripe_tax_rate_id ) ) {
+					$subscription_details['default_tax_rates'] = array( $stripe_tax_rate_id );
 				}
 			}
 
 			if ( $is_upgrading ) {
 				PaymentGatewayLogging::log_general(
 					'stripe',
-					'Processing Stripe membership upgrade',
-					'notice',
-					array(
-						'event_type'      => 'upgrade_processing',
-						'member_id'       => $member_id,
-						'membership_type' => $membership_type,
-					)
+					'Processing Stripe membership upgrade' . "\n" . wp_json_encode(
+						array(
+							'event_type'      => 'upgrade_processing',
+							'member_id'       => $member_id,
+							'membership_type' => $membership_type,
+						),
+						JSON_PRETTY_PRINT
+					),
+					'notice'
 				);
 
 				$previous_subscription = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
@@ -1247,23 +1361,32 @@ class StripeService {
 										$amount = $current_price + $discount_amount;
 									}
 								} elseif ( 'pro-rata' === $upgrade_type ) {
-									$amount = $new_price - $first_month_price;
+									$proration_result = $membership_upgrade_service->handle_subscription_to_paid_or_subscription_membership_upgrade(
+										$previous_membership_metas,
+										$membership_metas,
+										$previous_subscription,
+										false
+									);
+									$chargeable       = isset( $proration_result['chargeable_amount'] ) ? floatval( $proration_result['chargeable_amount'] ) : floatval( $new_price );
+									$amount           = max( 0, $new_price - $chargeable );
 								}
 
 								$currency = get_option( 'user_registration_payment_currency', 'USD' );
-								$amount   = ( 'JPY' === $currency ) ? $amount : $amount * 100;
+								$amount   = ( 'JPY' === $currency ) ? (int) round( $amount ) : (int) round( $amount * 100 );
 
 								PaymentGatewayLogging::log_general(
 									'stripe',
-									'Creating upgrade discount coupon',
-									'debug',
-									array(
-										'event_type'      => 'upgrade_coupon_created',
-										'member_id'       => $member_id,
-										'old_price'       => $current_price,
-										'new_price'       => $new_price,
-										'discount_amount' => $amount,
-									)
+									'Creating upgrade discount coupon' . "\n" . wp_json_encode(
+										array(
+											'event_type' => 'upgrade_coupon_created',
+											'member_id'  => $member_id,
+											'old_price'  => $current_price,
+											'new_price'  => $new_price,
+											'discount_amount' => $amount,
+										),
+										JSON_PRETTY_PRINT
+									),
+									'debug'
 								);
 
 								$coupon = \Stripe\Coupon::create(
@@ -1275,7 +1398,7 @@ class StripeService {
 									)
 								);
 
-								$subscription_details['coupon'] = $coupon->id;
+								$subscription_details['discounts'] = array( array( 'coupon' => $coupon->id ) );
 							}
 						}
 					}
@@ -1287,13 +1410,15 @@ class StripeService {
 
 					PaymentGatewayLogging::log_general(
 						'stripe',
-						'Upgrade scheduled with delayed start',
-						'notice',
-						array(
-							'event_type'    => 'upgrade_delayed_start',
-							'member_id'     => $member_id,
-							'delayed_until' => $next_subscription['delayed_until'],
-						)
+						'Upgrade scheduled with delayed start' . "\n" . wp_json_encode(
+							array(
+								'event_type'    => 'upgrade_delayed_start',
+								'member_id'     => $member_id,
+								'delayed_until' => $next_subscription['delayed_until'],
+							),
+							JSON_PRETTY_PRINT
+						),
+						'notice'
 					);
 				} elseif (
 					! empty( $previous_subscription['trial_end_date'] ) &&
@@ -1305,13 +1430,15 @@ class StripeService {
 
 					PaymentGatewayLogging::log_general(
 						'stripe',
-						'Upgrade preserving trial period',
-						'notice',
-						array(
-							'event_type'     => 'upgrade_trial_preserved',
-							'member_id'      => $member_id,
-							'trial_end_date' => $previous_subscription['trial_end_date'],
-						)
+						'Upgrade preserving trial period' . "\n" . wp_json_encode(
+							array(
+								'event_type'     => 'upgrade_trial_preserved',
+								'member_id'      => $member_id,
+								'trial_end_date' => $previous_subscription['trial_end_date'],
+							),
+							JSON_PRETTY_PRINT
+						),
+						'notice'
 					);
 				}
 			}
@@ -1343,7 +1470,7 @@ class StripeService {
 					'customer_id' => $customer_id,
 					'member_id'   => $member_id,
 					'has_trial'   => isset( $subscription_details['trial_end'] ),
-					'has_coupon'  => isset( $subscription_details['coupon'] ),
+					'has_coupon'  => isset( $subscription_details['discounts'] ),
 				)
 			);
 
@@ -1360,15 +1487,44 @@ class StripeService {
 				)
 			);
 
-			$three_ds2_source = $subscription->latest_invoice->payment_intent->next_action->use_stripe_sdk->three_d_secure_2_source ?? '';
+			$payments_data  = isset( $subscription->latest_invoice->payments->data ) ? (array) $subscription->latest_invoice->payments->data : array();
+			$payment_intent = ! empty( $payments_data ) ? ( $payments_data[0]->payment->payment_intent ?? null ) : null;
+
+			if ( empty( $payment_intent ) && isset( $subscription->latest_invoice->payment_intent ) ) {
+				$payment_intent = $subscription->latest_invoice->payment_intent;
+			}
+
+			// Retrieve the PaymentIntent (newer Stripe API returns only an id) and expose it on the
+			// invoice so the front-end can run 3D Secure / SCA.
+			if ( ! empty( $payment_intent ) && is_string( $payment_intent ) ) {
+				try {
+					$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent );
+				} catch ( \Exception $e ) {
+					$payment_intent = null;
+				}
+			}
+
+			if ( ! empty( $payment_intent ) && ! is_string( $payment_intent ) && isset( $subscription->latest_invoice ) ) {
+				$subscription->latest_invoice->payment_intent = $payment_intent;
+			}
+
+			$three_ds2_source = '';
+			if ( ! empty( $payment_intent ) && ! is_string( $payment_intent ) ) {
+				$three_ds2_source = $payment_intent->next_action->use_stripe_sdk->three_d_secure_2_source ?? '';
+			}
 
 			if ( 'active' === $subscription_status || 'trialing' === $subscription_status || ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ) {
 				$status = ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ? 'pending' : 'completed';
+				$pi_id  = '';
+				if ( ! empty( $payment_intent ) ) {
+					$pi_id = is_string( $payment_intent ) ? $payment_intent : ( $payment_intent->id ?? '' );
+				}
+				$transaction_id = ! empty( $pi_id ) ? $pi_id : $subscription->id;
 				$this->members_orders_repository->update(
 					$member_order['ID'],
 					array(
 						'status'         => $status,
-						'transaction_id' => $subscription->latest_invoice->payment_intent->id,
+						'transaction_id' => $transaction_id,
 					)
 				);
 
@@ -1393,6 +1549,18 @@ class StripeService {
 					)
 				);
 
+				PaymentGatewayLogging::log_debug(
+					'stripe',
+					'[Member ID #' . $member_id . '] Subscription record updated with Stripe subscription ID' . "\n" . wp_json_encode(
+						array(
+							'local_subscription_id'  => $member_order['subscription_id'],
+							'stripe_subscription_id' => $subscription->id,
+							'subscription_status'    => $subscription_status,
+						),
+						JSON_PRETTY_PRINT
+					)
+				);
+
 				PaymentGatewayLogging::log_transaction_success(
 					'stripe',
 					'Stripe subscription activated successfully',
@@ -1413,15 +1581,17 @@ class StripeService {
 			} elseif ( 'incomplete' === $subscription_status ) {
 				PaymentGatewayLogging::log_general(
 					'stripe',
-					'Stripe subscription requires 3D Secure verification',
-					'notice',
-					array(
-						'subscription_id'     => $subscription->id,
-						'subscription_status' => $subscription_status,
-						'member_id'           => $member_id,
-						'membership_type'     => $membership_type,
-						'requires_action'     => true,
-					)
+					'Stripe subscription requires 3D Secure verification' . "\n" . wp_json_encode(
+						array(
+							'subscription_id'     => $subscription->id,
+							'subscription_status' => $subscription_status,
+							'member_id'           => $member_id,
+							'membership_type'     => $membership_type,
+							'requires_action'     => true,
+						),
+						JSON_PRETTY_PRINT
+					),
+					'notice'
 				);
 
 				$this->members_subscription_repository->update(
@@ -1441,12 +1611,14 @@ class StripeService {
 		} catch ( \Exception $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Stripe subscription creation failed',
-				array(
-					'error_code'      => 'STRIPE_SUBSCRIPTION_ERROR',
-					'error_message'   => $e->getMessage(),
-					'member_id'       => $member_id,
-					'membership_type' => $membership_type,
+				'Stripe subscription creation failed' . "\n" . wp_json_encode(
+					array(
+						'error_code'      => 'STRIPE_SUBSCRIPTION_ERROR',
+						'error_message'   => $e->getMessage(),
+						'member_id'       => $member_id,
+						'membership_type' => $membership_type,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -1481,7 +1653,7 @@ class StripeService {
 		$coupon_exists    = false;
 		$stripe_coupon_id = '';
 		foreach ( $all_coupon->data as $key => $coupon ) {
-			if ( $coupon->metadata->coupon === strtolower( $data['post_data']['post_content'] ) ) {
+			if ( isset( $coupon->metadata->coupon ) && $coupon->metadata->coupon === strtolower( $data['post_data']['post_content'] ) ) {
 				$coupon_exists    = true;
 				$stripe_coupon_id = $coupon->id;
 			}
@@ -1493,9 +1665,9 @@ class StripeService {
 		}
 		$amount = $data['post_meta_data']['coupon_discount'];
 		if ( 'JPY' === $currency ) {
-			$amount = abs( $amount );
+			$amount = (int) round( abs( $amount ) );
 		} else {
-			$amount = abs( $amount ) * 100;
+			$amount = (int) round( abs( $amount ) * 100 );
 		}
 
 		$coupon_details = array(
@@ -1534,10 +1706,12 @@ class StripeService {
 		if ( empty( $subscription['subscription_id'] ) ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Stripe subscription ID not found for cancellation',
-				array(
-					'error_code' => 'MISSING_SUBSCRIPTION_ID',
-					'order_id'   => $order['ID'] ?? 'unknown',
+				'Stripe subscription ID not found for cancellation' . "\n" . wp_json_encode(
+					array(
+						'error_code' => 'MISSING_SUBSCRIPTION_ID',
+						'order_id'   => $order['ID'] ?? 'unknown',
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -1546,37 +1720,59 @@ class StripeService {
 
 		PaymentGatewayLogging::log_general(
 			'stripe',
-			'Cancelling Stripe subscription',
-			'notice',
-			array(
-				'event_type'      => 'cancellation_initiated',
-				'subscription_id' => $subscription['subscription_id'],
-				'order_id'        => $order['ID'] ?? 'unknown',
-			)
+			'Cancelling Stripe subscription' . "\n" . wp_json_encode(
+				array(
+					'event_type'      => 'cancellation_initiated',
+					'subscription_id' => $subscription['subscription_id'],
+					'order_id'        => $order['ID'] ?? 'unknown',
+				),
+				JSON_PRETTY_PRINT
+			),
+			'notice'
 		);
 
-		$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
-		if ( $stripe_subscription ) {
-			$deleted_sub = \Stripe\Subscription::update(
-				$subscription['subscription_id'],
-				array(
-					'cancel_at_period_end' => true,
+		try {
+			$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
+			if ( $stripe_subscription ) {
+				$deleted_sub = \Stripe\Subscription::update(
+					$subscription['subscription_id'],
+					array(
+						'cancel_at_period_end' => true,
+					)
+				);
+			}
+		} catch ( \Stripe\Exception\ApiErrorException $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Failed to cancel Stripe subscription' . "\n" . wp_json_encode(
+					array(
+						'error_code'      => 'STRIPE_CANCELLATION_ERROR',
+						'subscription_id' => $subscription['subscription_id'],
+						'error_message'   => $e->getMessage(),
+						'order_id'        => $order['ID'] ?? 'unknown',
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
+
+			return $response;
 		}
+
 		if ( isset( $deleted_sub['canceled_at'] ) && '' !== $deleted_sub['canceled_at'] ) {
 			$response['status'] = true;
 
 			PaymentGatewayLogging::log_general(
 				'stripe',
-				'Subscription cancelled successfully',
-				'success',
-				array(
-					'event_type'           => 'cancellation_success',
-					'subscription_id'      => $subscription['subscription_id'],
-					'canceled_at'          => date( 'Y-m-d H:i:s', $deleted_sub['canceled_at'] ),
-					'cancel_at_period_end' => $deleted_sub['cancel_at_period_end'] ?? false,
-				)
+				'Subscription cancelled successfully' . "\n" . wp_json_encode(
+					array(
+						'event_type'           => 'cancellation_success',
+						'subscription_id'      => $subscription['subscription_id'],
+						'canceled_at'          => date( 'Y-m-d H:i:s', $deleted_sub['canceled_at'] ),
+						'cancel_at_period_end' => $deleted_sub['cancel_at_period_end'] ?? false,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'success'
 			);
 		}
 
@@ -1633,22 +1829,26 @@ class StripeService {
 			} else {
 				PaymentGatewayLogging::log_general(
 					'stripe',
-					'Subscription not reactivable',
-					'info',
-					array(
-						'subscription_id'     => $subscription_id,
-						'subscription_status' => $subscription->status,
-						'event_type'          => 'reactivation_failed',
-					)
+					'Subscription not reactivable' . "\n" . wp_json_encode(
+						array(
+							'subscription_id'     => $subscription_id,
+							'subscription_status' => $subscription->status,
+							'event_type'          => 'reactivation_failed',
+						),
+						JSON_PRETTY_PRINT
+					),
+					'info'
 				);
 			}
 		} else {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Subscription not found in Stripe',
-				array(
-					'error_code'      => 'SUBSCRIPTION_NOT_FOUND_IN_STRIPE',
-					'subscription_id' => $subscription_id,
+				'Subscription not found in Stripe' . "\n" . wp_json_encode(
+					array(
+						'error_code'      => 'SUBSCRIPTION_NOT_FOUND_IN_STRIPE',
+						'subscription_id' => $subscription_id,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 			wp_send_json_error(
@@ -1691,7 +1891,6 @@ class StripeService {
 			wp_die();
 		}
 		switch ( $event['type'] ) {
-			case 'invoice.paid':
 			case 'invoice.payment_succeeded':
 				$this->handle_succeeded_invoice( $event, $subscription_id );
 				break;
@@ -1700,6 +1899,9 @@ class StripeService {
 				break;
 			case 'payment_intent.payment_failed':
 				$this->handle_failed_payment_intent( $event );
+				break;
+			case 'charge.refunded':
+				$this->handle_refunded_charge( $event );
 				break;
 			default:
 				break;
@@ -1727,10 +1929,12 @@ class StripeService {
 		if ( null === $subscription_id ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Subscription ID is null in webhook',
-				array(
-					'error_code'   => 'NULL_SUBSCRIPTION_ID',
-					'webhook_type' => 'invoice.payment_succeeded',
+				'Subscription ID is null in webhook' . "\n" . wp_json_encode(
+					array(
+						'error_code'   => 'NULL_SUBSCRIPTION_ID',
+						'webhook_type' => 'invoice.payment_succeeded',
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -1742,10 +1946,12 @@ class StripeService {
 		if ( empty( $current_subscription ) ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Subscription not found for subscription ID',
-				array(
-					'error_code'      => 'SUBSCRIPTION_NOT_FOUND',
-					'subscription_id' => $subscription_id,
+				'Subscription not found for subscription ID' . "\n" . wp_json_encode(
+					array(
+						'error_code'      => 'SUBSCRIPTION_NOT_FOUND',
+						'subscription_id' => $subscription_id,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -1758,6 +1964,25 @@ class StripeService {
 		$invoice_id        = $event['data']['object']['id'];
 		$payment_intent_id = $event['data']['object']['payment_intent'] ?? null;
 		$invoice_amount    = $event['data']['object']['amount_due']; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+
+		// $0 trial invoices have no payment_intent. The initial order was already created
+		// during subscription setup, so skip duplicate order creation here.
+		if ( empty( $payment_intent_id ) ) {
+			PaymentGatewayLogging::log_general(
+				'stripe',
+				'Skipping order creation for zero-amount trial invoice' . "\n" . wp_json_encode(
+					array(
+						'event_type'      => 'trial_invoice_skipped',
+						'subscription_id' => $subscription_id,
+						'invoice_id'      => $invoice_id,
+						'member_id'       => $member_id,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'notice'
+			);
+			return;
+		}
 
 		// Create new order.
 		$order_info = array(
@@ -1776,34 +2001,63 @@ class StripeService {
 
 		$existing_order = $order_repository->get_order_by_transaction_id( $payment_intent_id );
 		if ( empty( $existing_order ) ) {
-			$order_data                                   = $order_service->prepare_orders_data( $order_info, $member_id, $current_subscription );
-			$order_data['orders_data']['status']          = 'completed';
-			$order_data['orders_data']['user_id']         = $member_id;
-			$order_data['orders_data']['created_by']      = $member_id;
-			$order_data['orders_data']['trial_status']    = 'off';
-			$order_data['orders_data']['notes']           = sanitize_text_field( esc_html__( 'Generated with stripe webhook', 'user-registration' ) );
-			$order_data['orders_data']['total_amount']    = $membership_metas['amount'];
-			$order_data['orders_data']['transaction_id']  = $payment_intent_id ? sanitize_text_field( $payment_intent_id ) : '';
-			$order_data['orders_data']['subscription_id'] = $current_subscription['sub_id'];
+			// Fallback: if registration created an order before the payment_intent_id was persisted,
+			// update that order instead of creating a duplicate.
+			$existing_by_subscription = $order_repository->get_order_by_subscription( $current_subscription['sub_id'] );
+			if ( ! empty( $existing_by_subscription ) && empty( $existing_by_subscription['transaction_id'] ) && 'on' !== ( $existing_by_subscription['trial_status'] ?? 'off' ) ) {
+				PaymentGatewayLogging::log_general(
+					'stripe',
+					'Found existing order by subscription ID — updating instead of creating duplicate' . "\n" . wp_json_encode(
+						array(
+							'event_type'      => 'existing_order_updated_by_webhook',
+							'order_id'        => $existing_by_subscription['ID'],
+							'subscription_id' => $current_subscription['sub_id'],
+							'transaction_id'  => $payment_intent_id,
+						),
+						JSON_PRETTY_PRINT
+					),
+					'notice'
+				);
+				$order_repository->update(
+					$existing_by_subscription['ID'],
+					array(
+						'transaction_id' => sanitize_text_field( $payment_intent_id ),
+						'status'         => 'completed',
+					)
+				);
+				$order_id = $existing_by_subscription['ID'];
+			} else {
+				$order_data                                   = $order_service->prepare_orders_data( $order_info, $member_id, $current_subscription );
+				$order_data['orders_data']['status']          = 'completed';
+				$order_data['orders_data']['user_id']         = $member_id;
+				$order_data['orders_data']['created_by']      = $member_id;
+				$order_data['orders_data']['trial_status']    = 'off';
+				$order_data['orders_data']['notes']           = sanitize_text_field( esc_html__( 'Generated with stripe webhook', 'user-registration' ) );
+				$order_data['orders_data']['total_amount']    = $membership_metas['amount'];
+				$order_data['orders_data']['transaction_id']  = $payment_intent_id ? sanitize_text_field( $payment_intent_id ) : '';
+				$order_data['orders_data']['subscription_id'] = $current_subscription['sub_id'];
 
-			$order_id = $order_repository->create( $order_data );
+				$order_id = $order_repository->create( $order_data );
+			}
 		} else {
-			$order_id = $existing_order['id'] ?? '';
+			$order_id = $existing_order['ID'] ?? $existing_order['id'] ?? '';
 		}
 
 		PaymentGatewayLogging::log_general(
 			'stripe',
-			'New renewal order created via webhook',
-			'notice',
-			array(
-				'event_type'      => 'renewal_order_created',
-				'order_id'        => $order_id,
-				'subscription_id' => $subscription_id,
-				'invoice_id'      => $invoice_id,
-				'amount'          => $membership_metas['amount'],
-				'member_id'       => $member_id,
-				'membership_type' => $membership_type,
-			)
+			'New renewal order created via webhook' . "\n" . wp_json_encode(
+				array(
+					'event_type'      => 'renewal_order_created',
+					'order_id'        => $order_id,
+					'subscription_id' => $subscription_id,
+					'invoice_id'      => $invoice_id,
+					'amount'          => $membership_metas['amount'],
+					'member_id'       => $member_id,
+					'membership_type' => $membership_type,
+				),
+				JSON_PRETTY_PRINT
+			),
+			'notice'
 		);
 
 		$next_billing_date = SubscriptionService::get_expiry_date( date( 'Y-m-d' ), $membership_metas['subscription']['duration'], $membership_metas['subscription']['value'] );
@@ -1838,7 +2092,7 @@ class StripeService {
 		);
 
 		if ( $is_renewing ) {
-			delete_user_meta( $member_id, 'urm_user_just_created' );
+			delete_transient( 'urm_pending_login_' . $member_id );
 		}
 	}
 
@@ -1863,10 +2117,12 @@ class StripeService {
 		if ( empty( $subscription_id ) ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Subscription ID is empty in invoice.payment_failed webhook',
-				array(
-					'error_code'   => 'NULL_SUBSCRIPTION_ID',
-					'webhook_type' => 'invoice.payment_failed',
+				'Subscription ID is empty in invoice.payment_failed webhook' . "\n" . wp_json_encode(
+					array(
+						'error_code'   => 'NULL_SUBSCRIPTION_ID',
+						'webhook_type' => 'invoice.payment_failed',
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -1878,10 +2134,12 @@ class StripeService {
 		if ( empty( $current_subscription ) ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Subscription not found for subscription ID',
-				array(
-					'error_code'      => 'SUBSCRIPTION_NOT_FOUND',
-					'subscription_id' => $subscription_id,
+				'Subscription not found for subscription ID' . "\n" . wp_json_encode(
+					array(
+						'error_code'      => 'SUBSCRIPTION_NOT_FOUND',
+						'subscription_id' => $subscription_id,
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -1905,7 +2163,7 @@ class StripeService {
 				'member_id'       => $member_id,
 			)
 		);
-		delete_user_meta( $member_id, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $member_id );
 	}
 
 	/**
@@ -1951,7 +2209,61 @@ class StripeService {
 				)
 			);
 		}
-		delete_user_meta( $order['user_id'], 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $order['user_id'] );
+	}
+
+	/**
+	 * Handle charge.refunded webhook: mark the linked order as refunded.
+	 *
+	 * @param array $event Stripe event array.
+	 * @return void
+	 */
+	public function handle_refunded_charge( $event ) {
+		$charge            = isset( $event['data']['object'] ) ? $event['data']['object'] : array();
+		$payment_intent_id = isset( $charge['payment_intent'] ) ? $charge['payment_intent'] : null;
+
+		PaymentGatewayLogging::log_webhook_received(
+			'stripe',
+			'Charge refunded webhook received',
+			array(
+				'webhook_type'      => 'charge.refunded',
+				'payment_intent_id' => $payment_intent_id ?? 'unknown',
+				'event_id'          => isset( $event['id'] ) ? $event['id'] : 'unknown',
+			)
+		);
+
+		if ( empty( $payment_intent_id ) ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'charge.refunded webhook: no payment_intent on charge.',
+				array( 'error_code' => 'NO_PAYMENT_INTENT' )
+			);
+			return;
+		}
+
+		$order = $this->orders_repository->get_order_by_transaction_id( $payment_intent_id );
+		if ( empty( $order ) ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				sprintf( 'charge.refunded: no local order for PaymentIntent %s.', $payment_intent_id ),
+				array(
+					'error_code'        => 'ORDER_NOT_FOUND',
+					'payment_intent_id' => $payment_intent_id,
+				)
+			);
+			return;
+		}
+
+		$this->orders_repository->update( $order['ID'], array( 'status' => 'refunded' ) );
+
+		PaymentGatewayLogging::log_webhook_processed(
+			'stripe',
+			sprintf( 'Order %d marked as refunded (PaymentIntent %s).', $order['ID'], $payment_intent_id ),
+			array(
+				'order_id'          => $order['ID'],
+				'payment_intent_id' => $payment_intent_id,
+			)
+		);
 	}
 
 	/**
@@ -2176,7 +2488,7 @@ class StripeService {
 
 		try {
 			// Calculate amount in cents (or leave as-is for JPY).
-			$amount = ( 'JPY' === $currency ) ? abs( $meta_data['amount'] ) : abs( $meta_data['amount'] ) * 100;
+			$amount = ( 'JPY' === $currency ) ? (int) round( abs( $meta_data['amount'] ) ) : (int) round( abs( $meta_data['amount'] ) * 100 );
 
 			// Prepare price data.
 			$price_details = array(
@@ -2204,10 +2516,12 @@ class StripeService {
 		} catch ( \Stripe\Exception\ApiErrorException $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Error creating Stripe price',
-				array(
-					'error_code'    => 'PRICE_CREATION_FAILED',
-					'error_message' => $e->getMessage(),
+				'Error creating Stripe price' . "\n" . wp_json_encode(
+					array(
+						'error_code'    => 'PRICE_CREATION_FAILED',
+						'error_message' => $e->getMessage(),
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -2233,9 +2547,11 @@ class StripeService {
 		if ( empty( $subscription['sub_id'] ) ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Stripe subscription ID not found for retry',
-				array(
-					'error_code' => 'MISSING_SUBSCRIPTION_ID',
+				'Stripe subscription ID not found for retry' . "\n" . wp_json_encode(
+					array(
+						'error_code' => 'MISSING_SUBSCRIPTION_ID',
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -2246,14 +2562,16 @@ class StripeService {
 
 		PaymentGatewayLogging::log_general(
 			'stripe',
-			'Retrying Stripe subscription payment',
-			'notice',
-			array(
-				'event_type'      => 'retry_initiated',
-				'subscription_id' => $subscription['sub_id'],
-				'user_id'         => $subscription['user_id'] ?? 'unknown',
-				'item_id'         => $subscription['item_id'] ?? 'unknown',
-			)
+			'Retrying Stripe subscription payment' . "\n" . wp_json_encode(
+				array(
+					'event_type'      => 'retry_initiated',
+					'subscription_id' => $subscription['sub_id'],
+					'user_id'         => $subscription['user_id'] ?? 'unknown',
+					'item_id'         => $subscription['item_id'] ?? 'unknown',
+				),
+				JSON_PRETTY_PRINT
+			),
+			'notice'
 		);
 
 		try {
@@ -2262,9 +2580,11 @@ class StripeService {
 			if ( ! $stripe_subscription ) {
 				PaymentGatewayLogging::log_error(
 					'stripe',
-					'Stripe subscription not found for retry',
-					array(
-						'subscription_id' => $subscription['sub_id'],
+					'Stripe subscription not found for retry' . "\n" . wp_json_encode(
+						array(
+							'subscription_id' => $subscription['sub_id'],
+						),
+						JSON_PRETTY_PRINT
 					)
 				);
 
@@ -2309,10 +2629,12 @@ class StripeService {
 				} else {
 					PaymentGatewayLogging::log_error(
 						'stripe',
-						'Subscription payment retry - Unexpected status',
-						array(
-							'subscription_id' => $subscription['sub_id'],
-							'status'          => $updated_subscription->status,
+						'Subscription payment retry - Unexpected status' . "\n" . wp_json_encode(
+							array(
+								'subscription_id' => $subscription['sub_id'],
+								'status'          => $updated_subscription->status,
+							),
+							JSON_PRETTY_PRINT
 						)
 					);
 
@@ -2341,23 +2663,27 @@ class StripeService {
 				// Scenario: if automatic retry is enabled in stripe dashboard, it might be already active via smart retry.
 				PaymentGatewayLogging::log_general(
 					'stripe',
-					'Subscription is already active - no retry needed',
-					'notice',
-					array(
-						'subscription_id' => $subscription['sub_id'],
-						'status'          => $stripe_subscription->status,
-						'user_id'         => $subscription['user_id'] ?? 'unknown',
-					)
+					'Subscription is already active - no retry needed' . "\n" . wp_json_encode(
+						array(
+							'subscription_id' => $subscription['sub_id'],
+							'status'          => $stripe_subscription->status,
+							'user_id'         => $subscription['user_id'] ?? 'unknown',
+						),
+						JSON_PRETTY_PRINT
+					),
+					'notice'
 				);
 				$response['status']  = true;
 				$response['message'] = __( 'Subscription is already active', 'user-registration' );
 			} else {
 				PaymentGatewayLogging::log_error(
 					'stripe',
-					'Subscription cannot be recovered.',
-					array(
-						'subscription_id' => $subscription['sub_id'],
-						'status'          => $stripe_subscription->status,
+					'Subscription cannot be recovered.' . "\n" . wp_json_encode(
+						array(
+							'subscription_id' => $subscription['sub_id'],
+							'status'          => $stripe_subscription->status,
+						),
+						JSON_PRETTY_PRINT
 					)
 				);
 
@@ -2368,12 +2694,14 @@ class StripeService {
 		} catch ( ApiErrorException $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Stripe subscription retry failed',
-				array(
-					'error_code'      => $e->getStripeCode(),
-					'error_message'   => $e->getMessage(),
-					'subscription_id' => $subscription['subscription_id'],
-					'user_id'         => $subscription['user_id'] ?? 'unknown',
+				'Stripe subscription retry failed' . "\n" . wp_json_encode(
+					array(
+						'error_code'      => $e->getStripeCode(),
+						'error_message'   => $e->getMessage(),
+						'subscription_id' => $subscription['subscription_id'],
+						'user_id'         => $subscription['user_id'] ?? 'unknown',
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -2393,21 +2721,25 @@ class StripeService {
 			\Stripe\Account::retrieve();
 			PaymentGatewayLogging::log_general(
 				'stripe',
-				'Stripe credentials validated successfully',
-				'success',
-				array(
-					'event_type' => 'credential_validation',
-				)
+				'Stripe credentials validated successfully' . "\n" . wp_json_encode(
+					array(
+						'event_type' => 'credential_validation',
+					),
+					JSON_PRETTY_PRINT
+				),
+				'success'
 			);
 
 			return true;
 		} catch ( \Stripe\Exception\AuthenticationException $e ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Stripe authentication failed - Invalid credentials',
-				array(
-					'error_code'    => 'AUTHENTICATION_FAILED',
-					'error_message' => $e->getMessage(),
+				'Stripe authentication failed - Invalid credentials' . "\n" . wp_json_encode(
+					array(
+						'error_code'    => 'AUTHENTICATION_FAILED',
+						'error_message' => $e->getMessage(),
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -2416,10 +2748,12 @@ class StripeService {
 
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Stripe credential validation failed',
-				array(
-					'error_code'    => 'VALIDATION_ERROR',
-					'error_message' => $e->getMessage(),
+				'Stripe credential validation failed' . "\n" . wp_json_encode(
+					array(
+						'error_code'    => 'VALIDATION_ERROR',
+						'error_message' => $e->getMessage(),
+					),
+					JSON_PRETTY_PRINT
 				)
 			);
 
@@ -2589,6 +2923,21 @@ class StripeService {
 	 * @return void
 	 */
 	public function run_missed_subscription_backfill( $last_synced ) {
+		$logger = ur_get_logger();
+		$logger->info( '[Backfill][Stripe][Status] ---------- STARTED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+		$logger->info(
+			'[Backfill][Stripe][Status] Starting subscription status sync.' . "\n" . wp_json_encode(
+				array(
+					'event_type'   => 'backfill_start',
+					'window_start' => gmdate( 'Y-m-d H:i:s', $last_synced ),
+					'window_end'   => gmdate( 'Y-m-d H:i:s' ),
+					'event_types'  => array( 'customer.subscription.updated', 'customer.subscription.deleted' ),
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
 		$events = \Stripe\Event::all(
 			array(
 				'types'   => array( 'customer.subscription.updated', 'customer.subscription.deleted' ),
@@ -2599,17 +2948,22 @@ class StripeService {
 			)
 		);
 
+		$count_updated = 0;
+		$count_skipped = 0;
+
 		foreach ( $events->autoPagingIterator() as $event ) {
 			$subscription    = $event->data->object;
 			$subscription_id = $subscription->id;
 
 			if ( empty( $subscription_id ) ) {
+				++$count_skipped;
 				continue;
 			}
 
 			$membership_subscription = $this->members_subscription_repository->get_subscription_by_subscription_id_meta( $subscription_id );
 
 			if ( empty( $membership_subscription ) ) {
+				++$count_skipped;
 				continue;
 			}
 
@@ -2617,6 +2971,7 @@ class StripeService {
 
 				if ( 'active' === $subscription->status && 'canceled' === $membership_subscription['status'] && $subscription->cancel_at_period_end ) {
 					// If Stripe subscription is active but our record is canceled and Stripe subscription is set to cancel at period end, we should not update the status to active as it will cause confusion. We will wait for the next event to update the status.
+					++$count_skipped;
 					continue;
 				}
 
@@ -2635,8 +2990,42 @@ class StripeService {
 					$membership_subscription['ID'],
 					$update_data
 				);
+
+				++$count_updated;
+				$logger->info(
+					sprintf( '[Backfill][Stripe][Status] Updated subscription ID %d to status "%s"', $membership_subscription['ID'], $subscription->status ),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+
+				// When subscription becomes active, also complete its pending order.
+				if ( 'active' === $subscription->status ) {
+					$pending_order = $this->orders_repository->get_order_by_subscription( $membership_subscription['ID'] );
+					if ( ! empty( $pending_order ) && 'pending' === ( $pending_order['status'] ?? '' ) ) {
+						$this->orders_repository->update(
+							$pending_order['ID'],
+							array( 'status' => 'completed' )
+						);
+						$logger->info(
+							sprintf( '[Backfill][Stripe][Status] Completed pending order %d alongside subscription %d activation.', $pending_order['ID'], $membership_subscription['ID'] ),
+							array( 'source' => 'urm-missed-payment-backfill' )
+						);
+					}
+				}
 			}
 		}
+
+		$logger->info(
+			'[Backfill][Stripe][Status] Done.' . "\n" . wp_json_encode(
+				array(
+					'event_type' => 'backfill_done',
+					'updated'    => $count_updated,
+					'skipped'    => $count_skipped,
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+		$logger->info( '[Backfill][Stripe][Status] ---------- ENDED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
 	}
 
 	/**
@@ -2646,6 +3035,21 @@ class StripeService {
 	 * @return void
 	 */
 	public function run_missed_payment_backfill( $last_synced ) {
+		$logger = ur_get_logger();
+		$logger->info( '[Backfill][Stripe][Payments] ---------- STARTED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+		$logger->info(
+			'[Backfill][Stripe][Payments] Starting subscription payment backfill.' . "\n" . wp_json_encode(
+				array(
+					'event_type'   => 'backfill_start',
+					'window_start' => gmdate( 'Y-m-d H:i:s', $last_synced ),
+					'window_end'   => gmdate( 'Y-m-d H:i:s' ),
+					'event_types'  => array( 'invoice.payment_succeeded', 'invoice.paid' ),
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
 		$events = \Stripe\Event::all(
 			array(
 				'types'   => array( 'invoice.payment_succeeded', 'invoice.paid' ),
@@ -2656,12 +3060,16 @@ class StripeService {
 			)
 		);
 
+		$count_created = 0;
+		$count_skipped = 0;
+
 		foreach ( $events->autoPagingIterator() as $event ) {
 			$invoice           = $event->data->object;
 			$subscription_id   = $invoice->subscription ?? null;
 			$payment_intent_id = $invoice->payment_intent ?? null;
 
 			if ( empty( $subscription_id ) || empty( $payment_intent_id ) ) {
+				++$count_skipped;
 				continue;
 			}
 
@@ -2672,7 +3080,9 @@ class StripeService {
 
 				if ( empty( $payment ) ) {
 					$payment = $this->orders_repository->get_order_by_transaction_id( $subscription_id );
-					$this->orders_repository->delete( $payment['ID'] );
+					if ( ! empty( $payment ) ) {
+						$this->orders_repository->delete( $payment['ID'] );
+					}
 
 					$subscription   = $this->members_subscription_repository->retrieve( $membership_subscription['ID'] );
 					$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent_id );
@@ -2702,8 +3112,262 @@ class StripeService {
 						),
 					);
 					$this->orders_repository->create( $order_data );
+
+					++$count_created;
+					$logger->info(
+						sprintf( '[Backfill][Stripe][Payments] Created missing order for PaymentIntent %s (subscription %s)', $payment_intent_id, $subscription_id ),
+						array( 'source' => 'urm-missed-payment-backfill' )
+					);
+				} else {
+					++$count_skipped;
+				}
+			} else {
+				++$count_skipped;
+			}
+		}
+
+		$logger->info(
+			'[Backfill][Stripe][Payments] Done.' . "\n" . wp_json_encode(
+				array(
+					'event_type'     => 'backfill_done',
+					'orders_created' => $count_created,
+					'skipped'        => $count_skipped,
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+		$logger->info( '[Backfill][Stripe][Payments] ---------- ENDED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+	}
+
+	/**
+	 * Backfill missed one-time (paid type) Stripe payment records.
+	 *
+	 * Finds payment_intent.succeeded events that have no associated subscription
+	 * (i.e. one-time payments) and activates any local orders/subscriptions that
+	 * are still pending for the matching PaymentIntent ID.
+	 *
+	 * @param int $last_synced Unix timestamp — fetch events created on or after this time.
+	 * @return void
+	 */
+	public function run_missed_onetime_payment_backfill( $last_synced ) {
+		$logger = ur_get_logger();
+		$logger->info( '[Backfill][Stripe][OneTime] ---------- STARTED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+		$logger->info(
+			'[Backfill][Stripe][OneTime] Starting one-time payment backfill.' . "\n" . wp_json_encode(
+				array(
+					'event_type'   => 'backfill_start',
+					'window_start' => gmdate( 'Y-m-d H:i:s', $last_synced ),
+					'window_end'   => gmdate( 'Y-m-d H:i:s' ),
+					'event_types'  => array( 'payment_intent.succeeded' ),
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
+		$events = \Stripe\Event::all(
+			array(
+				'types'   => array( 'payment_intent.succeeded' ),
+				'created' => array(
+					'gte' => $last_synced,
+				),
+				'limit'   => 100,
+			)
+		);
+
+		$total_found   = 0;
+		$total_updated = 0;
+
+		foreach ( $events->autoPagingIterator() as $event ) {
+			$payment_intent = $event->data->object;
+
+			// Skip subscription invoices — those are handled by run_missed_payment_backfill.
+			if ( ! empty( $payment_intent->invoice ) ) {
+				continue;
+			}
+
+			$payment_intent_id = $payment_intent->id ?? null;
+			if ( empty( $payment_intent_id ) ) {
+				continue;
+			}
+
+			++$total_found;
+
+			$order = $this->orders_repository->get_order_by_transaction_id( $payment_intent_id );
+			if ( empty( $order ) ) {
+				$logger->info(
+					sprintf( '[Backfill][Stripe][OneTime] No local order found for PaymentIntent %s — skipping.', $payment_intent_id ),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				continue;
+			}
+
+			if ( 'pending' !== $order['status'] ) {
+				$logger->info(
+					sprintf( '[Backfill][Stripe][OneTime] Order %d for PaymentIntent %s already has status "%s" — skipping.', $order['ID'], $payment_intent_id, $order['status'] ),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				continue;
+			}
+
+			// Mark the order as completed.
+			$this->orders_repository->update(
+				$order['ID'],
+				array( 'status' => 'completed' )
+			);
+
+			// Activate the linked subscription.
+			if ( ! empty( $order['subscription_id'] ) ) {
+				$membership_subscription = $this->members_subscription_repository->retrieve( $order['subscription_id'] );
+				if ( ! empty( $membership_subscription ) && 'pending' === $membership_subscription['status'] ) {
+					$this->members_subscription_repository->update(
+						$membership_subscription['ID'],
+						array(
+							'status'     => 'active',
+							'start_date' => gmdate( 'Y-m-d 00:00:00' ),
+						)
+					);
+					$logger->info(
+						sprintf( '[Backfill][Stripe][OneTime] Activated subscription %d for order %d (PaymentIntent %s)', $membership_subscription['ID'], $order['ID'], $payment_intent_id ),
+						array( 'source' => 'urm-missed-payment-backfill' )
+					);
 				}
 			}
+
+			++$total_updated;
+			$logger->info(
+				sprintf( '[Backfill][Stripe][OneTime] Completed order %d for PaymentIntent %s', $order['ID'], $payment_intent_id ),
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+		}
+
+		$logger->info(
+			sprintf( '[Backfill][Stripe][OneTime] Total found: %d, Total updated: %d', $total_found, $total_updated ),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+		$logger->info( '[Backfill][Stripe][OneTime] ---------- ENDED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+	}
+
+	/**
+	 * Backfill refunded orders missed by webhooks.
+	 *
+	 * Fetches charge.refunded events from Stripe within the backfill window and
+	 * marks matching local orders as refunded.
+	 *
+	 * @param int $last_synced Unix timestamp of the previous sync.
+	 * @return void
+	 */
+	public function run_missed_refund_backfill( $last_synced ) {
+		$logger = ur_get_logger();
+		$logger->info( '[Backfill][Stripe][Refunds] ---------- STARTED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+		$logger->info(
+			'[Backfill][Stripe][Refunds] Starting refund backfill.' . "\n" . wp_json_encode(
+				array(
+					'event_type'   => 'backfill_start',
+					'window_start' => gmdate( 'Y-m-d H:i:s', $last_synced ),
+					'window_end'   => gmdate( 'Y-m-d H:i:s' ),
+					'event_types'  => array( 'charge.refunded' ),
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+
+		$events = \Stripe\Event::all(
+			array(
+				'types'   => array( 'charge.refunded' ),
+				'created' => array( 'gte' => $last_synced ),
+				'limit'   => 100,
+			)
+		);
+
+		$total_found   = 0;
+		$total_updated = 0;
+
+		foreach ( $events->autoPagingIterator() as $event ) {
+			$charge            = $event->data->object;
+			$payment_intent_id = $charge->payment_intent ?? null;
+
+			if ( empty( $payment_intent_id ) ) {
+				continue;
+			}
+
+			++$total_found;
+
+			$order = $this->orders_repository->get_order_by_transaction_id( $payment_intent_id );
+			if ( empty( $order ) ) {
+				$logger->info(
+					sprintf( '[Backfill][Stripe][Refunds] No local order for PaymentIntent %s — skipping.', $payment_intent_id ),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				continue;
+			}
+
+			if ( 'refunded' === $order['status'] ) {
+				$logger->info(
+					sprintf( '[Backfill][Stripe][Refunds] Order %d already refunded — skipping.', $order['ID'] ),
+					array( 'source' => 'urm-missed-payment-backfill' )
+				);
+				continue;
+			}
+
+			$this->orders_repository->update( $order['ID'], array( 'status' => 'refunded' ) );
+			++$total_updated;
+			$logger->info(
+				sprintf( '[Backfill][Stripe][Refunds] Marked order %d as refunded (PaymentIntent %s)', $order['ID'], $payment_intent_id ),
+				array( 'source' => 'urm-missed-payment-backfill' )
+			);
+		}
+
+		$logger->info(
+			'[Backfill][Stripe][Refunds] Done.' . "\n" . wp_json_encode(
+				array(
+					'event_type'    => 'backfill_done',
+					'total_found'   => $total_found,
+					'total_updated' => $total_updated,
+				),
+				JSON_PRETTY_PRINT
+			),
+			array( 'source' => 'urm-missed-payment-backfill' )
+		);
+		$logger->info( '[Backfill][Stripe][Refunds] ---------- ENDED ----------', array( 'source' => 'urm-missed-payment-backfill' ) );
+	}
+
+	/**
+	 * Returns an existing Stripe Tax Rate ID for the given percentage, creating one if needed.
+	 * IDs are cached per mode (test/live) in WordPress options to avoid duplicate Tax Rates in Stripe.
+	 */
+	private function get_or_create_stripe_tax_rate( $percentage ) {
+		$mode        = self::get_stripe_settings()['mode'] ?? 'test';
+		$option_key  = 'urm_stripe_tax_rate_' . $mode . '_' . str_replace( '.', '_', (string) $percentage );
+		$tax_rate_id = get_option( $option_key );
+
+		if ( ! empty( $tax_rate_id ) ) {
+			return $tax_rate_id;
+		}
+
+		try {
+			$tax_rate = \Stripe\TaxRate::create(
+				array(
+					'display_name' => 'Tax',
+					'percentage'   => $percentage,
+					'inclusive'    => false,
+				)
+			);
+			update_option( $option_key, $tax_rate->id );
+			return $tax_rate->id;
+		} catch ( \Exception $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Failed to create Stripe Tax Rate',
+				array(
+					'error_code'    => 'TAX_RATE_CREATE_FAILED',
+					'percentage'    => $percentage,
+					'error_message' => $e->getMessage(),
+				)
+			);
+			return '';
 		}
 	}
 }

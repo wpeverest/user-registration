@@ -33,6 +33,7 @@ class Orders {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'init', array( $this, 'add_payment_gateway_options' ) );
+		add_action( 'admin_post_ur_admin_download_invoice', array( $this, 'handle_admin_invoice_download' ) );
 		$this->includes();
 	}
 
@@ -61,13 +62,13 @@ class Orders {
 	public function add_orders_menu() {
 
 		$orders_repository = new OrdersRepository();
-		$args = array(
+		$args              = array(
 			'orderby' => 'order_id',
-			'order' => 'ASC'
+			'order'   => 'ASC',
 		);
 
 		$total_membership_items = $orders_repository->get_all( $args );
-		$total_form_items = urm_get_form_user_payments( $args );
+		$total_form_items       = urm_get_form_user_payments( $args );
 
 		$total_items = array_merge( $total_membership_items, $total_form_items );
 
@@ -174,10 +175,10 @@ class Orders {
 					$order['is_form_payment'] = false;
 				}
 
-				$order   = apply_filters( 'ur_membership_payment_history_order', $order );
+				$order           = apply_filters( 'ur_membership_payment_history_order', $order );
 				$order_meta_data = ! empty( $order['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'urm_team_id' ) : '';
-				$team_id 		 = ! empty( $order_meta_data['meta_value'] ) ? $order_meta_data[ 'meta_value' ] : '';
-				$team    = '';
+				$team_id         = ! empty( $order_meta_data['meta_value'] ) ? $order_meta_data['meta_value'] : '';
+				$team            = '';
 				if ( $team_id ) {
 					$team_repository = new TeamRepository();
 					$team            = $team_repository->get_single_team_by_ID( $team_id );
@@ -236,8 +237,8 @@ class Orders {
 	</div>
 	<hr>
 	<form method="get" id="ur-membership-payment-history-form">
-		<input type="hidden" name="page" value="<?php echo $this->page; ?>" />
-		<input type="hidden" name="action" value="<?php echo esc_attr( sanitize_text_field( wp_unslash( $_GET['action'] ?? '' ) ) ); ?>" />
+		<input type="hidden" name="page" value="<?php echo esc_attr( $this->page ); ?>" />
+		<input type="hidden" name="action" value="<?php echo isset( $_GET['action'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_GET['action'] ) ) ) : ''; ?>" />
 		<div>
 			<strong>Important Note:</strong>
 			This form is intended only to record missed payments for tracking purposes. Adding a payment here does not
@@ -426,6 +427,253 @@ class Orders {
 		$payment_gateways = apply_filters( 'user_registration_payment_gateways', $payment_gateways );
 
 		update_option( 'ur_payment_gateways', $payment_gateways );
+	}
+
+	/**
+	 * Generate and stream an invoice PDF for a membership order from the admin payments list.
+	 *
+	 * Hooked to admin_post_ur_admin_download_invoice. Mirrors the data-assembly logic of
+	 * User_Registration_Payments_Frontend::download_invoice_pdf() but works directly from
+	 * order_id instead of requiring a frontend session.
+	 *
+	 * @return void
+	 */
+	public function handle_admin_invoice_download() {
+		if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'ur_admin_download_invoice' ) ) {
+			wp_die( esc_html__( 'Security check failed.', 'user-registration' ) );
+		}
+
+		if ( ! current_user_can( 'manage_user_registration' ) || ! current_user_can( 'manage_options' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
+			wp_die( esc_html__( 'Permission denied.', 'user-registration' ) );
+		}
+
+		$order_id = isset( $_GET['order_id'] ) ? absint( $_GET['order_id'] ) : 0;
+		if ( ! $order_id ) {
+			wp_die( esc_html__( 'Invalid order.', 'user-registration' ) );
+		}
+
+		if ( ! function_exists( 'ur_pro_generate_pdf_file' ) ) {
+			require_once dirname( __DIR__, 2 ) . '/includes/pro/functions-payments.php';
+		}
+
+		$order_repository = new OrdersRepository();
+		$order            = $order_repository->get_order_detail( $order_id );
+
+		if ( empty( $order ) ) {
+			wp_die( esc_html__( 'Order not found.', 'user-registration' ) );
+		}
+
+		$user_id            = $order['user_id'] ?? 0;
+		$post_id            = $order['post_id'] ?? 0;
+		$membership_service = new MembershipService();
+		$membership         = $membership_service->get_membership_details( $post_id );
+		$membership_info    = $membership_service->get_membership_title_and_description( $post_id );
+
+		// Billing period.
+		$period = __( 'All Time', 'user-registration' );
+		if ( ! empty( $order['subscription_start_date'] ) && ! empty( $order['next_billing_date'] ) ) {
+			$period = gmdate( 'M d, Y', strtotime( $order['subscription_start_date'] ) )
+				. ' to '
+				. gmdate( 'M d, Y', strtotime( $order['next_billing_date'] ) );
+		}
+
+		// Invoice number — admin downloads do not increment the shared counter.
+		$invoice_format           = get_option( 'urm_invoice_format', '' );
+		$invoice_starts_from      = get_option( 'urm_invoice_starts_from', 1 );
+		$total_invoices_generated = get_option( 'urm_total_invoices_generated', 0 );
+		if ( ! empty( $invoice_format ) ) {
+			$current_invoice_number   = intval( $invoice_starts_from ) + intval( $total_invoices_generated );
+			$generated_invoice_number = str_replace( array( '{{year}}', '{year}' ), gmdate( 'Y' ), $invoice_format );
+			$generated_invoice_number = str_replace( array( '{{id}}', '{id}' ), $order_id, $generated_invoice_number );
+			$generated_invoice_number = str_replace( array( '{{counter}}', '{counter}' ), $current_invoice_number, $generated_invoice_number );
+		} else {
+			$generated_invoice_number = 'INV-' . gmdate( 'Y' ) . '-' . $order_id;
+		}
+
+		// Currency, symbol, and position.
+		$local_currency_meta = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
+		$currency            = ! empty( $local_currency_meta['meta_value'] ) ? $local_currency_meta['meta_value'] : get_option( 'user_registration_payment_currency', 'USD' );
+		$currencies          = ur_payment_integration_get_currencies();
+		$symbol              = html_entity_decode( ur_get_currency_symbol( $currency ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$symbol_pos          = isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left';
+
+		// Amounts and tax.
+		$raw_total   = floatval( $order['total_amount'] );
+		$is_trial    = isset( $order['trial_status'] ) && 'on' === $order['trial_status'];
+		$plan_amount = ! empty( $membership['amount'] ) ? floatval( $membership['amount'] ) : $raw_total;
+
+		$order_meta_data = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
+		$tax_data        = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data['meta_value'], true ) : array();
+		$tax_amount      = ! empty( $tax_data['tax_amount'] ) ? floatval( $tax_data['tax_amount'] ) : 0;
+		$tax_rate        = ! empty( $tax_data['tax_rate'] ) ? $tax_data['tax_rate'] : 0;
+		$tax_label       = 'Tax ( ' . $tax_rate . ' %)';
+
+		$invoice_pre_tax  = $tax_amount > 0 ? $raw_total - $tax_amount : $raw_total;
+		$invoice_amount   = number_format( $invoice_pre_tax, 2, '.', '' );
+		$total_amount_str = number_format( $raw_total, 2, '.', '' );
+
+		// Coupon discount — applied to the post-proration amount, back-calculated from
+		// what was actually charged (invoice_pre_tax = post_proration − coupon).
+		$coupon_code    = $order['coupon'] ?? '';
+		$coupon_label   = '';
+		$coupon_raw     = 0.0;
+		$discount_value = null;
+		$discount_type  = 'fixed';
+
+		if ( ! empty( $coupon_code ) ) {
+			$coupon_data = ur_get_coupon_details( $coupon_code );
+			if ( ! empty( $coupon_data ) ) {
+				if ( isset( $coupon_data['coupon_discount'], $coupon_data['coupon_discount_type'] ) ) {
+					$discount_value = (float) $coupon_data['coupon_discount'];
+					$discount_type  = $coupon_data['coupon_discount_type'];
+				} elseif ( isset( $coupon_data['discount'] ) ) {
+					$discount_value = (float) $coupon_data['discount'];
+					$discount_type  = $coupon_data['discount_type'] ?? $coupon_data['coupon_discount_type'] ?? 'fixed';
+				}
+			}
+		}
+
+		// Back-calculate post-proration amount and coupon from what was charged.
+		if ( null !== $discount_value && $discount_value > 0 ) {
+			if ( 'percent' === $discount_type ) {
+				$pct                   = min( (float) $discount_value, 100 );
+				$post_proration_amount = $pct < 100 ? round( $invoice_pre_tax / ( 1 - $pct / 100 ), 4 ) : $plan_amount;
+				$coupon_raw            = round( $post_proration_amount * $pct / 100, 2 );
+				$coupon_label          = 'Coupon ( ' . $pct . '% )';
+			} else {
+				$coupon_raw            = round( $discount_value, 2 );
+				$post_proration_amount = round( $invoice_pre_tax + $coupon_raw, 4 );
+				$coupon_name           = ! empty( $coupon_data['coupon_name'] ) ? $coupon_data['coupon_name'] : $coupon_code;
+				$coupon_label          = 'Coupon ( ' . $coupon_name . ' )';
+			}
+		} else {
+			$post_proration_amount = $invoice_pre_tax;
+		}
+
+		// Proration = plan price minus post-proration amount.
+		$prorate_discount = ( ! $is_trial && $raw_total > 0.005 && $plan_amount > $post_proration_amount + 0.005 )
+			? max( round( $plan_amount - $post_proration_amount, 2 ), 0 )
+			: 0;
+
+		$fmt_tax_bare    = number_format( $tax_amount, 2, '.', '' );
+		$fmt_item        = $invoice_amount;
+		$fmt_tax         = $fmt_tax_bare;
+		$fmt_subtotal    = $invoice_amount;
+		$fmt_total       = $total_amount_str;
+		$fmt_plan        = ( $prorate_discount > 0 || $coupon_raw > 0 ) ? number_format( $plan_amount, 2, '.', '' ) : '';
+		$fmt_prorate     = $prorate_discount > 0 ? number_format( $prorate_discount, 2, '.', '' ) : '';
+		$fmt_coupon_bare = $coupon_raw > 0 ? number_format( $coupon_raw, 2, '.', '' ) : '';
+		$fmt_coupon      = $fmt_coupon_bare;
+
+		if ( ! empty( $symbol ) ) {
+			if ( 'right' === $symbol_pos ) {
+				$fmt_item     = $invoice_amount . ' ' . $symbol;
+				$fmt_tax      = $fmt_tax_bare . ' ' . $symbol;
+				$fmt_subtotal = $invoice_amount . ' ' . $symbol;
+				$fmt_total    = $total_amount_str . ' ' . $symbol;
+				if ( '' !== $fmt_plan ) {
+					$fmt_plan    = $fmt_plan . ' ' . $symbol;
+					$fmt_prorate = '' !== $fmt_prorate ? $fmt_prorate . ' ' . $symbol : '';
+					$fmt_coupon  = '' !== $fmt_coupon ? $fmt_coupon . ' ' . $symbol : '';
+				}
+			} else {
+				$fmt_item     = $symbol . $invoice_amount;
+				$fmt_tax      = $symbol . $fmt_tax_bare;
+				$fmt_subtotal = $symbol . $invoice_amount;
+				$fmt_total    = $symbol . $total_amount_str;
+				if ( '' !== $fmt_plan ) {
+					$fmt_plan    = $symbol . $fmt_plan;
+					$fmt_prorate = '' !== $fmt_prorate ? $symbol . $fmt_prorate : '';
+					$fmt_coupon  = '' !== $fmt_coupon ? $symbol . $fmt_coupon : '';
+				}
+			}
+		}
+
+		// Customer info.
+		$user          = get_user_by( 'ID', $user_id );
+		$first_name    = get_user_meta( $user_id, 'first_name', true );
+		$last_name     = get_user_meta( $user_id, 'last_name', true );
+		$customer_name = trim( $first_name . ' ' . $last_name );
+
+		$smart_tag_context = array(
+			'email'   => $user ? $user->data->user_email : '',
+			'user_id' => $user_id,
+		);
+
+		$customer_detail = apply_filters( 'user_registration_process_smart_tags', get_option( 'urm_invoice_customer_info' ), $smart_tag_context, array() );
+		$footer_notes    = apply_filters(
+			'user_registration_process_smart_tags',
+			get_option(
+				'urm_invoice_footer_content',
+				'<p style="margin: 0 0 12px 0; color: #6c757d; font-size: 13px; line-height: 1.5;">Thank you for your purchase!</p>'
+				. '<p style="margin: 0; font-size: 14px; line-height: 1.6;"><a href="{{home_url}}" style="color: #4A90E2; text-decoration: none; font-weight: 500;">{{blog_info}} Team</a></p>'
+			),
+			$smart_tag_context,
+			array()
+		);
+
+		$context_ssl_off = array(
+			'ssl' => array(
+				'verify_peer'      => false,
+				'verify_peer_name' => false,
+			),
+		);
+		stream_context_set_default( $context_ssl_off );
+
+		$args = array(
+			'html'                 => '',
+			'company_name'         => get_option( 'urm_business_name', get_bloginfo( 'name' ) ),
+			'company_email'        => get_option( 'urm_business_email', get_option( 'admin_email' ) ),
+			'invoice_number'       => $generated_invoice_number,
+			'invoice_date'         => gmdate( 'M d, Y', strtotime( $order['created_at'] ) ),
+			'invoice_due_date'     => '',
+			'invoice_status'       => $is_trial ? 'TRIAL' : ( 'completed' === $order['status'] ? 'PAID' : strtoupper( $order['status'] ) ),
+			'customer_name'        => $customer_name,
+			'customer_email'       => $order['user_email'] ?? '',
+			'customer_detail'      => $customer_detail,
+			'company_detail'       => '',
+			'item_amount'          => $fmt_item,
+			'subtotal'             => $fmt_subtotal,
+			'original_plan_amount' => $fmt_plan,
+			'prorate_discount'     => $fmt_prorate,
+			'coupon_label'         => $coupon_label,
+			'coupon_discount'      => $fmt_coupon,
+			'coupon_discount_raw'  => $fmt_coupon_bare,
+			'tax_label'            => $tax_label,
+			'tax_amount'           => $fmt_tax,
+			'tax_amount_raw'       => $fmt_tax_bare,
+			'total_amount'         => $fmt_total,
+			'footer_notes'         => $footer_notes,
+			'footer_thanks'        => __( 'Thank you for your membership!', 'user-registration' ),
+			'footer_support'       => sprintf(
+				/* translators: %s: support email */
+				__( 'Questions? Contact us at %s', 'user-registration' ),
+				get_option( 'urm_business_email', get_option( 'admin_email' ) )
+			),
+			'is_trial'             => $is_trial,
+			'is_tax_enabled'       => ur_check_module_activation( 'taxes' ),
+			'item_description'     => $membership_info['item_title'] ?? ( $order['post_title'] ?? '' ),
+			'item_detail_text'     => $membership_info['item_description'] ?? ( $order['post_content'] ?? '' ),
+			'item_period'          => $period,
+		);
+
+		$file_name = ! empty( $user ) ? $user->user_login : 'invoice-' . $order_id;
+
+		if ( ob_get_level() ) {
+			ob_end_clean();
+		}
+		$tcpdf = ur_pro_generate_pdf_file( $args );
+		$tcpdf->output( $file_name . '.pdf', 'D' );
+
+		stream_context_set_default(
+			array(
+				'ssl' => array(
+					'verify_peer'      => true,
+					'verify_peer_name' => true,
+				),
+			)
+		);
+		exit;
 	}
 }
 

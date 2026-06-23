@@ -1077,10 +1077,10 @@ class UR_Getting_Started {
 			$meta['type'] = 'free';
 		} elseif ( 'one-time' === $type_input ) {
 			$meta['type']             = 'paid';
-			$meta['payment_gateways'] = get_option( 'ur_membership_payment_gateways' );
+			$meta['payment_gateways'] = self::get_wizard_payment_gateways();
 		} elseif ( 'subscription' === $type_input ) {
 			$meta['type']             = 'subscription';
-			$meta['payment_gateways'] = get_option( 'ur_membership_payment_gateways' );
+			$meta['payment_gateways'] = self::get_wizard_payment_gateways();
 			$meta['subscription']     = array(
 				'value'    => $billing_count,
 				'duration' => $billing_cycle,
@@ -1138,6 +1138,32 @@ class UR_Getting_Started {
 		self::sync_membership_access_rule( $membership_id, $access_rules );
 
 		return $membership_id;
+	}
+
+	/**
+	 * Build the payment_gateways meta for wizard-created plans.
+	 *
+	 * Returns every available gateway (via the runtime filter) with status 'on',
+	 * matching the structure used by manually-created plans so both new and
+	 * legacy installations display all configured gateways correctly.
+	 *
+	 * @return array
+	 */
+	protected static function get_wizard_payment_gateways() {
+		$available = apply_filters(
+			'user_registration_membership_payment_gateways',
+			array(
+				'paypal' => __( 'PayPal', 'user-registration' ),
+				'stripe' => __( 'Stripe', 'user-registration' ),
+				'bank'   => __( 'Bank', 'user-registration' ),
+			)
+		);
+
+		$gateways = array();
+		foreach ( $available as $key => $label ) {
+			$gateways[ $key ] = array( 'status' => 'on' );
+		}
+		return $gateways;
 	}
 
 	/**
@@ -1550,6 +1576,7 @@ class UR_Getting_Started {
 				'paypal_production_email'         => get_option( 'user_registration_global_paypal_live_email_address', get_option( 'user_registration_global_paypal_live_admin_email', get_option( 'user_registration_global_paypal_email_address', '' ) ) ),
 				'paypal_production_client_id'     => get_option( 'user_registration_global_paypal_live_client_id', get_option( 'user_registration_global_paypal_client_id', '' ) ),
 				'paypal_production_client_secret' => get_option( 'user_registration_global_paypal_live_client_secret', get_option( 'user_registration_global_paypal_client_secret', '' ) ),
+				'is_new_installation'             => ! ur_is_paypal_old_installation(),
 			),
 			array(
 				'id'                          => 'stripe',
@@ -1643,15 +1670,21 @@ class UR_Getting_Started {
 		$paypal_configured = true;
 		if ( $paypal ) {
 			if ( 'test' === $paypal_mode ) {
-				$paypal_configured = ! empty( $paypal_test_email ) && ! empty( $paypal_test_client_id ) && ! empty( $paypal_test_client_secret );
+				$has_rest_creds    = ! empty( $paypal_test_client_id ) && ! empty( $paypal_test_client_secret );
+				$paypal_configured = $has_rest_creds || ! empty( $paypal_test_email );
 			} else {
-				$paypal_configured = ! empty( $paypal_production_email ) && ! empty( $paypal_production_client_id ) && ! empty( $paypal_production_client_secret );
+				$has_rest_creds    = ! empty( $paypal_production_client_id ) && ! empty( $paypal_production_client_secret );
+				$paypal_configured = $has_rest_creds || ! empty( $paypal_production_email );
 			}
 
 			if ( ! $paypal_configured ) {
+				$message = ur_is_paypal_old_installation()
+					? __( 'PayPal requires either an email address or Client ID and Secret.', 'user-registration' )
+					: __( 'PayPal requires Client ID and Secret.', 'user-registration' );
+
 				$configuration_needed[] = array(
 					'gateway'      => 'paypal',
-					'message'      => __( 'PayPal requires an email address, client ID, and client secret.', 'user-registration' ),
+					'message'      => $message,
 					'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
 				);
 			}

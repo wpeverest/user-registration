@@ -13,13 +13,13 @@ $order_id        = isset( $order['order_id'] ) ? $order['order_id'] : 0;
 $user_id         = isset( $order['user_id'] ) ? $order['user_id'] : 0;
 $is_form_payment = isset( $order['is_form_payment'] ) ? $order['is_form_payment'] : false;
 
-$plan_details    = ! empty( $order['plan_details'] ) ? json_decode( $order['plan_details'], true ) : array();
-$post_content    = isset( $order['post_content'] ) ? json_decode( wp_unslash( $order['post_content'] ), true ) : array();
-$trial_status    = isset( $order['trial_status'] ) ? $order['trial_status'] : 'off';
+$plan_details = ! empty( $order['plan_details'] ) ? json_decode( $order['plan_details'], true ) : array();
+$post_content = isset( $order['post_content'] ) ? json_decode( wp_unslash( $order['post_content'] ), true ) : array();
+$trial_status = isset( $order['trial_status'] ) ? $order['trial_status'] : 'off';
 
 $order_repository = new OrdersRepository();
 $order_meta_data  = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
-$tax_data 		  = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
+$tax_data         = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data['meta_value'], true ) : array();
 $tax_amount       = ! empty( $tax_data['tax_amount'] ) ? $tax_data['tax_amount'] : 0;
 
 if ( $is_form_payment ) {
@@ -48,10 +48,10 @@ $currency   = get_option( 'user_registration_payment_currency', 'USD' );
 $currencies = ur_payment_integration_get_currencies();
 $symbol     = isset( $currencies[ $currency ]['symbol'] ) ? $currencies[ $currency ]['symbol'] : '$';
 
-$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
+$local_currency = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
 
 $currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
-$symbol = ur_get_currency_symbol( $currency );
+$symbol   = ur_get_currency_symbol( $currency );
 
 $status_options = array( 'completed', 'pending', 'failed', 'refunded' );
 
@@ -74,56 +74,62 @@ $local_currency_converted_amount = $order_repository->get_order_meta_by_order_id
 
 $product_amount = ! empty( $local_currency_converted_amount['meta_value'] ) ? $local_currency_converted_amount['meta_value'] : $product_amount;
 
-$coupon               = ! empty( $order['coupon'] ) ? ur_get_coupon_details( $order['coupon'] ) : null;
-$coupon_discount      = 0;
-$coupon_discount_type = 'fixed';
+$coupon                = ! empty( $order['coupon'] ) ? ur_get_coupon_details( $order['coupon'] ) : null;
+$coupon_discount       = 0;
+$coupon_discount_type  = 'fixed';
+$coupon_discount_value = null;
+$proration_discount    = 0;
+
+// Actual paid amount from DB already reflects all discounts (proration + coupon + tax).
+$raw_total       = isset( $order['total_amount'] ) ? (float) $order['total_amount'] : 0;
+$invoice_pre_tax = max( $raw_total - (float) $tax_amount, 0 );
 
 if ( ! empty( $coupon ) ) {
-	$discount_value = null;
-	$discount_type  = 'fixed';
-
 	if ( isset( $coupon['coupon_discount'] ) && isset( $coupon['coupon_discount_type'] ) ) {
-		$discount_value = (float) $coupon['coupon_discount'];
-		$discount_type  = $coupon['coupon_discount_type'];
+		$coupon_discount_value = (float) $coupon['coupon_discount'];
+		$coupon_discount_type  = $coupon['coupon_discount_type'];
 	} elseif ( isset( $coupon['discount'] ) ) {
-		$discount_value = (float) $coupon['discount'];
-		$discount_type  = isset( $coupon['discount_type'] ) ? $coupon['discount_type'] : ( isset( $coupon['coupon_discount_type'] ) ? $coupon['coupon_discount_type'] : 'fixed' );
-	}
-
-	if ( null !== $discount_value ) {
-		if ( 'percent' === $discount_type ) {
-			$coupon_discount = $product_amount * ( $discount_value / 100 );
-		} else {
-			$coupon_discount = $discount_value;
-		}
-		$coupon_discount_type = $discount_type;
+		$coupon_discount_value = (float) $coupon['discount'];
+		$coupon_discount_type  = isset( $coupon['discount_type'] ) ? $coupon['discount_type'] : ( isset( $coupon['coupon_discount_type'] ) ? $coupon['coupon_discount_type'] : 'fixed' );
 	}
 }
 
-if ( 0 === $coupon_discount && ! empty( $order['coupon'] ) && $user_id > 0 ) {
+if ( null === $coupon_discount_value && ! empty( $order['coupon'] ) && $user_id > 0 ) {
 	$user_coupon_discount      = get_user_meta( $user_id, 'ur_coupon_discount', true );
 	$user_coupon_discount_type = get_user_meta( $user_id, 'ur_coupon_discount_type', true );
 
 	if ( ! empty( $user_coupon_discount ) ) {
-		if ( 'percent' === $user_coupon_discount_type ) {
-			$coupon_discount = $product_amount * ( (float) $user_coupon_discount / 100 );
-		} else {
-			$coupon_discount = (float) $user_coupon_discount;
-		}
-		$coupon_discount_type = $user_coupon_discount_type;
+		$coupon_discount_value = (float) $user_coupon_discount;
+		$coupon_discount_type  = $user_coupon_discount_type;
 	}
 }
 
-$items_subtotal = $product_amount;
-$order_total    = $items_subtotal - $coupon_discount;
-$paid_amount    = ( 'on' === $trial_status ) ? 0 : $order_total;
-$paid_amount    = ! empty( $tax_data['total_after_tax'] ) ? $tax_data['total_after_tax'] : $paid_amount;
+// Back-calculate proration and coupon separately from the actual paid amount.
+// Coupon applies to the post-proration subtotal; proration = plan price − post-proration amount.
+if ( null !== $coupon_discount_value && $invoice_pre_tax > 0 ) {
+	if ( 'percent' === $coupon_discount_type ) {
+		$divisor        = 1 - ( $coupon_discount_value / 100 );
+		$post_proration = $divisor > 0 ? round( $invoice_pre_tax / $divisor, 2 ) : $product_amount;
+	} else {
+		$post_proration = round( $invoice_pre_tax + $coupon_discount_value, 2 );
+	}
+	$coupon_discount    = round( $post_proration - $invoice_pre_tax, 2 );
+	$proration_discount = max( round( $product_amount - $post_proration, 2 ), 0 );
+} elseif ( $invoice_pre_tax < $product_amount ) {
+	// No coupon but proration exists.
+	$proration_discount = round( $product_amount - $invoice_pre_tax, 2 );
+}
+
+$items_subtotal  = $product_amount;
+$order_total     = $invoice_pre_tax;
+$paid_amount     = ( 'on' === $trial_status ) ? 0 : $raw_total;
+$paid_amount     = ! empty( $tax_data['total_after_tax'] ) ? (float) $tax_data['total_after_tax'] : $paid_amount;
 $recurring_label = '-';
 if ( 'subscription' === $membership_type ) {
 	if ( $team ) {
-		$recurring_label = ! empty( $team['meta']['urm_team_data']['team_duration_period'] ) ? ( 'day' === $team['meta']['urm_team_data']['team_duration_period'] ? 'Daily' : ucfirst( $team['meta']['urm_team_data']['team_duration_period'] ) . 'ly' ) : '';
+		$recurring_label = ! empty( $team['meta']['urm_team_data']['team_duration_period'] ) ? ( 'day' === $team['meta']['urm_team_data']['team_duration_period'] ? __( 'Daily', 'user-registration' ) : ucfirst( $team['meta']['urm_team_data']['team_duration_period'] ) . 'ly' ) : '';
 	} elseif ( isset( $plan_details['subscription']['duration'] ) ) {
-		$recurring_label = ucfirst( $plan_details['subscription']['duration'] ) . 'ly';
+		$recurring_label = 'day' === $plan_details['subscription']['duration'] ? __( 'Daily', 'user-registration' ) : ucfirst( $plan_details['subscription']['duration'] ) . 'ly';
 	} else {
 		$recurring_label = __( 'Recurring', 'user-registration' );
 	}
@@ -208,6 +214,12 @@ if ( $first_name || $last_name ) {
 										<?php esc_html_e( 'Trial', 'user-registration' ); ?>
 									</span>
 									<?php endif; ?>
+									<?php if ( ! $is_form_payment && $order_id && ur_check_module_activation( 'pdf-invoice' ) ) : ?>
+									<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=ur_admin_download_invoice&order_id=' . $order_id ), 'ur_admin_download_invoice' ) ); ?>"
+										class="button">
+										<?php esc_html_e( 'Download Invoice', 'user-registration' ); ?>
+									</a>
+									<?php endif; ?>
 								</div>
 							</div>
 							<div class="ur-payments__section-content">
@@ -249,9 +261,10 @@ if ( $first_name || $last_name ) {
 													<div class="ur-payments__table-price">
 														<?php echo esc_html( $symbol . number_format( $order_total, 2 ) ); ?>
 													</div>
-													<?php if ( $coupon_discount > 0 ) : ?>
+													<?php $total_discount = round( $items_subtotal - $order_total, 2 ); ?>
+													<?php if ( $total_discount > 0 ) : ?>
 													<div class="ur-payments__table-discount">
-														<?php echo esc_html( $symbol . number_format( $coupon_discount, 2 ) . ' ' . __( 'discount', 'user-registration' ) ); ?>
+														<?php echo esc_html( $symbol . number_format( $total_discount, 2 ) . ' ' . __( 'discount', 'user-registration' ) ); ?>
 													</div>
 													<?php endif; ?>
 												</td>
@@ -283,6 +296,10 @@ if ( $first_name || $last_name ) {
 									<!-- Summary and Payment Tables -->
 									<div class="ur-payments__summary-payment-wrapper">
 										<!-- Order Summary Table -->
+
+										<?php
+										if ( 'on' !== $trial_status ) {
+											?>
 										<table class="ur-payments__summary-table">
 											<tbody>
 												<tr>
@@ -294,6 +311,17 @@ if ( $first_name || $last_name ) {
 														<?php echo esc_html( $symbol . number_format( $items_subtotal, 2 ) ); ?>
 													</td>
 												</tr>
+												<?php if ( $proration_discount > 0 ) : ?>
+												<tr>
+													<td class="ur-payments__summary-label">
+														<?php esc_html_e( 'Proration Discount:', 'user-registration' ); ?>
+													</td>
+													<td width="1%"></td>
+													<td class="ur-payments__summary-total">-
+														<?php echo esc_html( $symbol . number_format( $proration_discount, 2 ) ); ?>
+													</td>
+												</tr>
+												<?php endif; ?>
 												<?php if ( $coupon_discount > 0 ) : ?>
 												<tr>
 													<td class="ur-payments__summary-label">
@@ -325,6 +353,7 @@ if ( $first_name || $last_name ) {
 												</tr>
 											</tbody>
 										</table>
+										<?php } ?>
 
 										<!-- Payment Information Table -->
 										<table class="ur-payments__payment-table">
@@ -336,6 +365,13 @@ if ( $first_name || $last_name ) {
 													</td>
 													<td width="1%"></td>
 													<td class="ur-payments__payment-total">
+														<?php
+														if ( 'on' === $trial_status ) {
+
+															$paid_amount = 0;
+														}
+
+														?>
 														<?php echo esc_html( $symbol . number_format( $paid_amount, 2 ) ); ?>
 													</td>
 												</tr>
