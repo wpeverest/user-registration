@@ -123,7 +123,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				}
 			}
 
-			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			if ( ! empty( $start_date ) && ! empty( $end_date ) && empty( $usersearch ) ) {
 				$args['date_query'] = array(
 					array(
 						'after'     => $start_date,
