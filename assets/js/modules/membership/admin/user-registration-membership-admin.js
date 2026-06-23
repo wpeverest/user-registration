@@ -1604,6 +1604,18 @@
 		}
 	});
 
+	if (typeof flatpickr !== "undefined" && $("#urm_fixed_expiration_date").length) {
+		var tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
+
+		flatpickr("#urm_fixed_expiration_date", {
+			dateFormat: "Y-m-d",
+			minDate: tomorrow,
+			disableMobile: true,
+			allowInput: false
+		});
+	}
+
 	$(document).on("click", "#ur-membership-upgrade-action", function () {
 		$("#upgrade-settings-container").toggle();
 		$("input:radio[name=ur_membership_type]:checked").trigger("click");
