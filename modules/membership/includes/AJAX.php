@@ -716,7 +716,7 @@ class AJAX {
 			wp_send_json_success(
 				array(
 					'member_id' => $response['member_id'],
-					'message'   => esc_html__( 'New member has been successfully created. ', 'user-registration' ),
+					'message'   => get_option( 'user_registration_successful_membership_creation_message', esc_html__( 'New member has been successfully created.', 'user-registration' ) ),
 				)
 			);
 		} else {
