@@ -1,3 +1,8 @@
+= 5.2.3    - 23/06/2026 =
+* Fix      - validation for receiver email and payment amount in PayPal IPN handling.
+* Fix      - Selected membership tier during registration missed proper validation, allowing assignment of off-form membership tiers.
+* Fix      - Stripe subscription requests could trigger unintended deletion of pending member accounts due to insufficient authorization validation.
+
 = 5.2.2    - 19/06/2026 =
 * Dev      - Add UR_WPML compatibility service class.
 * Fix      - Password reset link shows "invalid or expired" error.
