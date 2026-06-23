@@ -89,6 +89,9 @@ class UR_Form_Validation extends UR_Validation {
 		}
 
 		foreach ( $form_field_data as $key => $data ) {
+			if ( empty( $data->general_setting->field_name ) ) {
+				continue;
+			}
 			$field_name = $data->general_setting->field_name;
 			if ( in_array( $field_name, $repeater_fields ) ) {
 				continue;
@@ -612,6 +615,12 @@ class UR_Form_Validation extends UR_Validation {
 	 * @return void
 	 */
 	public function validate_update_profile( $form_fields, $form_data, $form_id, $user_id ) {
+		$logger = ur_get_logger();
+		$logger->info(
+			sprintf( 'validate_update_profile started - form_id: %s, user_id: %s', $form_id, $user_id ),
+			array( 'source' => 'ur-profile-validation' )
+		);
+
 		$form_field_data = ur_get_form_field_data( $form_id );
 
 		$request_form_keys = array_map(
@@ -629,9 +638,21 @@ class UR_Form_Validation extends UR_Validation {
 
 		$filteredfields = array_filter(
 			$form_field_data,
-			function ( $fields ) {
+			function ( $fields ) use ( $logger, $form_id ) {
 				$fields = json_decode( json_encode( $fields ) );
-				return property_exists( $fields, 'advance_setting' ) && property_exists( $fields->advance_setting, 'field_visibility' ) && 'reg_form' === $fields->advance_setting->field_visibility;
+				if ( ! is_object( $fields ) ) {
+					$logger->warning(
+						sprintf(
+							'validate_update_profile - skipped non-object field entry (type: %s) for form_id: %s. Value: %s',
+							gettype( $fields ),
+							$form_id,
+							wp_json_encode( $fields )
+						),
+						array( 'source' => 'ur-profile-validation' )
+					);
+					return false;
+				}
+				return property_exists( $fields, 'advance_setting' ) && is_object( $fields->advance_setting ) && property_exists( $fields->advance_setting, 'field_visibility' ) && 'reg_form' === $fields->advance_setting->field_visibility;
 			}
 		);
 
@@ -659,9 +680,24 @@ class UR_Form_Validation extends UR_Validation {
 		}
 
 		if ( array_diff( $required_fields, $request_form_keys ) ) {
+			$missing = array_diff( $required_fields, $request_form_keys );
+			$logger->error(
+				sprintf(
+					'validate_update_profile - missing required fields for form_id: %s, user_id: %s. Missing: %s',
+					$form_id,
+					$user_id,
+					implode( ', ', $missing )
+				),
+				array( 'source' => 'ur-profile-validation' )
+			);
 			ur_add_notice( 'Some fields are missing in the submitted form. Please reload the page.', 'error' );
 			return;
 		}
+
+		$logger->info(
+			sprintf( 'validate_update_profile completed successfully - form_id: %s, user_id: %s', $form_id, $user_id ),
+			array( 'source' => 'ur-profile-validation' )
+		);
 	}
 
 

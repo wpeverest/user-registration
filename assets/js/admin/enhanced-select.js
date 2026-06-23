@@ -133,38 +133,18 @@ jQuery(function ($) {
 							DropdownAdapter,
 							AttachBody
 						);
-						function UnselectAll() {}
-						UnselectAll.prototype.render = function (decorated) {
-							var self = this;
-							var $rendered = decorated.call(this);
-							var $unSelectAllButton = $(
-								'<button class="button button-secondary button-medium ur-unselect-all-countries-button" type="button">Unselect All</button>'
-							);
-
-							$unSelectAllButton.on("click", function () {
-								self.$element.val([]);
-								self.$element.trigger("change");
-								self.trigger("close");
-							});
-							$rendered
-								.find(".select2-dropdown")
-								.prepend($unSelectAllButton);
-
-							return $rendered;
-						};
-
-						// Add unselect all button in dropdown
-						DropdownAdapter = Utils.Decorate(
-							DropdownAdapter,
-							UnselectAll
-						);
-
 						function SelectAll() {}
 						SelectAll.prototype.render = function (decorated) {
 							var self = this;
 							var $rendered = decorated.call(this);
+							var $buttonsWrapper = $(
+								'<div class="ur-select-all-wrapper"></div>'
+							);
 							var $selectAllButton = $(
 								'<button class="button button-secondary button-medium ur-select-all-countries-button" type="button">Select All</button>'
+							);
+							var $unSelectAllButton = $(
+								'<button class="button button-secondary button-medium ur-unselect-all-countries-button" type="button">Clear</button>'
 							);
 
 							$selectAllButton.on("click", function () {
@@ -178,14 +158,23 @@ jQuery(function ($) {
 								self.$element.trigger("change");
 								self.trigger("close");
 							});
+							$unSelectAllButton.on("click", function () {
+								self.$element.val([]);
+								self.$element.trigger("change");
+								self.trigger("close");
+							});
+
+							$buttonsWrapper
+								.append($selectAllButton)
+								.append($unSelectAllButton);
 							$rendered
 								.find(".select2-dropdown")
-								.prepend($selectAllButton);
+								.prepend($buttonsWrapper);
 
 							return $rendered;
 						};
 
-						// Add select all button in dropdown
+						// Add select all & unselect all buttons in dropdown
 						DropdownAdapter = Utils.Decorate(
 							DropdownAdapter,
 							SelectAll

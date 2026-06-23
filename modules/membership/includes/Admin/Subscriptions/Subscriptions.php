@@ -52,10 +52,6 @@ class Subscriptions {
 
 	public function add_menu() {
 
-		$subscription_repository = new SubscriptionRepository();
-		$result                  = $subscription_repository->query();
-
-		if( isset( $result['total'] ) && absint($result['total']) > 0 ) {
 			$page = add_submenu_page(
 				'user-registration',
 				__( 'Subscriptions', 'user-registration' ),
@@ -67,8 +63,6 @@ class Subscriptions {
 			);
 
 			add_action( "load-$page", array( $this, 'enqueue_scripts_styles' ) );
-		}
-
 	}
 
 	public function render_subscriptions_page() {

@@ -40,7 +40,7 @@ $layout         = get_option( 'user_registration_my_account_layout', 'vertical' 
 $endpoint_label = ur_get_account_menu_items()['edit-password'];
 ?>
 <div class="user-registration-MyAccount-content__header">
-	<div class="user-registration-MyAccount-content__header-content">
+	<div class="user-registration-MyAccount-content__header-content ur-myaccount-changepassword-header-content">
 		<a class="urm-back-button" href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-profile' ) ); ?>">
 			<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
 		</a>

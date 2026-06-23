@@ -16,7 +16,6 @@ import * as URIcon from "../../components/Icon/Icon";
 // Import new components
 import {
 	DefaultFormMissing,
-	DefaultWordPressLogin,
 	MembershipField,
 	PaymentSetup,
 	RequiredPagesMissing,
@@ -39,7 +38,6 @@ const SiteAssistant = () => {
 		requiredPages: false,
 		paymentSetup: false,
 		sendTestEmail: false,
-		defaultWordPressLogin: false,
 		spamProtection: false,
 		membershipField: false
 	});
@@ -66,17 +64,6 @@ const SiteAssistant = () => {
 
 	// State to track if test email was sent during this session
 	const [testEmailSent, setTestEmailSent] = useState(initialTestEmailSent);
-
-	// Check if default WordPress login has been handled (disabled or skipped)
-	const initialWordPressLoginHandled =
-		typeof _UR_DASHBOARD_ !== "undefined" &&
-		_UR_DASHBOARD_.site_assistant_data &&
-		_UR_DASHBOARD_.site_assistant_data.wordpress_login_handled;
-
-	// State to track if WordPress login was handled during this session
-	const [wordPressLoginHandled, setWordPressLoginHandled] = useState(
-		initialWordPressLoginHandled
-	);
 
 	// Check if spam protection has been handled (configured or skipped)
 	const initialSpamProtectionHandled =
@@ -149,10 +136,6 @@ const SiteAssistant = () => {
 		setTestEmailSent(true);
 	}, []);
 
-	// Callback to handle when WordPress login is handled (disabled or skipped)
-	const handleWordPressLoginHandled = useCallback(() => {
-		setWordPressLoginHandled(true);
-	}, []);
 
 	// Callback to handle when spam protection is handled (skipped)
 	const handleSpamProtectionHandled = useCallback(() => {
@@ -178,7 +161,6 @@ const SiteAssistant = () => {
 					!shouldShowMembershipField,
 					paymentSetupHandled,
 					testEmailSent,
-					wordPressLoginHandled,
 					spamProtectionHandled
 				];
 
@@ -188,7 +170,6 @@ const SiteAssistant = () => {
 					"membershipField",
 					"paymentSetup",
 					"sendTestEmail",
-					"defaultWordPressLogin",
 					"spamProtection"
 				];
 
@@ -215,7 +196,6 @@ const SiteAssistant = () => {
 			shouldShowMembershipField,
 			paymentSetupHandled,
 			testEmailSent,
-			wordPressLoginHandled,
 			spamProtectionHandled
 		]
 	);
@@ -228,7 +208,6 @@ const SiteAssistant = () => {
 			missingPagesData.length === 0 &&
 			!shouldShowMembershipField &&
 			testEmailSent &&
-			wordPressLoginHandled &&
 			spamProtectionHandled &&
 			paymentSetupHandled;
 
@@ -248,7 +227,6 @@ const SiteAssistant = () => {
 			missingPagesData.length === 0,
 			!shouldShowMembershipField,
 			testEmailSent,
-			wordPressLoginHandled,
 			spamProtectionHandled,
 			paymentSetupHandled
 		];
@@ -289,7 +267,6 @@ const SiteAssistant = () => {
 		missingPagesData.length,
 		shouldShowMembershipField,
 		testEmailSent,
-		wordPressLoginHandled,
 		spamProtectionHandled,
 		paymentSetupHandled,
 		allCompleted
@@ -356,7 +333,7 @@ const SiteAssistant = () => {
 							/>
 						)}
 
-				
+
 						{shouldShowMembershipField && (
 							<MembershipField
 								isOpen={open.membershipField}
@@ -382,18 +359,6 @@ const SiteAssistant = () => {
 								isOpen={open.sendTestEmail}
 								onToggle={() => toggleOpen("sendTestEmail")}
 								onEmailSent={handleTestEmailSent}
-								numbering={++config_number}
-							/>
-						)}
-
-						{/* Default WordPress Login - only show if not handled */}
-						{!wordPressLoginHandled && (
-							<DefaultWordPressLogin
-								isOpen={open.defaultWordPressLogin}
-								onToggle={() =>
-									toggleOpen("defaultWordPressLogin")
-								}
-								onHandled={handleWordPressLoginHandled}
 								numbering={++config_number}
 							/>
 						)}

@@ -37,7 +37,7 @@ class UR_Admin_Form_Templates {
 	public static function get_template_data() {
 		$template_data = get_transient( 'user_registration_templates_data' );
 
-		$template_url = 'https://d13ue4sfmuf7fw.cloudfront.net/';
+		$template_url = 'https://assets.wpeverest.com/wpuserregistration/forms/';
 
 		if ( false === $template_data ) {
 

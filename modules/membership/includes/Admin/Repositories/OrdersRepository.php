@@ -59,26 +59,36 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 						urmo.status,
 						urmo.total_amount,
 						urmo.created_at,
-						urmo.subscription_id
+						urmo.subscription_id,
+						urmo.order_type
 					FROM $this->table urmo
 					JOIN $this->posts_table wpp ON urmo.item_id = wpp.ID
 					JOIN $this->users_table wpu ON urmo.user_id = wpu.ID
 					WHERE 1 = 1
 				";
 		if ( isset( $args['membership_id'] ) ) {
-			$sql .= sprintf( " AND wpp.ID = '%d'", $args['membership_id'] );
+			$sql .= $wpdb->prepare( ' AND wpp.ID = %d', $args['membership_id'] );
 		}
 		if ( isset( $args['s'] ) ) {
-			$sql .= sprintf( " AND (wpu.display_name LIKE '%%%s%%' OR wpu.user_email LIKE '%%%s%%' OR urmo.transaction_id LIKE '%%%s%%')", $args['s'], $args['s'], $args['s'] );
+			$search = '%' . $wpdb->esc_like( $args['s'] ) . '%';
+			$sql   .= $wpdb->prepare(
+				' AND (wpu.display_name LIKE %s OR wpu.user_email LIKE %s OR urmo.transaction_id LIKE %s)',
+				$search,
+				$search,
+				$search
+			);
 		}
 		if ( isset( $args['payment_method'] ) ) {
-			$sql .= sprintf( " AND urmo.payment_method = '%s'", $args['payment_method'] );
+			$sql .= $wpdb->prepare( ' AND urmo.payment_method = %s', $args['payment_method'] );
 		}
 		if ( isset( $args['status'] ) ) {
-			$sql .= sprintf( " AND urmo.status = '%s'", $args['status'] );
+			$sql .= $wpdb->prepare( ' AND urmo.status = %s', $args['status'] );
 		}
 
-		$sql .= sprintf( ' ORDER BY %s %s', $args['orderby'], $args['order'] );
+		$allowed_orderby = array( 'created_at', 'status', 'ID' );
+		$orderby         = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'created_at';
+		$order           = 'ASC' === strtoupper( $args['order'] ) ? 'ASC' : 'DESC';
+		$sql            .= sprintf( ' ORDER BY %s %s', $orderby, $order );
 
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
 
@@ -222,6 +232,27 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 		return ! $result ? array() : $result;
 	}
 
+	/**
+	 * Get order by transaction ID (e.g. Stripe payment intent id).
+	 *
+	 * @param string $transaction_id Transaction ID.
+	 * @return array Order row or empty array if not found.
+	 */
+	public function get_order_by_transaction_id( $transaction_id ) {
+		if ( empty( $transaction_id ) ) {
+			return array();
+		}
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT * FROM $this->table WHERE transaction_id = %s LIMIT 1",
+				$transaction_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? array() : $result;
+	}
+
 	public function get_all_delayed_orders( $date ) {
 		$sql = sprintf(
 			"
@@ -273,5 +304,47 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 			TableList::order_meta_table(),
 			$order_meta
 		);
+	}
+
+	/**
+	 * Get pending PayPal one-time payment orders created on or after a given timestamp.
+	 *
+	 * @param int $since Unix timestamp.
+	 * @return array
+	 */
+	public function get_pending_paypal_one_time_orders() {
+		$result = $this->wpdb()->get_results(
+			"SELECT * FROM {$this->table}
+			 WHERE payment_method = 'paypal'
+			 AND order_type = 'paid'
+			 AND status = 'pending'",
+			ARRAY_A
+		);
+
+		return $result ? $result : array();
+	}
+
+	/**
+	 * Get completed PayPal one-time orders whose linked subscription is still pending.
+	 * Used by the backfill to activate subscriptions when the order completed but
+	 * the subscription activation step was missed.
+	 *
+	 * @return array
+	 */
+	public function get_completed_paypal_onetime_with_pending_subscription() {
+		$subs_table = $this->wpdb()->prefix . 'ur_membership_subscriptions';
+
+		$result = $this->wpdb()->get_results(
+			"SELECT o.*
+			 FROM {$this->table} o
+			 JOIN {$subs_table} s ON s.ID = o.subscription_id
+			 WHERE o.payment_method = 'paypal'
+			 AND o.order_type = 'paid'
+			 AND o.status = 'completed'
+			 AND s.status IN ('pending', 'expired', 'canceled')",
+			ARRAY_A
+		);
+
+		return $result ? $result : array();
 	}
 }

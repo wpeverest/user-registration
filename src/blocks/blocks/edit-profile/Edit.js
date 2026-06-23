@@ -4,6 +4,7 @@ import { Box } from "@chakra-ui/react";
 import metadata from "./block.json";
 
 import { useBlockProps } from "@wordpress/block-editor";
+import { Disabled } from "@wordpress/components";
 const ServerSideRender = wp.serverSideRender
 	? wp.serverSideRender
 	: wp.components.ServerSideRender;
@@ -15,11 +16,13 @@ const Edit = (props) => {
 	return (
 		<>
 			<Box {...useProps}>
-				<ServerSideRender
-					key="ur-gutenberg-login-form-server-side-renderer"
-					block={blockName}
-					attributes={props.attributes}
-				/>
+				<Disabled>
+					<ServerSideRender
+						key="ur-gutenberg-login-form-server-side-renderer"
+						block={blockName}
+						attributes={props.attributes}
+					/>
+				</Disabled>
 			</Box>
 		</>
 	);

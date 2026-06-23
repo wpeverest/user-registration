@@ -75,7 +75,6 @@ class UR_Admin {
 		}
 		update_option( 'user_registration_content_restriction_enable', true );
 		if ( ur_check_module_activation( 'payments' ) && ! get_option( 'global_paypal_setting_migration', false ) ) {
-			$logger->notice( '---------- Enable override global settings for paypal standard start. ----------', array( 'source' => 'migration-logger' ) );
 			$get_all_forms = ur_get_all_user_registration_form();
 			foreach ( $get_all_forms as $key => $form ) {
 				$is_paypal_setting_used = get_post_meta( $key, 'user_registration_enable_paypal_standard', false );
@@ -84,7 +83,7 @@ class UR_Admin {
 					add_post_meta( $key, 'user_registration_override_paypal_global_settings', true );
 				}
 			}
-			$logger->notice( '---------- Enable override global settings for paypal standard End. ----------', array( 'source' => 'migration-logger' ) );
+
 			add_option( 'global_paypal_setting_migration', true );
 		}
 
@@ -333,7 +332,7 @@ class UR_Admin {
 		include_once __DIR__ . '/class-ur-admin-user-list-manager.php';
 		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
 		include_once __DIR__ . '/class-ur-admin-form-templates.php';
-		include_once __DIR__ . '/class-ur-admin-deactivation-feedback.php';
+		include_once __DIR__ . '/class-ur-sdk-deactivation-feedback.php';
 
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -574,7 +573,7 @@ class UR_Admin {
 
 			if ( 'ur-template-refresh' === $action && ! empty( $templates ) ) {
 				if ( empty( $_GET['ur-template-nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['ur-template-nonce'] ) ), 'refresh' ) ) {
-					wp_die( esc_html_e( 'Could not verify nonce', 'user-registration' ) );
+					wp_die( esc_html__( 'Could not verify nonce', 'user-registration' ) );
 				}
 
 				foreach ( array( 'ur_pro_license_plan', 'ur_template_section_list' ) as $transient ) {

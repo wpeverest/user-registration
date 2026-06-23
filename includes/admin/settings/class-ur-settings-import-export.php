@@ -49,7 +49,7 @@ if ( ! class_exists( 'UR_Settings_Import_Export' ) ) :
 			if( 'import-export' !== $current_section ) return $sections;
 
 			$sections = array(
-				''                    => __( 'Export Users', 'user-registration' ),
+				''                    => __( 'Export Members', 'user-registration' ),
 				'import-export-forms' => __( 'Import/Export Forms', 'user-registration' ),
 			);
 

@@ -103,14 +103,21 @@ function ur_resetpassword_url( $default_url = '' ) {
 		return $default_url;
 	}
 
-	// Get reset password page from plugin option.
+	// The lost-password page is the primary page for the reset flow.
+	$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
+
+	if ( $lost_password_page && ! empty( get_post( $lost_password_page ) ) ) {
+		return get_permalink( $lost_password_page );
+	}
+
+	// Legacy fallback: a separate reset-password page (deprecated option).
 	$reset_password_page = get_option( 'user_registration_reset_password_page_id', false );
 
 	if ( $reset_password_page && ! empty( get_post( $reset_password_page ) ) ) {
 		return get_permalink( $reset_password_page );
-	} else {
-		return ur_lostpassword_url();
 	}
+
+	return ur_lostpassword_url();
 }
 add_filter( 'retrieve_password_url', 'ur_resetpassword_url', 20, 1 );
 
@@ -132,15 +139,6 @@ function ur_get_account_menu_items() {
 		'edit-password' => __( 'Change Password', 'user-registration' ),
 		'user-logout'   => __( 'Logout', 'user-registration' ),
 	);
-
-	$user_id = get_current_user_id();
-	$form_id = ur_get_form_id_by_userid( $user_id );
-
-	$profile = user_registration_form_data( $user_id, $form_id );
-
-	// if ( count( $profile ) < 1 ) {
-	// unset( $items['edit-profile'] );
-	// }
 
 	// Remove missing endpoints.
 	foreach ( $endpoints as $endpoint_id => $endpoint ) {
@@ -176,7 +174,7 @@ function ur_get_account_menu_item_classes( $endpoint ) {
 
 	// Set current item class.
 	$current = isset( $wp->query_vars[ $endpoint ] );
-	if ( 'edit-profile' === $endpoint && ( isset( $wp->query_vars['page'] ) || empty( $wp->query_vars ) ) ) {
+	if ( 'dashboard' === $endpoint && ( isset( $wp->query_vars['page'] ) || empty( $wp->query_vars ) ) ) {
 		$current = true; // Dashboard is not an endpoint, so needs a custom check.
 	}
 

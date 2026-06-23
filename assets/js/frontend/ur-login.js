@@ -82,7 +82,8 @@ jQuery(function ($) {
 						username: username,
 						password: password,
 						CaptchaResponse: CaptchaResponse,
-						redirect: redirect_url
+						redirect: redirect_url,
+						previous_page: document.referrer ? document.referrer : ''
 					};
 
 					if (
@@ -121,13 +122,11 @@ jQuery(function ($) {
 									.find(".user-registration-message")
 									.remove();
 
+								var $errorUl = $('<ul class="user-registration-error"></ul>');
+								$errorUl.html(res.data.message);
 								$this
 									.closest(".ur-frontend-form")
-									.prepend(
-										'<ul class="user-registration-error">' +
-											res.data.message +
-											"</ul>"
-									);
+									.prepend($errorUl);
 							} else {
 								if (res.data.status) {
 									$this
@@ -140,13 +139,11 @@ jQuery(function ($) {
 										.find(".user-registration-message")
 										.remove();
 
-									$this
-										.closest(".ur-frontend-form")
-										.prepend(
-											'<ul class="user-registration-message">' +
-												res.data.message +
-												"</ul>"
-										);
+									var $msgUl = $('<ul class="user-registration-message"></ul>');
+								$msgUl.html(res.data.message);
+								$this
+									.closest(".ur-frontend-form")
+									.prepend($msgUl);
 
 									$this
 										.closest("#user-registration")

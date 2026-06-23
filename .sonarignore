@@ -1,0 +1,16 @@
+# SonarScanner skips these paths entirely (no scan, no "ignored" log)
+node_modules/
+vendor/
+dist/
+build/
+assets/build/
+assets/dist/
+languages/
+tmp/
+cache/
+.git/
+**/*.min.js
+**/*.min.css
+**/*.map
+tests/
+__tests__/

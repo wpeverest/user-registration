@@ -392,12 +392,9 @@
 			},
 			success: function (response) {
 				if (!response.success) {
-					var error_message = response.data.message;
-					main_container.append(
-						'<span class="error inline">' +
-							error_message +
-							"</span>"
-					);
+					var $errorSpan = $('<span class="error inline"></span>');
+					$errorSpan.text(response.data.message);
+					main_container.append($errorSpan);
 				}
 			},
 			complete: function (response) {
@@ -1230,7 +1227,7 @@
 					"#user_registration_login_options_prevent_core_login"
 				);
 
-				$(".single_select_page").toggle();
+				$("#user_registration_login_options_login_redirect_url").closest(".single_select_page").toggle();
 				$("#user_registration_login_options_login_redirect_url").prop(
 					"required",
 					function () {

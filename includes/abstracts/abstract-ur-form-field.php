@@ -910,6 +910,26 @@ abstract class UR_Form_Field {
 					}
 					break;
 
+				case 'multiselect':
+					if ( isset( $setting_value['options'] )
+					     && gettype( $setting_value['options'] ) == 'array' ) {
+
+						$general_setting_wrapper .= '<select data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-multiselect ur-type-' . esc_attr( $setting_value['type'] ) . '"  name="' . esc_attr( $setting_value['name'] ) . '" multiple>';
+
+						$selected_arr = $this->get_general_setting_data( $setting_key );
+						$selected_arr = maybe_unserialize( $selected_arr );
+						$selected_arr = is_array( $selected_arr ) ? $selected_arr : array();
+						foreach ( $setting_value['options'] as $key => $val ) {
+							$selected  = selected( in_array( $key, $selected_arr ), true, false );
+							$general_setting_wrapper .= '<option value="' . esc_attr( $key ) . '" ' . esc_attr( $selected ) . '>';
+							$general_setting_wrapper .= esc_html( $val );
+							$general_setting_wrapper .= '</option>';
+						}
+
+						$general_setting_wrapper .= '</select>';
+					}
+					break;
+
 				case 'textarea':
 					$general_setting_wrapper .= '<textarea data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '"  name="' . esc_attr( $setting_value['name'] ) . '" placeholder= "' . esc_attr( $setting_value['placeholder'] ) . '" ';
 

@@ -4,7 +4,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 5.1.1 
+ * Version: 5.2.2
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -37,7 +37,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '5.1.1';
+		public $version = '5.2.2';
 
 		/**
 		 * Session instance.
@@ -134,6 +134,22 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		}
 
 		/**
+		 * Instantiate the WPML compatibility layer when WPML is active.
+		 *
+		 * Loading the service only when SitePress is present avoids any overhead
+		 * on non-multilingual sites. The class itself uses WPML's documented
+		 * filter API (no `new SitePress()`), so it cannot reintroduce the
+		 * duplicate-JOIN "Not unique table/alias" errors.
+		 *
+		 * @since 5.2.1
+		 */
+		public function init_wpml_compat() {
+			if ( ( defined( 'ICL_SITEPRESS_VERSION' ) || class_exists( 'SitePress', false ) ) && class_exists( 'UR_WPML' ) ) {
+				UR_WPML::instance();
+			}
+		}
+
+		/**
 		 * Ensures fatal errors are logged so they can be picked up in the status report.
 		 *
 		 * @since 3.0.5
@@ -143,11 +159,63 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 
 			if ( $error && in_array( $error['type'], array( E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ), true ) ) {
 				$logger = ur_get_logger();
+
+				$raw_message = isset( $error['message'] ) ? trim( wp_strip_all_tags( $error['message'] ) ) : __( 'Unknown error', 'user-registration' );
+				$file        = isset( $error['file'] ) ? $error['file'] : __( 'Unknown file', 'user-registration' );
+				$line        = isset( $error['line'] ) ? absint( $error['line'] ) : 0;
+
+				if ( false !== strpos( $file, 'wp-content/' ) ) {
+					$file = substr( $file, strpos( $file, 'wp-content/' ) );
+				}
+
+				$message = $raw_message;
+				$trace   = '';
+
+				if ( false !== strpos( $raw_message, 'Stack trace:' ) ) {
+					$parts = explode( 'Stack trace:', $raw_message, 2 );
+
+					$message = trim( $parts[0] );
+					$trace   = trim( $parts[1] );
+
+					// Remove trailing "thrown in ..." because file/line is already shown separately.
+					$trace = preg_replace( '/thrown in .*$/s', '', $trace );
+					$trace = trim( $trace );
+				}
+
+				$log  = "================================================================\n";
+				$log .= sprintf(
+					/* translators: %s: error timestamp */
+					__( '[%s] CRITICAL  Fatal error', 'user-registration' ),
+					gmdate( 'Y-m-d H:i:s' )
+				) . "\n";
+				$log .= "----------------------------------------------------------------\n";
+				$log .= sprintf(
+					/* translators: %s: error message */
+					__( 'Message : %s', 'user-registration' ),
+					$message
+				) . "\n";
+				$log .= sprintf(
+					/* translators: 1: file path, 2: line number */
+					__( 'File    : %1$s:%2$d', 'user-registration' ),
+					$file,
+					$line
+				) . "\n";
+				$log .= __( 'Status  : FAILED', 'user-registration' ) . "\n";
+
+				if ( ! empty( $trace ) ) {
+					$log .= "\n" . __( 'Trace:', 'user-registration' ) . "\n";
+					$log .= $trace . "\n";
+				}
+
+				$log .= '================================================================';
+
 				$logger->critical(
-					/* translators: 1: error message 2: file name and path 3: line number */
-					sprintf( __( '%1$s in %2$s on line %3$s', 'user-registration' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
+					$log,
 					array(
 						'source' => 'fatal-errors',
+						'type'   => $error['type'],
+						'file'   => $file,
+						'line'   => $line,
 					)
 				);
 			}
@@ -169,6 +237,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 			$this->define( 'UR_VERSION', $this->version );
 			$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
+			$this->define( 'UR_TEMPLATE_PATH', UR_ABSPATH . 'templates/' );
+			$this->define( 'UR_ASSET_PATH', plugins_url( 'assets/', UR_PLUGIN_FILE ) );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
 			$this->define( 'UR_PRO_ACTIVE', false );
@@ -211,6 +281,44 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 */
 		private function includes() {
 
+			if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+				require_once __DIR__ . '/vendor/autoload.php';
+			} else {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+						sprintf(
+							/* translators: 1: composer command. 2: plugin directory */
+							esc_html__( 'Your installation of the User Registration is incomplete. Please run %1$s within the %2$s directory.', 'user-registration' ),
+							'`composer install`',
+							'`' . esc_html( str_replace( ABSPATH, '', __DIR__ ) ) . '`'
+						)
+					);
+				}
+
+				/**
+				 * Outputs an admin notice if composer install has not been ran.
+				 */
+				add_action(
+					'admin_notices',
+					function () {
+						?>
+					<div class="notice notice-error">
+						<p>
+							<?php
+							printf(
+								/* translators: 1: composer command. 2: plugin directory */
+								esc_html__( 'Your installation of the  User Registration is incomplete. Please run %1$s within the %2$s directory.', 'user-registration' ),
+								'<code>composer install</code>',
+								'<code>' . esc_html( str_replace( ABSPATH, '', __DIR__ ) ) . '</code>'
+							);
+							?>
+						</p>
+					</div>
+						<?php
+					}
+				);
+			}
+
 			/**
 			 * Class autoloader.
 			 */
@@ -248,6 +356,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-privacy.php';
 			include_once UR_ABSPATH . 'includes/class-ur-form-block.php';
 			include_once UR_ABSPATH . 'includes/class-ur-cache-helper.php';
+			include_once UR_ABSPATH . 'includes/class-ur-wpml.php';
+
 			/**
 			 * Block classes.
 			 */
@@ -293,12 +403,6 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 
 			if ( ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) ) ) {
 				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
-			}
-
-			// Check if there are membership rules (>= 2)
-			$membership_rules_count = 0;
-			if ( function_exists( 'ur_get_membership_rules_count' ) ) {
-				$membership_rules_count = ur_get_membership_rules_count();
 			}
 
 			include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
@@ -398,6 +502,9 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 
 			// Set up localisation.
 			$this->load_plugin_textdomain();
+
+			// Boot WPML compatibility (only when WPML is active).
+			$this->init_wpml_compat();
 
 			// Session class, handles session data for users - can be overwritten if custom handler is needed.
 			if ( $this->is_request( 'frontend' ) || $this->is_request( 'cron' ) || $this->is_request( 'admin' ) ) {

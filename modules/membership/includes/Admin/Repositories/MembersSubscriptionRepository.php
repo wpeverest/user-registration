@@ -23,6 +23,32 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 	}
 
 	/**
+	 * Activate subscriptions that were left 'pending' even though their order is 'completed'.
+	 *
+	 * The real-time payment confirmation can mark an order completed without flipping the linked
+	 * subscription to active, and the event-window backfill skips orders that are already
+	 * completed — leaving such subscriptions stranded as 'pending' forever. A completed order is
+	 * proof of payment, so this heals them. Gateway-agnostic; runs off local data only.
+	 *
+	 * @return int Number of subscriptions activated.
+	 */
+	public function activate_pending_with_completed_orders() {
+		// Only activate subscriptions whose start date has already arrived, so a future-dated /
+		// scheduled subscription is never activated early. A completed order with a non-future
+		// start date that is still pending is an anomaly left by a partial confirmation.
+		$updated = $this->wpdb()->query(
+			"UPDATE $this->table s
+			 JOIN $this->orders_table o ON o.subscription_id = s.ID AND o.status = 'completed'
+			 SET s.status = 'active'
+			 WHERE s.status = 'pending'
+			   AND s.start_date IS NOT NULL
+			   AND s.start_date <= NOW()"
+		);
+
+		return is_numeric( $updated ) ? (int) $updated : 0;
+	}
+
+	/**
 	 * Get members subscription by their ID
 	 *
 	 * @param $member_id
@@ -165,7 +191,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 					    LEFT JOIN $this->users_table wu ON wums.user_id = wu.ID
 					    LEFT JOIN $this->posts_table wp ON wums.item_id = wp.ID
 						WHERE NOT wums.status = 'canceled'
-						AND wums.next_billing_date = '%s'
+						AND DATE(wums.next_billing_date) = DATE('%s')
 						",
 			$check_date
 		);
@@ -196,7 +222,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 					    LEFT JOIN $this->users_table wu ON wums.user_id = wu.ID
 					    LEFT JOIN $this->posts_table wp ON wums.item_id = wp.ID
 						WHERE wums.status = 'expired'
-						AND wums.expiry_date = '%s'
+						AND DATE(wums.expiry_date) = DATE('%s')
 						",
 			$check_date
 		);
@@ -228,7 +254,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 					    LEFT JOIN $this->users_table wu ON wums.user_id = wu.ID
 					    LEFT JOIN $this->posts_table wp ON wums.item_id = wp.ID
 						WHERE wums.status = 'active'
-						AND wums.expiry_date < '%s'
+						AND wums.expiry_date <= '%s'
 						",
 			$check_date
 		);
@@ -268,7 +294,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 		}
 
 		// Get retry settings
-		$retry_count = (int) get_option( 'user_registration_payment_retry_count', 3 );
+		$retry_count    = (int) get_option( 'user_registration_payment_retry_count', 3 );
 		$retry_interval = (int) get_option( 'user_registration_payment_retry_interval', 3 );
 
 		// Calculate a retry window in days
@@ -277,7 +303,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 		// Calculate the date from which we need to fetch subscriptions
 		// We want subscriptions updated within the last X days based on the retry window
 		$current_date = current_time( 'mysql' );
-		$check_date = date( 'Y-m-d H:i:s', strtotime( "-{$retry_window_days} days", strtotime( $current_date ) ) );
+		$check_date   = date( 'Y-m-d H:i:s', strtotime( "-{$retry_window_days} days", strtotime( $current_date ) ) );
 
 		$sql = sprintf(
 			"
@@ -307,5 +333,40 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
 
 		return ! $result ? array() : $result;
+	}
+
+	public function get_subscription_by_subscription_id_meta( $subscription_id ) {
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT wums.* FROM {$this->table} wums
+				WHERE wums.subscription_id = %s",
+				$subscription_id
+			),
+			ARRAY_A
+		);
+
+		return $result ? $result : false;
+	}
+
+	/**
+	 * Get all subscriptions paid via PayPal REST that have a PayPal subscription ID stored.
+	 *
+	 * @return array
+	 */
+	public function get_paypal_subscriptions_for_backfill() {
+		$result = $this->wpdb()->get_results(
+			"SELECT DISTINCT wums.*
+			 FROM {$this->table} wums
+			 LEFT JOIN {$this->orders_table} wo ON wums.ID = wo.subscription_id
+			 WHERE (
+			     wo.payment_method = 'paypal'
+			     OR wums.subscription_id LIKE 'I-%'
+			 )
+			 AND wums.subscription_id != ''
+			 AND wums.subscription_id IS NOT NULL",
+			ARRAY_A
+		);
+
+		return $result ? $result : array();
 	}
 }

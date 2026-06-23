@@ -8,6 +8,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use WPEverest\URMembership\Admin\Repositories\MembersRepository;
+use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Admin\Services\MembershipService;
+
 /**
  * Block Membership buy now class.
  */
@@ -17,9 +21,12 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 
 	/** Parse preset color */
 	private function parse_preset_color( $value ) {
+
 		if ( strpos( $value, 'var:preset|color|' ) !== false ) {
 			$slug = str_replace( 'var:preset|color|', '', $value );
 			return 'var(--wp--preset--color--' . $slug . ')';
+		} else if(  strpos( $value, 'accent-' !== false )  ) {
+			return 'var(--wp--preset--color--' . $value . ')';
 		}
 		return $value;
 	}
@@ -89,10 +96,8 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		}
 		$background = $this->parse_preset_color( $background_raw );
 
-
 		$text_hover_color    = isset( $attr['hoverTextColor'] ) ? $attr['hoverTextColor'] : '';
 		$text_hover_bg_color = isset( $attr['hoverBgColor'] ) ? $attr['hoverBgColor'] : '';
-
 
 		$border_color_raw = '';
 		if ( isset( $attr['borderColor'] ) && ! empty( $attr['borderColor'] ) ) {
@@ -168,7 +173,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		if ( $border_color ) {
 			$button_style .= 'border-color:' . $border_color . ';';
 		}
-		if ( $border_width ) {
+		if ( $border_width && strpos( $button_classes, 'is-style-outline' ) !== false ) {
 			$button_style .= 'border-width:' . $border_width . ';border-style:' . $border_style . ';';
 		}
 
@@ -266,11 +271,54 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			$html .= '<style>' . $inline_hover_styles . '</style>';
 		}
 
+		$membership_id = isset( $attr['membershipId'] ) ? $attr['membershipId'] : '';
+		$action_to_take = 'upgrade';
+
+		$current_user_id     = get_current_user_id();
+		$user_membership_ids = array();
+		$members_repository      = new MembersRepository();
+		$membership_repository      = new MembershipRepository();
+		$membership_service      = new MembershipService();
+		$current_plan = false;
+		$button_text = ! empty( $attr['text'] ) ? esc_html__( sanitize_text_field( $attr['text'] ), 'user-registration' ) : __( 'Buy Now', 'user-registration' );
+
+		if ( $current_user_id ) {
+			$user_memberships            = $members_repository->get_member_membership_by_id( $current_user_id );
+			$user_membership_ids         = array_filter(
+				array_map(
+					function ( $user_memberships ) {
+						return $user_memberships['post_id'];
+					},
+					$user_memberships
+				)
+			);
+
+			if ( in_array( $membership_id, $user_membership_ids ) ) {
+				$current_plan = true;
+				$button_text  = esc_html__( 'Current Plan', 'user-registration' );
+			}
+		}
+
+		$membership_details = $membership_repository->get_single_membership_by_ID( $membership_id );
+
+		$intended_action = $membership_service->fetch_intended_action( $action_to_take, $membership_details, $user_membership_ids );
+		$thank_you_page_id   = get_option( 'user_registration_thank_you_page_id', false );
+
+		$redirect_link_builder = array(
+				'action'  => $intended_action,
+				'membership_id' => $membership_id,
+				'thank_you' => $thank_you_page_id,
+			);
+		$concatenator       = strpos( $page_url, '?' ) === false ? '?' : '&';
+		$registration_page_url = $page_url . $concatenator . http_build_query(
+			$redirect_link_builder
+		);
+
 		$html .= '<div ' . $wrapper_attributes . '>';
 		$html .= '<div style="width:' . esc_attr( $attr['width'] ) . ';">';
-		$html .= '<a class="buynow-link" href="' . esc_url( $page_url ) . '" ' . $link_extra_attributes . ' >';
-		$html .= '<button type="button" class="' . esc_attr( $button_classes ) . '" style="' . esc_attr( $button_style ) . '">';
-		$html .= '<span class="label">' . esc_html( $attr['text'] ) . '</span>';
+		$html .= '<a class="buynow-link" href="' . esc_url( $registration_page_url ) . '" ' . $link_extra_attributes . ' style="text-decoration:none;">';
+		$html .= '<button type="button" class="' . esc_attr( $button_classes ) . '" style="' . esc_attr( $button_style ) . '" ' . ( empty( $registration_page_url ) || $current_plan ? 'disabled' : '' ) . '>';
+		$html .= '<span class="label">' . esc_html( $button_text ) . '</span>';
 		$html .= '</button>';
 		$html .= '</a>';
 		$html .= '</div>';

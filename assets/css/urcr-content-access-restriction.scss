@@ -80,9 +80,11 @@ $border-left-color_3: #0073aa;
 				cursor: pointer;
 
 				&:hover {
-					background: rgb(56.4578313253,
-							72.3614457831,
-							141.5421686747);
+					background: rgb(
+						56.4578313253,
+						72.3614457831,
+						141.5421686747
+					);
 				}
 
 				&:focus {
@@ -244,8 +246,8 @@ $border-left-color_3: #0073aa;
 	}
 
 	&.urcr-rule-highlighted {
-		border: 2px solid #475bb2;
-		box-shadow: 0 4px 12px rgba(71, 91, 178, 0.3);
+		border: 1px solid #475bb2;
+		box-shadow: 0 1px 1px rgba(71, 91, 178, 0.3);
 		animation:
 			urcr-highlight-fade-in 0.5s ease-out,
 			urcr-highlight-pulse 2s ease-in-out 0.5s;
@@ -873,6 +875,26 @@ $border-left-color_3: #0073aa;
 			outline: 0;
 			box-shadow: none;
 			border: 0;
+		}
+	}
+
+	&.is-locked {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		span {
+			display: inline-flex;
+			padding: 4px;
+			background: #ff8c39;
+			border-radius: 4px;
+		}
+
+		svg {
+			width: 12px;
+			height: 12px;
+			fill: white;
+			stroke: white;
 		}
 	}
 }
@@ -1802,7 +1824,6 @@ $border-left-color_3: #0073aa;
 		padding: 0 !important;
 
 		.urcr-buttons-wrapper {
-
 			.urcr-condition-dropdown-wrapper,
 			.urcr-add-group-button {
 				display: flex;
@@ -1853,7 +1874,6 @@ $not-tag: #fcdddd;
 		}
 
 		&.urcr-conditional-logic-definitions {
-
 			&:has(.urcr-logic-group-rule-OR),
 			&:has(.urcr-logic-group-rule-AND),
 			&:has(.urcr-logic-group-rule-NOT) {
@@ -2173,6 +2193,7 @@ $not-tag: #fcdddd;
 		.urcr-checkbox-radio-input {
 			margin: 0;
 			margin-right: 8px;
+			background: none;
 
 			&:focus {
 				outline: none;
@@ -2213,7 +2234,7 @@ $not-tag: #fcdddd;
 		// background: #f0f4ff;
 
 		.urcr-checkbox-radio-label {
-			color: #475bb2;
+			color: #475bb2 !important;
 			font-weight: 500;
 		}
 	}
@@ -2522,7 +2543,7 @@ $not-tag: #fcdddd;
 			}
 		}
 
-		>.ur-d-flex {
+		> .ur-d-flex {
 			width: 100%;
 			gap: 20px;
 		}
@@ -2594,7 +2615,7 @@ $not-tag: #fcdddd;
 					gap: 8px;
 				}
 
-				>select {
+				> select {
 					display: none;
 				}
 
@@ -2702,7 +2723,7 @@ $not-tag: #fcdddd;
 		border: 1px solid transparent;
 		cursor: pointer;
 		box-shadow: none !important;
-		transition: all .3s ease-in-out;
+		transition: all 0.3s ease-in-out;
 
 		@media screen and (max-width: 600px) {
 			margin-left: 0;
@@ -2733,12 +2754,12 @@ $not-tag: #fcdddd;
 		background: #fff;
 		border: 1px solid #d1d5db;
 		border-radius: 4px;
-		box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 		z-index: 999;
 		box-sizing: border-box;
-		transition: all .15s ease;
+		transition: all 0.15s ease;
 
-		>span {
+		> span {
 			display: none;
 		}
 	}
@@ -2771,7 +2792,7 @@ $not-tag: #fcdddd;
 		box-shadow: none !important;
 		margin: 0 !important;
 		cursor: pointer;
-		transition: all .3s ease-in-out;
+		transition: all 0.3s ease-in-out;
 
 		&:focus {
 			outline: none;

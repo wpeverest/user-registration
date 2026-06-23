@@ -8,7 +8,6 @@
 
 namespace WPEverest\URMembership;
 
-
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 
 class Crons {
@@ -27,6 +26,7 @@ class Crons {
 
 			// for both membership and non membership payments.
 			add_action( 'urm_daily_payment_retry_check', array( $this, 'payment_retry_check' ), 10, 1 );
+			add_action( 'urm_missed_payment_events_check', array( $this, 'membership_missed_payment_check' ), 10, 1 );
 
 			$this->payment_retry_check();
 
@@ -57,7 +57,7 @@ class Crons {
 	 * @return void
 	 */
 	public function membership_renewal_check() {
-		if ( ! ur_option_checked( 'user_registration_membership_enable_renewal_reminder_user_email', false ) && "automatic" !== get_option("user_registration_renewal_behaviour", "automatic") ) {
+		if ( ! ur_option_checked( 'user_registration_membership_enable_renewal_reminder_user_email', false ) && 'automatic' !== get_option( 'user_registration_renewal_behaviour', 'automatic' ) ) {
 			return;
 		}
 		$subscription_service = new SubscriptionService();
@@ -71,7 +71,7 @@ class Crons {
 	 */
 	public function membership_expiring_soon_check() {
 
-		if ( ! ur_option_checked( 'user_registration_membership_enable_expiring_soon_user_email', false ) && "manual" !== get_option("user_registration_renewal_behaviour", "automatic")) {
+		if ( ! ur_option_checked( 'user_registration_membership_enable_expiring_soon_user_email', false ) && 'manual' !== get_option( 'user_registration_renewal_behaviour', 'automatic' ) ) {
 			return;
 		}
 
@@ -79,9 +79,9 @@ class Crons {
 		$subscription_service->daily_membership_expiring_soon_check();
 	}
 
-	public function membership_ended_check(  ) {
+	public function membership_ended_check() {
 
-		if ( ! ur_option_checked( 'user_registration_membership_enable_membership_ended_user_email', false ) && "manual" !== get_option("user_registration_renewal_behaviour", "automatic")) {
+		if ( ! ur_option_checked( 'user_registration_membership_enable_membership_ended_user_email', true ) ) {
 			return;
 		}
 
@@ -98,5 +98,16 @@ class Crons {
 	public function membership_expiration_check() {
 		$subscription_service = new SubscriptionService();
 		$subscription_service->daily_membership_expiration_check();
+	}
+
+	/**
+	 * membership_missed_payment_check
+	 * Check for memberships that have missed payments and add related details.
+	 *
+	 * @return void
+	 */
+	public function membership_missed_payment_check() {
+		$subscription_service = new SubscriptionService();
+		$subscription_service->membership_missed_payment_check();
 	}
 }
