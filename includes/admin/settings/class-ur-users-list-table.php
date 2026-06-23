@@ -81,7 +81,9 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 
 			// Date Range Filter.
 
-			$start_date = gmdate( 'Y-m-d', strtotime( '-5 years' ) );
+			$date_range_offset = apply_filters( 'ur_users_list_default_date_range', '-5 years' );
+			$start_timestamp   = strtotime( $date_range_offset );
+			$start_date        = gmdate( 'Y-m-d', false !== $start_timestamp ? $start_timestamp : strtotime( '-5 years' ) );
 			$end_date   = gmdate( 'Y-m-d' );
 
 			if ( isset( $_REQUEST['date_range'] ) && ! empty( $_REQUEST['date_range'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification

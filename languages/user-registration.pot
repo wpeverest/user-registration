@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-19T04:13:23+00:00\n"
+"POT-Creation-Date: 2026-06-19T12:01:03+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -3375,7 +3375,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-members-menu.php:2030
 #: includes/admin/settings/class-ur-settings-email.php:362
 #: includes/class-ur-email-confirmation.php:97
-#: modules/membership/includes/Admin.php:844
+#: modules/membership/includes/Admin.php:849
 #: modules/membership/includes/Admin/Membership/ListTable.php:66
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:62
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:66
@@ -3430,7 +3430,7 @@ msgid "Transaction ID"
 msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:2028
-#: modules/membership/includes/Admin.php:843
+#: modules/membership/includes/Admin.php:848
 #: modules/membership/includes/Admin/Views/member-create.php:263
 #: modules/membership/includes/Admin/Views/subscription-edit.php:411
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:66
@@ -3458,7 +3458,7 @@ msgid "Payment Date"
 msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:2032
-#: modules/membership/includes/Admin.php:847
+#: modules/membership/includes/Admin.php:852
 #: templates/myaccount/edit-team.php:123
 #: templates/myaccount/membership.php:42
 #: templates/myaccount/payments.php:63
@@ -3469,8 +3469,8 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:2051
 #: includes/class-ur-smart-tags.php:775
-#: modules/membership/includes/Admin.php:864
-#: modules/membership/includes/Admin.php:871
+#: modules/membership/includes/Admin.php:869
+#: modules/membership/includes/Admin.php:876
 #: modules/membership/includes/Admin/Views/subscription-edit.php:267
 #: modules/membership/includes/Admin/Views/subscription-edit.php:439
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:60
@@ -3493,7 +3493,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-list-table.php:414
 #: includes/admin/views/html-admin-page-status-logs.php:73
 #: includes/admin/views/html-admin-page-status-logs.php:138
-#: modules/membership/includes/Admin.php:873
+#: modules/membership/includes/Admin.php:878
 #: modules/membership/includes/Admin/Members/MembersListTable.php:157
 msgid "View"
 msgstr ""
@@ -12454,23 +12454,23 @@ msgstr ""
 msgid "Membership group list"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:831
+#: modules/membership/includes/Admin.php:836
 msgid "Membership Details"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:833
+#: modules/membership/includes/Admin.php:838
 msgid "Membership Detail"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:842
+#: modules/membership/includes/Admin.php:847
 msgid "Plan Type"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:845
+#: modules/membership/includes/Admin.php:850
 msgid "Starts On"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:846
+#: modules/membership/includes/Admin.php:851
 #: modules/membership/includes/Admin/Views/member-create.php:269
 msgid "Expires On"
 msgstr ""
