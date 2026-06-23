@@ -3059,9 +3059,9 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		if ( isset( $form_data->field_type ) && 'repeater' === $form_data->field_type ) {
 			$data_html .= '<td class="user-registration-email__entries-data">' . $value . '</td></tr>';
 		} elseif ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
-			$data_html .= '<tr class="user-registration-email__entries-tr"><td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data"><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
+			$data_html .= '<td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data"><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
 		} else {
-			$data_html .= '<tr class="user-registration-email__entries-tr"><td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data">' . $value . '</td></tr>';
+			$data_html .= '<td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data">' . $value . '</td></tr>';
 		}
 
 		$name_value[ $field_name ] = $value;
