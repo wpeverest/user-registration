@@ -1755,8 +1755,7 @@
 			if ( testPubKey && testPubKey.indexOf( "pk_test_" ) !== 0 ) {
 				$this.find( ".ur-spinner" ).remove();
 				show_failure_message(
-					user_registration_settings_params.i18n.invalid_stripe_test_publishable_key ||
-					"Invalid Stripe test publishable key. It must start with pk_test_."
+					user_registration_settings_params.i18n.invalid_stripe_test_publishable_key
 				);
 				return;
 			}
@@ -1764,8 +1763,7 @@
 			if ( livePubKey && livePubKey.indexOf( "pk_live_" ) !== 0 ) {
 				$this.find( ".ur-spinner" ).remove();
 				show_failure_message(
-					user_registration_settings_params.i18n.invalid_stripe_live_publishable_key ||
-					"Invalid Stripe live publishable key. It must start with pk_live_."
+					user_registration_settings_params.i18n.invalid_stripe_live_publishable_key
 				);
 				return;
 			}
