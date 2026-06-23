@@ -941,7 +941,9 @@ class StripeService {
 			do_action( 'ur_membership_order_status_failed', $latest_order['ID'], $latest_order, 'failed' );
 
 			if ( ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
-				wp_delete_user( absint( $member_id ) );
+				if ( absint( $member_id ) === get_current_user_id() || current_user_can( 'edit_users' ) ) {
+					wp_delete_user( absint( $member_id ) );
+				}
 				$this->members_orders_repository->delete_member_order( $member_id );
 			}
 			if ( $is_renewing ) {
@@ -1623,7 +1625,9 @@ class StripeService {
 			);
 
 			if ( ! $is_upgrading && ! $is_renewing ) {
-				wp_delete_user( absint( $member_id ) );
+				if ( absint( $member_id ) === get_current_user_id() || current_user_can( 'edit_users' ) ) {
+					wp_delete_user( absint( $member_id ) );
+				}
 				$this->members_orders_repository->delete_member_order( $member_id );
 				$customer = \Stripe\Customer::retrieve( $customer_id );
 				$customer->delete();
