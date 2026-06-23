@@ -1748,6 +1748,27 @@
 			section_data[name] = value;
 		});
 
+		if ( setting_id === "stripe" ) {
+			var testPubKey = section_data["user_registration_stripe_test_publishable_key"] || "";
+			var livePubKey = section_data["user_registration_stripe_live_publishable_key"] || "";
+
+			if ( testPubKey && testPubKey.indexOf( "pk_test_" ) !== 0 ) {
+				$this.find( ".ur-spinner" ).remove();
+				show_failure_message(
+					user_registration_settings_params.i18n.invalid_stripe_test_publishable_key
+				);
+				return;
+			}
+
+			if ( livePubKey && livePubKey.indexOf( "pk_live_" ) !== 0 ) {
+				$this.find( ".ur-spinner" ).remove();
+				show_failure_message(
+					user_registration_settings_params.i18n.invalid_stripe_live_publishable_key
+				);
+				return;
+			}
+		}
+
 		update_payment_section_settings(
 			setting_id,
 			section_data,
