@@ -1249,12 +1249,6 @@ function ur_load_form_field_class( $class_key ) {
 	$class_path = apply_filters( 'user_registration_form_field_' . $class_key . '_path', $class_path );
 	/* Backward Compat since 1.4.0 */
 	if ( null != $class_path && file_exists( $class_path ) ) {
-		// Validate the resolved path to prevent directory traversal.
-		$real_class_path = realpath( $class_path );
-		$real_base_path  = realpath( UR_FORM_PATH );
-		if ( false === $real_class_path || false === $real_base_path || 0 !== strpos( $real_class_path, $real_base_path . DIRECTORY_SEPARATOR ) ) {
-			return null;
-		}
 		$class_name = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
 		if ( ! class_exists( $class_name ) ) {
 			include_once $class_path;
@@ -3065,9 +3059,9 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		if ( isset( $form_data->field_type ) && 'repeater' === $form_data->field_type ) {
 			$data_html .= '<td class="user-registration-email__entries-data">' . $value . '</td></tr>';
 		} elseif ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
-			$data_html .= '<tr class="user-registration-email__entries-tr"><td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data"><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
+			$data_html .= '<td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data"><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
 		} else {
-			$data_html .= '<tr class="user-registration-email__entries-tr"><td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data">' . $value . '</td></tr>';
+			$data_html .= '<td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data">' . $value . '</td></tr>';
 		}
 
 		$name_value[ $field_name ] = $value;

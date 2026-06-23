@@ -23,6 +23,32 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 	}
 
 	/**
+	 * Activate subscriptions that were left 'pending' even though their order is 'completed'.
+	 *
+	 * The real-time payment confirmation can mark an order completed without flipping the linked
+	 * subscription to active, and the event-window backfill skips orders that are already
+	 * completed — leaving such subscriptions stranded as 'pending' forever. A completed order is
+	 * proof of payment, so this heals them. Gateway-agnostic; runs off local data only.
+	 *
+	 * @return int Number of subscriptions activated.
+	 */
+	public function activate_pending_with_completed_orders() {
+		// Only activate subscriptions whose start date has already arrived, so a future-dated /
+		// scheduled subscription is never activated early. A completed order with a non-future
+		// start date that is still pending is an anomaly left by a partial confirmation.
+		$updated = $this->wpdb()->query(
+			"UPDATE $this->table s
+			 JOIN $this->orders_table o ON o.subscription_id = s.ID AND o.status = 'completed'
+			 SET s.status = 'active'
+			 WHERE s.status = 'pending'
+			   AND s.start_date IS NOT NULL
+			   AND s.start_date <= NOW()"
+		);
+
+		return is_numeric( $updated ) ? (int) $updated : 0;
+	}
+
+	/**
 	 * Get members subscription by their ID
 	 *
 	 * @param $member_id

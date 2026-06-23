@@ -205,18 +205,19 @@ class NewPaypalService {
 		$paypal_options['return_url'] = apply_filters( 'urm_paypal_override_return_url', '' === $return_url ? wp_login_url() : $return_url );
 
 		// REST credentials.
+		$mode_key                     = $this->get_paypal_mode_key();
 		$paypal_options['client_id']  = get_option(
-			sprintf( 'user_registration_global_paypal_%s_client_id', $mode ),
+			sprintf( 'user_registration_global_paypal_%s_client_id', $mode_key ),
 			isset( $paypal_options['client_id'] ) ? $paypal_options['client_id'] : get_option( 'user_registration_global_paypal_client_id', '' )
 		);
 		$paypal_options['secret_key'] = get_option(
-			sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ),
+			sprintf( 'user_registration_global_paypal_%s_client_secret', $mode_key ),
 			isset( $paypal_options['secret_key'] ) ? $paypal_options['secret_key'] : get_option( 'user_registration_global_paypal_client_secret', '' )
 		);
 
 		// Optional fallback email for compatibility and validation.
 		$paypal_options['email'] = get_option(
-			sprintf( 'user_registration_global_paypal_%s_email_address', $mode ),
+			sprintf( 'user_registration_global_paypal_%s_email_address', $mode_key ),
 			get_option( 'user_registration_global_paypal_email_address', '' )
 		);
 
@@ -315,7 +316,7 @@ class NewPaypalService {
 				array(
 					'ur-membership-return' => base64_encode( $query_args ),
 				),
-				apply_filters( 'user_registration_paypal_return_url', $paypal_options['return_url'], array() )
+				apply_filters( 'user_registration_paypal_return_url', home_url( '/' ), array() )
 			)
 		);
 
@@ -800,7 +801,11 @@ class NewPaypalService {
 		}
 
 		$payload = array(
-			'plan_id' => sanitize_text_field( $new_plan_id ),
+			'plan_id'             => sanitize_text_field( $new_plan_id ),
+			'application_context' => array(
+				'return_url' => $context['return_url'],
+				'cancel_url' => $context['cancel_url'],
+			),
 		);
 
 		if ( ! empty( $context['team_quantity'] ) ) {
@@ -1112,9 +1117,12 @@ class NewPaypalService {
 		$paypal_subscription_id = sanitize_text_field( isset( $_GET['subscription_id'] ) ? $_GET['subscription_id'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$member_subscription    = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
 		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'], true );
+		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $url_params['current_membership_id'] ?? '' ] );
 		// Also treat as one-time if PayPal returned a token with no subscription_id (proration upgrade).
 		$is_rest_one_time_payment = ( 'paid' === $member_order['order_type'] || 'one-time' === $membership_type )
 			|| ( ! empty( $order_token ) && empty( $paypal_subscription_id ) );
+
+		$payment_verified = false;
 
 		// if buyer already returned and internal order is completed, just redirect .
 		// if ( 'completed' === ( isset( $member_order['status'] ) ? $member_order['status'] : '' ) ) {
@@ -1179,6 +1187,7 @@ class NewPaypalService {
 					JSON_PRETTY_PRINT
 				)
 			);
+			$payment_verified = true;
 		}
 
 		// REST subscription return.
@@ -1247,6 +1256,18 @@ class NewPaypalService {
 					JSON_PRETTY_PRINT
 				)
 			);
+			$payment_verified = true;
+		}
+
+		if ( ! $payment_verified && ! $is_upgrading ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				sprintf(
+					'[Member ID #%s] PayPal redirect aborted: no token or subscription_id present — possible forged return URL.',
+					$member_id
+				)
+			);
+			return;
 		}
 
 		// Reload local subscription after any update.
@@ -1258,8 +1279,6 @@ class NewPaypalService {
 		}
 
 		$this->send_payment_success_email( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $membership_id );
-
-		$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $url_params['current_membership_id'] ] );
 
 		if ( $is_upgrading && ! empty( $member_subscription['ID'] ) ) {
 			PaymentGatewayLogging::log_general(
@@ -1976,11 +1995,12 @@ class NewPaypalService {
 			return true;
 		}
 
-		$mode = $this->get_paypal_mode();
+		$mode     = $this->get_paypal_mode();
+		$mode_key = $this->get_paypal_mode_key();
 
 		$required = array(
-			'client_id'     => get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id', '' ) ),
-			'client_secret' => get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret', '' ) ),
+			'client_id'     => get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode_key ), get_option( 'user_registration_global_paypal_client_id', '' ) ),
+			'client_secret' => get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode_key ), get_option( 'user_registration_global_paypal_client_secret', '' ) ),
 		);
 
 		// Keep compatibility with old one-time standard/email validation if needed by your UI.
@@ -2242,18 +2262,29 @@ class NewPaypalService {
 	}
 
 	/**
+	 * Get the option key segment for the current PayPal mode.
+	 * Options are stored under _live_ / _test_ keys, but the mode value is 'production' / 'test'.
+	 *
+	 * @return string 'live' or 'test'
+	 */
+	private function get_paypal_mode_key() {
+		return 'production' === $this->get_paypal_mode() ? 'live' : 'test';
+	}
+
+	/**
 	 * Get PayPal REST credentials.
 	 *
 	 * @return array
 	 */
 	private function get_paypal_rest_credentials() {
-		$mode = $this->get_paypal_mode();
+		$mode     = $this->get_paypal_mode();
+		$mode_key = $this->get_paypal_mode_key();
 
 		return array(
 			'mode'       => $mode,
-			'client_id'  => get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id', '' ) ),
-			'secret_key' => get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret', '' ) ),
-			'email'      => get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address', '' ) ),
+			'client_id'  => get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode_key ), get_option( 'user_registration_global_paypal_client_id', '' ) ),
+			'secret_key' => get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode_key ), get_option( 'user_registration_global_paypal_client_secret', '' ) ),
+			'email'      => get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode_key ), get_option( 'user_registration_global_paypal_email_address', '' ) ),
 		);
 	}
 

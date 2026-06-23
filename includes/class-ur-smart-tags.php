@@ -577,8 +577,8 @@ class UR_Smart_Tags {
 						break;
 					case 'display_name':
 						$user_id      = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
-						$user_data    = get_userdata( $user_id );
-						$display_name = isset( $user_data->display_name ) ? $user_data->display_name : '';
+						$user_obj     = get_userdata( $user_id );
+						$display_name = isset( $user_obj->display_name ) ? $user_obj->display_name : '';
 						$content      = str_replace( '{{' . $tag . '}}', esc_html( $display_name ), $content );
 						break;
 
@@ -866,9 +866,9 @@ class UR_Smart_Tags {
 					case 'registration_date':
 						$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
 						if ( $user_id ) {
-							$user_data = get_userdata( $user_id );
-							if ( $user_data && isset( $user_data->user_registered ) ) {
-								$registration_date = date_i18n( get_option( 'date_format' ), strtotime( $user_data->user_registered ) );
+							$user_obj = get_userdata( $user_id );
+							if ( $user_obj && isset( $user_obj->user_registered ) ) {
+								$registration_date = date_i18n( get_option( 'date_format' ), strtotime( $user_obj->user_registered ) );
 							} else {
 								$registration_date = '';
 							}

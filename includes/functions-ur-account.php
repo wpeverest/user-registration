@@ -103,14 +103,21 @@ function ur_resetpassword_url( $default_url = '' ) {
 		return $default_url;
 	}
 
-	// Get reset password page from plugin option.
+	// The lost-password page is the primary page for the reset flow.
+	$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
+
+	if ( $lost_password_page && ! empty( get_post( $lost_password_page ) ) ) {
+		return get_permalink( $lost_password_page );
+	}
+
+	// Legacy fallback: a separate reset-password page (deprecated option).
 	$reset_password_page = get_option( 'user_registration_reset_password_page_id', false );
 
 	if ( $reset_password_page && ! empty( get_post( $reset_password_page ) ) ) {
 		return get_permalink( $reset_password_page );
-	} else {
-		return ur_lostpassword_url();
 	}
+
+	return ur_lostpassword_url();
 }
 add_filter( 'retrieve_password_url', 'ur_resetpassword_url', 20, 1 );
 

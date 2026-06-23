@@ -877,7 +877,11 @@ class StripeService {
 			return $response;
 		}
 
-		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id, $order_id ) ) {
+		// Exclude the order that actually owns this transaction (already fetched above), not the
+		// client-supplied order_id which can arrive empty on the registration/first-purchase
+		// flow. Otherwise the order's own transaction is treated as a duplicate and the payment
+		// is reported "already verified" without ever completing the order/subscription.
+		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id, $latest_order['ID'] ) ) {
 
 			$duplicate_order = $this->orders_repository->get_order_by_transaction_id( $transaction_id );
 			if ( ! empty( $duplicate_order ) && absint( $duplicate_order['user_id'] ) === $member_id ) {
@@ -1489,6 +1493,24 @@ class StripeService {
 
 			$payments_data  = isset( $subscription->latest_invoice->payments->data ) ? (array) $subscription->latest_invoice->payments->data : array();
 			$payment_intent = ! empty( $payments_data ) ? ( $payments_data[0]->payment->payment_intent ?? null ) : null;
+
+			if ( empty( $payment_intent ) && isset( $subscription->latest_invoice->payment_intent ) ) {
+				$payment_intent = $subscription->latest_invoice->payment_intent;
+			}
+
+			// Retrieve the PaymentIntent (newer Stripe API returns only an id) and expose it on the
+			// invoice so the front-end can run 3D Secure / SCA.
+			if ( ! empty( $payment_intent ) && is_string( $payment_intent ) ) {
+				try {
+					$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent );
+				} catch ( \Exception $e ) {
+					$payment_intent = null;
+				}
+			}
+
+			if ( ! empty( $payment_intent ) && ! is_string( $payment_intent ) && isset( $subscription->latest_invoice ) ) {
+				$subscription->latest_invoice->payment_intent = $payment_intent;
+			}
 
 			$three_ds2_source = '';
 			if ( ! empty( $payment_intent ) && ! is_string( $payment_intent ) ) {
