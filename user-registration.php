@@ -4,7 +4,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 5.2.0
+ * Version: 5.2.2
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -37,7 +37,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '5.2.0';
+		public $version = '5.2.2';
 
 		/**
 		 * Session instance.
@@ -131,6 +131,22 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 
 			add_filter( 'plugin_action_links_' . UR_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
 			add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
+		}
+
+		/**
+		 * Instantiate the WPML compatibility layer when WPML is active.
+		 *
+		 * Loading the service only when SitePress is present avoids any overhead
+		 * on non-multilingual sites. The class itself uses WPML's documented
+		 * filter API (no `new SitePress()`), so it cannot reintroduce the
+		 * duplicate-JOIN "Not unique table/alias" errors.
+		 *
+		 * @since 5.2.1
+		 */
+		public function init_wpml_compat() {
+			if ( ( defined( 'ICL_SITEPRESS_VERSION' ) || class_exists( 'SitePress', false ) ) && class_exists( 'UR_WPML' ) ) {
+				UR_WPML::instance();
+			}
 		}
 
 		/**
@@ -340,6 +356,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-privacy.php';
 			include_once UR_ABSPATH . 'includes/class-ur-form-block.php';
 			include_once UR_ABSPATH . 'includes/class-ur-cache-helper.php';
+			include_once UR_ABSPATH . 'includes/class-ur-wpml.php';
 
 			/**
 			 * Block classes.
@@ -485,6 +502,9 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 
 			// Set up localisation.
 			$this->load_plugin_textdomain();
+
+			// Boot WPML compatibility (only when WPML is active).
+			$this->init_wpml_compat();
 
 			// Session class, handles session data for users - can be overwritten if custom handler is needed.
 			if ( $this->is_request( 'frontend' ) || $this->is_request( 'cron' ) || $this->is_request( 'admin' ) ) {

@@ -210,16 +210,16 @@
         },
         {
             "name": "themegrill/themegrill-sdk",
-            "version": "1.0.1",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/themegrill/themegrill-sdk.git",
-                "reference": "bdcd3b56256ce3126054d0dabb22fe8563b0becc"
+                "reference": "2787bc7bcd0c5d6bf470c986682fd74b390d34c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/themegrill/themegrill-sdk/zipball/bdcd3b56256ce3126054d0dabb22fe8563b0becc",
-                "reference": "bdcd3b56256ce3126054d0dabb22fe8563b0becc",
+                "url": "https://api.github.com/repos/themegrill/themegrill-sdk/zipball/2787bc7bcd0c5d6bf470c986682fd74b390d34c3",
+                "reference": "2787bc7bcd0c5d6bf470c986682fd74b390d34c3",
                 "shasum": ""
             },
             "require": {
@@ -240,40 +240,40 @@
                     "homepage": "https://themegrill.com"
                 }
             ],
-            "description": "ThemeGrill SDK",
+            "description": "A lightweight SDK that provides common functionality and shared features for ThemeGrill themes and plugins.",
             "support": {
                 "issues": "https://github.com/themegrill/themegrill-sdk/issues",
-                "source": "https://github.com/themegrill/themegrill-sdk/tree/v1.0.1"
+                "source": "https://github.com/themegrill/themegrill-sdk/tree/v1.0.4"
             },
-            "time": "2025-11-12T11:45:29+00:00"
+            "time": "2026-06-12T10:51:17+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "clue/stdio-react",
-            "version": "v2.6.0",
+            "version": "v2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/clue/reactphp-stdio.git",
-                "reference": "dfa6c378aabdff718202d4e2453f752c38ea3399"
+                "reference": "d8ced39f09f1f062e4a7f006aa6739f870eefb37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clue/reactphp-stdio/zipball/dfa6c378aabdff718202d4e2453f752c38ea3399",
-                "reference": "dfa6c378aabdff718202d4e2453f752c38ea3399",
+                "url": "https://api.github.com/repos/clue/reactphp-stdio/zipball/d8ced39f09f1f062e4a7f006aa6739f870eefb37",
+                "reference": "d8ced39f09f1f062e4a7f006aa6739f870eefb37",
                 "shasum": ""
             },
             "require": {
                 "clue/term-react": "^1.0 || ^0.1.1",
                 "clue/utf8-react": "^1.0 || ^0.1",
                 "php": ">=5.3",
-                "react/event-loop": "^1.2",
-                "react/stream": "^1.2"
+                "react/event-loop": "^1.6",
+                "react/stream": "^1.4"
             },
             "require-dev": {
                 "clue/arguments": "^2.0",
                 "clue/commander": "^1.2",
-                "phpunit/phpunit": "^9.3 || ^5.7 || ^4.8.35"
+                "phpunit/phpunit": "^9.6 || ^8.5 || ^5.7 || ^4.8.36"
             },
             "suggest": {
                 "ext-mbstring": "Using ext-mbstring should provide slightly better performance for handling I/O"
@@ -311,7 +311,7 @@
             ],
             "support": {
                 "issues": "https://github.com/clue/reactphp-stdio/issues",
-                "source": "https://github.com/clue/reactphp-stdio/tree/v2.6.0"
+                "source": "https://github.com/clue/reactphp-stdio/tree/v2.7.0"
             },
             "funding": [
                 {
@@ -323,7 +323,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-18T15:09:30+00:00"
+            "time": "2026-06-14T21:56:40+00:00"
         },
         {
             "name": "clue/term-react",
@@ -3626,16 +3626,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.37.0",
+            "version": "v1.38.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "6a21eb99c6973357967f6ce3708cd55a6bec6315"
+                "reference": "d3d318bad5e7a1bfbd026009c8bfb8d8f99ae6b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/6a21eb99c6973357967f6ce3708cd55a6bec6315",
-                "reference": "6a21eb99c6973357967f6ce3708cd55a6bec6315",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/d3d318bad5e7a1bfbd026009c8bfb8d8f99ae6b6",
+                "reference": "d3d318bad5e7a1bfbd026009c8bfb8d8f99ae6b6",
                 "shasum": ""
             },
             "require": {
@@ -3687,7 +3687,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.37.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.38.2"
             },
             "funding": [
                 {
@@ -3707,7 +3707,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-10T17:25:58+00:00"
+            "time": "2026-05-27T06:59:30+00:00"
         },
         {
             "name": "symfony/polyfill-php73",

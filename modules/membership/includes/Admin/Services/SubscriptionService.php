@@ -461,6 +461,16 @@ class SubscriptionService {
 
 		$current_subscription_id                   = $data['current_subscription_id'];
 		$subscription                              = $this->subscription_repository->retrieve( $data['current_subscription_id'] );
+
+		if ( empty( $subscription ) || (int) $subscription['user_id'] !== get_current_user_id() ) {
+			return array(
+				'response' => array(
+					'status'  => false,
+					'message' => __( 'You do not have permission to upgrade this subscription.', 'user-registration' ),
+				),
+			);
+		}
+
 		$user                                      = get_userdata( $subscription['user_id'] );
 		$payment_method                            = $data['selected_pg'];
 		$membership                                = $this->membership_repository->get_single_membership_by_ID( $subscription['item_id'] );
@@ -470,6 +480,26 @@ class SubscriptionService {
 		$selected_membership_details               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$selected_membership_details['post_title'] = $membership['post_title'];
 		$selected_membership_details['membership'] = $data['selected_membership_id'];
+
+		// Validate that the submitted payment method is one the destination membership actually supports.
+		if ( 'free' !== ( $selected_membership_details['type'] ?? '' ) ) {
+			$configured_gateways = array();
+			if ( ! empty( $selected_membership_details['payment_gateways'] ) && is_array( $selected_membership_details['payment_gateways'] ) ) {
+				foreach ( $selected_membership_details['payment_gateways'] as $gw_key => $gw_data ) {
+					if ( isset( $gw_data['status'] ) && 'on' === $gw_data['status'] ) {
+						$configured_gateways[] = $gw_key;
+					}
+				}
+			}
+			if ( ! empty( $configured_gateways ) && ! in_array( $payment_method, $configured_gateways, true ) ) {
+				return array(
+					'response' => array(
+						'status'  => false,
+						'message' => __( 'Invalid payment method for this membership.', 'user-registration' ),
+					),
+				);
+			}
+		}
 
 		$selected_membership_details['payment_method'] = $payment_method;
 		$membership_process                            = urm_get_membership_process( $user->ID );
@@ -739,6 +769,14 @@ class SubscriptionService {
 		}
 
 		$subscription                = $this->subscription_repository->retrieve( $data['current_subscription_id'] );
+
+		if ( empty( $subscription ) || (int) $subscription['user_id'] !== get_current_user_id() ) {
+			return array(
+				'status'  => false,
+				'message' => __( 'You do not have permission to upgrade this subscription.', 'user-registration' ),
+			);
+		}
+
 		$membership                  = $this->membership_repository->get_single_membership_by_ID( $data['selected_membership_id'] );
 		$selected_membership_details = wp_unslash( json_decode( $membership['meta_value'], true ) );
 
