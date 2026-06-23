@@ -66,7 +66,7 @@ class MembersService {
 					'message' => __( 'Invalid coupon type.', 'user-registration' ),
 				);
 			}
-			$coupon_membership = json_decode( $coupon_details['coupon_membership'], true );
+			$coupon_membership = (array) json_decode( $coupon_details['coupon_membership'], true );
 			if ( ! in_array( $data['membership'], $coupon_membership ) ) {
 				return array(
 					'status'  => false,
