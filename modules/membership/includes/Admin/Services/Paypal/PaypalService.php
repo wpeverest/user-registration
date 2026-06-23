@@ -664,6 +664,31 @@ class PaypalService {
 				)
 			);
 
+			// Validate receiver email and payment amount before any state changes.
+			$ipn_error = '';
+			if ( empty( $receiver_email ) || ! is_email( $receiver_email )
+				|| strtolower( $data['business'] ?? '' ) !== strtolower( trim( $receiver_email ) ) ) {
+				$ipn_error = esc_html__( 'Payment failed: recipient emails do not match', 'user-registration' );
+			} elseif ( 'web_accept' === $txn_type
+				&& ( empty( $amount ) || number_format( (float) ( $data['mc_gross'] ?? 0 ) ) !== number_format( (float) $amount ) ) ) {
+				// Amount check applies only to web_accept (one-time payment).
+				// subscr_signup carries no payment — the first real charge arrives via subscr_payment.
+				$ipn_error = esc_html__( 'Payment failed: payment amounts do not match ', 'user-registration' );
+			}
+
+			if ( ! empty( $ipn_error ) ) {
+				PaymentGatewayLogging::log_transaction_failure(
+					'paypal',
+					$ipn_error,
+					array(
+						'subscription_id' => $subscription_id,
+						'member_id'       => $member_id,
+					)
+				);
+				$this->members_orders_repository->update( $latest_order['ID'], array( 'status' => 'failed' ) );
+				return;
+			}
+
 			$this->members_orders_repository->update(
 				$latest_order['ID'],
 				array(
