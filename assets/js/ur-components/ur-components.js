@@ -61,10 +61,21 @@ jQuery(function ($) {
 		"click",
 		".user-registration-card__toggle",
 		function () {
-			$(this)
+			var card_body = $(this)
 				.closest(".user-registration-card")
-				.find(".user-registration-card__body")
-				.toggle();
+				.find(".user-registration-card__body");
+
+			card_body.toggle();
+
+			if (card_body.is(":visible")) {
+				$(this).html(
+					'<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polyline points="6 15 12 9 18 15"></polyline></svg>'
+				);
+			} else {
+				$(this).html(
+					'<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polyline points="6 9 12 15 18 9"></polyline></svg>'
+				);
+			}
 		}
 	);
 
