@@ -12281,6 +12281,10 @@ if ( ! function_exists( 'user_registration_create_product_and_price_for_stripe' 
 	 * @param array $data The data array.
 	 */
 	function user_registration_create_product_and_price_for_stripe( $data ) {
+		if ( ! function_exists( 'urm_is_payment_gateway_configured' ) || ! urm_is_payment_gateway_configured( 'stripe' ) ) {
+			return;
+		}
+
 		$stripe_service        = new StripeService();
 		$membership_repository = new MembershipRepository();
 		$memberships           = $membership_repository->get_all_memberships_without_status_filter();

@@ -330,6 +330,11 @@ class StripeService {
 			return;
 		}
 
+		$stripe_settings = self::get_stripe_settings();
+		if ( empty( $stripe_settings['secret_key'] ) ) {
+			return;
+		}
+
 		$membership_metas = $membership['meta_value'] ?? array();
 
 		if ( ! is_array( $membership_metas ) ) {
