@@ -2,7 +2,7 @@ jQuery(function ($) {
 	// Review notice.
 	$(".user-registration-notice").each(function () {
 		$(this)
-			.find(".notice-dismiss")
+			.find(".ur-notice-dismiss")
 			.on("click", function (e) {
 				e.preventDefault();
 
@@ -14,7 +14,7 @@ jQuery(function ($) {
 						.data("notice-id"),
 					notice_type_nonce = notice_type + "_nonce",
 					dismiss_forever = $(this).hasClass(
-						"notice-dismiss-permanently"
+						"ur-notice-dismiss-permanently"
 					);
 
 				$(this)

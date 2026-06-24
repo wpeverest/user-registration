@@ -27,20 +27,8 @@
 	width: 100%;
 	box-sizing: border-box;
 
-	.notice-dismiss {
+	.ur-notice-dismiss {
 		margin-left: 2px;
-
-		&:before {
-			display: none;
-		}
-	}
-
-	&.is-dismissible {
-		.notice-dismiss {
-			&::before {
-				display: block;
-			}
-		}
 	}
 
 	.user-registration-notice-thumbnail {
@@ -130,16 +118,15 @@
 		justify-content: space-between;
 		margin-top: 12px;
 
-		.notice-dismiss {
+		.ur-notice-dismiss {
 			min-height: 32px;
 			margin-left: 0;
 			align-content: center;
-			position: unset;
 			text-decoration: none;
 			font-weight: 400;
 			color: #9ca3af;
 
-			&.notice-nsa {
+			&.ur-notice-nsa {
 				padding: 0;
 			}
 		}
@@ -219,6 +206,8 @@
 		border: 1px solid;
 		width: 17px;
 		height: 17px;
+		line-height: 17px;
+		vertical-align: middle;
 	}
 }
 
