@@ -2330,16 +2330,12 @@ class UR_AJAX {
 			}
 		}
 
-		// Strict referer verification
-		$referer      = wp_get_referer();
-		$allowed_host = parse_url( home_url(), PHP_URL_HOST );
-		$referer_host = parse_url( $referer, PHP_URL_HOST );
-
-		if ( ! $referer || $referer_host !== $allowed_host ) {
+		if ( ! is_user_logged_in() || ! current_user_can( 'edit_posts' ) ) {
 			wp_send_json_error(
 				array(
-					__( 'Invalid form submission source.', 'user-registration' ),
-				)
+					'message' => __( 'Permission denied.', 'user-registration' ),
+				),
+				403
 			);
 		}
 		$updated_nonce_array = array();
