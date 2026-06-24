@@ -158,7 +158,12 @@ class AJAX {
 				$data['membership_id'] = $new_membership_ID;
 				$membership_repository = new MembershipRepository();
 				$membership            = $membership_repository->get_single_membership_by_ID( $new_membership_ID );
-				$stripe_service->sync_product_and_price_in_stripe( $membership );
+				try {
+					$stripe_service->sync_product_and_price_in_stripe( $membership );
+				} catch ( \Exception $e ) {
+					wp_delete_post( $new_membership_ID, true );
+					wp_send_json_error( array( 'message' => $e->getMessage() ) );
+				}
 			}
 
 			// Create or update content access rule if rule data provided
@@ -229,6 +234,26 @@ class AJAX {
 		}
 
 		$data = apply_filters( 'ur_membership_after_create_membership_data_prepare', $data );
+
+		if ( $is_stripe_enabled ) {
+			$meta_data_check = json_decode( $data['post_meta_data']['ur_membership']['meta_value'], true );
+			if (
+				'free' !== $meta_data_check['type'] &&
+				isset( $meta_data_check['subscription']['duration'], $meta_data_check['subscription']['value'] ) &&
+				'year' === $meta_data_check['subscription']['duration'] &&
+				(int) $meta_data_check['subscription']['value'] > 3
+			) {
+				wp_send_json_error(
+					array(
+						'message' => sprintf(
+							/* translators: %d: number of years */
+							__( 'Stripe does not support yearly subscription periods greater than 3 years. The value %d years is not allowed. Please set the subscription period to 3 years or less.', 'user-registration' ),
+							(int) $meta_data_check['subscription']['value']
+						),
+					)
+				);
+			}
+		}
 
 		$updated_ID = wp_insert_post( $data['post_data'] );
 
