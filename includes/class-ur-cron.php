@@ -87,6 +87,18 @@ class UR_Cron {
 		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_daily_membership_expiration_check' ) ) {
 			wp_schedule_event( time(), 'daily', 'urm_daily_membership_expiration_check' );
 		}
+		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_daily_fixed_period_membership_renewal_check' ) && ur_check_module_activation( 'fixed-period-membership' ) && ur_option_checked( 'user_registration_membership_enable_renewal_reminder_user_email', true ) ) {
+			wp_schedule_event( time(), 'daily', 'urm_daily_fixed_period_membership_renewal_check' );
+		}
+		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_daily_fixed_period_membership_expiring_soon_check' ) && ur_check_module_activation( 'fixed-period-membership' ) && ur_option_checked( 'user_registration_membership_enable_expiring_soon_user_email', true ) ) {
+			wp_schedule_event( time(), 'daily', 'urm_daily_fixed_period_membership_expiring_soon_check' );
+		}
+		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_daily_fixed_period_membership_ended_check' ) && ur_check_module_activation( 'fixed-period-membership' ) && ur_option_checked( 'user_registration_membership_enable_membership_ended_user_email', true ) ) {
+			wp_schedule_event( time(), 'daily', 'urm_daily_fixed_period_membership_ended_check' );
+		}
+		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_daily_fixed_period_membership_expiration_check' ) && ur_check_module_activation( 'fixed-period-membership' ) ) {
+			wp_schedule_event( time(), 'daily', 'urm_daily_fixed_period_membership_expiration_check' );
+		}
 		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_daily_payment_retry_check' ) ) {
 			wp_schedule_event( time(), 'daily', 'urm_daily_payment_retry_check' );
 		}
