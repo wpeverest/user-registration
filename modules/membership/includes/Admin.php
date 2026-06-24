@@ -309,47 +309,67 @@ if ( ! class_exists( 'Admin' ) ) :
 			}
 
 			// Validate that the submitted membership ID is one the form is actually configured to offer.
-			// This prevents an attacker from supplying an off-form tier (e.g. Administrator-role) in members_data.
-			if ( $membership_field_data ) {
-				$listing_option         = isset( $membership_field_data->general_setting->membership_listing_option )
-					? $membership_field_data->general_setting->membership_listing_option
-					: 'all';
-				$allowed_membership_ids = array();
-
-				if ( 'group' === $listing_option ) {
-					$group_id = isset( $membership_field_data->general_setting->membership_group )
-						? absint( $membership_field_data->general_setting->membership_group )
-						: 0;
-					if ( $group_id ) {
-						$group_service     = new MembershipGroupService();
-						$group_memberships = $group_service->get_group_memberships( $group_id );
-						foreach ( $group_memberships as $m ) {
-							$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
-							if ( $id ) {
-								$allowed_membership_ids[] = $id;
+			// Read field config from the stored form definition (post_content), not the runtime
+			// submission object — submission objects do not carry general_setting at this point.
+			$stored_membership_config = null;
+			$form_post                = get_post( absint( $form_id ) );
+			if ( $form_post && ! empty( $form_post->post_content ) ) {
+				$form_rows = json_decode( $form_post->post_content );
+				foreach ( (array) $form_rows as $row ) {
+					foreach ( (array) $row as $grid ) {
+						foreach ( (array) $grid as $field ) {
+							if ( isset( $field->field_key ) && 'membership' === $field->field_key ) {
+								$stored_membership_config = $field;
+								break 3;
 							}
 						}
 					}
-				} elseif ( 'selected' === $listing_option ) {
-					$selected_ids           = isset( $membership_field_data->general_setting->membership_active_memberships )
-						? $membership_field_data->general_setting->membership_active_memberships
-						: array();
-					$selected_ids           = is_array( $selected_ids ) ? $selected_ids : (array) maybe_unserialize( $selected_ids );
-					$allowed_membership_ids = array_values( array_filter( array_map( 'absint', $selected_ids ) ) );
-				} else {
-					$membership_service_temp = new MembershipService();
-					foreach ( $membership_service_temp->list_active_memberships() as $m ) {
+				}
+			}
+
+			if ( ! $stored_membership_config ) {
+				wp_delete_user( absint( $member_id ) );
+				wp_send_json_error( array( 'message' => esc_html__( 'Invalid membership selection.', 'user-registration' ) ) );
+			}
+
+			$listing_option         = isset( $stored_membership_config->general_setting->membership_listing_option )
+				? $stored_membership_config->general_setting->membership_listing_option
+				: 'all';
+			$allowed_membership_ids = array();
+
+			if ( 'group' === $listing_option ) {
+				$group_id = isset( $stored_membership_config->general_setting->membership_group )
+					? absint( $stored_membership_config->general_setting->membership_group )
+					: 0;
+				if ( $group_id ) {
+					$group_service     = new MembershipGroupService();
+					$group_memberships = $group_service->get_group_memberships( $group_id );
+					foreach ( $group_memberships as $m ) {
 						$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
 						if ( $id ) {
 							$allowed_membership_ids[] = $id;
 						}
 					}
 				}
-
-				if ( empty( $allowed_membership_ids ) || ! in_array( absint( $data['membership'] ), $allowed_membership_ids, true ) ) {
-					wp_delete_user( absint( $member_id ) );
-					wp_send_json_error( array( 'message' => esc_html__( 'Invalid membership selection.', 'user-registration' ) ) );
+			} elseif ( 'selected' === $listing_option ) {
+				$selected_ids           = isset( $stored_membership_config->general_setting->membership_active_memberships )
+					? $stored_membership_config->general_setting->membership_active_memberships
+					: array();
+				$selected_ids           = is_array( $selected_ids ) ? $selected_ids : (array) maybe_unserialize( $selected_ids );
+				$allowed_membership_ids = array_values( array_filter( array_map( 'absint', $selected_ids ) ) );
+			} else {
+				$membership_service_temp = new MembershipService();
+				foreach ( $membership_service_temp->list_active_memberships() as $m ) {
+					$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
+					if ( $id ) {
+						$allowed_membership_ids[] = $id;
+					}
 				}
+			}
+
+			if ( empty( $allowed_membership_ids ) || ! in_array( absint( $data['membership'] ), $allowed_membership_ids, true ) ) {
+				wp_delete_user( absint( $member_id ) );
+				wp_send_json_error( array( 'message' => esc_html__( 'Invalid membership selection.', 'user-registration' ) ) );
 			}
 			$data['username'] = $member->user_login;
 			$data['email']    = $member->user_email;

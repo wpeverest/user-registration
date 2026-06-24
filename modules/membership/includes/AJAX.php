@@ -1129,7 +1129,9 @@ class AJAX {
 			wp_send_json_success( $stripe_subscription );
 		} else {
 			if ( ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
-				wp_delete_user( absint( $member_id ) );
+				if ( absint( $member_id ) === get_current_user_id() || current_user_can( 'edit_users' ) ) {
+					wp_delete_user( absint( $member_id ) );
+				}
 			}
 
 			wp_send_json_error(

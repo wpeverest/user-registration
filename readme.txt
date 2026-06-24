@@ -4,7 +4,7 @@ Tags: membership, subscription, content restriction, user profile, user registra
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 5.2.2
+Stable tag: 5.2.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -251,6 +251,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 9. Subscription Management
 
 == Changelog ==
+
+= 5.2.3    - 23/06/2026 =
+* Fix      - validation for receiver email and payment amount in PayPal IPN handling.
+* Fix      - Selected membership tier during registration missed proper validation, allowing assignment of off-form membership tiers.
+* Fix      - Stripe subscription requests could trigger unintended deletion of pending member accounts due to insufficient authorization validation.
 
 = 5.2.2    - 19/06/2026 =
 * Dev      - Add UR_WPML compatibility service class.
