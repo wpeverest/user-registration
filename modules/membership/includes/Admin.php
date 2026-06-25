@@ -18,6 +18,7 @@ use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
 use WPEverest\URMembership\Admin\Services\PaymentGatewaysWebhookActions;
@@ -452,8 +453,11 @@ if ( ! class_exists( 'Admin' ) ) :
 			}
 
 			// Create order + subscription
-			$membership_service = new MembershipService();
-			$response           = $membership_service->create_membership_order_and_subscription( $data );
+			// UR-4573: This is a fresh membership registration, so the membership role should
+			// replace the default role the registration assigned (not stack on top of it).
+			$data['is_initial_registration'] = true;
+			$membership_service              = new MembershipService();
+			$response                        = $membership_service->create_membership_order_and_subscription( $data );
 
 			// PaymentGatewayLogging — order creation + free activation
 			if ( $response['status'] && class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
@@ -536,7 +540,7 @@ if ( ! class_exists( 'Admin' ) ) :
 						'member_id'      => absint( $member_id ),
 						'transaction_id' => esc_html( $transaction_id ),
 						'order_id'       => esc_html( $data['order_id'] ),
-						'message'        => esc_html__( 'New member has been successfully created.', 'user-registration' ),
+						'message'        => get_option( 'user_registration_successful_membership_creation_message', esc_html__( 'New member has been successfully created.', 'user-registration' ) ),
 					)
 				);
 				if ( ur_check_module_activation( 'team' ) ) {
@@ -822,9 +826,11 @@ if ( ! class_exists( 'Admin' ) ) :
 
 			$installed_version = get_option( 'ur_membership_db_version', '0.0.0' );
 
-			if ( version_compare( $installed_version, '1.0.0', '<' ) ) {
+			if ( version_compare( $installed_version, '1.0.0', '<' ) || ! Database::tables_exist() ) {
 				self::on_activation();
-				update_option( 'ur_membership_db_version', '1.0.0' );
+				if ( Database::tables_exist() ) {
+					update_option( 'ur_membership_db_version', '1.0.0' );
+				}
 			}
 
 			if ( version_compare( $installed_version, '1.0.1', '<' ) ) {

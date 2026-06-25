@@ -342,7 +342,7 @@ class UR_AJAX {
 			 *
 			 * @param array $response The profile update response.
 			 */
-			$response = apply_filters( 'user_registration_profile_update_response', $response );
+			$response = apply_filters( 'user_registration_profile_update_response', $response, $user_id );
 
 			wp_send_json_success(
 				$response

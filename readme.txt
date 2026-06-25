@@ -4,7 +4,7 @@ Tags: membership, subscription, content restriction, user profile, user registra
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 5.2.3
+Stable tag: 5.2.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -251,6 +251,23 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 9. Subscription Management
 
 == Changelog ==
+
+= 5.2.4    - 25/06/2026 =
+* Enhance  - User role overwritten on new membership assignment.
+* Enhance  - Add customizable membership registration success message in settings.
+* Fix      - Duplicate variable.
+* Fix      - Invoice dynamic content not translatable.
+* Fix      - Missing users in user registration members section.
+* Fix      - Validation of key while saving the stripe payment settings.
+* Fix      - My Account payment tab pulling footer content inside the tab area.
+* Fix      - Address incomplete PayPal setup error when adding PayPal for old user.
+* Fix      - hCaptcha enabled on registration form blocks users from completing signup.
+* Fix      - Reset content button not working in the prevent concurrent login email template.
+* Fix      - New Member Registered email not sent when Admin Approval Request email is enabled.
+* Fix      - Harden membership coupon apply paths against PHP 8 TypeError (free membership module).
+* Fix      - File upload attachments not updating correctly when admin edits another user's profile.
+* Fix      - Registration failure causes missing member records and prevents Stripe payment processing.
+
 
 = 5.2.3    - 23/06/2026 =
 * Fix      - validation for receiver email and payment amount in PayPal IPN handling.

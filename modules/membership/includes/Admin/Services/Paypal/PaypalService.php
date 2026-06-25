@@ -1210,21 +1210,19 @@ class PaypalService {
 		if ( ! $is_paypal_enabled ) {
 			return true;
 		}
-		$mode                    = get_option( 'user_registration_global_paypal_mode', 'test' ) == 'test' ? 'test' : 'live';
-		$paypal_options['email'] = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address' ) );
-		if ( 'subscription' === $membership_type ) {
-			$paypal_options['client_id']     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id' ) );
-			$paypal_options['client_secret'] = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret' ) );
+		if ( 'free' === $membership_type ) {
+			return false;
 		}
 
-		$is_incomplete = false;
-		foreach ( $paypal_options as $k => $option ) {
-			if ( empty( $option ) ) {
-				$is_incomplete = true;
-			}
-		}
+		$mode          = get_option( 'user_registration_global_paypal_mode', 'test' ) == 'test' ? 'test' : 'live';
+		$email         = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address' ) );
+		$client_id     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id' ) );
+		$client_secret = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret' ) );
 
-		return $is_incomplete;
+		$has_rest_credentials = ! empty( $client_id ) && ! empty( $client_secret );
+
+		// Subscription and one-time (paid): valid with REST credentials OR legacy email.
+		return ! $has_rest_credentials && empty( $email );
 	}
 
 	public function retry_subscription( $subscription ) {

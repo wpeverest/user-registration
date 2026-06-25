@@ -73,17 +73,24 @@ var createDedicatedHcaptchaLoader = function() {
 			return 'hcaptcha-loading';
 		},
 		reset: function(widgetId) {
-			if (window.hcaptcha && window.hcaptcha.reset) {
-				window.hcaptcha.reset(widgetId);
-			}
+			// widgetId is a string placeholder ('hcaptcha-loading') until the
+			// real widget has rendered; resetting with it throws and aborts
+			// submission, so only reset a real (numeric) widget id and never throw.
+			try {
+				if (window.hcaptcha && window.hcaptcha.reset && typeof widgetId !== 'string') {
+					window.hcaptcha.reset(widgetId);
+				}
+			} catch (e) {}
 		},
 		execute: function(siteKey, options) {
-			if (window.hcaptcha && window.hcaptcha.execute) {
-				window.hcaptcha.execute(siteKey, options);
-			}
+			try {
+				if (window.hcaptcha && window.hcaptcha.execute) {
+					window.hcaptcha.execute(siteKey, options);
+				}
+			} catch (e) {}
 		},
 		getResponse: function(widgetId) {
-			if (window.hcaptcha && window.hcaptcha.getResponse) {
+			if (window.hcaptcha && window.hcaptcha.getResponse && typeof widgetId !== 'string') {
 				return window.hcaptcha.getResponse(widgetId);
 			}
 			return '';
@@ -140,17 +147,23 @@ var createDedicatedRecaptchaLoader = function() {
 			return 'recaptcha-loading';
 		},
 		reset: function(widgetId) {
-			if (window.grecaptcha && window.grecaptcha.reset) {
-				window.grecaptcha.reset(widgetId);
-			}
+			// Skip the 'recaptcha-loading' placeholder id and never throw, so a
+			// captcha reset can't abort form submission.
+			try {
+				if (window.grecaptcha && window.grecaptcha.reset && typeof widgetId !== 'string') {
+					window.grecaptcha.reset(widgetId);
+				}
+			} catch (e) {}
 		},
 		execute: function(siteKey, options) {
-			if (window.grecaptcha && window.grecaptcha.execute) {
-				window.grecaptcha.execute(siteKey, options);
-			}
+			try {
+				if (window.grecaptcha && window.grecaptcha.execute) {
+					window.grecaptcha.execute(siteKey, options);
+				}
+			} catch (e) {}
 		},
 		getResponse: function(widgetId) {
-			if (window.grecaptcha && window.grecaptcha.getResponse) {
+			if (window.grecaptcha && window.grecaptcha.getResponse && typeof widgetId !== 'string') {
 				return window.grecaptcha.getResponse(widgetId);
 			}
 			return '';
@@ -288,6 +301,12 @@ var backupOriginalGlobals = function() {
 // Function to load fresh reCAPTCHA when all backups are hCaptcha
 var freshRecaptchaLoading = false;
 var loadFreshRecaptcha = function() {
+	// Only pull in Google reCAPTCHA when it is actually the configured captcha.
+	// Loading it on an hCaptcha-only form adds a second SDK whose compat shim
+	// then conflicts on window.grecaptcha. (Both v2 and v3 use ur_recaptcha_code.)
+	if (typeof ur_recaptcha_code === 'undefined' || !ur_recaptcha_code.site_key) {
+		return;
+	}
 	if (typeof window.ur_fresh_grecaptcha === 'undefined' && !freshRecaptchaLoading) {
 		freshRecaptchaLoading = true;
 		var script = document.createElement('script');
@@ -397,10 +416,12 @@ var protectGrecaptcha = function() {
 				}
 			});
 
+			// Keep this writable/configurable: locking it down makes hCaptcha's
+			// grecaptcha compat shim throw "Cannot assign to read only property".
 			Object.defineProperty(window, 'grecaptcha', {
 				value: grecaptchaProxy,
-				writable: false,
-				configurable: false
+				writable: true,
+				configurable: true
 			});
 		} catch (e) {
 			// Silent fail

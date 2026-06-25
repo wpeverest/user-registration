@@ -3059,9 +3059,9 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		if ( isset( $form_data->field_type ) && 'repeater' === $form_data->field_type ) {
 			$data_html .= '<td class="user-registration-email__entries-data">' . $value . '</td></tr>';
 		} elseif ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
-			$data_html .= '<tr class="user-registration-email__entries-tr"><td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data"><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
+			$data_html .= '<td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data"><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
 		} else {
-			$data_html .= '<tr class="user-registration-email__entries-tr"><td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data">' . $value . '</td></tr>';
+			$data_html .= '<td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data">' . $value . '</td></tr>';
 		}
 
 		$name_value[ $field_name ] = $value;
@@ -12281,6 +12281,10 @@ if ( ! function_exists( 'user_registration_create_product_and_price_for_stripe' 
 	 * @param array $data The data array.
 	 */
 	function user_registration_create_product_and_price_for_stripe( $data ) {
+		if ( ! function_exists( 'urm_is_payment_gateway_configured' ) || ! urm_is_payment_gateway_configured( 'stripe' ) ) {
+			return;
+		}
+
 		$stripe_service        = new StripeService();
 		$membership_repository = new MembershipRepository();
 		$memberships           = $membership_repository->get_all_memberships_without_status_filter();
