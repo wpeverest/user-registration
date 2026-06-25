@@ -567,6 +567,11 @@ class SubscriptionService {
 			$members_data['role'] = ! empty( $membership_details['role'] ) ? $membership_details['role'] : 'subscriber';
 		}
 
+		// UR-4573: Flag the upgrade so the previous membership's role is swapped out (instead of
+		// accumulating) while the user's base role is preserved.
+		$members_data['is_upgrade']    = true;
+		$members_data['previous_role'] = ! empty( $current_membership_details['role'] ) ? sanitize_text_field( $current_membership_details['role'] ) : '';
+
 		$member_service = new MembersService();
 		$member_service->update_user_meta( $members_data, $user->ID );
 

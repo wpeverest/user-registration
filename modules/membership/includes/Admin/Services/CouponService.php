@@ -78,8 +78,8 @@ class CouponService {
 			return $this->set_coupon_response( false, 422, 'Invalid coupon type.', );
 		}
 
-		$coupon_membership = json_decode( $coupon_details['coupon_membership'], true );
-		if ( ! in_array( $data['membership_id'], $coupon_membership ) ) {
+		$coupon_membership = (array) json_decode( $coupon_details['coupon_membership'], true );
+		if ( ! in_array( $membership_id, $coupon_membership ) ) {
 			return $this->set_coupon_response( false, 422, 'Coupon cannot be applied for the selected membership.' );
 		}
 
@@ -87,6 +87,10 @@ class CouponService {
 			return $this->set_coupon_response( false, 422, 'Coupon is not valid until ' . date_i18n( get_option( 'date_format' ), strtotime( $coupon_details['coupon_start_date'] ) ) . '.', );
 		}
 		$membership_details = $this->membership_repository->get_single_membership_by_ID( $membership_id );
+
+		if ( empty( $membership_details['meta_value'] ) ) {
+			return $this->set_coupon_response( false, 404, 'Membership does not exist.' );
+		}
 
 		$membership_meta = json_decode( $membership_details['meta_value'], true );
 		if ( 'free' === $membership_meta['type'] ) {

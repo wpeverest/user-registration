@@ -233,7 +233,10 @@ class UR_Frontend_Scripts {
 				'version' => '3.0.0',
 			),
 			'ur-recaptcha-hcaptcha'      => array(
-				'src'     => 'https://hcaptcha.com/1/api.js?onload=onloadURHcaptchaCallback&render=explicit',
+				// recaptchacompat=off prevents hCaptcha from aliasing window.grecaptcha,
+				// which would otherwise collide with Google reCAPTCHA when another plugin
+				// (e.g. Gravity Forms reCAPTCHA add-on) loads Google's api.js on the same page.
+				'src'     => 'https://hcaptcha.com/1/api.js?onload=onloadURHcaptchaCallback&render=explicit&recaptchacompat=off',
 				'deps'    => array(),
 				'version' => UR_VERSION,
 			),
