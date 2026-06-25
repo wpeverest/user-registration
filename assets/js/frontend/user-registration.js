@@ -1160,7 +1160,7 @@
 									var captchaResponse = "";
 									var registration_language = "";
 									if (
-										"hcaptcha" ===
+										"hCaptcha" ===
 										user_registration_params.recaptcha_type
 									) {
 										captchaResponse = $this

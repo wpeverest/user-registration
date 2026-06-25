@@ -66,7 +66,7 @@ class MembersService {
 					'message' => __( 'Invalid coupon type.', 'user-registration' ),
 				);
 			}
-			$coupon_membership = json_decode( $coupon_details['coupon_membership'], true );
+			$coupon_membership = (array) json_decode( $coupon_details['coupon_membership'], true );
 			if ( ! in_array( $data['membership'], $coupon_membership ) ) {
 				return array(
 					'status'  => false,
@@ -157,6 +157,10 @@ class MembersService {
 			if ( isset( $data['is_purchasing_multiple'] ) ) {
 				$response['is_purchasing_multiple'] = $data['is_purchasing_multiple'];
 			}
+
+			if ( isset( $data['is_initial_registration'] ) ) {
+				$response['is_initial_registration'] = $data['is_initial_registration'];
+			}
 		}
 
 		$team       = array();
@@ -220,7 +224,21 @@ class MembersService {
 	public function update_user_meta( $data, $new_user_id ) {
 		$user = new \WP_User( $new_user_id );
 		update_user_meta( $new_user_id, 'ur_registration_source', 'membership' );
-		$user->set_role( $data['role'] );
+
+		// UR-4573: Role handling on membership assignment.
+		if ( ! empty( $data['is_initial_registration'] ) ) {
+			// Fresh membership registration: the membership role replaces the default role the
+			// registration assigned, so the member ends up with only the membership role.
+			$user->set_role( $data['role'] );
+		} else {
+			// Existing user gaining or upgrading a membership: preserve their other role(s) and
+			// add the membership role on top, instead of overwriting. On an upgrade, drop the
+			// previous membership's role so it does not linger, while still keeping the base role.
+			if ( ! empty( $data['is_upgrade'] ) && ! empty( $data['previous_role'] ) && $data['previous_role'] !== $data['role'] ) {
+				$user->remove_role( $data['previous_role'] );
+			}
+			$user->add_role( $data['role'] );
+		}
 		if ( ! empty( $data['coupon_data'] ) ) {
 			update_user_meta( $new_user_id, 'ur_coupon_discount_type', $data['coupon_data']['coupon_discount_type'] );
 			update_user_meta( $new_user_id, 'ur_coupon_discount', $data['coupon_data']['coupon_discount'] );

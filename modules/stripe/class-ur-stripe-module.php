@@ -163,9 +163,50 @@ class User_Registration_Stripe_Module {
 				return $response;
 			}
 
-			// Detect mode from key
-			if ( strpos( $secret_key, 'sk_test_' ) === 0 ) {
+			// Validate publishable key is present.
+			if ( empty( $publishable_key ) ) {
+				$response['status']  = false;
+				$response['message'] = esc_html__( 'Stripe publishable key is missing.', 'user-registration' );
+				return $response;
+			}
 
+			// Validate publishable key prefix matches the selected mode.
+			$expected_pk_prefix = ( 'test' === $mode ) ? 'pk_test_' : 'pk_live_';
+			if ( strpos( $publishable_key, $expected_pk_prefix ) !== 0 ) {
+				$response['status']  = false;
+				$response['message'] = ( 'test' === $mode )
+					? esc_html__( 'Invalid Stripe test publishable key. It must start with pk_test_.', 'user-registration' )
+					: esc_html__( 'Invalid Stripe live publishable key. It must start with pk_live_.', 'user-registration' );
+				return $response;
+			}
+
+			// Verify the publishable key against the Stripe API.
+			// POST /v1/tokens is a publishable-key-accessible endpoint:
+			//   HTTP 401 → key does not exist in Stripe (invalid)
+			//   HTTP 400 → key is valid, request just lacks required card fields
+			$stripe_pk_check = wp_remote_post(
+				'https://api.stripe.com/v1/tokens',
+				array(
+					'headers' => array(
+						'Authorization' => 'Bearer ' . $publishable_key,
+					),
+					'body'    => array(),
+					'timeout' => 10,
+				)
+			);
+
+			if ( ! is_wp_error( $stripe_pk_check ) ) {
+				$pk_response_code = wp_remote_retrieve_response_code( $stripe_pk_check );
+				if ( 401 === $pk_response_code ) {
+					$response['status']    = false;
+					$response['connected'] = false;
+					$response['message']   = esc_html__( 'Invalid Stripe publishable key. Please verify the key and try again.', 'user-registration' );
+					return $response;
+				}
+			}
+
+			// Detect mode from key.
+			if ( strpos( $secret_key, 'sk_test_' ) === 0 ) {
 				if ( 'live' === $mode ) {
 					$response['status']  = false;
 					$response['message'] = esc_html__( 'Test key used while Live mode is selected.', 'user-registration' );
@@ -173,14 +214,14 @@ class User_Registration_Stripe_Module {
 				}
 			}
 
-			\Stripe\Stripe::setApiKey( $secret_key ); // Replace with your actual key
+			\Stripe\Stripe::setApiKey( $secret_key );
 
 			try {
 				$customers = \Stripe\Customer::all( array( 'limit' => 1 ) );
 			} catch ( \Stripe\Exception\AuthenticationException $e ) {
 				$response['status']    = false;
 				$response['connected'] = false;
-				$response['message']   = 'Invalid stripe credentials';
+				$response['message']   = esc_html__( 'Invalid Stripe secret key. Please verify the key and try again.', 'user-registration' );
 			}
 		}
 

@@ -21,7 +21,7 @@ class OrderService {
 	public function prepare_orders_data( $data, $member_id, $subscription, $upgrade_details = null, $is_renewal = false ) {
 
 		$current_user = wp_get_current_user();
-		$is_admin     = ( isset( $current_user->roles ) && ! empty( $current_user->roles ) && $current_user->roles[0] == 'administrator' );
+		$is_admin     = ( ! empty( $current_user->roles ) && in_array( 'administrator', (array) $current_user->roles, true ) );
 
 		$membership = get_post( $data['membership_data']['membership'], ARRAY_A );
 

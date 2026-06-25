@@ -330,6 +330,11 @@ class StripeService {
 			return;
 		}
 
+		$stripe_settings = self::get_stripe_settings();
+		if ( empty( $stripe_settings['secret_key'] ) ) {
+			return;
+		}
+
 		$membership_metas = $membership['meta_value'] ?? array();
 
 		if ( ! is_array( $membership_metas ) ) {
@@ -877,7 +882,11 @@ class StripeService {
 			return $response;
 		}
 
-		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id, $order_id ) ) {
+		// Exclude the order that actually owns this transaction (already fetched above), not the
+		// client-supplied order_id which can arrive empty on the registration/first-purchase
+		// flow. Otherwise the order's own transaction is treated as a duplicate and the payment
+		// is reported "already verified" without ever completing the order/subscription.
+		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id, $latest_order['ID'] ) ) {
 
 			$duplicate_order = $this->orders_repository->get_order_by_transaction_id( $transaction_id );
 			if ( ! empty( $duplicate_order ) && absint( $duplicate_order['user_id'] ) === $member_id ) {
