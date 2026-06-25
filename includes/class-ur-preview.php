@@ -346,10 +346,14 @@ class UR_Preview {
 				return;
 			}
 
+			$pro_content_suffix_emails = array( 'delete_account_email', 'delete_account_admin_email', 'auto_generated_password_email', 'email_verified_admin_email' );
+
 			if ( 'passwordless_login_email' === $option_name ) {
 				$email_content = get_option( 'user_registration_' . $option_name . '_content', $class_instance->$default_content() );
-			} elseif ( 'email_verified_admin_email' === $option_name ) {
-					$email_content = get_option( 'user_registration_pro_' . $option_name, $class_instance->$default_content() );
+			} elseif ( 'prevent_concurrent_login_email' === $option_name ) {
+				$email_content = get_option( 'user_registration_prevent_concurrent_login_email_content', $class_instance->$default_content() );
+			} elseif ( in_array( $option_name, $pro_content_suffix_emails, true ) ) {
+				$email_content = get_option( 'user_registration_pro_' . $option_name . '_content', $class_instance->$default_content() );
 			} else {
 				$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
 			}
