@@ -155,6 +155,7 @@ class Subscriptions {
 				'i18n_update_success'            => __( 'Subscription updated successfully.', 'user-registration' ),
 				'i18n_error'                     => __( 'An error occurred. Please try again.', 'user-registration' ),
 				'i18n_network_error'             => __( 'Network error. Please check your connection.', 'user-registration' ),
+				'i18n_required_fields'           => __( 'Please fill in all required fields.', 'user-registration' ),
 				'payment_gateways'               => get_option( 'ur_membership_payment_gateways', array() ),
 				'i18n_prompt_delete_title'       => __( 'Delete Subscription', 'user-registration' ),
 				'i18n_prompt_delete_description' => __( 'Are you sure you want to delete this subscription?', 'user-registration' ),
