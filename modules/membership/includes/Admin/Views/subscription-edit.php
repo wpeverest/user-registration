@@ -175,7 +175,7 @@ $is_admin_created      = ! empty( $is_admin_created_meta['meta_value'] );
 
 <div class="ur-membership">
 	<div class="ur-membership-tab-contents-wrapper ur-subscription">
-		<form id="ur-membership-subscription-edit-form" method="post" class="ur-subscription__form">
+		<form id="ur-membership-subscription-edit-form" method="post" novalidate class="ur-subscription__form">
 			<?php do_action( 'ur_membership_subscription_edit_form_start', $subscription ); ?>
 			<?php wp_nonce_field( 'ur_membership_subscription', 'security' ); ?>
 			<input type="hidden" name="id" value="<?php echo esc_attr( $subscription['ID'] ); ?>">
