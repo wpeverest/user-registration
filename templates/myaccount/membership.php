@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( empty( $membership_data ) ) {
-	echo esc_html_e( 'You do not have any records', 'user-registration' );
+	esc_html_e( 'You do not have any records', 'user-registration' );
 	return;
 }
 
