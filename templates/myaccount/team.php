@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( empty( $teams ) || empty( $teams['items'] ) ) {
-	echo esc_html_e( 'You do not have any team records', 'user-registration' );
+	esc_html_e( 'You do not have any team records', 'user-registration' );
 	return;
 }
 
