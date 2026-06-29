@@ -213,6 +213,19 @@
 			}
 
 			?>
+			<?php
+			$ur_email_marketing_addon_keys = array( 'activecampaign', 'brevo', 'convertkit', 'klaviyo', 'mailchimp', 'mailerlite', 'mailpoet', 'salesforce', 'zapier' );
+			$ur_any_email_marketing_active = false;
+			if ( function_exists( 'ur_is_marketing_addon_active' ) ) {
+				foreach ( $ur_email_marketing_addon_keys as $ur_addon_key ) {
+					if ( ur_is_marketing_addon_active( $ur_addon_key ) ) {
+						$ur_any_email_marketing_active = true;
+						break;
+					}
+				}
+			}
+			if ( $ur_any_email_marketing_active ) :
+			?>
 				<!-- Sync Membership to email marketing addons. -->
 				<div class="ur-membership-sync-to-email-marketing-addons <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?> ">
 					<div class="ur-membership-selection-container ur-d-flex ur-mt-2 ur-align-items-center"
@@ -254,6 +267,7 @@
 				if ( UR_PRO_ACTIVE && function_exists( 'ur_render_email_marketing_sync_settings' ) ) {
 					ur_render_email_marketing_sync_settings( $membership_details );
 				}
+			endif;
 
 				/**
 				 * Local Currency Settings Render.
