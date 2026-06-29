@@ -214,7 +214,7 @@
 
 			?>
 			<?php
-			$ur_email_marketing_addon_keys = array( 'activecampaign', 'brevo', 'convertkit', 'klaviyo', 'mailchimp', 'mailerlite', 'mailpoet', 'salesforce', 'zapier' );
+			$ur_email_marketing_addon_keys = apply_filters( 'user_registration_email_marketing_addon_keys', array( 'activecampaign', 'brevo', 'convertkit', 'klaviyo', 'mailchimp', 'mailerlite', 'mailpoet', 'salesforce', 'zapier' ) );
 			$ur_any_email_marketing_active = false;
 			if ( function_exists( 'ur_is_marketing_addon_active' ) ) {
 				foreach ( $ur_email_marketing_addon_keys as $ur_addon_key ) {
