@@ -615,7 +615,8 @@ function promotional_notice_links( $notice_target_links, $is_permanent_dismiss )
 					$link['link'] = $url . ( isset( $link['link']['link_params'] ) ? $link['link']['link_params'] : '#' );
 				}
 				?>
-			<li><a class="button <?php esc_attr_e( $link['class'], 'user-registration' ); ?>" href="<?php echo esc_url( $link['link'] ); ?>" target="<?php echo esc_attr( $link['target'] ); ?>" rel="noreferrer noopener"><span class="dashicons <?php echo esc_attr( $link['icon'] ); ?>"></span><?php esc_html_e( $link['title'], 'user-registration' ); ?></a></li>
+			<?php $action_class = str_replace( 'notice-dismiss', 'ur-notice-dismiss', $link['class'] ); ?>
+			<li><a class="button <?php esc_attr_e( $action_class, 'user-registration' ); ?>" href="<?php echo esc_url( $link['link'] ); ?>" target="<?php echo esc_attr( $link['target'] ); ?>" rel="noreferrer noopener"><span class="dashicons <?php echo esc_attr( $link['icon'] ); ?>"></span><?php esc_html_e( $link['title'], 'user-registration' ); ?></a></li>
 				<?php
 			}
 			?>
@@ -624,7 +625,7 @@ function promotional_notice_links( $notice_target_links, $is_permanent_dismiss )
 	if ( $is_permanent_dismiss ) {
 
 		?>
-			<a href="#" class="notice-dismiss notice-nsa notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
+			<a href="#" class="ur-notice-dismiss ur-notice-nsa ur-notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
 		<?php
 	}
 }
