@@ -1102,6 +1102,12 @@ class StripeService {
 			);
 		}
 
+		$reg_data = get_user_meta( $member_id, 'ur_membership_registration_data', true );
+		if ( ! empty( $reg_data ) && empty( get_user_meta( $member_id, 'ur_membership_welcome_email_sent', true ) ) ) {
+			do_action( 'urm_member_registered', $reg_data, $member_id );
+			update_user_meta( $member_id, 'ur_membership_welcome_email_sent', true );
+		}
+
 		return array(
 			'message' => $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) : __( 'New member has been successfully created with successful stripe payment.', 'user-registration' ),
 			'status'  => true,

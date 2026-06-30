@@ -414,6 +414,11 @@ if ( ! class_exists( 'Admin' ) ) :
 						}
 					}
 				}
+				// Also include globally active gateways (Settings > Payments) so that
+				// gateways enabled site-wide are accepted even if not per-membership saved.
+				$global_gateways     = array_keys( urm_get_all_active_payment_gateways( $membership_type ) );
+				$configured_gateways = array_unique( array_merge( $configured_gateways, $global_gateways ) );
+
 				if ( ! empty( $configured_gateways ) && ! in_array( $data['payment_method'], $configured_gateways, true ) ) {
 					wp_delete_user( absint( $member_id ) );
 					wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
@@ -532,7 +537,11 @@ if ( ! class_exists( 'Admin' ) ) :
 					}
 				}
 
-				do_action( 'urm_member_registered', $data, $member_id );
+				if ( 'free' === $data['payment_method'] ) {
+					do_action( 'urm_member_registered', $data, $member_id );
+				} else {
+					update_user_meta( $member_id, 'ur_membership_registration_data', $data );
+				}
 
 				$response_data = apply_filters(
 					'user_registration_membership_after_register_member',
