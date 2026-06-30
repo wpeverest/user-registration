@@ -1,0 +1,84 @@
+{
+  "name": "urm/membership-groups",
+  "d4Shortcode": "urm-membership-groups",
+  "title": "URM Membership Groups",
+  "moduleIcon": "divi/module",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "settings": {
+        "meta": {
+          "meta": {}
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "into-multiple-groups",
+          "groups": {
+            "groupId": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "contentGroupSettings",
+                "priority": 10,
+                "render": true,
+                "subName": "groupId",
+                "label": "Group ID",
+                "description": "Enter the ID of the membership group to display.",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            },
+            "buttonText": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "contentGroupSettings",
+                "priority": 20,
+                "render": true,
+                "subName": "buttonText",
+                "label": "Button Text",
+                "description": "Label for the sign up button.",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "content": "auto",
+    "groups": {
+      "contentGroupSettings": {
+        "panel": "content",
+        "priority": 10,
+        "groupName": "groupSettings",
+        "multiElements": true,
+        "component": {
+          "name": "divi/composite",
+          "props": {
+            "groupLabel": "Group Settings"
+          }
+        }
+      }
+    }
+  }
+}

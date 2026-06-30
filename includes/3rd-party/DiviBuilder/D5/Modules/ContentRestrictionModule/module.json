@@ -1,0 +1,96 @@
+{
+  "name": "urm/content-restriction",
+  "d4Shortcode": "urm-content-restriction",
+  "title": "URM Content Restriction",
+  "moduleIcon": "divi/module",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "settings": {
+        "meta": {
+          "meta": {}
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "into-multiple-groups",
+          "groups": {
+            "userRole": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "content_userRole",
+                "priority": 10,
+                "render": true,
+                "subName": "userRole",
+                "label": "User Role",
+                "description": "User role required to view the restricted content.",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            },
+            "restrictContent": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "content_restrictContent",
+                "priority": 20,
+                "render": true,
+                "subName": "restrictContent",
+                "label": "Content",
+                "description": "HTML content visible only to users with the required role.",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "content": "auto",
+    "groups": {
+      "content_userRole": {
+        "panel": "content",
+        "priority": 10,
+        "groupName": "userRole",
+        "multiElements": true,
+        "component": {
+          "name": "divi/composite",
+          "props": {
+            "groupLabel": "User Role"
+          }
+        }
+      },
+      "content_restrictContent": {
+        "panel": "content",
+        "priority": 20,
+        "groupName": "restrictContent",
+        "multiElements": true,
+        "component": {
+          "name": "divi/composite",
+          "props": {
+            "groupLabel": "Content"
+          }
+        }
+      }
+    }
+  }
+}

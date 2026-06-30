@@ -1,0 +1,17 @@
+{
+  "name": "urm/edit-password",
+  "d4Shortcode": "urm-edit-password",
+  "title": "URM Edit Password",
+  "moduleIcon": "divi/module",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "settings": {
+        "meta": {
+          "meta": {}
+        }
+      }
+    }
+  }
+}
