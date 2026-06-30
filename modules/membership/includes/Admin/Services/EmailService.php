@@ -535,7 +535,8 @@ class EmailService {
 		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
 		$settings             = new UR_Settings_Membership_Expiring_Soon_User_Email();
 		$subscription_service = new SubscriptionService();
-		$tags                 = $subscription_service->get_membership_plan_details( $data );
+		$values               = array( 'membership_tags' => $subscription_service->get_membership_plan_details( $data ) );
+		$values               = $data + $values;
 
 		$membership_url = esc_url( ur_get_page_id( 'myaccount' ) > 0 ? ur_get_page_permalink( 'myaccount' ) : ur_get_page_permalink( 'login' ) );
 		$membership_url = trailingslashit( $membership_url ) . 'ur-membership/';
@@ -573,7 +574,8 @@ class EmailService {
 		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
 		$settings             = new UR_Settings_Membership_Ended_User_Email();
 		$subscription_service = new SubscriptionService();
-		$tags                 = $subscription_service->get_membership_plan_details( $data );
+		$values               = array( 'membership_tags' => $subscription_service->get_membership_plan_details( $data ) );
+		$values               = $data + $values;
 
 		$values = array( 'membership_tags' => $tags, 'email' => $data['user_email'] ) + $data;
 

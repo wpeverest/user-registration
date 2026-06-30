@@ -203,6 +203,38 @@
 
 			<?php
 			do_action( 'ur_membership_team_membership', $membership, $membership_details );
+
+			// When the fixed-period module is not active, show a locked Enable Expiration toggle.
+			if ( ! ur_check_module_activation( 'fixed-period-membership' ) || ! class_exists( 'WPEverest\URM\FixedPeriodMemebership\Admin' ) ) :
+				?>
+				<div class="ur-membership-fixed-period-main-container <?php echo ( isset( $membership_details['type'] ) && 'paid' === $membership_details['type'] ) ? '' : 'ur-d-none'; ?>">
+					<div class="ur-membership-fixed-period-enable-container ur-d-flex ur-mt-2 ur-align-items-start upgradable-type" style="gap:20px; margin-bottom:16px;">
+						<div class="ur-label" style="width:30%; padding-top:4px;">
+							<label for="urm_enable_fixed_period_duration"><?php esc_html_e( 'Enable Expiration :', 'user-registration' ); ?></label>
+						</div>
+						<div style="width:100%">
+							<div class="ur-toggle-section m1-auto">
+								<span class="user-registration-toggle-form">
+									<input
+										data-key-name="Fixed period duration Action"
+										id="urm_enable_fixed_period_duration"
+										type="checkbox"
+										class="user-registration-switch__control hide-show-check enabled"
+										disabled
+										<?php echo ! empty( $membership_details['enable_fixed_period_duration'] ) ? 'checked' : ''; ?>
+									>
+									<span class="slider round" style="opacity: 0.5;"></span>
+									<?php ur_render_premium_feature_gate(); ?>
+								</span>
+							</div>
+							<p style="margin:4px 0 0; color:#757575; font-size:12px; line-height:1.5;">
+								<?php esc_html_e( 'Set a fixed end date for this membership. When enabled, access is granted only until the specified expiration date instead of lifetime access.', 'user-registration' ); ?>
+							</p>
+						</div>
+					</div>
+				</div>
+				<?php
+			endif;
 			?>
 
 			<!-- Payment Settings Notice -->

@@ -921,13 +921,27 @@ class AJAX {
 			}
 
 			if ( $is_renewing ) {
-				$response['message']            = __( 'Membership has been successfully renewed.', 'user-registration' );
-				$subscription_service           = new SubscriptionService();
-				$members_subscription_repo      = new MembersSubscriptionRepository();
-				$membership_repository          = new MembershipRepository();
-				$member_subscription            = $members_subscription_repo->get_subscription_data_by_member_and_membership_id( $member_id, $current_membership_id );
-				$membership                     = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
-				$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
+				$response['message'] = __( 'Membership has been successfully renewed.', 'user-registration' );
+
+				$members_subscription_repo = new MembersSubscriptionRepository();
+				$membership_repository     = new MembershipRepository();
+				$member_subscription       = $members_subscription_repo->get_subscription_data_by_member_and_membership_id( $member_id, $current_membership_id );
+
+				$membership       = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
+				$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
+
+				// Route to fixed-period service when applicable; fall back to standard service.
+				$is_paid                      = isset( $membership_metas['type'] ) && 'paid' === $membership_metas['type'];
+				$is_fixed_period              = ! empty( $membership_metas['enable_fixed_period_duration'] );
+				$is_renewable                 = ! empty( $membership_metas['fixed_period']['expiration_date_renewal'] );
+				$is_fixed_period_addon_active = class_exists( '\WPEverest\URM\FixedPeriodMemebership\FixedPeriodSubscriptionService' );
+
+				if ( $is_paid && $is_fixed_period && $is_renewable && $is_fixed_period_addon_active ) {
+					$subscription_service = new \WPEverest\URM\FixedPeriodMemebership\FixedPeriodSubscriptionService();
+				} else {
+					$subscription_service = new SubscriptionService();
+				}
+
 				$membership_metas['post_title'] = $membership['post_title'];
 				$subscription_service->update_subscription_data_for_renewal( $member_subscription, $membership_metas );
 			}
