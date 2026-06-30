@@ -1541,6 +1541,7 @@ class NewPaypalService {
 			case 'BILLING.SUBSCRIPTION.SUSPENDED':
 			case 'BILLING.SUBSCRIPTION.CANCELLED':
 			case 'BILLING.SUBSCRIPTION.EXPIRED':
+			case 'BILLING.SUBSCRIPTION.PAYMENT.FAILED':
 				$result = $this->handle_subscription_webhook_event( $event_type, $resource );
 				break;
 
@@ -1840,12 +1841,13 @@ class NewPaypalService {
 		}
 
 		$status_map = array(
-			'BILLING.SUBSCRIPTION.CREATED'   => 'pending',
-			'BILLING.SUBSCRIPTION.ACTIVATED' => 'active',
-			'BILLING.SUBSCRIPTION.UPDATED'   => isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'active',
-			'BILLING.SUBSCRIPTION.SUSPENDED' => 'canceled',
-			'BILLING.SUBSCRIPTION.CANCELLED' => 'canceled',
-			'BILLING.SUBSCRIPTION.EXPIRED'   => 'expired',
+			'BILLING.SUBSCRIPTION.CREATED'        => 'pending',
+			'BILLING.SUBSCRIPTION.ACTIVATED'      => 'active',
+			'BILLING.SUBSCRIPTION.UPDATED'        => isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'active',
+			'BILLING.SUBSCRIPTION.SUSPENDED'      => 'canceled',
+			'BILLING.SUBSCRIPTION.CANCELLED'      => 'canceled',
+			'BILLING.SUBSCRIPTION.EXPIRED'        => 'expired',
+			'BILLING.SUBSCRIPTION.PAYMENT.FAILED' => 'pending',
 		);
 
 		$new_status = isset( $status_map[ $event_type ] ) ? $status_map[ $event_type ] : ( isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'pending' );
