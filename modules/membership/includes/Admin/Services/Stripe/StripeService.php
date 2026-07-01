@@ -1293,11 +1293,14 @@ class StripeService {
 			}
 
 			$subscription_details = array(
-				'customer' => $customer->id,
-				'items'    => array(
+				'customer'         => $customer->id,
+				'items'            => array(
 					array(
 						'price' => $effective_price_id,
 					),
+				),
+				'payment_settings' => array(
+					'save_default_payment_method' => 'on_subscription',
 				),
 			);
 
