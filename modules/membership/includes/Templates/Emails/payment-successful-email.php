@@ -56,17 +56,29 @@ if ( $invoice_details['is_membership'] ) :
 	// Define label–key pairs for membership rows
 	$membership_fields = [
 		__( 'Membership Name', 'user-registration' )   => ucwords( $invoice_details['membership_plan_name'] ),
-		__( 'Trial Status', 'user-registration' )      => ucfirst( $trial_status ),
-		__( 'Trial Start Date', 'user-registration' )  => ! empty( $invoice_details['membership_plan_trial_start_date'] ) && 'N/A' !== $invoice_details['membership_plan_trial_start_date'] ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_trial_start_date'] ) ) : __( 'N/A', 'user-registration' ),
-		__( 'Trial End Date', 'user-registration' )    => ! empty( $invoice_details['membership_plan_trial_end_date'] ) && 'N/A' !== $invoice_details['membership_plan_trial_end_date'] ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_trial_end_date'] ) ) : __( 'N/A', 'user-registration' ),
-		__( 'Next Billing Date', 'user-registration' ) => ! empty( $invoice_details['membership_plan_next_billing_date'] ) && 'N/A' !== $invoice_details['membership_plan_next_billing_date'] ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_next_billing_date'] ) ) : __( 'N/A', 'user-registration' ),
-		__( 'Payment Date', 'user-registration' )      => date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_payment_date'] ) ),
-		__( 'Billing Cycle', 'user-registration' )     => $invoice_details['membership_plan_billing_cycle'],
-		__( 'Payment Method', 'user-registration' )    => $invoice_details['membership_plan_payment_method'],
-		__( 'Amount', 'user-registration' )            => $payment_amount,
-		__( 'Trial Amount', 'user-registration' )      => $trial_amount,
-		__( 'Tax Amount', 'user-registration' )		   => $tax_amount,
 	];
+
+	// Only show trial details when a trial is actually applicable.
+	if ( 'On' === $trial_status ) {
+		$membership_fields[ __( 'Trial Status', 'user-registration' ) ]     = ucfirst( $trial_status );
+		$membership_fields[ __( 'Trial Start Date', 'user-registration' ) ] = ! empty( $invoice_details['membership_plan_trial_start_date'] ) && 'N/A' !== $invoice_details['membership_plan_trial_start_date'] ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_trial_start_date'] ) ) : __( 'N/A', 'user-registration' );
+		$membership_fields[ __( 'Trial End Date', 'user-registration' ) ]   = ! empty( $invoice_details['membership_plan_trial_end_date'] ) && 'N/A' !== $invoice_details['membership_plan_trial_end_date'] ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_trial_end_date'] ) ) : __( 'N/A', 'user-registration' );
+	}
+
+	$membership_fields[ __( 'Next Billing Date', 'user-registration' ) ] = ! empty( $invoice_details['membership_plan_next_billing_date'] ) && 'N/A' !== $invoice_details['membership_plan_next_billing_date'] ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_next_billing_date'] ) ) : __( 'N/A', 'user-registration' );
+	$membership_fields[ __( 'Payment Date', 'user-registration' ) ]      = date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_payment_date'] ) );
+	$membership_fields[ __( 'Billing Cycle', 'user-registration' ) ]     = $invoice_details['membership_plan_billing_cycle'];
+	$membership_fields[ __( 'Payment Method', 'user-registration' ) ]    = $invoice_details['membership_plan_payment_method'];
+	$membership_fields[ __( 'Amount', 'user-registration' ) ]            = $payment_amount;
+
+	if ( 'On' === $trial_status ) {
+		$membership_fields[ __( 'Trial Amount', 'user-registration' ) ] = $trial_amount;
+	}
+
+	// Only show tax when the tax module is enabled and it was actually charged.
+	if ( ur_check_module_activation( 'taxes' ) && ! empty( $tax_amount ) ) {
+		$membership_fields[ __( 'Tax Amount', 'user-registration' ) ] = $tax_amount;
+	}
 
 	// Add coupon details if they exist
 	if ( ! empty( $invoice_details['membership_plan_coupon'] ) ) {
