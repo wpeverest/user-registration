@@ -128,6 +128,12 @@
   color: #d63638;
   background: #fcefef;
 }
+.ur-subscription__badge--status-canceling {
+  color: #374151;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+}
 .ur-subscription__badge--status-refunded {
   color: #8c8f94;
   background: #f5f5f5;

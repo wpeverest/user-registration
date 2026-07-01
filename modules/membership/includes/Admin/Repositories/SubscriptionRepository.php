@@ -87,8 +87,13 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 			$cancel_sub = $subscription_service->cancel_subscription( $order, $subscription );
 
 			if ( $cancel_sub['status'] ) {
+				$expiry_date = $subscription['expiry_date'] ?? '';
 
-				$this->update( $subscription_id, array( 'status' => 'canceled' ) );
+				if ( ! empty( $expiry_date ) && strtotime( $expiry_date ) > time() ) {
+					update_user_meta( $subscription['user_id'], 'urm_pending_cancel_' . $subscription_id, $expiry_date );
+				} else {
+					$this->update( $subscription_id, array( 'status' => 'canceled' ) );
+				}
 				if ( $send_email ) {
 					$subscription_service->send_cancel_emails( $subscription_id );
 				}
@@ -104,13 +109,22 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 	}
 
 	public function reactivate_subscription_by_id( $subscription_id, $send_email = true ) {
-		$subscription = $this->retrieve( $subscription_id );
+		$subscription       = $this->retrieve( $subscription_id );
+		$pending_cancel_key = 'urm_pending_cancel_' . $subscription_id;
 
 		if ( 'active' === $subscription['status'] ) {
-			return array(
-				'status'  => false,
-				'message' => esc_html__( 'Subscription is already active.', 'user-registration' ),
-			);
+			if ( ! get_user_meta( $subscription['user_id'], $pending_cancel_key, true ) ) {
+				return array(
+					'status'  => false,
+					'message' => esc_html__( 'Subscription is already active.', 'user-registration' ),
+				);
+			}
+
+			$order = $this->orders_repository->get_order_by_subscription( $subscription_id );
+			( new SubscriptionService() )->reactivate_subscription( $order, $subscription );
+			delete_user_meta( $subscription['user_id'], $pending_cancel_key );
+
+			return array( 'status' => true );
 		}
 
 		if ( 'expired' !== $subscription['status'] ) {

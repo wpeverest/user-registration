@@ -2506,6 +2506,24 @@ class NewPaypalService {
 		);
 	}
 
+	private function cancel_paypal_subscription( $subscription_id, $payload, $paypal_options ) {
+		return $this->paypal_rest_request(
+			'POST',
+			'/v1/billing/subscriptions/' . rawurlencode( $subscription_id ) . '/cancel',
+			$payload,
+			$paypal_options
+		);
+	}
+
+	public function cancel_suspended_subscription( $subscription_id ) {
+		$paypal_options = $this->get_paypal_rest_credentials();
+		return $this->cancel_paypal_subscription(
+			$subscription_id,
+			array( 'reason' => 'Subscription period ended' ),
+			$paypal_options
+		);
+	}
+
 	/**
 	 * Activate subscription.
 	 *

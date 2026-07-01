@@ -898,7 +898,23 @@ if ( ! class_exists( 'Admin' ) ) :
 								<tr>
 									<td><?php echo esc_html( $membership['post_title'] ); ?></td>
 									<td><?php echo esc_html( $amount ); ?></td>
-									<td class="status-<?php echo esc_attr( $membership['status'] ); ?>"><?php echo esc_html( ucfirst( $membership['status'] ) ); ?></td>
+									<?php $pending_cancel_date = get_user_meta( $user_id, 'urm_pending_cancel_' . ( $membership['subscription_id'] ?? '' ), true ); ?>
+								<td class="<?php echo $pending_cancel_date ? 'status-pending' : 'status-' . esc_attr( $membership['status'] ); ?>">
+										<?php
+										if ( $pending_cancel_date ) {
+											echo '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'; // phpcs:ignore WordPress.Security.EscapeOutput
+											echo esc_html(
+												sprintf(
+													/* translators: %s: cancellation date */
+													__( 'Cancels %s', 'user-registration' ),
+													date_i18n( get_option( 'date_format' ), strtotime( $pending_cancel_date ) )
+												)
+											);
+										} else {
+											echo esc_html( ucfirst( $membership['status'] ) );
+										}
+										?>
+									</td>
 									<td><?php echo ! empty( $membership['start_date'] ) ? esc_html( date_i18n( 'Y-m-d', strtotime( $membership['start_date'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
 									<td><?php echo esc_html( $expiry_date ); ?></td>
 									<td><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-subscriptions&action=edit&id=' . ( $membership['subscription_id'] ?? 0 ) ) ); ?>"><?php esc_html_e( 'View', 'user-registration' ); ?></a></td>
