@@ -1192,7 +1192,12 @@ class SubscriptionService {
 			if ( $last_order['order_type'] !== 'subscription' ) {
 				continue;
 			}
-			// Update subscription status to expired
+			// If this was a pending-cancel PayPal subscription, now truly cancel it on PayPal's end.
+			$pending_cancel_meta = get_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id, true );
+			if ( $pending_cancel_meta && 'paypal' === ( $last_order['payment_method'] ?? '' ) && ! empty( $last_order['subscription_id'] ) ) {
+				( new NewPaypalService() )->cancel_suspended_subscription( $last_order['subscription_id'] );
+			}
+			delete_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id );
 			$update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => 'expired' ) );
 
 			if ( $update_result ) {

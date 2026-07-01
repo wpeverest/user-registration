@@ -49,6 +49,7 @@ $status_badge_classes = array(
 	'expired'  => 'ur-subscription__badge--status-refunded',
 );
 $status_badge_class   = isset( $status_badge_classes[ $subscription['status'] ] ) ? $status_badge_classes[ $subscription['status'] ] : '';
+$pending_cancel_date  = get_user_meta( $subscription['user_id'], 'urm_pending_cancel_' . $subscription['ID'], true );
 $product_amount       = isset( $subscription['billing_amount'] ) ? (float) $subscription['billing_amount'] : 0;
 
 $has_active_trial = false;
@@ -241,6 +242,20 @@ $is_admin_created      = ! empty( $is_admin_created_meta['meta_value'] );
 									class="ur-subscription__badge ur-subscription__badge--status <?php echo esc_attr( $status_badge_class ); ?>">
 									<?php echo esc_html( ucfirst( $subscription['status'] ) ); ?>
 								</span>
+								<?php if ( $pending_cancel_date ) : ?>
+								<span class="ur-subscription__badge ur-subscription__badge--status ur-subscription__badge--status-canceling" style="display:inline-flex;align-items:center;gap:5px;">
+									<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+									<?php
+									echo esc_html(
+										sprintf(
+											/* translators: %s: cancellation date */
+											__( 'Cancels %s', 'user-registration' ),
+											date_i18n( get_option( 'date_format' ), strtotime( $pending_cancel_date ) )
+										)
+									);
+									?>
+								</span>
+								<?php endif; ?>
 							</div>
 						</div>
 						<div class="ur-subscription__section-content">
