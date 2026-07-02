@@ -646,15 +646,21 @@ input.ur-input-border-red, textarea.ur-input-border-red{
 }
 
 .ur-front-spinner {
-	background: url("../images/wpspin_light-2x.gif") no-repeat;
-	background-size: 16px 16px;
-	display: block;
-	opacity: 0.7;
-	filter: alpha(opacity=70);
+	display: inline-block;
 	width: 16px;
 	height: 16px;
-	margin-left: -40px;
-	float: left;
+	margin-left: -10px;
+	margin-right: 8px;
+	vertical-align: middle;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-dasharray='24 100'/%3E%3C/svg%3E") no-repeat center;
+	background-size: 16px 16px;
+	animation: ur-front-spinner-rotate 0.8s linear infinite;
+}
+
+@keyframes ur-front-spinner-rotate {
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 .ur-hidden {
