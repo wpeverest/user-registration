@@ -364,7 +364,7 @@ class UR_Frontend_Form_Handler {
 						}
 					}
 				}
-				if ( ! isset( $success_params['stripe_process'] ) || $success_params['stripe_process'] == false ) {
+				if ( ! isset( $success_params['payment_process'] ) || $success_params['payment_process'] == false ) {
 
 					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
 
