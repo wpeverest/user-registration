@@ -61,13 +61,23 @@ if ( $invoice_details['is_membership'] ) :
 	// Only show trial details when a trial is actually applicable.
 	if ( 'On' === $trial_status ) {
 		$membership_fields[ __( 'Trial Status', 'user-registration' ) ]     = ucfirst( $trial_status );
-		$membership_fields[ __( 'Trial Start Date', 'user-registration' ) ] = ! empty( $invoice_details['membership_plan_trial_start_date'] ) && 'N/A' !== $invoice_details['membership_plan_trial_start_date'] ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_trial_start_date'] ) ) : __( 'N/A', 'user-registration' );
-		$membership_fields[ __( 'Trial End Date', 'user-registration' ) ]   = ! empty( $invoice_details['membership_plan_trial_end_date'] ) && 'N/A' !== $invoice_details['membership_plan_trial_end_date'] ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_trial_end_date'] ) ) : __( 'N/A', 'user-registration' );
+		$membership_fields[ __( 'Trial Start Date', 'user-registration' ) ] = ! empty( $invoice_details['membership_plan_trial_start_date'] ) && 'N/A' !== $invoice_details['membership_plan_trial_start_date'] ? date_i18n( get_option( 'date_format' ), ur_membership_parse_display_date( $invoice_details['membership_plan_trial_start_date'] ) ) : __( 'N/A', 'user-registration' );
+		$membership_fields[ __( 'Trial End Date', 'user-registration' ) ]   = ! empty( $invoice_details['membership_plan_trial_end_date'] ) && 'N/A' !== $invoice_details['membership_plan_trial_end_date'] ? date_i18n( get_option( 'date_format' ), ur_membership_parse_display_date( $invoice_details['membership_plan_trial_end_date'] ) ) : __( 'N/A', 'user-registration' );
 	}
 
-	$membership_fields[ __( 'Next Billing Date', 'user-registration' ) ] = ! empty( $invoice_details['membership_plan_next_billing_date'] ) && 'N/A' !== $invoice_details['membership_plan_next_billing_date'] ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_next_billing_date'] ) ) : __( 'N/A', 'user-registration' );
-	$membership_fields[ __( 'Payment Date', 'user-registration' ) ]      = date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_payment_date'] ) );
-	$membership_fields[ __( 'Billing Cycle', 'user-registration' ) ]     = $invoice_details['membership_plan_billing_cycle'];
+	// Only show billing cycle details for subscription plans, not one-time payments.
+	$is_subscription = 'Subscription' === $invoice_details['membership_plan_type'];
+
+	if ( $is_subscription ) {
+		$membership_fields[ __( 'Next Billing Date', 'user-registration' ) ] = ! empty( $invoice_details['membership_plan_next_billing_date'] ) && 'N/A' !== $invoice_details['membership_plan_next_billing_date'] ? date_i18n( get_option( 'date_format' ), ur_membership_parse_display_date( $invoice_details['membership_plan_next_billing_date'] ) ) : __( 'N/A', 'user-registration' );
+	}
+
+	$membership_fields[ __( 'Payment Date', 'user-registration' ) ]      = date_i18n( get_option( 'date_format' ), ur_membership_parse_display_date( $invoice_details['membership_plan_payment_date'] ) );
+
+	if ( $is_subscription ) {
+		$membership_fields[ __( 'Billing Cycle', 'user-registration' ) ] = $invoice_details['membership_plan_billing_cycle'];
+	}
+
 	$membership_fields[ __( 'Payment Method', 'user-registration' ) ]    = $invoice_details['membership_plan_payment_method'];
 	$membership_fields[ __( 'Amount', 'user-registration' ) ]            = $payment_amount;
 

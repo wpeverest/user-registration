@@ -815,6 +815,26 @@ if ( ! function_exists( 'urwc_handle_shop_restriction' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_membership_parse_display_date' ) ) {
+	/**
+	 * Parse a membership date string that SubscriptionService formats as 'Y, F d'
+	 * (e.g. "2027, July 02") back into a timestamp.
+	 *
+	 * strtotime() can't reliably parse that format — it silently drops the year —
+	 * so this tries the exact format first and falls back to strtotime() for any
+	 * other date string shape.
+	 *
+	 * @param string $date_string Date string to parse.
+	 *
+	 * @return int|false Timestamp on success, false on failure.
+	 */
+	function ur_membership_parse_display_date( $date_string ) {
+		$parsed = DateTime::createFromFormat( 'Y, F d', $date_string );
+
+		return $parsed ? $parsed->getTimestamp() : strtotime( $date_string );
+	}
+}
+
 
 /**
  * Deprecating function code start
