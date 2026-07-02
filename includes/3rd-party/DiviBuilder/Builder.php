@@ -114,6 +114,14 @@ class Builder {
 			)
 		);
 
+		// D5 populates its insert panel from ET_Builder_Module subclasses and marks
+		// any module without a JS registerModule() call as "Legacy". Content
+		// Restriction has no D5 registration in the free plugin, so skip its D4
+		// registration in D5 to prevent it from appearing in the insert panel.
+		if ( urm_is_divi5_active() ) {
+			unset( $modules['content-restriction'] );
+		}
+
 		foreach ( $modules as $module ) {
 			new $module();
 		}
