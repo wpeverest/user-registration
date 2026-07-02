@@ -212,6 +212,13 @@ class Builder {
 		);
 		wp_enqueue_style( 'urm-form-style' );
 
+		wp_enqueue_style(
+			'user-registration-my-account',
+			UR()->plugin_url() . '/assets/css/my-account-layout.css',
+			array(),
+			UR()->version
+		);
+
 		if ( defined( 'UR_VERSION' ) ) {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
