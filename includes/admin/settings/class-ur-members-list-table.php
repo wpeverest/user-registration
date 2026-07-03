@@ -852,6 +852,22 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 									break;
 								}
 
+								$pending_cancel_date = get_user_meta( $new_user_object->ID, 'urm_pending_cancel_' . ( $user_subs_object['subscription_id'] ?? '' ), true );
+
+								if ( $pending_cancel_date ) {
+									$clock_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+									$row       .= sprintf(
+										'<span id="" class="user-subscription-status user-subscription-canceling">%s%s</span>',
+										$clock_icon,
+										sprintf(
+											/* translators: %s: cancellation date */
+											esc_html__( 'Cancels %s', 'user-registration' ),
+											esc_html( date_i18n( get_option( 'date_format' ), strtotime( $pending_cancel_date ) ) )
+										)
+									);
+									break;
+								}
+
 								$expiry_date = new \DateTime( $user_subs_object['expiry_date'] );
 
 								if ( ! empty( $user_subs_object['payment_method'] ) && ( 'subscription' == $user_subs_object['payment_method'] ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
