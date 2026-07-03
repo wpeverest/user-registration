@@ -1809,24 +1809,19 @@ class StripeService {
 
 			if ( 'active' === $subscription->status ) {
 
-				if ( 'canceled' === $local_subscription['status'] && true === $subscription->cancel_at_period_end ) {
+				if ( true === $subscription->cancel_at_period_end ) {
 					\Stripe\Subscription::update(
 						$subscription_id,
 						array(
 							'cancel_at_period_end' => false,
 						)
 					);
-
-					return array(
-						'status'  => true,
-						'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
-					);
-				} else {
-					return array(
-						'status'  => true,
-						'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
-					);
 				}
+
+				return array(
+					'status'  => true,
+					'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
+				);
 			} elseif ( 'canceled' !== $subscription->status && true === $subscription->cancel_at_period_end ) {
 				\Stripe\Subscription::update(
 					$subscription_id,

@@ -248,6 +248,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 						       wp.post_title as membership_plan_name,
 						       wums.item_id as membership,
 						       wums.ID as subscription_id,
+						       wums.subscription_id as gateway_subscription_id,
 						       wums.next_billing_date,
 						       wums.expiry_date
 						FROM  $this->table wums

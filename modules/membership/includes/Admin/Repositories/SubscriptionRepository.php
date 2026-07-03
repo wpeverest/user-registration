@@ -120,8 +120,16 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 				);
 			}
 
-			$order = $this->orders_repository->get_order_by_subscription( $subscription_id );
-			( new SubscriptionService() )->reactivate_subscription( $order, $subscription );
+			$order  = $this->orders_repository->get_order_by_subscription( $subscription_id );
+			$result = ( new SubscriptionService() )->reactivate_subscription( $order, $subscription );
+
+			if ( empty( $result['status'] ) ) {
+				return array(
+					'status'  => false,
+					'message' => $result['message'] ?? esc_html__( 'Failed to reactivate subscription with payment gateway.', 'user-registration' ),
+				);
+			}
+
 			delete_user_meta( $subscription['user_id'], $pending_cancel_key );
 
 			return array( 'status' => true );

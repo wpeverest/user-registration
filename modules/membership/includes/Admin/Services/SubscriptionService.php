@@ -1187,15 +1187,15 @@ class SubscriptionService {
 			$subscription_id = $subscription['subscription_id'];
 			$user_id         = $subscription['member_id'];
 			$membership_id   = isset( $subscription['membership'] ) ? absint( $subscription['membership'] ) : 0;
-			$last_order      = $this->members_orders_repository->get_member_orders( $user_id );
+			$order           = $this->orders_repository->get_order_by_subscription( $subscription_id );
 
-			if ( $last_order['order_type'] !== 'subscription' ) {
+			if ( ( $order['order_type'] ?? '' ) !== 'subscription' ) {
 				continue;
 			}
 			// If this was a pending-cancel PayPal subscription, now truly cancel it on PayPal's end.
 			$pending_cancel_meta = get_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id, true );
-			if ( $pending_cancel_meta && 'paypal' === ( $last_order['payment_method'] ?? '' ) && ! empty( $last_order['subscription_id'] ) ) {
-				( new NewPaypalService() )->cancel_suspended_subscription( $last_order['subscription_id'] );
+			if ( $pending_cancel_meta && 'paypal' === ( $order['payment_method'] ?? '' ) && ! empty( $subscription['gateway_subscription_id'] ) ) {
+				( new NewPaypalService() )->cancel_suspended_subscription( $subscription['gateway_subscription_id'] );
 			}
 			delete_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id );
 			$update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => 'expired' ) );
