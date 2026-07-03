@@ -515,8 +515,17 @@ class AJAX {
 		$order['membership'] = $order['post_id'];
 		unset( $order['user_id'], $order['post_id'] );
 
-		$email_service = new EmailService();
-		$email_service->send_email( $order, 'payment_successful' );
+		if ( $response['status'] ) {
+			$email_service = new EmailService();
+			$email_service->send_email( $order, 'payment_successful' );
+
+			$member_id = $response['member_id'] ?? $order['member_id'];
+			$reg_data  = get_user_meta( $member_id, 'ur_membership_registration_data', true );
+			if ( ! empty( $reg_data ) && empty( get_user_meta( $member_id, 'ur_membership_welcome_email_sent', true ) ) ) {
+				do_action( 'urm_member_registered', $reg_data, $member_id );
+				update_user_meta( $member_id, 'ur_membership_welcome_email_sent', true );
+			}
+		}
 
 		if ( ! $response['status'] ) {
 			return array(

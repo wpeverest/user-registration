@@ -305,6 +305,7 @@ class OrderService {
 				}
 
 				delete_user_meta( $user_id, 'urm_next_subscription_data' );
+				$this->response['member_id'] = $user_id;
 				return $this->response;
 
 			}
