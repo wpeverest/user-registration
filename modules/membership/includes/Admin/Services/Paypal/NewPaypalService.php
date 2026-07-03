@@ -1545,6 +1545,10 @@ class NewPaypalService {
 				$result = $this->handle_subscription_webhook_event( $event_type, $resource );
 				break;
 
+			case 'PAYMENT.SALE.COMPLETED':
+				$result = $this->handle_subscription_payment_completed( $resource );
+				break;
+
 			default:
 				PaymentGatewayLogging::log_general(
 					'paypal',
@@ -1747,6 +1751,43 @@ class NewPaypalService {
 					'transaction_id' => $transaction_id,
 				),
 				JSON_PRETTY_PRINT
+			)
+		);
+
+		return true;
+	}
+
+	/**
+	 * Handle PAYMENT.SALE.COMPLETED webhook (subscription renewal retry succeeded).
+	 *
+	 * @param array $resource
+	 * @return bool
+	 */
+	private function handle_subscription_payment_completed( $resource ) {
+		$paypal_subscription_id = sanitize_text_field( isset( $resource['billing_agreement_id'] ) ? $resource['billing_agreement_id'] : '' );
+
+		if ( empty( $paypal_subscription_id ) ) {
+			return true; 
+		}
+
+		$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $paypal_subscription_id, true );
+
+		if ( empty( $current_subscription ) ) {
+			return true;
+		}
+
+		$this->members_subscription_repository->update(
+			$current_subscription['sub_id'],
+			array( 'status' => 'active' )
+		);
+
+		PaymentGatewayLogging::log_webhook_processed(
+			'paypal',
+			'PAYMENT.SALE.COMPLETED: subscription restored to active after successful retry',
+			array(
+				'paypal_subscription_id' => $paypal_subscription_id,
+				'sub_id'                 => $current_subscription['sub_id'],
+				'member_id'              => $current_subscription['user_id'],
 			)
 		);
 
