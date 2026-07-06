@@ -1767,7 +1767,7 @@ class NewPaypalService {
 		$paypal_subscription_id = sanitize_text_field( isset( $resource['billing_agreement_id'] ) ? $resource['billing_agreement_id'] : '' );
 
 		if ( empty( $paypal_subscription_id ) ) {
-			return true; 
+			return true;
 		}
 
 		$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $paypal_subscription_id, true );
@@ -1776,8 +1776,17 @@ class NewPaypalService {
 			return true;
 		}
 
-		if ( ! in_array( $current_subscription['status'], array( 'pending', 'active' ), true ) ) {
-			return true; // ignore stale/redelivered sale events for canceled/expired/suspended subs
+		// Only recover from pending; already-active needs no change, terminal states must not be resurrected.
+		if ( 'pending' !== $current_subscription['status'] ) {
+			return true;
+		}
+
+		// Don't activate a future-dated subscription early (mirrors activate_pending_with_completed_orders()).
+		$sub_data   = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $current_subscription['sub_id'] );
+		$start_date = isset( $sub_data['start_date'] ) ? $sub_data['start_date'] : null;
+
+		if ( ! empty( $start_date ) && strtotime( $start_date ) > time() ) {
+			return true;
 		}
 
 		$this->members_subscription_repository->update(
