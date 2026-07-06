@@ -2057,7 +2057,7 @@ class AJAX {
 			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
 		}
 
-		if ( isset( $_POST['type'] ) && 'multiple' === sanitize_text_field( $_POST['type'] ) ) {
+		if ( ! empty( $user_membership_ids ) ) {
 			$subscription_service = new SubscriptionService();
 			$status               = $subscription_service->can_purchase_multiple( $data );
 
