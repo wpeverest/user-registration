@@ -1167,7 +1167,7 @@ class SubscriptionService {
 	 */
 	public function daily_membership_expiration_check() {
 		// Grace period gives the hourly missed-payment backfill time to catch a renewal
-		$grace_hours   = (int) apply_filters( 'urm_expiry_grace_hours', 24 );
+		$grace_hours   = (int) apply_filters( 'urm_expiry_grace_hours', 12 );
 		$date          = new \DateTime( "-{$grace_hours} hours" );
 		$check_date    = $date->format( 'Y-m-d H:i:s' );
 		$subscriptions = $this->members_subscription_repository->get_subscriptions_to_expire( $check_date );
