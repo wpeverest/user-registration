@@ -142,6 +142,11 @@
 			'logged_out': { label: 'Logged Out' },
 		};
 
+		var userStateOptionsNoEmpty = {
+			'logged_in':  { label: 'Logged In' },
+			'logged_out': { label: 'Logged Out' },
+		};
+
 		function register( name, d4Shortcode, title, fields ) {
 			var attrs = {
 				module: { type: 'object', settings: { meta: { meta: {} } } },
@@ -156,9 +161,14 @@
 					var f    = fields[ i ];
 					var slug = 'content_' + f.key;
 
-					var component = f.options
-						? { type: 'field', name: 'divi/select', props: { options: f.options } }
-						: { type: 'field', name: 'divi/text' };
+					var component;
+					if ( f.component ) {
+						component = f.component;
+					} else if ( f.options ) {
+						component = { type: 'field', name: 'divi/select', props: { options: f.options } };
+					} else {
+						component = { type: 'field', name: 'divi/text' };
+					}
 
 					contentGroups[ f.key ] = {
 						groupType: 'group-item',
@@ -223,7 +233,7 @@
 			[
 				{ key: 'redirectUrl',    label: 'Redirect URL',        desc: 'Redirect the user to this URL after login.' },
 				{ key: 'logoutRedirect', label: 'Logout Redirect URL', desc: 'Redirect the user to this URL after logout.' },
-				{ key: 'userState',      label: 'User State',          desc: 'Show this module to specific user states only.', options: userStateOptions },
+				{ key: 'userState',      label: 'User State',          desc: 'Show this module to specific user states only.', options: userStateOptionsNoEmpty },
 			]
 		);
 
@@ -232,7 +242,7 @@
 			[
 				{ key: 'redirectUrl',    label: 'Redirect URL',        desc: 'Redirect the user to this URL after login.' },
 				{ key: 'logoutRedirect', label: 'Logout Redirect URL', desc: 'Redirect the user to this URL after logout.' },
-				{ key: 'userState',      label: 'User State',          desc: 'Show this module to specific user states only.', options: userStateOptions },
+				{ key: 'userState',      label: 'User State',          desc: 'Show this module to specific user states only.', options: userStateOptionsNoEmpty },
 			]
 		);
 
