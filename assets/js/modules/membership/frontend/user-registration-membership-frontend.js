@@ -452,7 +452,7 @@
 				is_upgrade = false;
 			}
 			var no_errors = true,
-				pg_inputs = $('input[name="urm_payment_method"]:visible'),
+				pg_inputs = $('input[name="urm_payment_method"]:checked'),
 				selected_tier = $(".urm-team-pricing-tier.selected"),
 				seat_input = selected_tier.find(".ur-team-tier-seats-input");
 
@@ -3147,7 +3147,7 @@
 				"user_registration_frontend_validate_before_form_submit",
 				function (e, $form) {
 					var stripe_selected = false;
-					$('input[name="urm_payment_method"]:visible').each(
+					$('input[name="urm_payment_method"]:checked').each(
 						function () {
 							if (
 								$(this).val() === "stripe" &&
@@ -3197,7 +3197,7 @@
 								urmf_data.ajax_url,
 								{
 									action: "user_registration_membership_validate_stripe_card_mode",
-									_nonce: urmf_data._nonce,
+									security: urmf_data._nonce,
 									payment_method_id: pmResult.paymentMethod.id
 								},
 								function (response) {
