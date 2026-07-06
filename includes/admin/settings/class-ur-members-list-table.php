@@ -789,6 +789,10 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 								$subscriptions = $new_user_object->subscriptions;
 
 								foreach ( $subscriptions as $key => $sub ) {
+									if ( empty( $sub['expiry_date'] ) ) {
+										continue;
+									}
+
 									$expiry_date = new \DateTime( $sub['expiry_date'] );
 
 									if ( ! empty( $sub['billing_cycle'] ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
@@ -868,10 +872,12 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 									break;
 								}
 
-								$expiry_date = new \DateTime( $user_subs_object['expiry_date'] );
+								if ( ! empty( $user_subs_object['expiry_date'] ) ) {
+									$expiry_date = new \DateTime( $user_subs_object['expiry_date'] );
 
-								if ( ! empty( $user_subs_object['payment_method'] ) && ( 'subscription' == $user_subs_object['payment_method'] ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
-									$status = 'expired';
+									if ( ! empty( $user_subs_object['payment_method'] ) && ( 'subscription' == $user_subs_object['payment_method'] ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
+										$status = 'expired';
+									}
 								}
 
 								$status_class = 'user-subscription-secondary';
