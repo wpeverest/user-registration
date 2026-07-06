@@ -1151,6 +1151,28 @@ class NewPaypalService {
 				return;
 			}
 
+			$capture_status = isset( $capture_response['purchase_units'][0]['payments']['captures'][0]['status'] )
+				? $capture_response['purchase_units'][0]['payments']['captures'][0]['status']
+				: ( isset( $capture_response['status'] ) ? $capture_response['status'] : '' );
+
+			if ( 'COMPLETED' !== strtoupper( $capture_status ) ) {
+				PaymentGatewayLogging::log_error(
+					'paypal',
+					sprintf(
+						'[Member ID #%s] PayPal order capture did not complete after redirect.',
+						$member_id
+					) . "\n" . wp_json_encode(
+						array(
+							'paypal_order_id' => $order_token,
+							'member_id'       => $member_id,
+							'capture_status'  => $capture_status,
+						),
+						JSON_PRETTY_PRINT
+					)
+				);
+				return;
+			}
+
 			update_user_meta( $member_id, 'urm_paypal_order_capture_response', wp_json_encode( $capture_response ) );
 
 			$transaction_id = $this->extract_capture_id_from_order_response( $capture_response );
