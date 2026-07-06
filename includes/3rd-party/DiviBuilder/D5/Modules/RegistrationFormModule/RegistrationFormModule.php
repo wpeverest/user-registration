@@ -57,11 +57,32 @@ class RegistrationFormModule implements DependencyInterface {
 			);
 		}
 
-		return \UR_Shortcodes::form(
-			array(
-				'id'        => $form_id,
-				'userState' => $user_state,
-			)
-		);
+		if ( 'logged_in' === $user_state && ! is_user_logged_in() ) {
+			return '';
+		}
+
+		if ( 'logged_out' === $user_state && is_user_logged_in() ) {
+			return '';
+		}
+
+		if ( 'logged_in' === $user_state && is_user_logged_in() ) {
+			global $wp;
+			$user_id      = get_current_user_id();
+			$user         = get_user_by( 'ID', $user_id );
+			$current_url  = home_url( add_query_arg( array(), $wp->request ) );
+			$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
+			/* translators: 1: display name link 2: logout link */
+			return apply_filters(
+				'ur_register_pre_form_message',
+				'<p class="alert" id="ur_register_pre_form_message">' . sprintf(
+					__( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ),
+					'<a href="#" title="' . esc_attr( $display_name ) . '">' . esc_html( $display_name ) . '</a>',
+					'<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>'
+				) . '</p>',
+				$user_id
+			);
+		}
+
+		return \UR_Shortcodes::form( array( 'id' => $form_id ) );
 	}
 }

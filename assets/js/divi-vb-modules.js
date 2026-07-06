@@ -99,15 +99,40 @@
 
 		function makeRenderer( blockName, title ) {
 			return function EditRenderer( props ) {
-				if ( SSR ) {
-					var attrs = ( props && props.attrs && typeof props.attrs === 'object' )
-						? props.attrs
-						: ( props && props.attributes && typeof props.attributes === 'object' )
-							? props.attributes
-							: {};
-					return React.createElement( SSR, { block: blockName, attributes: attrs } );
+				var ModuleContainer = window.divi &&
+				                      window.divi.module &&
+				                      window.divi.module.ModuleContainer;
+
+				var domRef = React.useRef( null );
+
+				var attrs = ( props && props.attrs && typeof props.attrs === 'object' )
+					? props.attrs
+					: ( props && props.attributes && typeof props.attributes === 'object' )
+						? props.attributes
+						: {};
+
+				var content = SSR
+					? React.createElement( SSR, { block: blockName, attributes: attrs } )
+					: React.createElement( 'div', { style: placeholderStyle }, title );
+
+				if ( ModuleContainer && props && props.id ) {
+					return React.createElement(
+						ModuleContainer,
+						{
+							domRef:                   domRef,
+							attrs:                    props.attrs || {},
+							defaultPrintedStyleAttrs: props.defaultPrintedStyleAttrs,
+							elements:                 props.elements,
+							id:                       props.id,
+							name:                     props.name,
+							isFirst:                  props.isFirst,
+							isLast:                   props.isLast,
+						},
+						content
+					);
 				}
-				return React.createElement( 'div', { style: placeholderStyle }, title );
+
+				return content;
 			};
 		}
 
