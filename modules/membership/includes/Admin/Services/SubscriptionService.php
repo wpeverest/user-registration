@@ -227,6 +227,8 @@ class SubscriptionService {
 				$stripe_service = new StripeService();
 				return $stripe_service->reactivate_subscription( $subscription['subscription_id'] );
 				break;
+			case 'bank':
+				return array( 'status' => true );
 			default:
 				return apply_filters( 'urm_reactivate_membership_subscription', $response, $order, $subscription );
 		}
