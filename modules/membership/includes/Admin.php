@@ -144,6 +144,15 @@ if ( ! class_exists( 'Admin' ) ) :
 				2
 			);
 			add_filter(
+				'user_registration_success_params',
+				array(
+					$this,
+					'set_payment_process_for_membership',
+				),
+				10,
+				4
+			);
+			add_filter(
 				'user_registration_success_params_before_send_json',
 				array(
 					$this,
@@ -250,6 +259,24 @@ if ( ! class_exists( 'Admin' ) ) :
 			$settings['sections']['user_registration_content_restriction_settings']['settings'] = $just_settings;
 
 			return $settings;
+		}
+
+		/**
+		 * Set payment_process = true for paid membership registrations so the welcome email
+		 * is not sent during form submission — it should only fire after payment is confirmed.
+		 */
+		public function set_payment_process_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
+			if ( empty( $_POST['is_membership_active'] ) && empty( $_POST['membership_type'] ) ) {
+				return $success_params;
+			}
+
+			$data = isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array();
+			if ( empty( $data['payment_method'] ) || 'free' === $data['payment_method'] ) {
+				return $success_params;
+			}
+
+			$success_params['payment_process'] = true;
+			return $success_params;
 		}
 
 		public function update_success_params_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {

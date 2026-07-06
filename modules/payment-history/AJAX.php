@@ -518,6 +518,7 @@ class AJAX {
 		if ( $response['status'] ) {
 			$email_service = new EmailService();
 			$email_service->send_email( $order, 'payment_successful' );
+			$email_service->send_email( $order, 'payment_successful_admin' );
 
 			$member_id = $response['member_id'] ?? $order['member_id'];
 			$reg_data  = get_user_meta( $member_id, 'ur_membership_registration_data', true );
