@@ -49,6 +49,15 @@ class LoginFormModule implements DependencyInterface {
 		$d5_values       = $attrs['content']['innerContent']['desktop']['value'] ?? array();
 		$redirect_url    = esc_url_raw( $d5_values['redirectUrl'] ?? '' );
 		$logout_redirect = esc_url_raw( $d5_values['logoutRedirect'] ?? '' );
+		$user_state      = sanitize_text_field( $d5_values['userState'] ?? '' );
+
+		if ( 'logged_in' === $user_state && ! is_user_logged_in() ) {
+			return '';
+		}
+
+		if ( 'logged_out' === $user_state && is_user_logged_in() ) {
+			return '';
+		}
 
 		$parameters = array();
 
