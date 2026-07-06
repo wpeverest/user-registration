@@ -186,12 +186,22 @@ class PaymentService {
 		// Skip for upgrades: SubscriptionService already bakes the coupon into chargeable_amount.
 		$coupon_discount = 0;
 		if ( ur_check_module_activation( 'coupon' ) && ! empty( $data['coupon'] ) && empty( $data['upgrade'] ) ) {
-			$coupon_details = ur_get_coupon_details( $data['coupon'] );
-			if ( ! empty( $coupon_details['coupon_discount_type'] ) && isset( $coupon_details['coupon_discount'] ) ) {
-				$coupon_discount = ( 'fixed' === $coupon_details['coupon_discount_type'] )
-					? floatval( $coupon_details['coupon_discount'] )
-					: floatval( $data['amount'] ) * floatval( $coupon_details['coupon_discount'] ) / 100;
-				$data['amount']  = max( 0, floatval( $data['amount'] ) - $coupon_discount );
+			$coupon_service    = new CouponService();
+			$coupon_validation = $coupon_service->validate(
+				array(
+					'coupon'        => $data['coupon'],
+					'membership_id' => isset( $data['item_id'] ) ? absint( $data['item_id'] ) : 0,
+				)
+			);
+
+			if ( $coupon_validation['status'] ) {
+				$coupon_details = ur_get_coupon_details( $data['coupon'] );
+				if ( ! empty( $coupon_details['coupon_discount_type'] ) && isset( $coupon_details['coupon_discount'] ) ) {
+					$coupon_discount = ( 'fixed' === $coupon_details['coupon_discount_type'] )
+						? floatval( $coupon_details['coupon_discount'] )
+						: floatval( $data['amount'] ) * floatval( $coupon_details['coupon_discount'] ) / 100;
+					$data['amount']  = max( 0, floatval( $data['amount'] ) - $coupon_discount );
+				}
 			}
 		}
 
