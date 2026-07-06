@@ -77,6 +77,9 @@
 					body.append( 'block',  props.block );
 					body.append( 'attrs',  cacheKey );
 
+					var fallback = '<div style="padding:20px;text-align:center;background:#f5f5f5;border:1px dashed #ccc;font-family:sans-serif;font-size:13px;color:#555">'
+					               + ( props.title || props.block ) + '</div>';
+
 					window.fetch( AJAX_URL, { method: 'POST', body: body } )
 						.then( function( r ) { return r.json(); } )
 						.then( function( data ) {
@@ -84,9 +87,11 @@
 							var html = ( data.success && data.data.html ) ? data.data.html : '';
 							node.innerHTML = html
 								? '<div style="pointer-events:none;user-select:none">' + html + '</div>'
-								: '';
+								: fallback;
 						} )
-						.catch( function() {} );
+						.catch( function() {
+							if ( node.isConnected ) { node.innerHTML = fallback; }
+						} );
 				}, [ cacheKey ] );
 
 				return React.createElement( 'div', { ref: ref } );
@@ -112,7 +117,7 @@
 						: {};
 
 				var content = SSR
-					? React.createElement( SSR, { block: blockName, attributes: attrs } )
+					? React.createElement( SSR, { block: blockName, attributes: attrs, title: title } )
 					: React.createElement( 'div', { style: placeholderStyle }, title );
 
 				if ( ModuleContainer && props && props.id ) {
@@ -206,18 +211,24 @@
 				modSettings.groups = settingsGroups;
 			}
 
-			regFn(
-				{
-					name:        name,
-					d4Shortcode: d4Shortcode,
-					title:       title,
-					moduleIcon:  'divi/module',
-					category:    'module',
-					attributes:  attrs,
-					settings:    modSettings,
-				},
-				{ renderers: { edit: makeRenderer( name, title ) } }
-			);
+			try {
+				regFn(
+					{
+						name:        name,
+						d4Shortcode: d4Shortcode,
+						title:       title,
+						moduleIcon:  'divi/module',
+						category:    'module',
+						attributes:  attrs,
+						settings:    modSettings,
+					},
+					{ renderers: { edit: makeRenderer( name, title ) } }
+				);
+			} catch ( e ) {
+				// A duplicate-registration error means this module was already
+				// registered (e.g. by the pro script running after us). Silently
+				// skip so the remaining modules in this batch still register.
+			}
 		}
 
 		register(
