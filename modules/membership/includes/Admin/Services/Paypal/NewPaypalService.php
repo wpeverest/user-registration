@@ -1776,6 +1776,10 @@ class NewPaypalService {
 			return true;
 		}
 
+		if ( ! in_array( $current_subscription['status'], array( 'pending', 'active' ), true ) ) {
+			return true; // ignore stale/redelivered sale events for canceled/expired/suspended subs
+		}
+
 		$this->members_subscription_repository->update(
 			$current_subscription['sub_id'],
 			array( 'status' => 'active' )
@@ -1891,7 +1895,13 @@ class NewPaypalService {
 			'BILLING.SUBSCRIPTION.PAYMENT.FAILED' => 'pending',
 		);
 
-		$new_status = isset( $status_map[ $event_type ] ) ? $status_map[ $event_type ] : ( isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'pending' );
+		$new_status      = isset( $status_map[ $event_type ] ) ? $status_map[ $event_type ] : ( isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'pending' );
+		$current_status  = isset( $member_subscription['status'] ) ? $member_subscription['status'] : '';
+		$terminal_states = array( 'canceled', 'expired' );
+
+		if ( 'BILLING.SUBSCRIPTION.PAYMENT.FAILED' === $event_type && in_array( $current_status, $terminal_states, true ) ) {
+			return true; // ignore late failure events for already-terminated subscriptions
+		}
 
 		$this->members_subscription_repository->update(
 			$member_subscription['ID'],
