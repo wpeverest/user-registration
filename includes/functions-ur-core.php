@@ -7647,7 +7647,8 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 		$active_memberships = array_filter(
 			array_map(
 				function ( $user_memberships ) {
-					if ( ! empty( $user_memberships['status'] ) && ! in_array( $user_memberships['status'], array( 'pending', 'inactive' ) ) ) {
+					// 'pending' no longer forces a logout (UR-4633) — only 'inactive' does.
+					if ( ! empty( $user_memberships['status'] ) && ! in_array( $user_memberships['status'], array( 'inactive' ), true ) ) {
 						return $user_memberships['post_id'];
 					}
 				},
