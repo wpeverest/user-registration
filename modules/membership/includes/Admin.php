@@ -197,6 +197,11 @@ if ( ! class_exists( 'Admin' ) ) :
 		 * @param int   $member_id Newly created WP user ID.
 		 */
 		public function send_registration_emails( $data, $member_id ) {
+			static $queued = array();
+			if ( isset( $queued[ $member_id ] ) ) {
+				return;
+			}
+			$queued[ $member_id ] = true;
 			add_action(
 				'shutdown',
 				function () use ( $data, $member_id ) {
