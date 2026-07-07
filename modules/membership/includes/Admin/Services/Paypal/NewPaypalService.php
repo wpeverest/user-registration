@@ -1463,22 +1463,29 @@ class NewPaypalService {
 					JSON_PRETTY_PRINT
 				)
 			);
-			return;
+		} else {
+			PaymentGatewayLogging::log_transaction_success(
+				'paypal',
+				sprintf(
+					'[Member ID #%s] Payment successful email sent.',
+					$member_id
+				) . "\n" . wp_json_encode(
+					array(
+						'member_id'       => $member_id,
+						'subscription_id' => isset( $member_subscription['ID'] ) ? $member_subscription['ID'] : '',
+					),
+					JSON_PRETTY_PRINT
+				)
+			);
 		}
 
-		PaymentGatewayLogging::log_transaction_success(
-			'paypal',
-			sprintf(
-				'[Member ID #%s] Payment successful email sent.',
-				$member_id
-			) . "\n" . wp_json_encode(
-				array(
-					'member_id'       => $member_id,
-					'subscription_id' => isset( $member_subscription['ID'] ) ? $member_subscription['ID'] : '',
-				),
-				JSON_PRETTY_PRINT
-			)
-		);
+		$email_service->send_email( $email_data, 'payment_successful_admin' );
+
+		$reg_data = get_user_meta( $member_id, 'ur_membership_registration_data', true );
+		if ( ! empty( $reg_data ) && empty( get_user_meta( $member_id, 'ur_membership_welcome_email_sent', true ) ) ) {
+			do_action( 'urm_member_registered', $reg_data, $member_id );
+			update_user_meta( $member_id, 'ur_membership_welcome_email_sent', true );
+		}
 	}
 
 	/**

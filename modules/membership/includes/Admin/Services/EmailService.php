@@ -50,6 +50,8 @@ class EmailService {
 				return $this->send_user_register_admin_email( $data );
 			case 'payment_successful': // payment successful message to member.
 				return self::send_payment_successful_email( $data );
+			case 'payment_successful_admin': // payment successful notification to admin.
+				return self::send_payment_successful_admin_email( $data );
 			case 'payment_retry_failed': // payment retry failed (single retry attempt failed)
 				return self::send_payment_retry_failed_email( $data );
 			case 'payment_retry_cancel': // payment retry exhausted -> final cancellation
@@ -205,6 +207,55 @@ class EmailService {
 		if ( ur_string_to_bool( get_option( 'user_registration_enable_payment_success_email', true ) ) ) {
 			return \UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id );
 
+		}
+
+		return false;
+	}
+
+	/**
+	 * Send payment successful notification to admin.
+	 *
+	 * @param array $data Email data including member_id.
+	 *
+	 * @return bool
+	 */
+	public static function send_payment_successful_admin_email( $data ) {
+		$user_id              = absint( $data['member_id'] );
+		$user                 = get_user_by( 'ID', $user_id );
+		$form_id              = ur_get_form_id_by_userid( $user_id );
+		$data['username']     = $user->user_login;
+		$data['user_email']   = $user->user_email;
+		$subscription_service = new SubscriptionService();
+		$values               = array(
+			'membership_tags' => $subscription_service->get_membership_plan_details( $data ),
+		);
+		$values               = $data + $values;
+
+		$admin_email = get_option( 'user_registration_payments_admin_email_receipents', get_option( 'admin_email' ) );
+		$admin_email = explode( ',', $admin_email );
+		$admin_email = array_map( 'trim', $admin_email );
+
+		$subject  = get_option( 'user_registration_payment_success_admin_email_subject', __( 'Payment Received from {{username}}', 'user-registration' ) );
+		$settings = new \UR_Settings_Payment_Success_Admin_Email();
+		$message  = $settings->ur_get_payment_success_admin_email();
+		$message  = get_option( 'user_registration_payment_success_admin_email', $message );
+
+		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+
+		$message = \UR_Emailer::parse_smart_tags( $message, $values );
+		$subject = \UR_Emailer::parse_smart_tags( $subject, $values );
+		$headers = \UR_Emailer::ur_get_header();
+
+		if ( ur_string_to_bool( get_option( 'user_registration_enable_payment_success_admin_email', true ) ) ) {
+			$result = true;
+			foreach ( $admin_email as $email ) {
+				if ( ! \UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id ) ) {
+					$result = false;
+				}
+			}
+			return $result;
 		}
 
 		return false;
