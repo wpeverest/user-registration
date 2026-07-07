@@ -144,6 +144,15 @@ if ( ! class_exists( 'Admin' ) ) :
 				2
 			);
 			add_filter(
+				'user_registration_success_params',
+				array(
+					$this,
+					'set_payment_process_for_membership',
+				),
+				10,
+				4
+			);
+			add_filter(
 				'user_registration_success_params_before_send_json',
 				array(
 					$this,
@@ -188,6 +197,11 @@ if ( ! class_exists( 'Admin' ) ) :
 		 * @param int   $member_id Newly created WP user ID.
 		 */
 		public function send_registration_emails( $data, $member_id ) {
+			static $queued = array();
+			if ( isset( $queued[ $member_id ] ) ) {
+				return;
+			}
+			$queued[ $member_id ] = true;
 			add_action(
 				'shutdown',
 				function () use ( $data, $member_id ) {
@@ -250,6 +264,24 @@ if ( ! class_exists( 'Admin' ) ) :
 			$settings['sections']['user_registration_content_restriction_settings']['settings'] = $just_settings;
 
 			return $settings;
+		}
+
+		/**
+		 * Set payment_process = true for paid membership registrations so the welcome email
+		 * is not sent during form submission — it should only fire after payment is confirmed.
+		 */
+		public function set_payment_process_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
+			if ( empty( $_POST['is_membership_active'] ) && empty( $_POST['membership_type'] ) ) {
+				return $success_params;
+			}
+
+			$data = isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array();
+			if ( empty( $data['payment_method'] ) || 'free' === $data['payment_method'] ) {
+				return $success_params;
+			}
+
+			$success_params['payment_process'] = true;
+			return $success_params;
 		}
 
 		public function update_success_params_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
@@ -414,6 +446,11 @@ if ( ! class_exists( 'Admin' ) ) :
 						}
 					}
 				}
+				// Also include globally active gateways (Settings > Payments) so that
+				// gateways enabled site-wide are accepted even if not per-membership saved.
+				$global_gateways     = array_keys( urm_get_all_active_payment_gateways( $membership_type ) );
+				$configured_gateways = array_unique( array_merge( $configured_gateways, $global_gateways ) );
+
 				if ( ! empty( $configured_gateways ) && ! in_array( $data['payment_method'], $configured_gateways, true ) ) {
 					wp_delete_user( absint( $member_id ) );
 					wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
@@ -532,7 +569,11 @@ if ( ! class_exists( 'Admin' ) ) :
 					}
 				}
 
-				do_action( 'urm_member_registered', $data, $member_id );
+				if ( 'free' === $data['payment_method'] ) {
+					do_action( 'urm_member_registered', $data, $member_id );
+				} else {
+					update_user_meta( $member_id, 'ur_membership_registration_data', $data );
+				}
 
 				$response_data = apply_filters(
 					'user_registration_membership_after_register_member',
