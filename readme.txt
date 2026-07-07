@@ -4,7 +4,7 @@ Tags: membership, subscription, content restriction, user profile, user registra
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 5.2.4
+Stable tag: 5.2.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -251,6 +251,33 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 9. Subscription Management
 
 == Changelog ==
+
+
+= 5.2.5    - 07/07/2026 =
+* Enhance  - Defer expiry to period end.
+* Enhance  - Pin Stripe subscription payment method for reliable renewals.
+* Fix      - User and admin email order.
+* Fix      - Payment fail case for paypal.
+* Fix      - Lost Password Carrot adjustment.
+* Fix      - Unnecessary payment retry checks.
+* Fix      - Required Nonce Error on registration.
+* Fix      - Setup wizard membership duration issue.
+* Fix      - Loader timing issue during registration.
+* Fix      - Unwanted settings showing up in free version.
+* Fix      - Prevent formula injection in user CSV export.
+* Fix      - Reject underpaid PayPal subscription payments.
+* Fix      - Harden signup notice against malicious content.
+* Fix      - Stop users from cancelling others' email changes.
+* Fix      - Remove unwanted fields from payment confirmed email.
+* Fix      - Pending subscription blocked the user from logging in.
+* Fix      - Design issues in promotional notices after WordPress v7.0.
+* Fix      - Use server membership state for multiple-membership policy.
+* Fix      - Block tampered PayPal payments from activating memberships.
+* Fix      - Stripe payment and nonce validation failed on Membership form.
+* Fix      - Security: prevent unauthorized login during membership signup payment.
+* Fix      - Check coupon eligibility before discount on public membership purchase.
+* Fix      - Super admin bypass missing for admin content access in membership rules.
+* Fix      - Check PayPal payment is complete before activating one-time memberships.
 
 = 5.2.4    - 25/06/2026 =
 * Enhance  - User role overwritten on new membership assignment.

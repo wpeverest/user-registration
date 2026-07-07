@@ -160,7 +160,8 @@ const SetupWizard: React.FC = () => {
 			name: plan.name,
 			type: plan.type,
 			price: plan.price,
-			billing_period: plan.billingCycle,
+			billing_cycle: plan.billingCycle,
+			billing_cycle_count: plan.billingCycleCount,
 			access: plan.contentAccess.map((a) => ({
 				type: a.type,
 				value: a.value

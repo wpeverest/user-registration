@@ -1815,6 +1815,10 @@ class UR_AJAX {
 			wp_die( - 1 );
 		}
 
+		if ( $user_id !== get_current_user_id() && ! current_user_can( 'edit_user', $user_id ) ) {
+			wp_die( - 1 );
+		}
+
 		// Remove the confirmation key, pending email and expiry date.
 		UR_Form_Handler::delete_pending_email_change( $user_id );
 

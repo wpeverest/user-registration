@@ -364,7 +364,7 @@ class UR_Frontend_Form_Handler {
 						}
 					}
 				}
-				if ( ! isset( $success_params['stripe_process'] ) || $success_params['stripe_process'] == false ) {
+				if ( ! isset( $success_params['payment_process'] ) || $success_params['payment_process'] == false ) {
 
 					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
 
@@ -519,6 +519,16 @@ class UR_Frontend_Form_Handler {
 			);
 
 			set_transient( 'urm_pending_login_' . $user_id, $hash, 2 * HOUR_IN_SECONDS );
+			// Bind the pending nopriv payment/auto-login flow to this browser session.
+			setcookie(
+				'urm_pending_login_' . $user_id,
+				$hash,
+				time() + 2 * HOUR_IN_SECONDS,
+				defined( 'COOKIEPATH' ) && COOKIEPATH ? COOKIEPATH : '/',
+				defined( 'COOKIE_DOMAIN' ) ? COOKIE_DOMAIN : '',
+				is_ssl(),
+				true
+			);
 		}
 	}
 }

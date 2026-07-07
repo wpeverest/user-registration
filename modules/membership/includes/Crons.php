@@ -28,8 +28,6 @@ class Crons {
 			add_action( 'urm_daily_payment_retry_check', array( $this, 'payment_retry_check' ), 10, 1 );
 			add_action( 'urm_missed_payment_events_check', array( $this, 'membership_missed_payment_check' ), 10, 1 );
 
-			$this->payment_retry_check();
-
 		}
 	}
 

@@ -1644,6 +1644,11 @@
 									}
 
 									&--status {
+										display: flex;
+										flex-direction: column;
+										align-items: flex-start;
+										gap: 4px;
+
 										span {
 											display: inline-block !important;
 											padding: 6px 12px !important;
@@ -1657,6 +1662,32 @@
 											&.btn-completed {
 												color: #3aa530;
 												background: #def8db;
+											}
+
+											&.btn-canceled {
+												color: #f25656;
+												background: #ffe8e8;
+											}
+
+											&.btn-expired,
+											&.btn-inactive {
+												color: #a1a1a1;
+												background: #e7e7e7;
+											}
+
+											&.btn-trial {
+												color: #ff8300;
+												background: #fff0e0;
+											}
+
+											&.btn-pending-cancel {
+												color: #374151;
+												background: #ffffff;
+												border: 1px solid #d1d5db;
+												border-radius: 999px !important;
+												display: inline-flex !important;
+												align-items: center;
+												gap: 5px;
 											}
 										}
 									}

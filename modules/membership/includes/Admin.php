@@ -144,6 +144,15 @@ if ( ! class_exists( 'Admin' ) ) :
 				2
 			);
 			add_filter(
+				'user_registration_success_params',
+				array(
+					$this,
+					'set_payment_process_for_membership',
+				),
+				10,
+				4
+			);
+			add_filter(
 				'user_registration_success_params_before_send_json',
 				array(
 					$this,
@@ -188,6 +197,11 @@ if ( ! class_exists( 'Admin' ) ) :
 		 * @param int   $member_id Newly created WP user ID.
 		 */
 		public function send_registration_emails( $data, $member_id ) {
+			static $queued = array();
+			if ( isset( $queued[ $member_id ] ) ) {
+				return;
+			}
+			$queued[ $member_id ] = true;
 			add_action(
 				'shutdown',
 				function () use ( $data, $member_id ) {
@@ -250,6 +264,24 @@ if ( ! class_exists( 'Admin' ) ) :
 			$settings['sections']['user_registration_content_restriction_settings']['settings'] = $just_settings;
 
 			return $settings;
+		}
+
+		/**
+		 * Set payment_process = true for paid membership registrations so the welcome email
+		 * is not sent during form submission — it should only fire after payment is confirmed.
+		 */
+		public function set_payment_process_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
+			if ( empty( $_POST['is_membership_active'] ) && empty( $_POST['membership_type'] ) ) {
+				return $success_params;
+			}
+
+			$data = isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array();
+			if ( empty( $data['payment_method'] ) || 'free' === $data['payment_method'] ) {
+				return $success_params;
+			}
+
+			$success_params['payment_process'] = true;
+			return $success_params;
 		}
 
 		public function update_success_params_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
@@ -414,6 +446,11 @@ if ( ! class_exists( 'Admin' ) ) :
 						}
 					}
 				}
+				// Also include globally active gateways (Settings > Payments) so that
+				// gateways enabled site-wide are accepted even if not per-membership saved.
+				$global_gateways     = array_keys( urm_get_all_active_payment_gateways( $membership_type ) );
+				$configured_gateways = array_unique( array_merge( $configured_gateways, $global_gateways ) );
+
 				if ( ! empty( $configured_gateways ) && ! in_array( $data['payment_method'], $configured_gateways, true ) ) {
 					wp_delete_user( absint( $member_id ) );
 					wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
@@ -532,7 +569,11 @@ if ( ! class_exists( 'Admin' ) ) :
 					}
 				}
 
-				do_action( 'urm_member_registered', $data, $member_id );
+				if ( 'free' === $data['payment_method'] ) {
+					do_action( 'urm_member_registered', $data, $member_id );
+				} else {
+					update_user_meta( $member_id, 'ur_membership_registration_data', $data );
+				}
 
 				$response_data = apply_filters(
 					'user_registration_membership_after_register_member',
@@ -898,7 +939,23 @@ if ( ! class_exists( 'Admin' ) ) :
 								<tr>
 									<td><?php echo esc_html( $membership['post_title'] ); ?></td>
 									<td><?php echo esc_html( $amount ); ?></td>
-									<td class="status-<?php echo esc_attr( $membership['status'] ); ?>"><?php echo esc_html( ucfirst( $membership['status'] ) ); ?></td>
+									<?php $pending_cancel_date = get_user_meta( $user_id, 'urm_pending_cancel_' . ( $membership['subscription_id'] ?? '' ), true ); ?>
+								<td class="<?php echo $pending_cancel_date ? 'status-pending' : 'status-' . esc_attr( $membership['status'] ); ?>">
+										<?php
+										if ( $pending_cancel_date ) {
+											echo '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'; // phpcs:ignore WordPress.Security.EscapeOutput
+											echo esc_html(
+												sprintf(
+													/* translators: %s: cancellation date */
+													__( 'Cancels %s', 'user-registration' ),
+													date_i18n( get_option( 'date_format' ), strtotime( $pending_cancel_date ) )
+												)
+											);
+										} else {
+											echo esc_html( ucfirst( $membership['status'] ) );
+										}
+										?>
+									</td>
 									<td><?php echo ! empty( $membership['start_date'] ) ? esc_html( date_i18n( 'Y-m-d', strtotime( $membership['start_date'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
 									<td><?php echo esc_html( $expiry_date ); ?></td>
 									<td><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-subscriptions&action=edit&id=' . ( $membership['subscription_id'] ?? 0 ) ) ); ?>"><?php esc_html_e( 'View', 'user-registration' ); ?></a></td>

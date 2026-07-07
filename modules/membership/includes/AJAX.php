@@ -773,6 +773,21 @@ class AJAX {
 	 */
 	public static function validate_coupon() {
 		ur_membership_verify_nonce( 'ur_members_frontend' );
+
+		$rate_limit_key = 'urm_coupon_validate_' . md5( ur_get_ip_address() );
+		$attempts       = (int) get_transient( $rate_limit_key );
+
+		if ( $attempts >= 10 ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Too many coupon attempts. Please try again later.', 'user-registration' ),
+				),
+				429
+			);
+		}
+
+		set_transient( $rate_limit_key, $attempts + 1, MINUTE_IN_SECONDS );
+
 		$data           = isset( $_POST['coupon_data'] ) ? (array) wp_unslash( $_POST['coupon_data'] ) : array();
 		$coupon_service = new CouponService();
 
@@ -857,12 +872,25 @@ class AJAX {
 				)
 			);
 		}
-		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			if ( ! current_user_can( 'edit_user', $member_id ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+					)
+				);
+			}
+		} else {
+			// Nopriv: bind to the registration session that created this pending member.
+			$saved_hash   = get_transient( 'urm_pending_login_' . $member_id );
+			$cookie_token = isset( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) ? wp_unslash( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) : '';
+			if ( empty( $saved_hash ) || empty( $cookie_token ) || ! hash_equals( (string) $saved_hash, (string) $cookie_token ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+					)
+				);
+			}
 		}
 		$stripe_service = new StripeService();
 		$payment_status = sanitize_text_field( $_POST['payment_status'] );
@@ -1095,12 +1123,25 @@ class AJAX {
 				)
 			);
 		}
-		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			if ( ! current_user_can( 'edit_user', $member_id ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+					)
+				);
+			}
+		} else {
+			// Nopriv: bind to the registration session that created this pending member.
+			$saved_hash   = get_transient( 'urm_pending_login_' . $member_id );
+			$cookie_token = isset( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) ? wp_unslash( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) : '';
+			if ( empty( $saved_hash ) || empty( $cookie_token ) || ! hash_equals( (string) $saved_hash, (string) $cookie_token ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+					)
+				);
+			}
 		}
 		$stripe_service      = new StripeService();
 		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
@@ -1340,6 +1381,8 @@ class AJAX {
 					)
 				);
 
+				delete_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id );
+
 				wp_send_json_success(
 					array(
 						'message' => __( 'Membership reactivated successfully.', 'user-registration' ),
@@ -1349,6 +1392,9 @@ class AJAX {
 
 				$reactivation_status = $subscription_repository->reactivate_subscription_by_id( $subscription_id );
 				if ( $reactivation_status['status'] ) {
+
+					// Ensure pending cancel meta is cleaned up regardless of gateway path.
+					delete_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id );
 
 					// Prepare data to register subscription reactivation event.
 					$payload = array(
@@ -2057,7 +2103,7 @@ class AJAX {
 			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
 		}
 
-		if ( isset( $_POST['type'] ) && 'multiple' === sanitize_text_field( $_POST['type'] ) ) {
+		if ( ! empty( $user_membership_ids ) ) {
 			$subscription_service = new SubscriptionService();
 			$status               = $subscription_service->can_purchase_multiple( $data );
 
@@ -2698,6 +2744,16 @@ class AJAX {
 	 * @since 6.1.0
 	 */
 	public static function validate_payment_currency() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, you do not have permission to do this.', 'user-registration' ),
+				)
+			);
+		}
+
+		ur_membership_verify_nonce( 'validate_payment_currency_nonce' );
+
 		$zone_id = ! empty( sanitize_text_field( wp_unslash( $_POST['zone_id'] ) ) ) ? sanitize_text_field( wp_unslash( $_POST['zone_id'] ) ) : '';
 
 		if ( empty( $zone_id ) ) {

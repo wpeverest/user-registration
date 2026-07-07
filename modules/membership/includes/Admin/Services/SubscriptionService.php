@@ -227,6 +227,8 @@ class SubscriptionService {
 				$stripe_service = new StripeService();
 				return $stripe_service->reactivate_subscription( $subscription['subscription_id'] );
 				break;
+			case 'bank':
+				return array( 'status' => true );
 			default:
 				return apply_filters( 'urm_reactivate_membership_subscription', $response, $order, $subscription );
 		}
@@ -1166,7 +1168,9 @@ class SubscriptionService {
 	 * @return void
 	 */
 	public function daily_membership_expiration_check() {
-		$date          = new \DateTime( 'today' );
+		// Grace period gives the hourly missed-payment backfill time to catch a renewal
+		$grace_hours   = (int) apply_filters( 'urm_expiry_grace_hours', 12 );
+		$date          = new \DateTime( "-{$grace_hours} hours" );
 		$check_date    = $date->format( 'Y-m-d H:i:s' );
 		$subscriptions = $this->members_subscription_repository->get_subscriptions_to_expire( $check_date );
 		if ( empty( $subscriptions ) ) {
@@ -1187,12 +1191,17 @@ class SubscriptionService {
 			$subscription_id = $subscription['subscription_id'];
 			$user_id         = $subscription['member_id'];
 			$membership_id   = isset( $subscription['membership'] ) ? absint( $subscription['membership'] ) : 0;
-			$last_order      = $this->members_orders_repository->get_member_orders( $user_id );
+			$order           = $this->orders_repository->get_order_by_subscription( $subscription_id );
 
-			if ( $last_order['order_type'] !== 'subscription' ) {
+			if ( ( $order['order_type'] ?? '' ) !== 'subscription' ) {
 				continue;
 			}
-			// Update subscription status to expired
+			// If this was a pending-cancel PayPal subscription, now truly cancel it on PayPal's end.
+			$pending_cancel_meta = get_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id, true );
+			if ( $pending_cancel_meta && 'paypal' === ( $order['payment_method'] ?? '' ) && ! empty( $subscription['gateway_subscription_id'] ) ) {
+				( new NewPaypalService() )->cancel_suspended_subscription( $subscription['gateway_subscription_id'] );
+			}
+			delete_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id );
 			$update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => 'expired' ) );
 
 			if ( $update_result ) {
