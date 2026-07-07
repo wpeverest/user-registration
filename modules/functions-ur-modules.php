@@ -582,11 +582,15 @@ if ( ! function_exists( 'urm_check_user_membership_has_access' ) ) {
 	 * @param array $allowed_memberships Allowed memberships for access.
 	 */
 	function urm_check_user_membership_has_access( $allowed_memberships ) {
-		$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+		if ( is_super_admin() ) {
+			return true;
+		}
 
 		if ( ! is_user_logged_in() ) {
 			return false;
 		}
+
+		$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
 
 		$user_memberships = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 
