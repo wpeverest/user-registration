@@ -770,7 +770,7 @@ if ( ! function_exists( 'urwc_handle_shop_restriction' ) ) {
 		remove_all_actions( 'woocommerce_after_shop_loop' );
 
 		add_action( 'woocommerce_no_products_found', 'ob_start', 0 );
-		add_action( 'woocommerce_no_products_found', 'ob_end_clean', PHP_INT_MAX );
+		add_action( 'woocommerce_no_products_found', 'ob_end_clean', PHP_INT_MAX, 0 );
 
 		add_action(
 			'wp_head',
