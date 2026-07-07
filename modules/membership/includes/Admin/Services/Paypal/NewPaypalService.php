@@ -1541,7 +1541,12 @@ class NewPaypalService {
 			case 'BILLING.SUBSCRIPTION.SUSPENDED':
 			case 'BILLING.SUBSCRIPTION.CANCELLED':
 			case 'BILLING.SUBSCRIPTION.EXPIRED':
+			case 'BILLING.SUBSCRIPTION.PAYMENT.FAILED':
 				$result = $this->handle_subscription_webhook_event( $event_type, $resource );
+				break;
+
+			case 'PAYMENT.SALE.COMPLETED':
+				$result = $this->handle_subscription_payment_completed( $resource );
 				break;
 
 			default:
@@ -1753,6 +1758,56 @@ class NewPaypalService {
 	}
 
 	/**
+	 * Handle PAYMENT.SALE.COMPLETED webhook (subscription renewal retry succeeded).
+	 *
+	 * @param array $resource
+	 * @return bool
+	 */
+	private function handle_subscription_payment_completed( $resource ) {
+		$paypal_subscription_id = sanitize_text_field( isset( $resource['billing_agreement_id'] ) ? $resource['billing_agreement_id'] : '' );
+
+		if ( empty( $paypal_subscription_id ) ) {
+			return true;
+		}
+
+		$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $paypal_subscription_id, true );
+
+		if ( empty( $current_subscription ) ) {
+			return true;
+		}
+
+		// Only recover from pending; already-active needs no change, terminal states must not be resurrected.
+		if ( 'pending' !== $current_subscription['status'] ) {
+			return true;
+		}
+
+		// Don't activate a future-dated subscription early (mirrors activate_pending_with_completed_orders()).
+		$sub_data   = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $current_subscription['sub_id'] );
+		$start_date = isset( $sub_data['start_date'] ) ? $sub_data['start_date'] : null;
+
+		if ( ! empty( $start_date ) && strtotime( $start_date ) > time() ) {
+			return true;
+		}
+
+		$this->members_subscription_repository->update(
+			$current_subscription['sub_id'],
+			array( 'status' => 'active' )
+		);
+
+		PaymentGatewayLogging::log_webhook_processed(
+			'paypal',
+			'PAYMENT.SALE.COMPLETED: subscription restored to active after successful retry',
+			array(
+				'paypal_subscription_id' => $paypal_subscription_id,
+				'sub_id'                 => $current_subscription['sub_id'],
+				'member_id'              => $current_subscription['user_id'],
+			)
+		);
+
+		return true;
+	}
+
+	/**
 	 * Handle PAYMENT.CAPTURE.REFUNDED and PAYMENT.SALE.REFUNDED webhooks.
 	 *
 	 * For CAPTURE.REFUNDED the original capture ID is extracted from the 'up'
@@ -1840,15 +1895,22 @@ class NewPaypalService {
 		}
 
 		$status_map = array(
-			'BILLING.SUBSCRIPTION.CREATED'   => 'pending',
-			'BILLING.SUBSCRIPTION.ACTIVATED' => 'active',
-			'BILLING.SUBSCRIPTION.UPDATED'   => isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'active',
-			'BILLING.SUBSCRIPTION.SUSPENDED' => 'canceled',
-			'BILLING.SUBSCRIPTION.CANCELLED' => 'canceled',
-			'BILLING.SUBSCRIPTION.EXPIRED'   => 'expired',
+			'BILLING.SUBSCRIPTION.CREATED'        => 'pending',
+			'BILLING.SUBSCRIPTION.ACTIVATED'      => 'active',
+			'BILLING.SUBSCRIPTION.UPDATED'        => isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'active',
+			'BILLING.SUBSCRIPTION.SUSPENDED'      => 'canceled',
+			'BILLING.SUBSCRIPTION.CANCELLED'      => 'canceled',
+			'BILLING.SUBSCRIPTION.EXPIRED'        => 'expired',
+			'BILLING.SUBSCRIPTION.PAYMENT.FAILED' => 'pending',
 		);
 
-		$new_status = isset( $status_map[ $event_type ] ) ? $status_map[ $event_type ] : ( isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'pending' );
+		$new_status      = isset( $status_map[ $event_type ] ) ? $status_map[ $event_type ] : ( isset( $member_subscription['status'] ) ? $member_subscription['status'] : 'pending' );
+		$current_status  = isset( $member_subscription['status'] ) ? $member_subscription['status'] : '';
+		$terminal_states = array( 'canceled', 'expired' );
+
+		if ( 'BILLING.SUBSCRIPTION.PAYMENT.FAILED' === $event_type && in_array( $current_status, $terminal_states, true ) ) {
+			return true; // ignore late failure events for already-terminated subscriptions
+		}
 
 		$this->members_subscription_repository->update(
 			$member_subscription['ID'],
