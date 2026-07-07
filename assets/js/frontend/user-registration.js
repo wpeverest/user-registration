@@ -2594,18 +2594,22 @@
 					$(this).closest("form.register").ur_form_submission();
 				});
 
-				var urm_toast_content =
+				if (
 					user_registration_frontend_utils.ur_get_cookie(
 						"urm_toast_content"
-					);
-
-				if (
+					) &&
 					$(".user-registration-page .notice-container").length === 0
 				) {
-					// Adds the toast container on the top of page.
 					$(document)
 						.find(".user-registration-page")
-						.prepend(urm_toast_content);
+						.prepend(
+							'<div class="user-registration-membership-notice__container">' +
+								'<div class="ur-toaster user-registration-membership-notice__red">' +
+									'<span class="user-registration-membership-notice__message"></span>' +
+									'<span class="user-registration-membership__close_notice">&times;</span>' +
+								"</div>" +
+							"</div>"
+						);
 				}
 
 				var urm_toast_success_message =

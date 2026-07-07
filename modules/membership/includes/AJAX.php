@@ -872,12 +872,25 @@ class AJAX {
 				)
 			);
 		}
-		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			if ( ! current_user_can( 'edit_user', $member_id ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+					)
+				);
+			}
+		} else {
+			// Nopriv: bind to the registration session that created this pending member.
+			$saved_hash   = get_transient( 'urm_pending_login_' . $member_id );
+			$cookie_token = isset( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) ? wp_unslash( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) : '';
+			if ( empty( $saved_hash ) || empty( $cookie_token ) || ! hash_equals( (string) $saved_hash, (string) $cookie_token ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+					)
+				);
+			}
 		}
 		$stripe_service = new StripeService();
 		$payment_status = sanitize_text_field( $_POST['payment_status'] );
@@ -1110,12 +1123,25 @@ class AJAX {
 				)
 			);
 		}
-		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			if ( ! current_user_can( 'edit_user', $member_id ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+					)
+				);
+			}
+		} else {
+			// Nopriv: bind to the registration session that created this pending member.
+			$saved_hash   = get_transient( 'urm_pending_login_' . $member_id );
+			$cookie_token = isset( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) ? wp_unslash( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) : '';
+			if ( empty( $saved_hash ) || empty( $cookie_token ) || ! hash_equals( (string) $saved_hash, (string) $cookie_token ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+					)
+				);
+			}
 		}
 		$stripe_service      = new StripeService();
 		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();

@@ -256,6 +256,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 = 5.2.5    - 07/07/2026 =
 * Enhance  - Defer expiry to period end.
 * Enhance  - Pin Stripe subscription payment method for reliable renewals.
+* Fix      - User and admin email order.
 * Fix      - Payment fail case for paypal.
 * Fix      - Lost Password Carrot adjustment.
 * Fix      - Unnecessary payment retry checks.
