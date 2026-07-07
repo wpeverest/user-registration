@@ -55,6 +55,7 @@
 			var $submitButton = $buttonContainer.find(".ur-submit-button");
 
 			$submitButton.find("span").removeClass("ur-front-spinner");
+			$submitButton.prop("disabled", false);
 		},
 
 		/**
@@ -686,9 +687,6 @@
 					);
 					break;
 				case "stripe":
-					ur_membership_frontend_utils.show_success_message(
-						response.data.message
-					);
 					stripe_settings.handle_stripe_response(
 						response,
 						prepare_members_data,
@@ -2303,6 +2301,10 @@
 				{
 					success: function (response) {
 						if (response.success) {
+							ur_membership_frontend_utils.hide_payment_processing_overlay();
+							ur_membership_frontend_utils.show_success_message(
+								response.data.message
+							);
 							if (
 								response.data.is_upgrading ||
 								response.data.is_renewing ||
@@ -2343,7 +2345,6 @@
 									}
 								);
 							}
-							//first show successful toast
 						} else {
 							ur_membership_frontend_utils.hide_payment_processing_overlay();
 							stripe_settings.show_stripe_error(
