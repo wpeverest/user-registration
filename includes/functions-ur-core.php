@@ -5513,21 +5513,6 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			);
 		}
 
-		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) && empty( $_POST['ur_fallback_submit'] ) ) {
-			$logger->error(
-				sprintf( '[Form #%d] AJAX nonce verification failed for form submission.', $form_id ) . "\n   ",
-				array(
-					'source'  => 'form-submission',
-					'form_id' => $form_id,
-				)
-			);
-
-			wp_send_json_error(
-				array(
-					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
-				)
-			);
-		}
 
 		$logger->info(
 			sprintf( '[Form #%d] Processing form submission.', $form_id ),
@@ -5537,9 +5522,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			)
 		);
 
-		$nonce            = $nonce_value;
 		$captcha_response = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
-		$flag             = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 
 		$recaptcha_enabled   = ur_string_to_bool( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false ) );
 		$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
@@ -5656,21 +5639,6 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			}
 		}
 
-		if ( true != $flag || is_wp_error( $flag ) ) {
-			$logger->error(
-				sprintf( '[Form #%d] Frontend form nonce verification failed. Please reload and try again.', $form_id ) . "\n  ",
-				array(
-					'source'  => 'form-submission',
-					'form_id' => $form_id,
-				)
-			);
-
-			wp_send_json_error(
-				array(
-					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
-				)
-			);
-		}
 		/**
 		 * Filter to override the register settings.
 		 * Default value is the get_option('users_can_register')

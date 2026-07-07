@@ -1156,7 +1156,6 @@
 										.prop("disabled", true);
 									var form_data;
 									var form_id = 0;
-									var form_nonce = "0";
 									var captchaResponse = "";
 									var registration_language = "";
 									if (
@@ -1225,21 +1224,6 @@
 											.val();
 									}
 
-									if (
-										$(this)
-											.closest("form")
-											.find(
-												'input[name="ur_frontend_form_nonce"]'
-											).length === 1
-									) {
-										form_nonce = $(this)
-											.closest("form")
-											.find(
-												'input[name="ur_frontend_form_nonce"]'
-											)
-											.val();
-									}
-
 									// Append tax details if available
 									var taxDetails =
 										$(document).find("#ur-tax-details");
@@ -1255,14 +1239,11 @@
 
 									var data = {
 										action: "user_registration_user_form_submit",
-										security:
-											user_registration_params.user_registration_form_data_save,
 										form_data: form_data,
 										captchaResponse: captchaResponse,
 										form_id: form_id,
 										registration_language:
-											registration_language,
-										ur_frontend_form_nonce: form_nonce
+											registration_language
 									};
 
 									var $error_message = {};
@@ -1421,18 +1402,6 @@
 								);
 							}
 
-							// Add security nonce
-							if (
-								$form.find('input[name="security"]').length ===
-								0
-							) {
-								$form.append(
-									'<input type="hidden" name="security" value="' +
-										user_registration_params.user_registration_form_data_save +
-										'" />'
-								);
-							}
-
 							// Add form data
 							if (
 								$form.find('input[name="form_data"]').length ===
@@ -1482,20 +1451,6 @@
 								$form.append(
 									'<input type="hidden" name="registration_language" value="' +
 										posted_data.registration_language +
-										'" />'
-								);
-							}
-
-							// Add form nonce
-							if (
-								posted_data.ur_frontend_form_nonce &&
-								$form.find(
-									'input[name="ur_frontend_form_nonce"]'
-								).length === 0
-							) {
-								$form.append(
-									'<input type="hidden" name="ur_frontend_form_nonce" value="' +
-										posted_data.ur_frontend_form_nonce +
 										'" />'
 								);
 							}
@@ -2949,73 +2904,6 @@
 			}
 		});
 	};
-	var update_nonce = function (all_forms_ids) {
-		$.ajax({
-			url: user_registration_params.ajax_url,
-			data: {
-				action: "user_registration_get_recent_nonce",
-				form_ids: all_forms_ids,
-				nonce_for: "registration"
-			},
-			type: "POST",
-			async: true,
-			complete: function (ajax_response) {
-				var response = JSON.parse(ajax_response.responseText);
-				if (response.success) {
-					$.each(response.data, function (index, item) {
-						$("#user-registration-form-" + index)
-							.find("#ur_frontend_form_nonce")
-							.val(item);
-					});
-				}
-			}
-		});
-	};
-	var update_nonce = function (all_forms_ids) {
-		$.ajax({
-			url: user_registration_params.ajax_url,
-			data: {
-				action: "user_registration_get_recent_nonce",
-				form_ids: all_forms_ids,
-				nonce_for: "registration"
-			},
-			type: "POST",
-			async: true,
-			complete: function (ajax_response) {
-				var response = JSON.parse(ajax_response.responseText);
-				if (response.success) {
-					$.each(response.data, function (index, item) {
-						$("#user-registration-form-" + index)
-							.find("#ur_frontend_form_nonce")
-							.val(item);
-					});
-				}
-			}
-		});
-	};
-	var update_nonce = function (all_forms_ids) {
-		$.ajax({
-			url: user_registration_params.ajax_url,
-			data: {
-				action: "user_registration_get_recent_nonce",
-				form_ids: all_forms_ids,
-				nonce_for: "registration"
-			},
-			type: "POST",
-			async: true,
-			complete: function (ajax_response) {
-				var response = JSON.parse(ajax_response.responseText);
-				if (response.success) {
-					$.each(response.data, function (index, item) {
-						$("#user-registration-form-" + index)
-							.find("#ur_frontend_form_nonce")
-							.val(item);
-					});
-				}
-			}
-		});
-	};
-
 	function user_registration_count() {
 		$("textarea").each(function () {
 			var input_count;
@@ -3095,14 +2983,6 @@
 			}
 		});
 	});
-	var all_forms_ids = "";
-	/**
-	 * Update nonce on page load everytime
-	 */
-	$("form.register").each(function () {
-		all_forms_ids += $(this).data("form-id") + ",";
-	});
-	update_nonce(all_forms_ids);
 	user_registration_form_init();
 
 	/**
