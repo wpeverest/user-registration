@@ -133,6 +133,23 @@ class ListTable extends \UR_List_Table {
 	}
 
 	public function column_status( $subscription ) {
+		$pending_cancel_date = get_user_meta( $subscription->user_id, 'urm_pending_cancel_' . $subscription->ID, true );
+
+		if ( $pending_cancel_date ) {
+			$clock_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+			return sprintf(
+				'<span class="subscription-status user-subscription-canceling">%s%s</span>',
+				$clock_icon,
+				esc_html(
+					sprintf(
+						/* translators: %s: cancellation date */
+						__( 'Cancels %s', 'user-registration' ),
+						date_i18n( get_option( 'date_format' ), strtotime( $pending_cancel_date ) )
+					)
+				)
+			);
+		}
+
 		$status_class = 'user-subscription-secondary';
 		if ( 'active' === $subscription->status ) {
 			$status_class = 'user-subscription-active';

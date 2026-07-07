@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - develop
+            - UR-4615-cancellation-revokes-access-immediately-instead-of-at-period-end
         workflow_dispatch:
 jobs:
     sync:
