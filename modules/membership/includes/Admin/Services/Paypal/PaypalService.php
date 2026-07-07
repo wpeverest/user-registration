@@ -822,6 +822,24 @@ class PaypalService {
 		$payment_date = $payment_date->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Y-m-d' );
 		// handle first ipn of the day appart from the signup ipn.
 		if ( 'subscr_payment' === $txn_type && $payment_date == date( 'Y-m-d' ) ) {
+			// Verify receiver email and amount before activating — this path must not
+			// skip the checks that run below for later payments.
+			if ( empty( $receiver_email ) || ! is_email( $receiver_email )
+				|| strtolower( $data['business'] ?? '' ) !== strtolower( trim( $receiver_email ) )
+				|| empty( $amount )
+				|| number_format( (float) ( $data['mc_gross'] ?? 0 ), 2 ) !== number_format( (float) $amount, 2 ) ) {
+				PaymentGatewayLogging::log_transaction_failure(
+					'paypal',
+					esc_html__( 'Payment failed: receiver email or amount mismatch', 'user-registration' ),
+					array(
+						'subscription_id' => $subscription_id,
+						'member_id'       => $member_id,
+					)
+				);
+				$this->members_orders_repository->update( $latest_order['ID'], array( 'status' => 'failed' ) );
+
+				return;
+			}
 			$this->members_subscription_repository->update(
 				$subscription_id,
 				array(
