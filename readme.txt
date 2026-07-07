@@ -272,13 +272,13 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - Pending subscription blocked the user from logging in.
 * Fix      - Design issues in promotional notices after WordPress v7.0.
 * Fix      - Use server membership state for multiple-membership policy.
+* Fix      - Block tampered PayPal payments from activating memberships.
 * Fix      - Stripe payment and nonce validation failed on Membership form.
 * Fix      - Security: prevent unauthorized login during membership signup payment.
 * Fix      - Check coupon eligibility before discount on public membership purchase.
 * Fix      - Super admin bypass missing for admin content access in membership rules.
 * Fix      - Check PayPal payment is complete before activating one-time memberships.
 
-* Fix      - Security: block tampered PayPal payments from activating memberships.
 = 5.2.4    - 25/06/2026 =
 * Enhance  - User role overwritten on new membership assignment.
 * Enhance  - Add customizable membership registration success message in settings.
