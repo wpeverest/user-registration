@@ -10,6 +10,7 @@ use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+use WPEverest\URMembership\Admin\Services\CouponService;
 use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\OrderService;
@@ -165,9 +166,19 @@ class PaypalService {
 		if ( isset( $data['upgrade'] ) && $data['upgrade'] ) {
 			$final_amount = $data['amount'];
 		} elseif ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
-			$coupon_details  = ur_get_coupon_details( $data['coupon'] );
-			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
-			$final_amount    = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+			$coupon_service    = new CouponService();
+			$coupon_validation = $coupon_service->validate(
+				array(
+					'coupon'        => $data['coupon'],
+					'membership_id' => absint( $membership ),
+				)
+			);
+
+			if ( $coupon_validation['status'] ) {
+				$coupon_details  = ur_get_coupon_details( $data['coupon'] );
+				$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
+				$final_amount    = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+			}
 		}
 
 		if ( ( 'subscription' === ( $membership_type ) && ! $is_renewing ) || ( $is_automatic && $is_renewing ) ) {

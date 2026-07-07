@@ -773,6 +773,21 @@ class AJAX {
 	 */
 	public static function validate_coupon() {
 		ur_membership_verify_nonce( 'ur_members_frontend' );
+
+		$rate_limit_key = 'urm_coupon_validate_' . md5( ur_get_ip_address() );
+		$attempts       = (int) get_transient( $rate_limit_key );
+
+		if ( $attempts >= 10 ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Too many coupon attempts. Please try again later.', 'user-registration' ),
+				),
+				429
+			);
+		}
+
+		set_transient( $rate_limit_key, $attempts + 1, MINUTE_IN_SECONDS );
+
 		$data           = isset( $_POST['coupon_data'] ) ? (array) wp_unslash( $_POST['coupon_data'] ) : array();
 		$coupon_service = new CouponService();
 
@@ -2062,7 +2077,7 @@ class AJAX {
 			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
 		}
 
-		if ( isset( $_POST['type'] ) && 'multiple' === sanitize_text_field( $_POST['type'] ) ) {
+		if ( ! empty( $user_membership_ids ) ) {
 			$subscription_service = new SubscriptionService();
 			$status               = $subscription_service->can_purchase_multiple( $data );
 
@@ -2703,6 +2718,16 @@ class AJAX {
 	 * @since 6.1.0
 	 */
 	public static function validate_payment_currency() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, you do not have permission to do this.', 'user-registration' ),
+				)
+			);
+		}
+
+		ur_membership_verify_nonce( 'validate_payment_currency_nonce' );
+
 		$zone_id = ! empty( sanitize_text_field( wp_unslash( $_POST['zone_id'] ) ) ) ? sanitize_text_field( wp_unslash( $_POST['zone_id'] ) ) : '';
 
 		if ( empty( $zone_id ) ) {

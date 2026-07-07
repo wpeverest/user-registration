@@ -21,6 +21,7 @@ use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+use WPEverest\URMembership\Admin\Services\CouponService;
 use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\OrderService;
@@ -282,12 +283,22 @@ class NewPaypalService {
 		if ( $is_upgrading ) {
 			$final_amount = (float) ( isset( $data['amount'] ) ? $data['amount'] : $final_amount );
 		} elseif ( ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
-			$coupon_details = ur_get_coupon_details( $data['coupon'] );
-			$discount_value = ( 'fixed' === ( isset( $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount_type'] : '' ) )
-				? (float) ( isset( $coupon_details['coupon_discount'] ) ? $coupon_details['coupon_discount'] : 0 )
-				: ( $final_amount * (float) ( isset( $coupon_details['coupon_discount'] ) ? $coupon_details['coupon_discount'] : 0 ) / 100 );
+			$coupon_service    = new CouponService();
+			$coupon_validation = $coupon_service->validate(
+				array(
+					'coupon'        => $data['coupon'],
+					'membership_id' => absint( $membership ),
+				)
+			);
 
-			$final_amount = max( 0.0, (float) user_registration_sanitize_amount( $final_amount - $discount_value ) );
+			if ( $coupon_validation['status'] ) {
+				$coupon_details = ur_get_coupon_details( $data['coupon'] );
+				$discount_value = ( 'fixed' === ( isset( $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount_type'] : '' ) )
+					? (float) ( isset( $coupon_details['coupon_discount'] ) ? $coupon_details['coupon_discount'] : 0 )
+					: ( $final_amount * (float) ( isset( $coupon_details['coupon_discount'] ) ? $coupon_details['coupon_discount'] : 0 ) / 100 );
+
+				$final_amount = max( 0.0, (float) user_registration_sanitize_amount( $final_amount - $discount_value ) );
+			}
 		}
 
 		$pre_tax_final_amount = $final_amount; // Saved before tax — used as base price in subscription plans.
@@ -645,6 +656,8 @@ class NewPaypalService {
 
 		if ( ! empty( $response['id'] ) ) {
 			update_user_meta( $context['member_id'], 'urm_paypal_order_id', sanitize_text_field( $response['id'] ) );
+			update_user_meta( $context['member_id'], 'urm_paypal_order_amount', (float) $context['final_amount'] );
+			update_user_meta( $context['member_id'], 'urm_paypal_order_currency', sanitize_text_field( $context['currency'] ) );
 		}
 
 		PaymentGatewayLogging::log_transaction_success(
@@ -1131,7 +1144,28 @@ class NewPaypalService {
 
 		// REST one-time order capture.
 		if ( ! empty( $order_token ) && $is_rest_one_time_payment ) {
-			$capture_response = $this->capture_paypal_order( $order_token, $this->get_paypal_rest_credentials() );
+			$expected_order_id = get_user_meta( $member_id, 'urm_paypal_order_id', true );
+
+			if ( empty( $expected_order_id ) || ! hash_equals( (string) $expected_order_id, (string) $order_token ) ) {
+				PaymentGatewayLogging::log_error(
+					'paypal',
+					sprintf(
+						'[Member ID #%s] PayPal order token does not match the order created for this member.',
+						$member_id
+					) . "\n" . wp_json_encode(
+						array(
+							'paypal_order_id'    => $order_token,
+							'expected_order_id'  => $expected_order_id,
+							'member_id'          => $member_id,
+						),
+						JSON_PRETTY_PRINT
+					)
+				);
+				return;
+			}
+
+			$paypal_credentials = $this->get_paypal_rest_credentials();
+			$capture_response   = $this->capture_paypal_order( $order_token, $paypal_credentials );
 
 			if ( is_wp_error( $capture_response ) ) {
 				PaymentGatewayLogging::log_error(
@@ -1144,6 +1178,67 @@ class NewPaypalService {
 							'paypal_order_id' => $order_token,
 							'member_id'       => $member_id,
 							'message'         => $capture_response->get_error_message(),
+						),
+						JSON_PRETTY_PRINT
+					)
+				);
+				return;
+			}
+
+			$capture_status = isset( $capture_response['purchase_units'][0]['payments']['captures'][0]['status'] )
+				? $capture_response['purchase_units'][0]['payments']['captures'][0]['status']
+				: ( isset( $capture_response['status'] ) ? $capture_response['status'] : '' );
+
+			if ( 'COMPLETED' !== strtoupper( $capture_status ) ) {
+				PaymentGatewayLogging::log_error(
+					'paypal',
+					sprintf(
+						'[Member ID #%s] PayPal order capture did not complete after redirect.',
+						$member_id
+					) . "\n" . wp_json_encode(
+						array(
+							'paypal_order_id' => $order_token,
+							'member_id'       => $member_id,
+							'capture_status'  => $capture_status,
+						),
+						JSON_PRETTY_PRINT
+					)
+				);
+				return;
+			}
+
+			$captured_amount_data = isset( $capture_response['purchase_units'][0]['payments']['captures'][0]['amount'] )
+				? $capture_response['purchase_units'][0]['payments']['captures'][0]['amount']
+				: ( isset( $capture_response['purchase_units'][0]['amount'] ) ? $capture_response['purchase_units'][0]['amount'] : array() );
+
+			$expected_amount   = (float) get_user_meta( $member_id, 'urm_paypal_order_amount', true );
+			$expected_currency = get_user_meta( $member_id, 'urm_paypal_order_currency', true );
+			$captured_amount   = isset( $captured_amount_data['value'] ) ? (float) $captured_amount_data['value'] : 0.0;
+			$captured_currency = isset( $captured_amount_data['currency_code'] ) ? $captured_amount_data['currency_code'] : '';
+
+			$amount_mismatch   = $expected_amount > 0 && ( $captured_amount + 0.01 ) < $expected_amount;
+			$currency_mismatch = ! empty( $expected_currency ) && ! empty( $captured_currency ) && 0 !== strcasecmp( $expected_currency, $captured_currency );
+
+			$payee_email       = isset( $capture_response['purchase_units'][0]['payee']['email_address'] ) ? $capture_response['purchase_units'][0]['payee']['email_address'] : '';
+			$configured_email  = isset( $paypal_credentials['email'] ) ? $paypal_credentials['email'] : '';
+			$payee_mismatch    = ! empty( $payee_email ) && ! empty( $configured_email ) && 0 !== strcasecmp( $payee_email, $configured_email );
+
+			if ( $amount_mismatch || $currency_mismatch || $payee_mismatch ) {
+				PaymentGatewayLogging::log_error(
+					'paypal',
+					sprintf(
+						'[Member ID #%s] PayPal captured amount, currency, or payee does not match the expected order.',
+						$member_id
+					) . "\n" . wp_json_encode(
+						array(
+							'paypal_order_id'   => $order_token,
+							'member_id'         => $member_id,
+							'expected_amount'   => $expected_amount,
+							'captured_amount'   => $captured_amount,
+							'expected_currency' => $expected_currency,
+							'captured_currency' => $captured_currency,
+							'configured_payee'  => $configured_email,
+							'captured_payee'    => $payee_email,
 						),
 						JSON_PRETTY_PRINT
 					)

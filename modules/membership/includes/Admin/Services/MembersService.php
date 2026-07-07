@@ -130,7 +130,17 @@ class MembersService {
 		}
 
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
-			$response['coupon_data'] = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
+			$coupon_service    = new CouponService();
+			$coupon_validation = $coupon_service->validate(
+				array(
+					'coupon'        => sanitize_text_field( $data['coupon'] ),
+					'membership_id' => isset( $data['membership'] ) ? absint( $data['membership'] ) : 0,
+				)
+			);
+
+			if ( $coupon_validation['status'] ) {
+				$response['coupon_data'] = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
+			}
 		}
 
 		$response['user_data'] = array(
