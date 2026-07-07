@@ -111,8 +111,9 @@ class ContentRestriction extends BuilderAbstract {
 		if ( ! ur_check_module_activation( 'content-restriction' ) ) {
 			return sprintf( '<div class="user-registration ur-frontend-form"><div class="user-registration-info">%s</div></div>', esc_html__( 'Please active content restriction.', 'user-registration' ) );
 		}
-		// Getting current post id because global $post not working in the divi.
-		$post_id = isset( $_POST['current_page']['id'] ) ? absint( $_POST['current_page']['id'] ) : 0;
+		// In the D4 VB AJAX context Divi sends the post ID via POST. On the
+		// frontend (Divi 5 or static render) fall back to get_the_ID().
+		$post_id = isset( $_POST['current_page']['id'] ) ? absint( $_POST['current_page']['id'] ) : ( get_the_ID() ?: 0 );
 
 		$output = sprintf(
 			'[urcr_restrict access_role="%s" post_id="%s"]%s[/urcr_restrict]',

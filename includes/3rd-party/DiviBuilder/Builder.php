@@ -87,7 +87,25 @@ class Builder {
 		if ( urm_is_divi5_active() ) {
 			D5\Builder::init();
 		}
+		// Register URM Divi shortcodes on init so they are available on the
+		// frontend. In Divi 5 et_builder_ready does not fire on non-VB page
+		// loads, so shortcodes registered only inside register_divi_builder()
+		// would never be processed and would appear as raw text.
+		add_action( 'init', array( $this, 'register_shortcodes' ) );
 		add_action( 'et_builder_ready', array( $this, 'register_divi_builder' ) );
+	}
+
+	/**
+	 * Register URM Divi module shortcodes with WordPress.
+	 *
+	 * Called on the `init` hook so shortcodes are available on every page
+	 * load — including Divi 5 frontend requests where et_builder_ready never
+	 * fires and ET_Builder_Module does not register them automatically.
+	 *
+	 * @since xx.xx.xx
+	 */
+	public function register_shortcodes(): void {
+		add_shortcode( 'urm-content-restriction', array( ContentRestriction::class, 'render_module' ) );
 	}
 
 	/**

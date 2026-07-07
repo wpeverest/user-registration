@@ -185,10 +185,13 @@ class Builder {
 			wp_send_json_error( 'Unknown block', 404 );
 		}
 
-		// For 'logged_out' preview: simulate a guest so the form renders its guest-facing content.
+		// For 'logged_out' preview, temporarily simulate a guest user so:
+		//   (a) the userState visibility filter passes, and
+		//   (b) the form renders its guest-facing content (the actual form fields).
+		// For 'logged_in', the logged-in admin is the correct context: the form
+		// naturally renders the "You are already logged in. Log out?" message.
 		$user_state        = $attrs['content']['innerContent']['desktop']['value']['userState'] ?? '';
 		$simulated_user_id = null;
-
 		if ( 'logged_out' === $user_state ) {
 			$simulated_user_id = get_current_user_id();
 			wp_set_current_user( 0 );
@@ -206,6 +209,7 @@ class Builder {
 
 		$html = call_user_func( $callbacks[ $block_name ], $attrs, '', $dummy_block );
 
+		// Restore the original user after rendering.
 		if ( null !== $simulated_user_id ) {
 			wp_set_current_user( $simulated_user_id );
 		}

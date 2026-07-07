@@ -26,8 +26,28 @@
                 "priority": 10,
                 "render": true,
                 "subName": "userRole",
-                "label": "User Role",
-                "description": "User role required to view the restricted content.",
+                "label": "Allow Access To",
+                "description": "Select who can access this restricted content.",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            },
+            "selectedRoles": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "content_selectedRoles",
+                "priority": 15,
+                "render": true,
+                "subName": "selectedRoles",
+                "label": "Roles",
+                "description": "Select the user roles that can access this content.",
                 "category": "basic_option",
                 "features": {
                   "sticky": false,
@@ -55,7 +75,7 @@
                 },
                 "component": {
                   "type": "field",
-                  "name": "divi/text"
+                  "name": "divi/richtext"
                 }
               }
             }
@@ -75,7 +95,19 @@
         "component": {
           "name": "divi/composite",
           "props": {
-            "groupLabel": "User Role"
+            "groupLabel": "Allow Access To"
+          }
+        }
+      },
+      "content_selectedRoles": {
+        "panel": "content",
+        "priority": 15,
+        "groupName": "selectedRoles",
+        "multiElements": true,
+        "component": {
+          "name": "divi/composite",
+          "props": {
+            "groupLabel": "Roles"
           }
         }
       },
