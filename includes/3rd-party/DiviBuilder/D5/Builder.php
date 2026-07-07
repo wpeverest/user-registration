@@ -88,6 +88,25 @@ class Builder {
 			true
 		);
 
+		// The VB canvas runs in a separate "app-window" context served by this
+		// hook, not the regular frontend wp_enqueue_scripts pass.  Enqueue URM
+		// front-end styles here so the module preview HTML is styled correctly
+		// (lavender notice box, ::before emoji, etc.).  Also enqueue dashicons
+		// so the info-circle icon in the admin-only notice renders.
+		wp_enqueue_style( 'dashicons' );
+		wp_enqueue_style(
+			'urm-form-style',
+			UR()->plugin_url() . '/assets/css/user-registration.css',
+			array(),
+			UR()->version
+		);
+		wp_enqueue_style(
+			'user-registration-my-account',
+			UR()->plugin_url() . '/assets/css/my-account-layout.css',
+			array(),
+			UR()->version
+		);
+
 		// Build registration form options for divi/select.
 		$forms        = function_exists( 'ur_get_all_user_registration_form' ) ? ur_get_all_user_registration_form() : array();
 		$form_options = array( '0' => array( 'label' => __( '-- Select Form --', 'user-registration' ) ) );
