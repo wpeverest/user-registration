@@ -3218,20 +3218,51 @@
 							? $form.find(".ur-submit-button")
 							: $(".ur-submit-button");
 					$submit_button.prop("disabled", true);
+					$submit_button
+						.find("span")
+						.addClass("ur-front-spinner");
 
-					// Show a "validating…" notice so the core submit handler's
-					// `#stripe-errors:visible` guard blocks this first submit from
-					// racing straight to registration while the card is still being
-					// validated. It is removed on success (and replaced by the real
-					// error on failure). The programmatic re-submit after validation
-					// succeeds is what actually registers the user — exactly once.
-					stripe_settings.show_stripe_error(
-						urmf_data.labels.i18n_validating_stripe_card
+					// The core submit handler's `#stripe-errors:visible` guard is
+					// what stops this first submit from racing straight to
+					// registration while the card is still being validated (the
+					// button's own disabled state only protects *later* clicks,
+					// not this first synchronous pass). We still need that
+					// element to exist, but the user already sees the button's
+					// spinner, so this one is collapsed out of the layout
+					// entirely (zero size, taken out of normal flow) rather
+					// than just visually hidden — otherwise the `.user-
+					// registration-error` class's own border/padding still
+					// renders an empty box and reserves a gap. jQuery's
+					// `:visible` only requires the element to generate a box
+					// (any `getClientRects()` entry) — it doesn't need to have
+					// non-zero size — so this still satisfies that guard.
+					var $validating_marker = $(
+						'<label id="stripe-errors" class="user-registration-error" role="alert" style="position:absolute;width:0;height:0;margin:0;padding:0;border:0;overflow:hidden;"></label>'
 					);
+					$membership_registration_form
+						.find(".stripe-container")
+						.closest(".ur_membership_frontend_input_container")
+						.append($validating_marker);
+
+					// show_stripe_error() reuses an existing #stripe-errors
+					// element via .show(), which only toggles `display` and
+					// would leave the marker's collapsing inline styles in
+					// place — silently hiding a real error. Remove the marker
+					// first so a genuine failure always renders a fresh,
+					// fully-visible label.
+					var show_real_stripe_error = function (message) {
+						$membership_registration_form
+							.find("#stripe-errors")
+							.remove();
+						stripe_settings.show_stripe_error(message);
+					};
 
 					var release_submit = function () {
 						stripe_validation_in_progress = false;
 						$submit_button.prop("disabled", false);
+						$submit_button
+							.find("span")
+							.removeClass("ur-front-spinner");
 					};
 
 					elements.stripe
@@ -3241,7 +3272,7 @@
 						})
 						.then(function (pmResult) {
 							if (pmResult.error) {
-								stripe_settings.show_stripe_error(
+								show_real_stripe_error(
 									pmResult.error.message
 								);
 								release_submit();
@@ -3271,7 +3302,7 @@
 											$form.submit();
 										}
 									} else {
-										stripe_settings.show_stripe_error(
+										show_real_stripe_error(
 											response.data &&
 												response.data.message
 												? response.data.message
