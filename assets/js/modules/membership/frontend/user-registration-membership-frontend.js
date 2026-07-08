@@ -1660,6 +1660,7 @@
 			});
 		},
 		handle_authorize_multiple_purchase: function (
+			submittedData,
 			selected_membership_id,
 			selected_pg,
 			btn,
@@ -1681,7 +1682,11 @@
 							action: "user_registration_membership_add_multiple_membership",
 							selected_membership_id: data.selected_membership_id,
 							selected_pg: data.selected_pg,
-							ur_authorize_data: data.ur_authorize_data
+							ur_authorize_data: data.ur_authorize_data,
+							form_data: submittedData.form_data,
+							coupon: submittedData.coupon,
+							form_id: submittedData.form_id,
+							type: data.type
 						},
 						{
 							success: function (response) {

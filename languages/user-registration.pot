@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-07T07:08:52+00:00\n"
+"POT-Creation-Date: 2026-07-08T06:06:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -218,7 +218,7 @@ msgstr ""
 #: includes/3rd-party/DiviBuilder/Modules/MembershipGroups.php:66
 #: includes/admin/class-ur-admin-menus.php:563
 #: includes/Functions/CoreFunctions.php:494
-#: modules/membership/includes/Admin.php:700
+#: modules/membership/includes/Admin.php:741
 #: modules/membership/includes/Admin/Membership/Membership.php:383
 msgid "Membership Groups"
 msgstr ""
@@ -279,7 +279,7 @@ msgstr ""
 #: includes/3rd-party/DiviBuilder/Modules/RegistrationForm.php:60
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-registration.php:35
 #: includes/admin/class-ur-admin-menus.php:651
-#: includes/class-ur-ajax.php:2474
+#: includes/class-ur-ajax.php:2478
 #: includes/functions-ur-core.php:8466
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:681
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:789
@@ -346,7 +346,7 @@ msgid "Membership Pricing"
 msgstr ""
 
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-membership-listing.php:81
-#: modules/membership/includes/Admin.php:701
+#: modules/membership/includes/Admin.php:742
 msgid "Membership Group"
 msgstr ""
 
@@ -469,7 +469,7 @@ msgstr ""
 
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-membership-listing.php:322
 #: includes/admin/settings/class-ur-members-list-table.php:946
-#: modules/membership/includes/Admin.php:652
+#: modules/membership/includes/Admin.php:693
 msgid "All Memberships"
 msgstr ""
 
@@ -751,7 +751,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-assets.php:672
 #: includes/admin/class-ur-admin-menus.php:1157
 #: includes/admin/class-ur-admin-settings.php:267
-#: includes/class-ur-ajax.php:1890
+#: includes/class-ur-ajax.php:1894
 #: includes/functions-ur-core.php:4883
 #: chunks/form_templates.js:1
 #: src/form-templates/components/TemplateList.js:690
@@ -962,8 +962,8 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:870
 #: includes/admin/class-ur-admin-menus.php:1515
 #: includes/functions-ur-core.php:6518
-#: modules/membership/includes/Admin.php:654
-#: modules/membership/includes/Admin.php:704
+#: modules/membership/includes/Admin.php:695
+#: modules/membership/includes/Admin.php:745
 #: modules/membership/includes/Admin/Members/Members.php:251
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -1722,7 +1722,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:545
 #: includes/admin/functions-ur-admin.php:952
 #: includes/Functions/CoreFunctions.php:481
-#: modules/membership/includes/Admin.php:650
+#: modules/membership/includes/Admin.php:691
 #: modules/membership/includes/Admin/Membership/ListTable.php:217
 #: modules/membership/includes/Admin/Membership/Membership.php:368
 #: modules/membership/includes/Admin/Membership/Membership.php:369
@@ -1775,7 +1775,7 @@ msgstr ""
 #: includes/functions-ur-core.php:6527
 #: includes/Functions/CoreFunctions.php:506
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:304
-#: modules/membership/includes/Admin.php:622
+#: modules/membership/includes/Admin.php:663
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:103
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:332
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:388
@@ -1855,7 +1855,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:944
 #: includes/admin/class-ur-admin-menus.php:956
 #: includes/admin/settings/class-ur-settings-license.php:121
-#: includes/class-ur-ajax.php:1887
+#: includes/class-ur-ajax.php:1891
 #: includes/class-ur-plugin-updater.php:328
 msgid "Activate License"
 msgstr ""
@@ -1992,8 +1992,8 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-list-table.php:420
 #: includes/class-ur-post-types.php:62
 #: modules/content-restriction/class-urcr-post-types.php:59
-#: modules/membership/includes/Admin.php:656
-#: modules/membership/includes/Admin.php:706
+#: modules/membership/includes/Admin.php:697
+#: modules/membership/includes/Admin.php:747
 #: modules/membership/includes/Admin/Members/MembersListTable.php:161
 #: modules/membership/includes/Admin/Membership/ListTable.php:112
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:112
@@ -2837,7 +2837,7 @@ msgstr ""
 
 #. translators: %s: cancellation date
 #: includes/admin/settings/class-ur-members-list-table.php:868
-#: modules/membership/includes/Admin.php:909
+#: modules/membership/includes/Admin.php:950
 #: modules/membership/includes/Admin/Members/MembersListTable.php:241
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:146
 #: modules/membership/includes/Admin/Views/subscription-edit.php:252
@@ -2938,7 +2938,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-menu.php:182
 #: includes/class-ur-frontend-scripts.php:582
 #: includes/frontend/class-ur-frontend-form-handler.php:402
-#: includes/frontend/class-ur-frontend-form-handler.php:555
+#: includes/frontend/class-ur-frontend-form-handler.php:565
 msgid "User successfully registered."
 msgstr ""
 
@@ -3428,7 +3428,7 @@ msgstr ""
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:296
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:272
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:487
-#: modules/membership/includes/Admin.php:651
+#: modules/membership/includes/Admin.php:692
 #: modules/membership/includes/Admin/Forms/class-ur-form-field-membership.php:49
 #: modules/membership/includes/Admin/Members/Members.php:347
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:64
@@ -3517,7 +3517,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-members-menu.php:2030
 #: includes/admin/settings/class-ur-settings-email.php:362
 #: includes/class-ur-email-confirmation.php:97
-#: modules/membership/includes/Admin.php:875
+#: modules/membership/includes/Admin.php:916
 #: modules/membership/includes/Admin/Membership/ListTable.php:66
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:62
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:66
@@ -3575,7 +3575,7 @@ msgid "Transaction ID"
 msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:2028
-#: modules/membership/includes/Admin.php:874
+#: modules/membership/includes/Admin.php:915
 #: modules/membership/includes/Admin/Views/member-create.php:263
 #: modules/membership/includes/Admin/Views/subscription-edit.php:426
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:82
@@ -3603,7 +3603,7 @@ msgid "Payment Date"
 msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:2032
-#: modules/membership/includes/Admin.php:878
+#: modules/membership/includes/Admin.php:919
 #: templates/myaccount/edit-team.php:123
 #: templates/myaccount/membership.php:42
 #: templates/myaccount/payments.php:63
@@ -3616,8 +3616,8 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:2051
 #: includes/class-ur-smart-tags.php:775
-#: modules/membership/includes/Admin.php:895
-#: modules/membership/includes/Admin.php:918
+#: modules/membership/includes/Admin.php:936
+#: modules/membership/includes/Admin.php:959
 #: modules/membership/includes/Admin/Views/subscription-edit.php:282
 #: modules/membership/includes/Admin/Views/subscription-edit.php:454
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:64
@@ -3640,7 +3640,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-list-table.php:416
 #: includes/admin/views/html-admin-page-status-logs.php:73
 #: includes/admin/views/html-admin-page-status-logs.php:138
-#: modules/membership/includes/Admin.php:920
+#: modules/membership/includes/Admin.php:961
 #: modules/membership/includes/Admin/Members/MembersListTable.php:157
 msgid "View"
 msgstr ""
@@ -4221,7 +4221,7 @@ msgstr ""
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:669
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:475
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:526
-#: modules/content-restriction/class-urcr-frontend.php:1559
+#: modules/content-restriction/class-urcr-frontend.php:1563
 msgid "Membership Required"
 msgstr ""
 
@@ -4230,7 +4230,7 @@ msgstr ""
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:670
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:476
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:527
-#: modules/content-restriction/class-urcr-frontend.php:1560
+#: modules/content-restriction/class-urcr-frontend.php:1564
 msgid "This content is available to members only."
 msgstr ""
 
@@ -4239,7 +4239,7 @@ msgstr ""
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:671
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:477
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:528
-#: modules/content-restriction/class-urcr-frontend.php:1561
+#: modules/content-restriction/class-urcr-frontend.php:1565
 msgid "Sign up to unlock access or log in if you already have an account."
 msgstr ""
 
@@ -4385,7 +4385,7 @@ msgstr ""
 #: includes/Functions/CoreFunctions.php:708
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:1156
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:1567
-#: modules/membership/includes/Admin.php:757
+#: modules/membership/includes/Admin.php:798
 #: modules/membership/includes/Admin/Forms/FormFields.php:106
 #: modules/membership/includes/Admin/Forms/Views/admin-membership.php:89
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:77
@@ -4514,7 +4514,7 @@ msgstr ""
 #: includes/Functions/CoreFunctions.php:709
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:1157
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:1583
-#: modules/membership/includes/Admin.php:758
+#: modules/membership/includes/Admin.php:799
 #: modules/membership/includes/Admin/Forms/FormFields.php:107
 #: modules/membership/includes/Admin/Forms/Views/admin-membership.php:90
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:360
@@ -4692,7 +4692,7 @@ msgid "Enter the text message that appears after successful membership registrat
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-registration-login.php:141
-#: modules/membership/includes/Admin.php:543
+#: modules/membership/includes/Admin.php:584
 #: modules/membership/includes/AJAX.php:719
 msgid "New member has been successfully created."
 msgstr ""
@@ -4962,7 +4962,7 @@ msgid "A New Member Registered."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:106
-#: modules/membership/includes/Admin/Services/EmailService.php:138
+#: modules/membership/includes/Admin/Services/EmailService.php:140
 msgid "A Member registration: {{username}}"
 msgstr ""
 
@@ -5248,6 +5248,7 @@ msgid "Enable this email sent to the admin after succesful payment from user."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-payment-success-admin-email.php:104
+#: modules/membership/includes/Admin/Services/EmailService.php:238
 msgid "Payment Received from {{username}}"
 msgstr ""
 
@@ -5296,7 +5297,7 @@ msgid "Enable this email sent to the user after succesful payment."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-payment-success-email.php:94
-#: modules/membership/includes/Admin/Services/EmailService.php:190
+#: modules/membership/includes/Admin/Services/EmailService.php:192
 msgid "Payment Confirmed"
 msgstr ""
 
@@ -5534,7 +5535,7 @@ msgstr ""
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:97
 #: includes/class-ur-emailer.php:243
 #: includes/class-ur-emailer.php:877
-#: modules/membership/includes/Admin/Services/EmailService.php:93
+#: modules/membership/includes/Admin/Services/EmailService.php:95
 msgid "Welcome to {{blog_info}}!"
 msgstr ""
 
@@ -6220,10 +6221,12 @@ msgid "User Registration and Membership"
 msgstr ""
 
 #: includes/class-ur-ajax.php:247
-#: modules/membership/includes/AJAX.php:878
-#: modules/membership/includes/AJAX.php:996
-#: modules/membership/includes/AJAX.php:1116
-#: modules/membership/includes/AJAX.php:1336
+#: modules/membership/includes/AJAX.php:879
+#: modules/membership/includes/AJAX.php:890
+#: modules/membership/includes/AJAX.php:1009
+#: modules/membership/includes/AJAX.php:1130
+#: modules/membership/includes/AJAX.php:1141
+#: modules/membership/includes/AJAX.php:1362
 msgid "You are not allowed to edit this user."
 msgstr ""
 
@@ -6299,8 +6302,8 @@ msgstr ""
 #: includes/class-ur-ajax.php:654
 #: includes/class-ur-ajax.php:698
 #: includes/class-ur-ajax.php:1230
-#: includes/class-ur-ajax.php:2416
-#: includes/class-ur-ajax.php:2672
+#: includes/class-ur-ajax.php:2420
+#: includes/class-ur-ajax.php:2676
 msgid "You do not have permission."
 msgstr ""
 
@@ -6334,7 +6337,7 @@ msgid "Seems like you haven't selected the reCAPTCHA type (Configured Captcha)."
 msgstr ""
 
 #: includes/class-ur-ajax.php:1065
-#: includes/class-ur-ajax.php:1996
+#: includes/class-ur-ajax.php:2000
 msgid "The selected page is not a User Registration & Membership Login or My Account page."
 msgstr ""
 
@@ -6343,8 +6346,8 @@ msgid "Please select a login redirection page."
 msgstr ""
 
 #: includes/class-ur-ajax.php:1092
-#: includes/class-ur-ajax.php:2028
-#: includes/class-ur-ajax.php:2707
+#: includes/class-ur-ajax.php:2032
+#: includes/class-ur-ajax.php:2711
 msgid "The selected page does not contain the required lost password shortcode [user_registration_lost_password]"
 msgstr ""
 
@@ -6353,7 +6356,7 @@ msgid "Please select a valid lost password page."
 msgstr ""
 
 #: includes/class-ur-ajax.php:1171
-#: includes/class-ur-ajax.php:2558
+#: includes/class-ur-ajax.php:2562
 msgid "You do not have permission to create pages."
 msgstr ""
 
@@ -6421,182 +6424,182 @@ msgstr ""
 msgid "Something went wrong, please try again later"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1823
+#: includes/class-ur-ajax.php:1827
 msgid "Changed email cancelled successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1985
-#: includes/class-ur-ajax.php:2016
+#: includes/class-ur-ajax.php:1989
+#: includes/class-ur-ajax.php:2020
 msgid "You do not have permission to edit settings form."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2045
-#: includes/class-ur-ajax.php:2370
+#: includes/class-ur-ajax.php:2049
+#: includes/class-ur-ajax.php:2374
 msgid "You do not have permission to edit payment settings."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2049
-#: includes/class-ur-ajax.php:2098
-#: includes/class-ur-ajax.php:2374
+#: includes/class-ur-ajax.php:2053
+#: includes/class-ur-ajax.php:2102
+#: includes/class-ur-ajax.php:2378
 msgid "Insufficient Data"
 msgstr ""
 
-#: includes/class-ur-ajax.php:2080
+#: includes/class-ur-ajax.php:2084
 #, php-format
 msgid "Payment Setting for %s has been saved successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2094
+#: includes/class-ur-ajax.php:2098
 msgid "You do not have permission to edit captcha settings."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2118
+#: includes/class-ur-ajax.php:2122
 msgid "Captcha settings saved successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2118
+#: includes/class-ur-ajax.php:2122
 #, php-format
 msgid "Captcha Setting for %s has been saved successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2132
-#: includes/class-ur-ajax.php:2228
+#: includes/class-ur-ajax.php:2136
+#: includes/class-ur-ajax.php:2232
 msgid "You do not have permission to reset captcha keys."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2138
-#: includes/class-ur-ajax.php:2234
+#: includes/class-ur-ajax.php:2142
+#: includes/class-ur-ajax.php:2238
 msgid "Setting ID is required."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2206
+#: includes/class-ur-ajax.php:2210
 #: modules/payment-history/Admin/OrderService.php:62
 msgid "Invalid payment method."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2215
+#: includes/class-ur-ajax.php:2219
 #, php-format
 msgid "Payment method settings for %s have been reset successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2279
+#: includes/class-ur-ajax.php:2283
 msgid "Invalid captcha type."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2303
+#: includes/class-ur-ajax.php:2307
 #, php-format
 msgid "Captcha keys for %s have been reset successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2317
+#: includes/class-ur-ajax.php:2321
 msgid "Form ID is missing!"
 msgstr ""
 
-#: includes/class-ur-ajax.php:2326
+#: includes/class-ur-ajax.php:2330
 #: includes/functions-ur-core.php:11329
 msgid "Form not found!"
 msgstr ""
 
-#: includes/class-ur-ajax.php:2341
+#: includes/class-ur-ajax.php:2345
 msgid "Invalid form submission source."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2360
+#: includes/class-ur-ajax.php:2364
 msgid "Nonce could not be updated"
 msgstr ""
 
-#: includes/class-ur-ajax.php:2391
-#: modules/membership/includes/AJAX.php:2756
+#: includes/class-ur-ajax.php:2395
+#: modules/membership/includes/AJAX.php:2788
 #, php-format
 msgid "%1$s is not currently supported by %2$s."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2401
-#: modules/membership/includes/AJAX.php:2766
+#: includes/class-ur-ajax.php:2405
+#: modules/membership/includes/AJAX.php:2798
 msgid "Currency is valid."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2446
+#: includes/class-ur-ajax.php:2450
 msgid "Registration form already configured."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2483
+#: includes/class-ur-ajax.php:2487
 msgid "Failed to create default form."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2495
+#: includes/class-ur-ajax.php:2499
 msgid "Default form created successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2534
+#: includes/class-ur-ajax.php:2538
 msgid "Failed to update the form."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2541
+#: includes/class-ur-ajax.php:2545
 msgid "Membership field added successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2564
+#: includes/class-ur-ajax.php:2568
 msgid "No pages specified to create."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2575
+#: includes/class-ur-ajax.php:2579
 msgid "Required pages created successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2590
+#: includes/class-ur-ajax.php:2594
 msgid "You do not have permission to modify login settings."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2600
+#: includes/class-ur-ajax.php:2604
 msgid "Default WordPress login has been disabled successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2604
+#: includes/class-ur-ajax.php:2608
 msgid "Invalid action specified."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2617
+#: includes/class-ur-ajax.php:2621
 msgid "You do not have permission to skip sections."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2628
+#: includes/class-ur-ajax.php:2632
 msgid "Default WordPress login setting has been skipped."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2638
+#: includes/class-ur-ajax.php:2642
 msgid "Spam protection setting has been skipped."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2648
+#: includes/class-ur-ajax.php:2652
 msgid "Payment setup has been skipped."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2657
+#: includes/class-ur-ajax.php:2661
 msgid "Membership field step has been skipped."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2663
+#: includes/class-ur-ajax.php:2667
 msgid "Invalid section specified."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2685
+#: includes/class-ur-ajax.php:2689
 msgid "Invalid page type"
 msgstr ""
 
-#: includes/class-ur-ajax.php:2696
+#: includes/class-ur-ajax.php:2700
 msgid "Please select a valid lost password page that contains the lost password shortcode [user_registration_lost_password]"
 msgstr ""
 
-#: includes/class-ur-ajax.php:2719
+#: includes/class-ur-ajax.php:2723
 msgid "Please select a valid MyAccount or Login page that contains the Login or MyAccount shortcode/block [user_registration_my_account]/[user_registration_login]."
 msgstr ""
 
-#: includes/class-ur-ajax.php:2730
+#: includes/class-ur-ajax.php:2734
 msgid "The selected page does not contain the required Login or My Account shortcode/block [user_registration_my_account]/[user_registration_login]"
 msgstr ""
 
-#: includes/class-ur-ajax.php:2745
+#: includes/class-ur-ajax.php:2749
 msgid "Page validation successful."
 msgstr ""
 
@@ -11433,7 +11436,7 @@ msgstr ""
 
 #: includes/Functions/CoreFunctions.php:710
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:1158
-#: modules/membership/includes/Admin.php:759
+#: modules/membership/includes/Admin.php:800
 #: modules/membership/includes/Admin/Forms/FormFields.php:108
 #: modules/membership/includes/Admin/Forms/Views/admin-membership.php:91
 #: modules/payment-history/Orders.php:412
@@ -11725,7 +11728,7 @@ msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-gutenberg-blocks.php:304
 #: modules/content-restriction/admin/class-urcr-admin-meta-boxes.php:235
-#: modules/content-restriction/class-urcr-frontend.php:1376
+#: modules/content-restriction/class-urcr-frontend.php:1380
 #: modules/content-restriction/class-urcr-shortcodes.php:61
 msgid "This content is restricted!"
 msgstr ""
@@ -12618,7 +12621,7 @@ msgstr ""
 msgid "Upgrade Now"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:236
+#: modules/membership/includes/Admin.php:250
 #: modules/membership/includes/Admin/Views/membership-groups-create.php:135
 #: chunks/blocks.js:280
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:245
@@ -12626,207 +12629,207 @@ msgstr ""
 msgid "Select Memberships"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:237
+#: modules/membership/includes/Admin.php:251
 msgid "The memberships selected here will have access to restricted content."
 msgstr ""
 
-#: modules/membership/includes/Admin.php:333
-#: modules/membership/includes/Admin.php:373
+#: modules/membership/includes/Admin.php:365
+#: modules/membership/includes/Admin.php:405
 msgid "Invalid membership selection."
 msgstr ""
 
-#: modules/membership/includes/Admin.php:407
-#: modules/membership/includes/Admin.php:419
+#: modules/membership/includes/Admin.php:439
+#: modules/membership/includes/Admin.php:456
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:500
 msgid "Invalid payment method for this membership."
 msgstr ""
 
-#: modules/membership/includes/Admin.php:519
-#: modules/membership/includes/Admin.php:555
+#: modules/membership/includes/Admin.php:556
+#: modules/membership/includes/Admin.php:596
 msgid "Sorry! There was an unexpected error while registering the user."
 msgstr ""
 
-#: modules/membership/includes/Admin.php:531
-#: modules/membership/includes/AJAX.php:1139
+#: modules/membership/includes/Admin.php:568
+#: modules/membership/includes/AJAX.php:1165
 msgid "Invalid User"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:622
+#: modules/membership/includes/Admin.php:663
 msgid "View User Registration & Membership Settings"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:653
+#: modules/membership/includes/Admin.php:694
 msgctxt "Admin menu name"
 msgid "Memberships"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:655
-#: modules/membership/includes/Admin.php:705
+#: modules/membership/includes/Admin.php:696
+#: modules/membership/includes/Admin.php:746
 msgid "Add new"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:657
+#: modules/membership/includes/Admin.php:698
 msgid "Edit membership"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:658
+#: modules/membership/includes/Admin.php:699
 msgid "New membership"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:659
+#: modules/membership/includes/Admin.php:700
 msgid "View membership"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:660
+#: modules/membership/includes/Admin.php:701
 msgid "View memberships"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:661
+#: modules/membership/includes/Admin.php:702
 msgid "Search memberships"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:662
+#: modules/membership/includes/Admin.php:703
 msgid "No memberships found"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:663
+#: modules/membership/includes/Admin.php:704
 msgid "No memberships found in trash"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:664
+#: modules/membership/includes/Admin.php:705
 msgid "Parent membership"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:665
+#: modules/membership/includes/Admin.php:706
 msgid "Membership image"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:666
+#: modules/membership/includes/Admin.php:707
 msgid "Set membership image"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:667
+#: modules/membership/includes/Admin.php:708
 msgid "Remove membership image"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:668
+#: modules/membership/includes/Admin.php:709
 msgid "Use as membership image"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:669
+#: modules/membership/includes/Admin.php:710
 msgid "Insert into membership"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:670
+#: modules/membership/includes/Admin.php:711
 msgid "Uploaded to this membership"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:671
+#: modules/membership/includes/Admin.php:712
 msgid "Filter membership"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:672
+#: modules/membership/includes/Admin.php:713
 msgid "Membership navigation"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:673
+#: modules/membership/includes/Admin.php:714
 msgid "Membership list"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:702
+#: modules/membership/includes/Admin.php:743
 msgid "All Membership Groups"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:703
+#: modules/membership/includes/Admin.php:744
 msgctxt "Admin menu name"
 msgid "Membership Groups"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:707
+#: modules/membership/includes/Admin.php:748
 msgid "Edit membership group"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:708
+#: modules/membership/includes/Admin.php:749
 msgid "New membership group"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:709
+#: modules/membership/includes/Admin.php:750
 msgid "View membership group"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:710
+#: modules/membership/includes/Admin.php:751
 msgid "View memberships group"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:711
+#: modules/membership/includes/Admin.php:752
 msgid "Search membership groups"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:712
+#: modules/membership/includes/Admin.php:753
 msgid "No membership groups found"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:713
+#: modules/membership/includes/Admin.php:754
 msgid "No membership groups found in trash"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:714
+#: modules/membership/includes/Admin.php:755
 msgid "Parent membership group"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:715
+#: modules/membership/includes/Admin.php:756
 msgid "Membership group image"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:716
+#: modules/membership/includes/Admin.php:757
 msgid "Set membership group image"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:717
+#: modules/membership/includes/Admin.php:758
 msgid "Remove membership group image"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:718
+#: modules/membership/includes/Admin.php:759
 msgid "Use as membership group image"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:719
+#: modules/membership/includes/Admin.php:760
 msgid "Insert into membership group"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:720
+#: modules/membership/includes/Admin.php:761
 msgid "Uploaded to this membership group"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:721
+#: modules/membership/includes/Admin.php:762
 msgid "Filter membership group"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:722
+#: modules/membership/includes/Admin.php:763
 msgid "Membership group navigation"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:723
+#: modules/membership/includes/Admin.php:764
 msgid "Membership group list"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:862
+#: modules/membership/includes/Admin.php:903
 msgid "Membership Details"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:864
+#: modules/membership/includes/Admin.php:905
 msgid "Membership Detail"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:873
+#: modules/membership/includes/Admin.php:914
 msgid "Plan Type"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:876
+#: modules/membership/includes/Admin.php:917
 msgid "Starts On"
 msgstr ""
 
-#: modules/membership/includes/Admin.php:877
+#: modules/membership/includes/Admin.php:918
 #: modules/membership/includes/Admin/Views/member-create.php:269
 msgid "Expires On"
 msgstr ""
@@ -13251,77 +13254,77 @@ msgstr ""
 msgid "Failed to reactivate subscription with payment gateway."
 msgstr ""
 
-#: modules/membership/includes/Admin/Repositories/SubscriptionRepository.php:152
-#: modules/membership/includes/AJAX.php:2591
+#: modules/membership/includes/Admin/Repositories/SubscriptionRepository.php:158
+#: modules/membership/includes/AJAX.php:2623
 msgid "Failed to update subscription."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:232
+#: modules/membership/includes/Admin/Services/EmailService.php:283
 msgid "Payment Attempt Failed – Action Required on {{blog_info}}"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:262
+#: modules/membership/includes/Admin/Services/EmailService.php:313
 msgid "Payment Cancelled – Registration Cancelled on {{blog_info}}"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:285
+#: modules/membership/includes/Admin/Services/EmailService.php:336
 msgid "Payment Approved!"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:289
+#: modules/membership/includes/Admin/Services/EmailService.php:340
 #, php-format
 msgid "Hi <b><i>%1$s</i></b>, Your payment of amount %2$s for the membership: <b>%3$s</b> has been approved by admin."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:290
+#: modules/membership/includes/Admin/Services/EmailService.php:341
 msgid "You can now login as a member."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:291
-#: modules/membership/includes/Admin/Services/EmailService.php:606
+#: modules/membership/includes/Admin/Services/EmailService.php:342
+#: modules/membership/includes/Admin/Services/EmailService.php:657
 msgid "Thank You."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:420
+#: modules/membership/includes/Admin/Services/EmailService.php:471
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Cancellation_User_Email.php:88
 msgid "Membership Cancelled"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:483
+#: modules/membership/includes/Admin/Services/EmailService.php:534
 #: modules/membership/includes/Emails/Admin/UR_Settings_Membership_Cancellation_Admin_Email.php:88
 msgid "Membership Cancelled: {{username}}"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:512
+#: modules/membership/includes/Admin/Services/EmailService.php:563
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Renewal_Reminder_User_Email.php:119
 msgid "Your Membership Renews Soon"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:533
+#: modules/membership/includes/Admin/Services/EmailService.php:584
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Expiring_Soon_User_Email.php:119
 msgid "Your Membership Expires on {{membership_end_date}}"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:571
+#: modules/membership/includes/Admin/Services/EmailService.php:622
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Ended_User_Email.php:88
 msgid "Your Membership Has Expired"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:602
+#: modules/membership/includes/Admin/Services/EmailService.php:653
 msgid "Congratulations! Registration completed"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:603
+#: modules/membership/includes/Admin/Services/EmailService.php:654
 #, php-format
 msgid "Hi, %s"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:604
+#: modules/membership/includes/Admin/Services/EmailService.php:655
 #, php-format
 msgid "Account created successfully under membership <b><i>%s</i></b>."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/EmailService.php:605
+#: modules/membership/includes/Admin/Services/EmailService.php:656
 #, php-format
 msgid "<b>Username: </b><i>%1$s</i> <b>Password: </b><i>%2$s</i> "
 msgstr ""
@@ -13501,59 +13504,59 @@ msgstr ""
 msgid "PayPal approval URL not found."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2190
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2197
 msgid "PayPal subscription ID not present."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2323
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1265
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2580
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2330
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1315
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2588
 msgid "Subscription ID not found"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2352
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1430
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2359
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1480
 msgid "Subscription payment retried and reactivated successfully"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2358
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1461
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2699
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2365
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1511
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2707
 msgid "Subscription is already active"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2363
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1475
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2712
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2370
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1525
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2720
 #, php-format
 msgid "Subscription status is %s and cannot be retried"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2476
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2483
 msgid "PayPal client ID or secret key is missing."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2506
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2513
 msgid "Unable to retrieve PayPal access token."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2561
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2568
 msgid "PayPal API request failed."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2782
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2789
 msgid "PayPal plan could not be created."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2826
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2833
 msgid "PayPal product could not be created."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:4181
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:4188
 msgid "PayPal webhook registration requires an HTTPS URL. Registration skipped for non-HTTPS sites."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:4336
+#: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:4343
 msgid "PayPal webhook created but no ID returned."
 msgstr ""
 
@@ -13569,66 +13572,70 @@ msgstr ""
 msgid "Paypal subscription cancellation failed"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:682
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:817
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:704
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:867
 msgid "Payment failed: recipient emails do not match"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:687
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:820
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:711
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:870
 msgid "Payment failed: payment amounts do not match "
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:998
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1097
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:833
+msgid "Payment failed: receiver email or amount mismatch"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1048
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1147
 msgid "Invalid response from paypal, check Client ID or Secret."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1008
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1058
 msgid "Paypal Subscription ID not present, please contact your administrator."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1058
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1108
 msgid "Subscription successfully canceled from paypal."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1074
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1124
 msgid "Subscription cancellation failed from Paypal."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1146
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1196
 msgid "Subscription successfully reactivated from paypal."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1153
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1203
 msgid "Subscription reactivation failed from Paypal."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1285
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1335
 msgid "Invalid response from PayPal, check Client ID or Secret."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1330
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1380
 msgid "Connection error with PayPal"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1359
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1409
 msgid "Subscription not found in PayPal"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1444
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1494
 msgid "Subscription reactivation failed"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:143
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:846
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1264
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1272
 msgid "Test card numbers are not accepted in live mode. Please use a real payment card."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:150
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:852
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1270
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1278
 msgid "Real card numbers are not accepted in test mode. Please use a Stripe test card."
 msgstr ""
 
@@ -13707,50 +13714,50 @@ msgid "Stripe Payment failed."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:984
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1117
-#: modules/membership/includes/AJAX.php:1910
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1125
+#: modules/membership/includes/AJAX.php:1942
 msgid "Membership upgraded successfully."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:984
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1117
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1125
 msgid "New member has been successfully created with successful stripe payment."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1233
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1241
 msgid "Stripe is not properly configured for this membership. Please save the membership settings to re-sync with Stripe."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1604
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1612
 msgid "New member has been successfully created with successful stripe subscription."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1631
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1639
 msgid "Payment requires additional verification."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1837
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1849
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1845
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1857
 msgid "Subscription reactivated successfully."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1878
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1886
 msgid "Error reactivating the stripe subscription."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2057
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2065
 msgid "Generated with stripe webhook"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2613
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2621
 msgid "Subscription not found in Stripe"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2650
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2658
 msgid "Subscription payment retried successfully"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2681
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2689
 msgid "Subscription retry did not resolve the issue"
 msgstr ""
 
@@ -13848,7 +13855,7 @@ msgid "Subscription created successfully."
 msgstr ""
 
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:155
-#: modules/membership/includes/AJAX.php:2610
+#: modules/membership/includes/AJAX.php:2642
 msgid "Subscription updated successfully."
 msgstr ""
 
@@ -14202,7 +14209,7 @@ msgid "Payment Gateway"
 msgstr ""
 
 #: modules/membership/includes/Admin/Views/subscription-edit.php:12
-#: modules/membership/includes/AJAX.php:2494
+#: modules/membership/includes/AJAX.php:2526
 msgid "Subscription not found."
 msgstr ""
 
@@ -14496,258 +14503,258 @@ msgid "Field form_response is required"
 msgstr ""
 
 #: modules/membership/includes/AJAX.php:871
-#: modules/membership/includes/AJAX.php:1109
+#: modules/membership/includes/AJAX.php:1122
 msgid "Invalid Request."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:912
-#: modules/membership/includes/AJAX.php:959
-#: modules/membership/includes/AJAX.php:1154
+#: modules/membership/includes/AJAX.php:925
+#: modules/membership/includes/AJAX.php:972
+#: modules/membership/includes/AJAX.php:1180
 msgid "Something went wrong when updating users payment status"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:927
+#: modules/membership/includes/AJAX.php:940
 msgid "Membership upgraded successfully"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:933
+#: modules/membership/includes/AJAX.php:946
 msgid "Membership purchased successfully"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:939
+#: modules/membership/includes/AJAX.php:952
 msgid "Membership has been successfully renewed."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:977
-#: modules/membership/includes/AJAX.php:1324
-#: modules/membership/includes/AJAX.php:1419
-#: modules/membership/includes/AJAX.php:1563
-#: modules/membership/includes/AJAX.php:1566
-#: modules/membership/includes/AJAX.php:1600
+#: modules/membership/includes/AJAX.php:990
+#: modules/membership/includes/AJAX.php:1350
+#: modules/membership/includes/AJAX.php:1451
+#: modules/membership/includes/AJAX.php:1595
+#: modules/membership/includes/AJAX.php:1598
+#: modules/membership/includes/AJAX.php:1632
 msgid "Wrong request."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:987
+#: modules/membership/includes/AJAX.php:1000
 msgid "User's subscription not found."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1079
+#: modules/membership/includes/AJAX.php:1092
 msgid "Something went wrong while cancelling your subscription. Please contact support"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1164
+#: modules/membership/includes/AJAX.php:1190
 msgid "Sorry, you do not have permission to create subscription"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1176
+#: modules/membership/includes/AJAX.php:1202
 msgid "Please fill in all required fields."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1190
+#: modules/membership/includes/AJAX.php:1216
 msgid "Invalid membership plan selected."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1200
+#: modules/membership/includes/AJAX.php:1226
 msgid "Expiry date is required for recurring subscription plans."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1239
+#: modules/membership/includes/AJAX.php:1265
 msgid "Failed to create subscription."
 msgstr ""
 
 #. translators: %s: Current user display name
-#: modules/membership/includes/AJAX.php:1253
+#: modules/membership/includes/AJAX.php:1279
 #, php-format
 msgid "Recurring subscription created by %s"
 msgstr ""
 
 #. translators: %s: Current user display name
-#: modules/membership/includes/AJAX.php:1258
+#: modules/membership/includes/AJAX.php:1284
 #, php-format
 msgid "One-time membership created by %s"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1287
+#: modules/membership/includes/AJAX.php:1313
 msgid "Recurring subscription and order created successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1288
+#: modules/membership/includes/AJAX.php:1314
 msgid "Recurring subscription created successfully, but order creation failed."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1290
+#: modules/membership/includes/AJAX.php:1316
 msgid "One-time membership and order created successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1291
+#: modules/membership/includes/AJAX.php:1317
 msgid "One-time membership created successfully, but order creation failed."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1362
-#: modules/membership/includes/AJAX.php:1384
+#: modules/membership/includes/AJAX.php:1394
+#: modules/membership/includes/AJAX.php:1416
 msgid "Membership reactivated successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1388
+#: modules/membership/includes/AJAX.php:1420
 msgid "Failed to reactivate membership."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1398
+#: modules/membership/includes/AJAX.php:1430
 msgid "Membership details not found. Please contact site administrator."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1405
+#: modules/membership/includes/AJAX.php:1437
 msgid "Cannot reactivate this membership. Please contact site administrator."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1422
+#: modules/membership/includes/AJAX.php:1454
 msgid "Field list type is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1438
+#: modules/membership/includes/AJAX.php:1470
 msgid "No membership is available for the selected group."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1462
+#: modules/membership/includes/AJAX.php:1494
 msgid "No memberships selected."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1473
+#: modules/membership/includes/AJAX.php:1505
 msgid "No valid memberships selected."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1494
+#: modules/membership/includes/AJAX.php:1526
 msgid "No memberships found for the current selection."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1516
-#: modules/membership/includes/AJAX.php:1557
-#: modules/membership/includes/AJAX.php:1594
+#: modules/membership/includes/AJAX.php:1548
+#: modules/membership/includes/AJAX.php:1589
+#: modules/membership/includes/AJAX.php:1626
 msgid "Sorry, You do not have permission to create membership groups."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1523
+#: modules/membership/includes/AJAX.php:1555
 msgid "Field membership_groups_data is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1542
+#: modules/membership/includes/AJAX.php:1574
 msgid "Membership Groups saved successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1575
+#: modules/membership/includes/AJAX.php:1607
 msgid "Invalid post type"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1624
-#: modules/membership/includes/AJAX.php:1678
+#: modules/membership/includes/AJAX.php:1656
+#: modules/membership/includes/AJAX.php:1710
 msgid "Membership does not exist"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1653
+#: modules/membership/includes/AJAX.php:1685
 msgid "No upgradable Memberships."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1695
+#: modules/membership/includes/AJAX.php:1727
 msgid "Selected membership details not found."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1717
+#: modules/membership/includes/AJAX.php:1749
 msgid "Field current_subscription_id is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1724
-#: modules/membership/includes/AJAX.php:1975
+#: modules/membership/includes/AJAX.php:1756
+#: modules/membership/includes/AJAX.php:2007
 msgid "Field selected_membership_id is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1791
+#: modules/membership/includes/AJAX.php:1823
 msgid "User details added while upgrading."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1955
+#: modules/membership/includes/AJAX.php:1987
 msgid "Something went wrong while upgrading membership."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2046
+#: modules/membership/includes/AJAX.php:2078
 msgid "User details added while purchasing membership."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2220
+#: modules/membership/includes/AJAX.php:2252
 msgid "Membership purchase process already initiated."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2241
+#: modules/membership/includes/AJAX.php:2273
 msgid "Membership purchased successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2261
+#: modules/membership/includes/AJAX.php:2293
 msgid "Something went wrong while purchasing membership."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2287
+#: modules/membership/includes/AJAX.php:2319
 msgid "Scheduled membership has been cancelled successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2293
-#: modules/membership/includes/AJAX.php:2461
+#: modules/membership/includes/AJAX.php:2325
+#: modules/membership/includes/AJAX.php:2493
 msgid "Something went wrong while cancelling membership."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2387
+#: modules/membership/includes/AJAX.php:2419
 msgid "User details added while renewing."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2427
+#: modules/membership/includes/AJAX.php:2459
 msgid "Membership renewed successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2470
+#: modules/membership/includes/AJAX.php:2502
 msgid "Sorry, you do not have permission to update subscription"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2483
+#: modules/membership/includes/AJAX.php:2515
 msgid "Subscription ID is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2521
+#: modules/membership/includes/AJAX.php:2553
 msgid "Trial start date cannot be after trial end date."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2534
+#: modules/membership/includes/AJAX.php:2566
 msgid "Trial end date cannot exceed expiry date."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2547
+#: modules/membership/includes/AJAX.php:2579
 msgid "Expiry date cannot be less than trial start date."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2622
-#: modules/membership/includes/AJAX.php:2626
+#: modules/membership/includes/AJAX.php:2654
+#: modules/membership/includes/AJAX.php:2658
 msgid "You do not have permission to change membership details."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2638
+#: modules/membership/includes/AJAX.php:2670
 msgid "API list not found"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2666
+#: modules/membership/includes/AJAX.php:2698
 msgid "Sorry, You do not have permission to set upgrade path."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2674
-#: modules/membership/includes/AJAX.php:2684
+#: modules/membership/includes/AJAX.php:2706
+#: modules/membership/includes/AJAX.php:2716
 msgid "Please select memberships."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2710
+#: modules/membership/includes/AJAX.php:2742
 msgid "Something went wrong. Please refresh the page and try again."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2724
+#: modules/membership/includes/AJAX.php:2756
 msgid "Sorry, you do not have permission to do this."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2736
+#: modules/membership/includes/AJAX.php:2768
 msgid "Currency is invalid."
 msgstr ""
 
@@ -15326,7 +15333,7 @@ msgstr ""
 msgid "Order has been approved successfully."
 msgstr ""
 
-#: modules/payment-history/Admin/OrderService.php:322
+#: modules/payment-history/Admin/OrderService.php:323
 msgid "Something went wrong while updating payment status"
 msgstr ""
 
