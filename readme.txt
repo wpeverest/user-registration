@@ -275,6 +275,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - Use server membership state for multiple-membership policy.
 * Fix      - Block tampered PayPal payments from activating memberships.
 * Fix      - Stripe payment and nonce validation failed on Membership form.
+* Fix      - Field Visibility add-on hides fields in My Account read-only profiles.
 * Fix      - Security: prevent unauthorized login during membership signup payment.
 * Fix      - Check coupon eligibility before discount on public membership purchase.
 * Fix      - Super admin bypass missing for admin content access in membership rules.
