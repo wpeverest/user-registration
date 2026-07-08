@@ -3,6 +3,8 @@
 	var elements = {};
 	var stripe_mode_validated = false;
 	var validated_stripe_pm_id = null;
+	var stripe_card_state = { complete: false, error: null };
+	var stripe_validation_in_progress = false;
 	var ur_membership_frontend_utils = {
 		/**
 		 * Appends a spinner element to the specified element.
@@ -478,6 +480,25 @@
 							};
 
 							elements.card.emit("change", event);
+						} else if (!stripe_card_state.complete) {
+							// Card element has input but Stripe.js reports it
+							// incomplete/invalid (e.g. missing postal code).
+							// Block the submit here, before the registration
+							// request creates the user, instead of letting
+							// confirmCardPayment fail afterwards.
+							no_errors = false;
+							var incomplete_event = {
+								error: {
+									message:
+										stripe_card_state.error &&
+										stripe_card_state.error.message
+											? stripe_card_state.error.message
+											: urmf_data.labels
+													.i18n_empty_card_details
+								}
+							};
+
+							elements.card.emit("change", incomplete_event);
 						}
 					}
 				});
@@ -2162,6 +2183,13 @@
 			elements.card.addEventListener("change", function (e) {
 				stripe_mode_validated = false;
 				validated_stripe_pm_id = null;
+				// Genuine Stripe change events always carry a boolean `complete`;
+				// synthetic events emitted from validate_membership_form don't,
+				// and must not overwrite the tracked card state.
+				if (typeof e.complete !== "undefined") {
+					stripe_card_state.complete = e.complete;
+					stripe_card_state.error = e.error || null;
+				}
 				if (e.error) {
 					stripe_settings.show_stripe_error(e.error.message);
 				} else {
@@ -2274,7 +2302,6 @@
 						prepare_members_data,
 						form_response
 					);
-					ur_membership_frontend_utils.hide_payment_processing_overlay();
 				});
 		},
 		update_order_status: function (
@@ -3182,6 +3209,31 @@
 						return;
 					}
 
+					// Prevent double submission
+					if (stripe_validation_in_progress) return;
+					stripe_validation_in_progress = true;
+
+					var $submit_button =
+						$form && $form.length
+							? $form.find(".ur-submit-button")
+							: $(".ur-submit-button");
+					$submit_button.prop("disabled", true);
+
+					// Show a "validating…" notice so the core submit handler's
+					// `#stripe-errors:visible` guard blocks this first submit from
+					// racing straight to registration while the card is still being
+					// validated. It is removed on success (and replaced by the real
+					// error on failure). The programmatic re-submit after validation
+					// succeeds is what actually registers the user — exactly once.
+					stripe_settings.show_stripe_error(
+						urmf_data.labels.i18n_validating_stripe_card
+					);
+
+					var release_submit = function () {
+						stripe_validation_in_progress = false;
+						$submit_button.prop("disabled", false);
+					};
+
 					elements.stripe
 						.createPaymentMethod({
 							type: "card",
@@ -3192,6 +3244,7 @@
 								stripe_settings.show_stripe_error(
 									pmResult.error.message
 								);
+								release_submit();
 								return;
 							}
 
@@ -3210,6 +3263,7 @@
 										validated_stripe_pm_id =
 											pmResult.paymentMethod.id;
 										stripe_mode_validated = true;
+										stripe_validation_in_progress = false;
 										if ($form && $form.length) {
 											$form
 												.find(".ur-submit-button")
@@ -3224,9 +3278,15 @@
 												: urmf_data.labels
 														.i18n_stripe_mode_error
 										);
+										release_submit();
 									}
 								}
-							);
+							).fail(function () {
+								release_submit();
+							});
+						})
+						.catch(function () {
+							release_submit();
 						});
 				}
 			);
