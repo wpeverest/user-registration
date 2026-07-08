@@ -3177,10 +3177,6 @@
 						return;
 					}
 
-					stripe_settings.show_stripe_error(
-						urmf_data.labels.i18n_validating_stripe_card
-					);
-
 					elements.stripe
 						.createPaymentMethod({
 							type: "card",
