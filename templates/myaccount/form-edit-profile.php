@@ -345,14 +345,7 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 								$form_id         = ur_get_form_id_by_userid( $user_id );
 								$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
-								/**
-								 * Apply the profile-account field visibility filter to the read-only
-								 * profile view as well, so fields configured to be hidden on Profile
-								 * Details (e.g. via the Field Visibility add-on) are not rendered here.
-								 *
-								 * Mirrors the filtering already applied to the editable profile form
-								 * through user_registration_form_data().
-								 */
+								// Apply field visibility filter to the read-only view too, so fields hidden on Profile Details are not rendered here.
 								$form_data_array = apply_filters( 'user_registration_profile_account_filter_all_fields', $form_data_array, $form_id, current_user_can( 'manage_options' ) );
 
 								$row_ids = array();
