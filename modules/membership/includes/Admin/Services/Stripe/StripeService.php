@@ -792,6 +792,29 @@ class StripeService {
 			'status' => true,
 		);
 
+		// A failed client-side confirmation (card validation error, decline, 3DS
+		// abandonment) is a normal gateway outcome, not a verification anomaly:
+		// surface the gateway's own message and leave the order pending for retry.
+		if ( 'failed' === $payment_status ) {
+			$client_error_message = sanitize_text_field( wp_unslash( $data['payment_result']['error']['message'] ?? '' ) );
+			$client_error_code    = sanitize_text_field( wp_unslash( $data['payment_result']['error']['code'] ?? '' ) );
+
+			if ( '' === $client_error_message ) {
+				$client_error_message = __( 'Payment could not be completed. Please check your card details and try again.', 'user-registration' );
+			}
+
+			return $this->update_order_error(
+				$response,
+				$client_error_message,
+				'Stripe payment confirmation failed on the client side.',
+				array(
+					'error_code' => '' !== $client_error_code ? $client_error_code : 'PAYMENT_FAILED',
+					'member_id'  => $member_id,
+					'order_id'   => $order_id,
+				)
+			);
+		}
+
 		$stripe_settings = self::get_stripe_settings();
 
 		if ( empty( $stripe_settings['secret_key'] ) ) {

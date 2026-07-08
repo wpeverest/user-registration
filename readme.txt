@@ -252,8 +252,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-
-= 5.2.5    - 07/07/2026 =
+= 5.2.5    - 08/07/2026 =
 * Enhance  - Defer expiry to period end.
 * Enhance  - Pin Stripe subscription payment method for reliable renewals.
 * Fix      - User and admin email order.
@@ -261,6 +260,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - Lost Password Carrot adjustment.
 * Fix      - Unnecessary payment retry checks.
 * Fix      - Required Nonce Error on registration.
+* Fix      - Fatal error on WooCommerce shop page.
 * Fix      - Setup wizard membership duration issue.
 * Fix      - Loader timing issue during registration.
 * Fix      - Unwanted settings showing up in free version.
@@ -274,6 +274,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - Use server membership state for multiple-membership policy.
 * Fix      - Block tampered PayPal payments from activating memberships.
 * Fix      - Stripe payment and nonce validation failed on Membership form.
+* Fix      - Field Visibility add-on hides fields in My Account read-only profiles.
 * Fix      - Security: prevent unauthorized login during membership signup payment.
 * Fix      - Check coupon eligibility before discount on public membership purchase.
 * Fix      - Super admin bypass missing for admin content access in membership rules.

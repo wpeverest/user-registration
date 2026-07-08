@@ -140,10 +140,16 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 
 			$subscription_service = new SubscriptionService();
 			$subscription_service->reactivate_subscription( $order, $subscription );
+
+			// Only restore to 'active' if the order's payment has actually been approved/completed
+			// (e.g. Bank Transfer orders stay 'pending' until an admin approves them); otherwise
+			// restore to 'pending' instead of bypassing the manual payment verification flow.
+			$reactivated_status = ( 'completed' === ( $order['status'] ?? '' ) ) ? 'active' : 'pending';
+
 			$result = $this->update(
 				$subscription_id,
 				array(
-					'status' => 'active',
+					'status' => $reactivated_status,
 				)
 			);
 			if ( ! $result ) {

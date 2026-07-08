@@ -1374,10 +1374,16 @@ class AJAX {
 		if ( ! empty( $order_associated_with_subscription_id['order_type'] ) && $order_associated_with_subscription_id['order_type'] === $membership_details['type'] ) {
 			if ( isset( $membership_details['type'] ) && 'subscription' !== $membership_details['type'] ) {
 				$subscription_repository = new SubscriptionRepository();
+
+				// Only restore to 'active' if the order's payment has actually been approved/completed
+				// (e.g. Bank Transfer orders stay 'pending' until an admin approves them); otherwise
+				// restore to 'pending' instead of bypassing the manual payment verification flow.
+				$reactivated_status = ( 'completed' === ( $order_associated_with_subscription_id['status'] ?? '' ) ) ? 'active' : 'pending';
+
 				$subscription_repository->update(
 					$subscription_id,
 					array(
-						'status' => 'active',
+						'status' => $reactivated_status,
 					)
 				);
 
