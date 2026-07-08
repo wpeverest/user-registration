@@ -80,6 +80,17 @@
 					var fallback = '<div style="padding:20px;text-align:center;background:#f5f5f5;border:1px dashed #ccc;font-family:sans-serif;font-size:13px;color:#555">'
 					               + ( props.title || props.block ) + '</div>';
 
+					// Buttons/inputs rendered inside the VB canvas preview are real,
+					// live elements (e.g. an actual form submit button) — disable
+					// them so editing the layout can't trigger real actions.
+					function disableInteractiveElements( container ) {
+						if ( ! container || ! container.querySelectorAll ) { return; }
+						var els = container.querySelectorAll( 'button, input, select, textarea' );
+						for ( var i = 0; i < els.length; i++ ) {
+							els[ i ].setAttribute( 'disabled', 'disabled' );
+						}
+					}
+
 					window.fetch( AJAX_URL, { method: 'POST', body: body } )
 						.then( function( r ) { return r.json(); } )
 						.then( function( data ) {
@@ -88,6 +99,7 @@
 							node.innerHTML = html
 								? '<div style="pointer-events:none;user-select:none">' + html + '</div>'
 								: fallback;
+							disableInteractiveElements( node );
 						} )
 						.catch( function() {
 							if ( node.isConnected ) { node.innerHTML = fallback; }
