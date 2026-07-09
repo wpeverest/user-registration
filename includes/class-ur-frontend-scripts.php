@@ -233,7 +233,10 @@ class UR_Frontend_Scripts {
 				'version' => '3.0.0',
 			),
 			'ur-recaptcha-hcaptcha'      => array(
-				'src'     => 'https://hcaptcha.com/1/api.js?onload=onloadURHcaptchaCallback&render=explicit',
+				// recaptchacompat=off prevents hCaptcha from aliasing window.grecaptcha,
+				// which would otherwise collide with Google reCAPTCHA when another plugin
+				// (e.g. Gravity Forms reCAPTCHA add-on) loads Google's api.js on the same page.
+				'src'     => 'https://hcaptcha.com/1/api.js?onload=onloadURHcaptchaCallback&render=explicit&recaptchacompat=off',
 				'deps'    => array(),
 				'version' => UR_VERSION,
 			),
@@ -550,7 +553,7 @@ class UR_Frontend_Scripts {
 
 				return array(
 					'ajax_url'                             => admin_url( 'admin-ajax.php' ),
-					'user_registration_form_data_save'     => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
+
 					'user_registration_update_state_field' => wp_create_nonce( 'user_registration_update_state_field_nonce' ),
 					'user_registration_profile_details_save' => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
 					'user_registration_profile_picture_upload_nonce' => wp_create_nonce( 'user_registration_profile_picture_upload_nonce' ),

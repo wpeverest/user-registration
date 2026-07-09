@@ -634,7 +634,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 
-		$required_fields = array_diff( $form_key_list, $skippable_fields );
+		$required_fields = array_filter( array_diff( $form_key_list, $skippable_fields ) );
 
 		$filteredfields = array_filter(
 			$form_field_data,
@@ -751,6 +751,7 @@ class UR_Form_Validation extends UR_Validation {
 			'signature',
 			'membership',
 			'subscription_plan',
+			'coupon',
 		);
 
 		$form_skippable_fields = array_filter(

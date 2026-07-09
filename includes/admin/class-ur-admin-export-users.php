@@ -34,6 +34,25 @@ class UR_Admin_Export_Users {
 	}
 
 	/**
+	 * Neutralize spreadsheet formula characters to prevent CSV/formula injection
+	 * when the exported file is opened in spreadsheet software.
+	 *
+	 * @param mixed $value Cell value.
+	 * @return mixed
+	 */
+	private function sanitize_csv_cell( $value ) {
+		if ( ! is_string( $value ) || '' === $value ) {
+			return $value;
+		}
+
+		if ( in_array( $value[0], array( '=', '+', '-', '@', "\t", "\r" ), true ) ) {
+			return "'" . $value;
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Exports users data along with extra information in CSV format.
 	 *
 	 * @param int $form_id Form ID.
@@ -125,7 +144,7 @@ class UR_Admin_Export_Users {
 
 		// Get the columns.
 		$columns = $this->generate_columns( $form_id, $unchecked_fields, $checked_additional_fields );
-		fputcsv( $handle, array_values( $columns ) );
+		fputcsv( $handle, array_map( array( $this, 'sanitize_csv_cell' ), array_values( $columns ) ), ',', '"', '\\' );
 
 		// Loop over users in batches.
 		while ( true ) {
@@ -155,7 +174,7 @@ class UR_Admin_Export_Users {
 
 			// Write the rows to the CSV.
 			foreach ( $rows as $row ) {
-				fputcsv( $handle, $row );
+				fputcsv( $handle, array_map( array( $this, 'sanitize_csv_cell' ), $row ), ',', '"', '\\' );
 			}
 
 			wp_cache_flush();

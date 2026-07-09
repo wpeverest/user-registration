@@ -600,13 +600,18 @@ class Orders {
 			'user_id' => $user_id,
 		);
 
-		$customer_detail = apply_filters( 'user_registration_process_smart_tags', get_option( 'urm_invoice_customer_info' ), $smart_tag_context, array() );
-		$footer_notes    = apply_filters(
+		$customer_detail = apply_filters( 'user_registration_process_smart_tags', ur_string_translation( 0, 'urm_invoice_customer_info', get_option( 'urm_invoice_customer_info' ) ), $smart_tag_context, array() );
+
+		$footer_notes = apply_filters(
 			'user_registration_process_smart_tags',
-			get_option(
+			ur_string_translation(
+				0,
 				'urm_invoice_footer_content',
-				'<p style="margin: 0 0 12px 0; color: #6c757d; font-size: 13px; line-height: 1.5;">Thank you for your purchase!</p>'
-				. '<p style="margin: 0; font-size: 14px; line-height: 1.6;"><a href="{{home_url}}" style="color: #4A90E2; text-decoration: none; font-weight: 500;">{{blog_info}} Team</a></p>'
+				get_option(
+					'urm_invoice_footer_content',
+					'<p style="margin: 0 0 12px 0; color: #6c757d; font-size: 13px; line-height: 1.5;">Thank you for your purchase!</p>'
+					. '<p style="margin: 0; font-size: 14px; line-height: 1.6;"><a href="{{home_url}}" style="color: #4A90E2; text-decoration: none; font-weight: 500;">{{blog_info}} Team</a></p>'
+				)
 			),
 			$smart_tag_context,
 			array()
