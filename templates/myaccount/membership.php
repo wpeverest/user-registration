@@ -70,12 +70,14 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 						$can_renew     = ! $is_renewing && isset( $membership['post_content']['type'] ) && 'automatic' !== $data['renewal_behaviour'] && 'subscription' == $membership_type;
 
 						// Fixed-period paid memberships with annual renewal enabled (pro + module required).
-						if ( UR_PRO_ACTIVE
+						$is_fixed_period_renewable = UR_PRO_ACTIVE
 							&& ur_check_module_activation( 'fixed-period-membership' )
 							&& class_exists( '\WPEverest\URM\FixedPeriodMemebership\FixedPeriodSubscriptionService' )
 							&& 'paid' === $membership_type
 							&& ur_string_to_bool( get_user_meta( $membership['user_id'], 'expiration_date_renewal', true ) )
-							&& ! empty( $membership['expiry_date'] ) ) {
+							&& ! empty( $membership['expiry_date'] );
+
+						if ( $is_fixed_period_renewable ) {
 							$can_renew = true;
 						}
 
@@ -189,6 +191,11 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 												)
 											);
 											?>
+										</span>
+										<?php endif; ?>
+										<?php if ( $is_fixed_period_renewable && ! $is_membership_expired ) : ?>
+										<span class="ur-membership-early-renewal-note">
+											<?php esc_html_e( 'Early renewal available', 'user-registration' ); ?>
 										</span>
 										<?php endif; ?>
 										<?php

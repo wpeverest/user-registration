@@ -2054,7 +2054,8 @@ body,
 .ur-membership-title-text,
 .ur-membership-trial-label,
 .ur-membership-period-text,
-.ur-membership-trial-end {
+.ur-membership-trial-end,
+.ur-membership-fixed-period-end {
 	display: block;
 }
 
@@ -2087,4 +2088,21 @@ body,
 	color: #6b6b6b;
 	margin-top: 3px;
 	line-height: 16px;
+}
+
+.ur-membership-fixed-period-end {
+	font-size: 12px;
+	font-weight: 400;
+	color: #6b6b6b;
+	margin-top: 3px;
+	line-height: 16px;
+}
+
+.ur-membership-plan-expired {
+	opacity: 0.5;
+	cursor: not-allowed !important;
+
+	.ur-membership-fixed-period-end {
+		color: #d63638;
+	}
 }

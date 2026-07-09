@@ -1369,7 +1369,17 @@ class NewPaypalService {
 		$member_subscription = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
 
 		if ( $is_renewing && ! empty( $member_subscription ) ) {
-			$subscription_service = new SubscriptionService();
+			$is_paid                      = isset( $membership_metas['type'] ) && 'paid' === $membership_metas['type'];
+			$is_fixed_period              = ! empty( $membership_metas['enable_fixed_period_duration'] );
+			$is_renewable                 = ! empty( $membership_metas['fixed_period']['expiration_date_renewal'] );
+			$is_fixed_period_addon_active = class_exists( '\WPEverest\URM\FixedPeriodMemebership\FixedPeriodSubscriptionService' );
+
+			if ( $is_paid && $is_fixed_period && $is_renewable && $is_fixed_period_addon_active ) {
+				$subscription_service = new \WPEverest\URM\FixedPeriodMemebership\FixedPeriodSubscriptionService();
+			} else {
+				$subscription_service = new SubscriptionService();
+			}
+
 			$subscription_service->update_subscription_data_for_renewal( $member_subscription, $membership_metas );
 		}
 

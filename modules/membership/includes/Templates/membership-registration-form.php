@@ -210,7 +210,7 @@
 				$urm_default_pg   = apply_filters( 'user_registration_membership_default_payment_gateway', '' );
 				$has_team_pricing = $is_team_addon_activated && ! empty( $membership['team_pricing'] );
 				?>
-				<label class="ur_membership_input_label ur-label <?php echo $has_team_pricing ? 'ur-has-team-pricing' : 'ur-normal-pricing'; ?>"
+				<label class="ur_membership_input_label ur-label <?php echo $has_team_pricing ? 'ur-has-team-pricing' : 'ur-normal-pricing'; ?><?php echo ! empty( $membership['fixed_period_expired'] ) ? ' ur-membership-plan-expired' : ''; ?>"
 						for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
 						data-membership-id="<?php echo esc_attr( $membership['ID'] ); ?>">
 					<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
@@ -236,6 +236,7 @@
 						<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
 							data-local-currency="<?php echo esc_attr( ! empty( $final_period ) ? $local_currency_by_country : '' ); ?>"
 							data-zone-id="<?php echo esc_attr( ! empty( $final_period ) && isset( $enabled_zones[ $local_currency_by_country ]['ID'] ) ? $enabled_zones[ $local_currency_by_country ]['ID'] : '' ); ?>"
+							<?php disabled( ! empty( $membership['fixed_period_expired'] ) ); ?>
 					>
 					<span class="ur-membership-duration ur-membership-name-wrap">
 						<span class="ur-membership-title-text"><?php echo esc_html( $membership['title'] ); ?></span>
@@ -252,6 +253,18 @@
 								printf( esc_html__( 'Trial ends %s', 'user-registration' ), esc_html( $trial_end_display ) );
 								?>
 							</span>
+						<?php elseif ( ! empty( $membership['fixed_period_valid_until'] ) ) : ?>
+							<span class="ur-membership-fixed-period-end">
+								<?php
+								if ( ! empty( $membership['fixed_period_expired'] ) ) {
+									/* translators: %s: expiration date (e.g. "Jul 30, 2026") */
+									printf( esc_html__( 'Expired on %s', 'user-registration' ), esc_html( $membership['fixed_period_valid_until'] ) );
+								} else {
+									/* translators: %s: expiration date (e.g. "Jul 30, 2026") */
+									printf( esc_html__( 'Valid until: %s', 'user-registration' ), esc_html( $membership['fixed_period_valid_until'] ) );
+								}
+								?>
+							</span>
 						<?php endif; ?>
 					</span>
 				</label>
@@ -260,7 +273,7 @@
 				<div class="urm-team-pricing-container" id="urm-team-pricing-container-<?php echo esc_attr( $membership['ID'] ); ?>" style="display: none;">
 					<div class="urm-team-pricing-card">
 						<div class="urm-team-pricing-card__body">
-							<label class="ur_membership_input_label ur-label ur-team-pricing-label"
+							<label class="ur_membership_input_label ur-label ur-team-pricing-label<?php echo ! empty( $membership['fixed_period_expired'] ) ? ' ur-membership-plan-expired' : ''; ?>"
 								for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
 								<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
 										data-key-name="ur-membership-id"
@@ -277,6 +290,7 @@
 										data-has-coupon-link="<?php echo esc_attr( in_array( $membership['ID'], $membership_ids_link_with_coupons ) ? 'yes' : 'no' ); ?>"
 										data-urm-default-pg="<?php echo $urm_default_pg; ?>"
 									<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
+									<?php disabled( ! empty( $membership['fixed_period_expired'] ) ); ?>
 								>
 								<span
 									class="ur-membership-duration ur-membership-title ur-membership-name-wrap">
@@ -294,6 +308,18 @@
 											<?php
 											/* translators: %s: trial end date (e.g. "May 20") */
 											printf( esc_html__( 'Trial ends %s', 'user-registration' ), esc_html( $trial_end_display ) );
+											?>
+										</span>
+									<?php elseif ( ! empty( $membership['fixed_period_valid_until'] ) ) : ?>
+										<span class="ur-membership-fixed-period-end">
+											<?php
+											if ( ! empty( $membership['fixed_period_expired'] ) ) {
+												/* translators: %s: expiration date (e.g. "Jul 30, 2026") */
+												printf( esc_html__( 'Expired on %s', 'user-registration' ), esc_html( $membership['fixed_period_valid_until'] ) );
+											} else {
+												/* translators: %s: expiration date (e.g. "Jul 30, 2026") */
+												printf( esc_html__( 'Valid until: %s', 'user-registration' ), esc_html( $membership['fixed_period_valid_until'] ) );
+											}
 											?>
 										</span>
 									<?php endif; ?>
@@ -396,6 +422,18 @@
 																<?php
 																/* translators: %s: trial end date (e.g. "May 20") */
 																printf( esc_html__( 'Trial ends %s', 'user-registration' ), esc_html( $trial_end_display ) );
+																?>
+															</span>
+														<?php elseif ( ! empty( $membership['fixed_period_valid_until'] ) ) : ?>
+															<span class="ur-membership-fixed-period-end">
+																<?php
+																if ( ! empty( $membership['fixed_period_expired'] ) ) {
+																	/* translators: %s: expiration date (e.g. "Jul 30, 2026") */
+																	printf( esc_html__( 'Expired on %s', 'user-registration' ), esc_html( $membership['fixed_period_valid_until'] ) );
+																} else {
+																	/* translators: %s: expiration date (e.g. "Jul 30, 2026") */
+																	printf( esc_html__( 'Valid until: %s', 'user-registration' ), esc_html( $membership['fixed_period_valid_until'] ) );
+																}
 																?>
 															</span>
 														<?php endif; ?>
