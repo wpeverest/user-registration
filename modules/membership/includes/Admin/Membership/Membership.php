@@ -91,12 +91,14 @@ class Membership {
 		// Enqueue jQuery UI Sortable for drag-and-drop functionality
 		wp_enqueue_script( 'jquery-ui-sortable' );
 
+		wp_enqueue_style( 'flatpickr' );
 		wp_register_script(
 			'user-registration-membership',
 			UR()->plugin_url() . '/assets/js/modules/membership/admin/user-registration-membership-admin' . $suffix . '.js',
 			array(
 				'jquery',
 				'jquery-ui-sortable',
+				'flatpickr',
 			),
 			UR_VERSION,
 			true

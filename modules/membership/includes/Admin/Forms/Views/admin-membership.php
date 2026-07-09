@@ -165,7 +165,7 @@ $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 							}
 						}
 						?>
-						<div class="urmg-plan-card <?php echo esc_attr( $selected_class ); ?>"
+						<div class="urmg-plan-card <?php echo esc_attr( $selected_class ); ?><?php echo ! empty( $option['fixed_period_expired'] ) ? ' ur-membership-plan-expired' : ''; ?>"
 							data-plan-id="<?php echo $plan_id; ?>"
 							data-plan-amount="<?php echo esc_attr( $plan_amount ); ?>"
 							data-plan-type="<?php echo esc_attr( $plan_type ); ?>">
@@ -188,6 +188,18 @@ $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 											<?php
 											/* translators: %s: trial end date (e.g. "May 20") */
 											printf( esc_html__( 'Trial ends %s', 'user-registration' ), esc_html( $admin_trial_end_display ) );
+											?>
+										</span>
+									<?php elseif ( ! empty( $option['fixed_period_valid_until'] ) ) : ?>
+										<span class="ur-membership-fixed-period-end">
+											<?php
+											if ( ! empty( $option['fixed_period_expired'] ) ) {
+												/* translators: %s: expiration date (e.g. "Jul 30, 2026") */
+												printf( esc_html__( 'Expired on %s', 'user-registration' ), esc_html( $option['fixed_period_valid_until'] ) );
+											} else {
+												/* translators: %s: expiration date (e.g. "Jul 30, 2026") */
+												printf( esc_html__( 'Valid until: %s', 'user-registration' ), esc_html( $option['fixed_period_valid_until'] ) );
+											}
 											?>
 										</span>
 									<?php endif; ?>

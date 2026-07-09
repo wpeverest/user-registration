@@ -258,7 +258,7 @@ elseif ( 'list' === $type ) :
 					}
 					?>
 					<div class="membership-block">
-						<label class="ur_membership_input_label ur-label"
+						<label class="ur_membership_input_label ur-label<?php echo ! empty( $membership['fixed_period_expired'] ) ? ' ur-membership-plan-expired' : ''; ?>"
 								for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
 							<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field <?php echo esc_html( $radio_class ); ?>"
 									id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
@@ -269,6 +269,7 @@ elseif ( 'list' === $type ) :
 									data-action="<?php echo esc_attr( $intended_action ); ?>"
 									data-redirect="<?php echo esc_url( $redirect_page_url ); ?>"
 									data-thankyou="<?php echo esc_attr( $thank_you_page_id ); ?>"
+									<?php disabled( ! empty( $membership['fixed_period_expired'] ) ); ?>
 							>
 							<div class="ur-membership-title-wrapper">
 								<span class="ur-membership-title">
@@ -301,6 +302,18 @@ elseif ( 'list' === $type ) :
 												<?php
 												/* translators: %s: trial end date (e.g. "May 20") */
 												printf( esc_html__( 'Trial ends %s', 'user-registration' ), esc_html( $trial_end_display ) );
+												?>
+											</span>
+										<?php elseif ( ! empty( $membership['fixed_period_valid_until'] ) ) : ?>
+											<span class="ur-membership-fixed-period-end">
+												<?php
+												if ( ! empty( $membership['fixed_period_expired'] ) ) {
+													/* translators: %s: expiration date (e.g. "Jul 30, 2026") */
+													printf( esc_html__( 'Expired on %s', 'user-registration' ), esc_html( $membership['fixed_period_valid_until'] ) );
+												} else {
+													/* translators: %s: expiration date (e.g. "Jul 30, 2026") */
+													printf( esc_html__( 'Valid until: %s', 'user-registration' ), esc_html( $membership['fixed_period_valid_until'] ) );
+												}
 												?>
 											</span>
 										<?php endif; ?>

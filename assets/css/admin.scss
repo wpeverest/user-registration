@@ -2749,6 +2749,15 @@ img.tips {
 	background-color: $white;
 }
 
+// The vendor theme fixes the month/year header at 34px, but WP-admin's own
+// select/number-input styling renders the month dropdown and year input at 38px,
+// so they overflow the header box and visually crowd the weekday row below it
+// regardless of margin. Give the header enough height to actually contain them,
+// then add breathing room on top of that.
+.flatpickr-months .flatpickr-month {
+	height: 48px;
+}
+
 /**
    * Fullscreen Mode
    **/

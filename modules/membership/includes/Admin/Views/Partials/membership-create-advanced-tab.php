@@ -278,5 +278,6 @@
 					WPEverest\URMembership\Local_Currency\Admin\CoreFunctions::ur_render_local_currency_settings( $membership_details );
 					endif;
 				?>
+
 		</div>
 	</div>

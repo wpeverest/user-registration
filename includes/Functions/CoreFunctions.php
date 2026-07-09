@@ -402,17 +402,36 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				}
 			}
 
+			$fixed_period_status      = 'off';
+			$fixed_period_valid_until = '';
+			$fixed_period_expired     = false;
+			if ( 'paid' === $membership_type
+				&& ur_string_to_bool( $membership['meta_value']['enable_fixed_period_duration'] ?? '' )
+				&& 'fixed_expiration_date' === ( $membership['meta_value']['fixed_period']['period_type'] ?? '' )
+				&& ! empty( $membership['meta_value']['fixed_period']['expiration_date'] )
+			) {
+				$expiration_timestamp = strtotime( $membership['meta_value']['fixed_period']['expiration_date'] );
+				if ( false !== $expiration_timestamp ) {
+					$fixed_period_status      = 'on';
+					$fixed_period_valid_until = date_i18n( 'M j, Y', $expiration_timestamp );
+					$fixed_period_expired     = $expiration_timestamp < strtotime( gmdate( 'Y-m-d' ) );
+				}
+			}
+
 			$new_mem[ $k ] = array(
-				'ID'                => $membership_id,
-				'title'             => ! empty( $membership['post_title'] ) ? $membership['post_title'] : '',
-				'description'       => ! empty( $membership['post_content']['description'] ) ? $membership['post_content']['description'] : get_post_meta( $membership_id, 'ur_membership_description', true ),
-				'type'              => $membership_type,
-				'amount'            => ! empty( $membership_meta_value ) ? $membership['meta_value']['amount'] : 0,
-				'currency_symbol'   => $symbol,
-				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? (float) $membership_meta_value['amount'] : 0 ),
-				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : $subscription_period,
-				'trial_status'      => ! empty( $membership['meta_value']['trial_status'] ) ? $membership['meta_value']['trial_status'] : 'off',
-				'trial_data'        => ( ! empty( $membership['meta_value']['trial_data'] ) && is_array( $membership['meta_value']['trial_data'] ) ) ? $membership['meta_value']['trial_data'] : array(),
+				'ID'                       => $membership_id,
+				'title'                    => ! empty( $membership['post_title'] ) ? $membership['post_title'] : '',
+				'description'              => ! empty( $membership['post_content']['description'] ) ? $membership['post_content']['description'] : get_post_meta( $membership_id, 'ur_membership_description', true ),
+				'type'                     => $membership_type,
+				'amount'                   => ! empty( $membership_meta_value ) ? $membership['meta_value']['amount'] : 0,
+				'currency_symbol'          => $symbol,
+				'calculated_amount'        => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? (float) $membership_meta_value['amount'] : 0 ),
+				'period'                   => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : $subscription_period,
+				'trial_status'             => ! empty( $membership['meta_value']['trial_status'] ) ? $membership['meta_value']['trial_status'] : 'off',
+				'trial_data'               => ( ! empty( $membership['meta_value']['trial_data'] ) && is_array( $membership['meta_value']['trial_data'] ) ) ? $membership['meta_value']['trial_data'] : array(),
+				'fixed_period_status'      => $fixed_period_status,
+				'fixed_period_valid_until' => $fixed_period_valid_until,
+				'fixed_period_expired'     => $fixed_period_expired,
 			);
 
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
