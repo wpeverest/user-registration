@@ -1,4 +1,4 @@
-wpeverest/user-registration-pro@UR-4500-tweak/compatibility-with-latest-divi-release:
+wpeverest/user-registration-pro@develop:
     - source: assets
       exclude: |
         js/divi-vb-modules.js
