@@ -1,0 +1,104 @@
+{
+  "name": "urm/login-form",
+  "d4Shortcode": "urm-login-form",
+  "title": "URM Login Form",
+  "moduleIcon": "divi/module",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "settings": {
+        "meta": {
+          "meta": {}
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "into-multiple-groups",
+          "groups": {
+            "redirectUrl": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "contentFormSettings",
+                "priority": 10,
+                "render": true,
+                "subName": "redirectUrl",
+                "label": "Redirect URL",
+                "description": "URL to redirect to after successful login.",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            },
+            "logoutRedirect": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "contentFormSettings",
+                "priority": 20,
+                "render": true,
+                "subName": "logoutRedirect",
+                "label": "Logout Redirect URL",
+                "description": "URL to redirect to after logout.",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            },
+            "userState": {
+              "groupType": "group-item",
+              "item": {
+                "groupSlug": "contentFormSettings",
+                "priority": 30,
+                "render": true,
+                "subName": "userState",
+                "label": "Visibility",
+                "description": "Who should see this form: logged_out, logged_in, or both.",
+                "category": "basic_option",
+                "features": {
+                  "sticky": false,
+                  "hover": false
+                },
+                "component": {
+                  "type": "field",
+                  "name": "divi/text"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "content": "auto",
+    "groups": {
+      "contentFormSettings": {
+        "panel": "content",
+        "priority": 10,
+        "groupName": "formSettings",
+        "multiElements": true,
+        "component": {
+          "name": "divi/composite",
+          "props": {
+            "groupLabel": "Form Settings"
+          }
+        }
+      }
+    }
+  }
+}

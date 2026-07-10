@@ -132,7 +132,7 @@ class UR_Shortcode_My_Account {
 			$user_id = get_current_user_id();
 			$form_id = get_user_meta( $user_id, 'ur_form_id', true );
 
-			if ( ! empty( $form_id ) ) {
+			if ( ! empty( $form_id ) || current_user_can( 'manage_options' ) ) {
 
 				/**
 				* Action to handles for enqueuing scripts for User Registration my Account page.

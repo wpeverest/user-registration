@@ -1,0 +1,17 @@
+{
+  "name": "urm/edit-profile",
+  "d4Shortcode": "urm-edit-profile",
+  "title": "URM Edit Profile",
+  "moduleIcon": "divi/module",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "settings": {
+        "meta": {
+          "meta": {}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "urm/membership-thank-you",
+  "d4Shortcode": "urm-membership-thank-you",
+  "title": "URM Membership Thank You",
+  "moduleIcon": "divi/module",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "settings": {
+        "meta": {
+          "meta": {}
+        }
+      }
+    }
+  }
+}

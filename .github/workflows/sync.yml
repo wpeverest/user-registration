@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - develop
+            - UR-4500-tweak/compatibility-with-latest-divi-release
         workflow_dispatch:
 jobs:
     sync:
