@@ -3429,9 +3429,12 @@
 			$(document).on("click", ".cancel-membership-button", function (e) {
 				e.preventDefault();
 				var $this = $(this),
-					error_div = $("#membership-error-div"),
-					button_text = $this.text(),
 					membership_title = $("#membership-title").text();
+
+				if ($this.find(".urm-spinner").length) {
+					return;
+				}
+				ur_membership_frontend_utils.append_spinner($this);
 
 				Swal.fire({
 					icon: "warning",
@@ -3454,31 +3457,41 @@
 								security: urmf_data._nonce,
 								subscription_id: $this.data("id")
 							},
-							beforeSend: function () {
-								$this.text(urmf_data.labels.i18n_sending_text);
-							},
 							success: function (response) {
 								if (response.success) {
-									if (error_div.hasClass("btn-error")) {
-										error_div.removeClass("btn-error");
-										error_div.addClass("btn-success");
-									}
-									error_div.text(response.data.message);
-									error_div.show();
 									location.reload();
 								} else {
-									if (error_div.hasClass("btn-success")) {
-										error_div.removeClass("btn-success");
-										error_div.addClass("btn-error");
+									if (
+										$(".user-registration-membership-notice__container").length === 0
+									) {
+										$("body").append(
+											'<div class="user-registration-membership-notice__container urm-notice-error" style="display:none;"><span class="user-registration-membership-notice__message"></span><span class="user-registration-membership__close_notice">&times;</span></div>'
+										);
 									}
-									error_div.text(response.data.message);
-									error_div.show();
+									$(document).trigger("urm_show_action_message", {
+										message: response.data.message,
+										type: "error"
+									});
+									var $notice = $(".user-registration-membership-notice__container");
+									$notice.addClass("urm-notice-error");
+									$notice
+										.find(".user-registration-membership__close_notice")
+										.off("click.urmcancel")
+										.on("click.urmcancel", function () {
+											$notice.fadeOut(200);
+										});
+									clearTimeout(window.__urmCancelNoticeTimer);
+									window.__urmCancelNoticeTimer = setTimeout(function () {
+										$notice.fadeOut(300);
+									}, 6000);
 								}
 							},
 							complete: function () {
-								$this.text(button_text);
+								ur_membership_frontend_utils.remove_spinner($this);
 							}
 						});
+					} else {
+						ur_membership_frontend_utils.remove_spinner($this);
 					}
 				});
 			});
