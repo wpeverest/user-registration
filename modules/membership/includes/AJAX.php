@@ -905,8 +905,9 @@ class AJAX {
 				$is_delayed            = ! empty( $next_subscription['delayed_until'] );
 				if ( ! empty( $previous_subscription ) && ! $is_delayed ) {
 					$previous_subscription = json_decode( $previous_subscription, true );
-					$stripe_service        = new StripeService();
-					$stripe_service->cancel_subscription( array(), $previous_subscription );
+					$previous_order        = json_decode( get_user_meta( $member_id, 'urm_previous_order_data', true ), true );
+					$subscription_service  = new SubscriptionService();
+					$subscription_service->cancel_subscription( is_array( $previous_order ) ? $previous_order : array(), $previous_subscription, true );
 					delete_user_meta( $member_id, 'urm_next_subscription_data' );
 					delete_user_meta( $member_id, 'urm_previous_subscription_data' );
 					delete_user_meta( $member_id, 'urm_previous_order_data' );
