@@ -505,18 +505,17 @@ class SubscriptionService {
 
 		$selected_membership_details['payment_method'] = $payment_method;
 
-		global $wpdb;
 		$lock_name = 'urm_upgrade_lock_' . (int) $user->ID;
-		$lock      = $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, %d)', $lock_name, 5 ) );
+		$lock      = $this->subscription_repository->acquire_lock( $lock_name );
 
 		$membership_process = urm_get_membership_process( $user->ID );
 		$in_progress        = $membership_process['upgrade'][ $data['current_membership_id'] ] ?? array();
 		// A stale guard means a previous attempt died or was abandoned before completing; let it be retried.
 		$is_upgrading = ! empty( $in_progress ) && ( time() - (int) ( $in_progress['started_at'] ?? 0 ) ) < 15 * MINUTE_IN_SECONDS;
 
-		if ( '0' === (string) $lock || $is_upgrading ) {
-			if ( '1' === (string) $lock ) {
-				$wpdb->get_var( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
+		if ( false === $lock || $is_upgrading ) {
+			if ( true === $lock ) {
+				$this->subscription_repository->release_lock( $lock_name );
 			}
 			$response['response']['status']  = false;
 			$response['response']['message'] = __( 'Membership upgrade process already initiated.', 'user-registration' );
@@ -535,8 +534,8 @@ class SubscriptionService {
 			update_user_meta( $user->ID, 'urm_membership_process', $membership_process );
 		}
 
-		if ( '1' === (string) $lock ) {
-			$wpdb->get_var( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
+		if ( true === $lock ) {
+			$this->subscription_repository->release_lock( $lock_name );
 		}
 
 		$current_membership_details['ID']  = $data['current_membership_id'];
