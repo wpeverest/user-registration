@@ -1064,14 +1064,24 @@ class UR_Smart_Tags {
 									$order_detail      = $orders_repository->get_order_detail( $latest_order['ID'] );
 									if ( ! empty( $order_detail ) && isset( $order_detail['total_amount'] ) ) {
 										$renewal_amount = $order_detail['total_amount'];
+
+										if ( ! empty( $order_detail['order_id'] ) ) {
+											$renewal_order_currency = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
+										}
 									}
 								}
 							}
 						}
 						if ( ! empty( $renewal_amount ) ) {
-							// Format amount with currency if available.
-							$currency = get_option( 'user_registration_payment_currency', 'USD' );
-							if ( function_exists( 'ur_payment_integration_get_currencies' ) ) {
+							// Prefer the order's own currency over the store's global default.
+							$currency = ! empty( $renewal_order_currency['meta_value'] )
+								? $renewal_order_currency['meta_value']
+								: get_option( 'user_registration_payment_currency', 'USD' );
+
+							if ( function_exists( 'ur_get_currency_symbol' ) ) {
+								$symbol         = ur_get_currency_symbol( $currency );
+								$renewal_amount = $symbol . number_format( floatval( $renewal_amount ), 2 );
+							} elseif ( function_exists( 'ur_payment_integration_get_currencies' ) ) {
 								$currencies     = ur_payment_integration_get_currencies();
 								$symbol         = isset( $currencies[ $currency ]['symbol'] ) ? $currencies[ $currency ]['symbol'] : $currency;
 								$renewal_amount = $symbol . number_format( floatval( $renewal_amount ), 2 );

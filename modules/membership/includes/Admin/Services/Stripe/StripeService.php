@@ -530,8 +530,7 @@ class StripeService {
 		);
 
 		if ( isset( $payment_data['upgrade'] ) && $payment_data['upgrade'] ) {
-			$amount = $payment_data['amount'];
-
+			// $amount already holds the resolved (and converted) chargeable_amount — nothing to do.
 		} elseif ( isset( $payment_data['coupon'] ) && ! empty( $payment_data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_service    = new CouponService();
 			$coupon_validation = $coupon_service->validate(
@@ -1316,14 +1315,22 @@ class StripeService {
 				)
 			);
 
-			// For team subscriptions the total amount differs from the base membership price,
-			// so resolve a Stripe price that matches the actual charged amount.
-			if ( $team_id && $total_amount > 0 ) {
+			// Re-resolve the Stripe price for team pricing, local currency, or a missing stored price_id.
+			$is_local_currency_subscription = ! $team_id && ! empty( $local_currency['meta_value'] );
+			$stored_price_id                = $stripe_product_details['price_id'] ?? '';
+
+			// Use the pre-tax amount so Stripe applies the tax rate on top (visible on its invoice).
+			$price_amount = $total_amount;
+			if ( $is_local_currency_subscription && ! empty( $tax_data['tax_rate'] ) ) {
+				$price_amount = (int) round( $total_amount / ( 1 + floatval( $tax_data['tax_rate'] ) / 100 ) );
+			}
+
+			if ( $team_id || $is_local_currency_subscription || empty( $stored_price_id ) ) {
 				$effective_price_id = $this->ensure_price_in_stripe(
 					'subscription',
 					$stripe_product_details['product_id'] ?? '',
-					$stripe_product_details['price_id'] ?? '',
-					$total_amount,
+					$stored_price_id,
+					$price_amount,
 					$currency,
 					array(
 						'subscription_duration' => $subscription_duration,
@@ -1331,7 +1338,7 @@ class StripeService {
 					)
 				);
 			} else {
-				$effective_price_id = $stripe_product_details['price_id'];
+				$effective_price_id = $stored_price_id;
 			}
 
 			$subscription_details = array(
@@ -1393,8 +1400,31 @@ class StripeService {
 						$previous_membership_metas = json_decode( wp_unslash( $previous_membership['meta_value'] ), true );
 
 						if ( isset( $previous_membership_metas['type'], $previous_membership_metas['amount'] ) && 'free' !== $previous_membership_metas['type'] ) {
-							$new_price     = isset( $membership_metas['amount'] ) ? $membership_metas['amount'] : 0;
-							$current_price = $previous_membership_metas['amount'];
+							$new_price     = isset( $membership_metas['amount'] ) ? (float) $membership_metas['amount'] : 0;
+							$current_price = (float) $previous_membership_metas['amount'];
+
+							// Convert both plans' base prices into $currency (resolved above from the order).
+							$global_currency = strtoupper( get_option( 'user_registration_payment_currency', 'USD' ) );
+
+							if ( $currency !== $global_currency && class_exists( CoreFunctions::class ) ) {
+								if ( ! empty( $membership_metas['local_currency'] ) && ur_string_to_bool( $membership_metas['local_currency']['is_enable'] ) ) {
+									$new_zone_id = CoreFunctions::ur_get_zone_id_by_currency( $membership_metas['local_currency'], $currency );
+									if ( ! empty( $new_zone_id ) ) {
+										$new_pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $new_zone_id );
+										$new_price        = CoreFunctions::ur_get_amount_after_conversion( $new_price, $currency, $new_pricing_data, $membership_metas['local_currency'], $new_zone_id );
+									}
+								}
+
+								if ( ! empty( $previous_membership_metas['local_currency'] ) && ur_string_to_bool( $previous_membership_metas['local_currency']['is_enable'] ) ) {
+									$current_zone_id = CoreFunctions::ur_get_zone_id_by_currency( $previous_membership_metas['local_currency'], $currency );
+									if ( ! empty( $current_zone_id ) ) {
+										$current_pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $current_zone_id );
+										$current_price        = CoreFunctions::ur_get_amount_after_conversion( $current_price, $currency, $current_pricing_data, $previous_membership_metas['local_currency'], $current_zone_id );
+									}
+								}
+							}
+
+							$previous_membership_metas['amount'] = $current_price;
 
 							$membership_upgrade_service      = new UpgradeMembershipService();
 							$previous_membership_metas['ID'] = $previous_membership['ID'];
@@ -1427,8 +1457,7 @@ class StripeService {
 									$amount           = max( 0, $new_price - $chargeable );
 								}
 
-								$currency = get_option( 'user_registration_payment_currency', 'USD' );
-								$amount   = ( 'JPY' === $currency ) ? (int) round( $amount ) : (int) round( $amount * 100 );
+								$amount = ( 'JPY' === $currency ) ? (int) round( $amount ) : (int) round( $amount * 100 );
 
 								PaymentGatewayLogging::log_general(
 									'stripe',
@@ -1448,7 +1477,7 @@ class StripeService {
 								$coupon = \Stripe\Coupon::create(
 									array(
 										'amount_off' => $amount,
-										'currency'   => $currency,
+										'currency'   => strtolower( $currency ),
 										'duration'   => 'once',
 										'name'       => 'UpgradeCoupon',
 									)

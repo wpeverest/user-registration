@@ -255,17 +255,23 @@ class NewPaypalService {
 		$membership_process = urm_get_membership_process( $member_id );
 		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $data['current_membership_id'], $membership_process['renew'], true );
 
-		$currency       = get_option( 'user_registration_payment_currency', 'USD' );
-		$local_currency = isset( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
-		$ur_zone_id     = isset( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
+		$base_membership_amount = $membership_amount;
+
+		$currency               = get_option( 'user_registration_payment_currency', 'USD' );
+		$local_currency         = isset( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
+		$ur_zone_id             = isset( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
+		$pricing_data           = null;
+		$local_currency_data    = array();
+		$local_currency_applies = false;
 
 		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
 			$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
 			$local_currency_data = ! empty( $data['local_currency'] ) ? $data['local_currency'] : array();
 
 			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
-				$currency          = $local_currency;
-				$membership_amount = CoreFunctions::ur_get_amount_after_conversion(
+				$currency               = $local_currency;
+				$local_currency_applies = true;
+				$membership_amount      = CoreFunctions::ur_get_amount_after_conversion(
 					$membership_amount,
 					$currency,
 					$pricing_data,
@@ -281,7 +287,11 @@ class NewPaypalService {
 		$discount_value = 0.0;
 
 		if ( $is_upgrading ) {
-			$final_amount = (float) ( isset( $data['amount'] ) ? $data['amount'] : $final_amount );
+			// $data['amount'] is the prorated delta in the base currency — scale it by the plan's local/base ratio.
+			$chargeable_amount_base = (float) ( isset( $data['amount'] ) ? $data['amount'] : $final_amount );
+			$final_amount           = ( $local_currency_applies && $base_membership_amount > 0 )
+				? $membership_amount * ( $chargeable_amount_base / $base_membership_amount )
+				: $chargeable_amount_base;
 		} elseif ( ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_service    = new CouponService();
 			$coupon_validation = $coupon_service->validate(
@@ -292,10 +302,25 @@ class NewPaypalService {
 			);
 
 			if ( $coupon_validation['status'] ) {
-				$coupon_details = ur_get_coupon_details( $data['coupon'] );
-				$discount_value = ( 'fixed' === ( isset( $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount_type'] : '' ) )
+				$coupon_details       = ur_get_coupon_details( $data['coupon'] );
+				$coupon_discount_type = isset( $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount_type'] : '';
+				$discount_value       = ( 'fixed' === $coupon_discount_type )
 					? (float) ( isset( $coupon_details['coupon_discount'] ) ? $coupon_details['coupon_discount'] : 0 )
 					: ( $final_amount * (float) ( isset( $coupon_details['coupon_discount'] ) ? $coupon_details['coupon_discount'] : 0 ) / 100 );
+
+				// Fixed discounts are configured in the base currency — convert before subtracting.
+				if ( $local_currency_applies && 'fixed' === $coupon_discount_type ) {
+					$discounted_base  = max( 0.0, $base_membership_amount - $discount_value );
+					$discounted_local = CoreFunctions::ur_get_amount_after_conversion(
+						$discounted_base,
+						$currency,
+						$pricing_data,
+						$local_currency_data,
+						$ur_zone_id,
+						$base_membership_amount
+					);
+					$discount_value = max( 0.0, $final_amount - $discounted_local );
+				}
 
 				$final_amount = max( 0.0, (float) user_registration_sanitize_amount( $final_amount - $discount_value ) );
 			}
