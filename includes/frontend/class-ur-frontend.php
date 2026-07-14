@@ -221,7 +221,7 @@ class UR_Frontend {
 		} elseif ( 'internal-page' === $redirect_option ) {
 			$page_id = get_option( 'user_registration_login_options_after_login_redirect_page', 0 );
 			if ( 0 !== absint( $page_id ) ) {
-				$redirect = get_permalink( $page_id );
+				$redirect = get_permalink( ur_get_translated_page_id( $page_id ) );
 			} else {
 				ur_get_logger()->info( sprintf( 'Invalid page ID %s set for after login redirection.', $page_id ), array( 'source' => 'user-registration' ) );
 			}
@@ -252,7 +252,7 @@ class UR_Frontend {
 		} elseif ( 'internal-page' === $redirect_option ) {
 			$page_id = get_option( 'user_registration_login_options_after_logout_redirect_page', 0 );
 			if ( 0 !== absint( $page_id ) ) {
-				$redirect = get_permalink( $page_id );
+				$redirect = get_permalink( ur_get_translated_page_id( $page_id ) );
 			} else {
 				ur_get_logger()->info( sprintf( 'Invalid page ID %s set for after logout redirection.', $page_id ), array( 'source' => 'user-registration' ) );
 			}

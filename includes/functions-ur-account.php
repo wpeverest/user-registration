@@ -56,7 +56,7 @@ function ur_lostpassword_url( $default_url = '' ) {
 	$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
 
 	if ( $lost_password_page && ! empty( get_post( $lost_password_page ) ) ) {
-		return get_permalink( $lost_password_page );
+		return get_permalink( ur_get_translated_page_id( $lost_password_page ) );
 	} else {
 		$ur_account_page_url = ur_get_page_permalink( 'myaccount' );
 
@@ -107,14 +107,14 @@ function ur_resetpassword_url( $default_url = '' ) {
 	$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
 
 	if ( $lost_password_page && ! empty( get_post( $lost_password_page ) ) ) {
-		return get_permalink( $lost_password_page );
+		return get_permalink( ur_get_translated_page_id( $lost_password_page ) );
 	}
 
 	// Legacy fallback: a separate reset-password page (deprecated option).
 	$reset_password_page = get_option( 'user_registration_reset_password_page_id', false );
 
 	if ( $reset_password_page && ! empty( get_post( $reset_password_page ) ) ) {
-		return get_permalink( $reset_password_page );
+		return get_permalink( ur_get_translated_page_id( $reset_password_page ) );
 	}
 
 	return ur_lostpassword_url();
