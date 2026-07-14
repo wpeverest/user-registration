@@ -348,12 +348,17 @@ class UR_Preview {
 
 			$pro_content_suffix_emails = array( 'delete_account_email', 'delete_account_admin_email', 'auto_generated_password_email', 'email_verified_admin_email' );
 
+			// Membership emails whose saved content option uses a `_message` suffix (the content field id differs from $this->id).
+			$message_suffix_emails = array( 'membership_ended_user_email', 'membership_expiring_soon_user_email', 'membership_renewal_reminder_user_email' );
+
 			if ( 'passwordless_login_email' === $option_name ) {
 				$email_content = get_option( 'user_registration_' . $option_name . '_content', $class_instance->$default_content() );
 			} elseif ( 'prevent_concurrent_login_email' === $option_name ) {
 				$email_content = get_option( 'user_registration_prevent_concurrent_login_email_content', $class_instance->$default_content() );
 			} elseif ( in_array( $option_name, $pro_content_suffix_emails, true ) ) {
 				$email_content = get_option( 'user_registration_pro_' . $option_name . '_content', $class_instance->$default_content() );
+			} elseif ( in_array( $option_name, $message_suffix_emails, true ) ) {
+				$email_content = get_option( 'user_registration_' . $option_name . '_message', $class_instance->$default_content() );
 			} else {
 				$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
 			}
