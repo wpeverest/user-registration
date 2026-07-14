@@ -3501,7 +3501,8 @@
 							subscription_id: $this.data("id")
 						},
 						beforeSend: function () {
-							$this.text(urmf_data.labels.i18n_sending_text);
+							ur_membership_frontend_utils.append_spinner($this);
+							ur_membership_frontend_utils.toggleSaveButtons(true, $this);
 						},
 						success: function (response) {
 							if (!response.success) {
@@ -3529,7 +3530,8 @@
 							}
 						},
 						complete: function () {
-							$this.text(button_text);
+							ur_membership_frontend_utils.remove_spinner($this);
+							ur_membership_frontend_utils.toggleSaveButtons(false, $this);
 						}
 					});
 				}
