@@ -131,7 +131,9 @@ class OrderService {
 			'transaction_id'  => $transaction_id,
 			'payment_method'  => ( $data['membership_data']['payment_method'] ) ? sanitize_text_field( $data['membership_data']['payment_method'] ) : '',
 			'total_amount'    => number_format( $total, 2, '.', '' ),
-			'status'          => ( 'free' === $membership_meta['type'] || $is_admin ) ? 'completed' : 'pending',
+			// UR-4386: a one-time free order (paid plan + 100% coupon, payment_method="free") has no
+			// gateway step, so complete it immediately like a free plan.
+			'status'          => ( 'free' === $membership_meta['type'] || $is_admin || ( 'free' === ( $data['membership_data']['payment_method'] ?? '' ) && 0.0 === (float) $total && $coupon_discount_amount > 0 ) ) ? 'completed' : 'pending',
 			'order_type'      => $order_type,
 			'trial_status'    => ( ! empty( $upgrade_details ) && ( 'on' === $upgrade_details['trial_status'] ) ) ? 'on' : ( isset( $membership_meta['trial_status'] ) ? sanitize_text_field( $membership_meta['trial_status'] ) : 'off' ),
 			'notes'           => $note,

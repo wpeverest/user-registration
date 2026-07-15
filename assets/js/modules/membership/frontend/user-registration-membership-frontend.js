@@ -351,7 +351,12 @@
 			user_data.membership = membership_input.val();
 			user_data.payment_method = "free";
 			user_data.password = password.val();
-			if (membership_input.data("urm-pg-type") !== "free") {
+			// UR-4386: one-time plan zeroed by a 100% coupon (data-urm-free-order="1") stays a
+			// $0 free order and keeps payment_method="free".
+			if (
+				membership_input.data("urm-pg-type") !== "free" &&
+				membership_input.attr("data-urm-free-order") !== "1"
+			) {
 				user_data.payment_method = $(
 					'input[name="urm_payment_method"]:checked'
 				).val();
@@ -1080,6 +1085,21 @@
 			$(".urm-pre-subtotal-divider").toggle(hasDiscount);
 			$(".urm-membership-sub-total-value").toggle(hasAdjustment);
 			$(".urm-pre-total-divider").toggle(hasAdjustment);
+
+			// UR-4386: one-time (paid) plan zeroed by a 100% coupon => hide the gateway and submit
+			// as a free order. Subscriptions are untouched (they keep the gateway for renewals).
+			if ("paid" === $this.data("urm-pg-type")) {
+				if (parseFloat(totalDetails.total) <= 0) {
+					$(".ur_payment_gateway_container").addClass("urm-d-none");
+					$(".stripe-container").addClass("urm-d-none");
+					$this.attr("data-urm-free-order", "1");
+				} else if ($this.attr("data-urm-free-order") === "1") {
+					// Discount no longer covers the full amount — restore the gateway selector.
+					$(".ur_payment_gateway_container").removeClass("urm-d-none");
+					$(".stripe-container").removeClass("urm-d-none");
+					$this.removeAttr("data-urm-free-order");
+				}
+			}
 		},
 		upgrade_membership: function (
 			data,

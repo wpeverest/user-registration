@@ -172,6 +172,9 @@ class StripeService {
 			'invoice.payment_failed',
 			'payment_intent.payment_failed',
 			'charge.refunded',
+			// Fires when a delayed-start Subscription Schedule (100% coupon) actually starts and
+			// materializes its subscription, so we can back-fill the real subscription id. UR-4386.
+			'customer.subscription.created',
 		);
 	}
 
@@ -557,13 +560,20 @@ class StripeService {
 			$amount     = $amount + $tax_amount;
 		}
 
+		// UR-4386: allow a 100%-coupon subscription (amount 0) past the min-amount guards below;
+		// it is created with a delayed start in create_subscription().
+		$is_full_discount_subscription = ( 'subscription' === $membership_type )
+			&& ( (float) $amount <= 0.0 )
+			&& ! empty( $payment_data['coupon'] )
+			&& ur_check_module_activation( 'coupon' );
+
 		if ( 'JPY' === $currency ) {
 			$amount = (int) round( abs( $amount ) );
 		} else {
 			$amount = (int) round( abs( $amount ) * 100 );
 		}
 
-		if ( $amount < 1 ) {
+		if ( $amount < 1 && ! $is_full_discount_subscription ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
 				'Payment stopped - Amount less than minimum' . "\n" . wp_json_encode(
@@ -584,8 +594,9 @@ class StripeService {
 				)
 			);
 		}
-		// Return if invalid amount.
-		if ( empty( $amount ) || user_registration_sanitize_amount( 0, $currency ) == $amount ) {
+		// Return if invalid amount. A full-discount subscription legitimately has a $0 first
+		// charge (delayed-start schedule), so it must not be aborted here. UR-4386.
+		if ( ! $is_full_discount_subscription && ( empty( $amount ) || user_registration_sanitize_amount( 0, $currency ) == $amount ) ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
 				'Payment stopped - Invalid or empty amount' . "\n" . wp_json_encode(
@@ -1334,6 +1345,102 @@ class StripeService {
 				$effective_price_id = $stripe_product_details['price_id'];
 			}
 
+			// UR-4386: 100% coupon on a subscription => first period free. Create a Stripe
+			// Subscription Schedule starting one billing period out (nothing charged now; full
+			// price bills from the next cycle) instead of a normal subscription.
+			$is_full_discount_subscription = ( ! $team_id )
+				&& ( 'subscription' === $membership_type )
+				&& ( 0.0 === (float) $member_order['total_amount'] )
+				&& ! empty( $order_detail['coupon'] )
+				&& ur_check_module_activation( 'coupon' );
+
+			if ( $is_full_discount_subscription ) {
+				// Server-side re-validation: confirm the coupon truly zeroes the plan amount so a
+				// forged $0 order cannot obtain a free period.
+				$coupon_details = ur_get_coupon_details( $order_detail['coupon'] );
+				$plan_amount    = floatval( $membership_metas['amount'] ?? 0 );
+				$discount_type  = $coupon_details['coupon_discount_type'] ?? 'fixed';
+				$discount_value = floatval( $coupon_details['coupon_discount'] ?? 0 );
+				$discount       = ( 'percent' === $discount_type ) ? ( $plan_amount * $discount_value / 100 ) : $discount_value;
+				$is_zeroed      = ( $plan_amount > 0 ) && ( 0.0 === round( max( 0, $plan_amount - $discount ), 2 ) );
+
+				if ( $is_zeroed ) {
+					$start_ts      = ( new \DateTime( "+ {$subscription_value} {$subscription_duration}" ) )->getTimestamp();
+					// Single open-ended phase starting one billing period in the future: nothing is
+					// charged until start_date, then the plan bills at full price indefinitely.
+					$phase         = array(
+						'items' => array(
+							array( 'price' => $effective_price_id ),
+						),
+					);
+
+					// Reflect membership tax on the scheduled subscription's invoices.
+					if ( ! empty( $tax_data['tax_rate'] ) ) {
+						$stripe_tax_rate_id = $this->get_or_create_stripe_tax_rate( floatval( $tax_data['tax_rate'] ) );
+						if ( ! empty( $stripe_tax_rate_id ) ) {
+							$phase['default_tax_rates'] = array( $stripe_tax_rate_id );
+						}
+					}
+
+					$schedule_args = array(
+						'customer'         => $customer->id,
+						'start_date'       => $start_ts,
+						'end_behavior'     => 'release',
+						'phases'           => array( $phase ),
+						'default_settings' => array(
+							'default_payment_method' => $payment_method->id,
+						),
+					);
+
+					$schedule = \Stripe\SubscriptionSchedule::create( $schedule_args );
+
+					PaymentGatewayLogging::log_api_response(
+						'stripe',
+						'Stripe subscription schedule created (100% coupon, delayed start)',
+						array(
+							'schedule_id' => $schedule->id,
+							'start_date'  => $start_ts,
+							'member_id'   => $member_id,
+						)
+					);
+
+					// The real Stripe subscription id materializes when the schedule starts; store the
+					// schedule id so the webhook handler can back-fill the subscription id later.
+					update_user_meta( $member_id, 'urm_stripe_schedule_id', sanitize_text_field( $schedule->id ) );
+
+					$this->members_orders_repository->update(
+						$member_order['ID'],
+						array(
+							'status'         => 'completed',
+							'transaction_id' => $schedule->id,
+						)
+					);
+
+					$this->members_subscription_repository->update(
+						$member_order['subscription_id'],
+						array(
+							'subscription_id' => sanitize_text_field( $schedule->id ),
+							'status'          => 'active',
+						)
+					);
+
+					$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
+
+					// Return a subscription-shaped payload the checkout JS already understands
+					// ('active' status + a null payment_intent means "complete, no SCA needed").
+					$response['subscription'] = array(
+						'id'             => $schedule->id,
+						'status'         => 'active',
+						'schedule'       => $schedule->id,
+						'latest_invoice' => array( 'payment_intent' => null ),
+					);
+					$response['message'] = __( 'New member has been successfully created. The subscription will start after the free coupon period.', 'user-registration' );
+					$response['status']  = true;
+
+					return $response;
+				}
+			}
+
 			$subscription_details = array(
 				'customer'         => $customer->id,
 				'items'            => array(
@@ -1956,9 +2063,64 @@ class StripeService {
 			case 'charge.refunded':
 				$this->handle_refunded_charge( $event );
 				break;
+			case 'customer.subscription.created':
+				$this->handle_scheduled_subscription_started( $event );
+				break;
 			default:
 				break;
 		}
+	}
+
+	/**
+	 * Back-fill the real Stripe subscription id when a delayed-start Subscription Schedule
+	 * (created for a 100% coupon, UR-4386) starts. Until it starts, the local order/subscription
+	 * store the schedule id (sub_sched_...); this swaps in the materialized subscription id so
+	 * renewals and cancellations keep working.
+	 *
+	 * @param array $event Stripe event.
+	 * @return void
+	 */
+	public function handle_scheduled_subscription_started( $event ) {
+		$object      = isset( $event['data']['object'] ) ? $event['data']['object'] : array();
+		$schedule_id = isset( $object['schedule'] ) ? $object['schedule'] : '';
+		$real_sub_id = isset( $object['id'] ) ? $object['id'] : '';
+
+		// Only scheduled subscriptions carry a schedule id; ignore all other subscription creations.
+		if ( empty( $schedule_id ) || empty( $real_sub_id ) ) {
+			return;
+		}
+
+		$local = $this->members_subscription_repository->get_membership_by_subscription_id( $schedule_id, true );
+		if ( empty( $local ) ) {
+			return;
+		}
+
+		$this->members_subscription_repository->update(
+			$local['sub_id'],
+			array( 'subscription_id' => sanitize_text_field( $real_sub_id ) )
+		);
+
+		$order_repository = new OrdersRepository();
+		$order            = $order_repository->get_order_by_subscription( $local['sub_id'] );
+		if ( ! empty( $order['ID'] ) ) {
+			$order_repository->update( $order['ID'], array( 'transaction_id' => sanitize_text_field( $real_sub_id ) ) );
+		}
+
+		update_user_meta( $local['user_id'], 'ur_stripe_subscription_id', sanitize_text_field( $real_sub_id ) );
+
+		PaymentGatewayLogging::log_general(
+			'stripe',
+			'Delayed-start schedule materialized; back-filled subscription id' . "\n" . wp_json_encode(
+				array(
+					'event_type'      => 'schedule_subscription_backfill',
+					'schedule_id'     => $schedule_id,
+					'subscription_id' => $real_sub_id,
+					'member_id'       => $local['user_id'],
+				),
+				JSON_PRETTY_PRINT
+			),
+			'notice'
+		);
 	}
 
 	/**
