@@ -550,11 +550,26 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 					break;
 
 				case 'membership':
-					if ( $user->ID && ur_check_module_activation( 'membership' ) ) {
-						$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-						$user_membership    = $members_repository->get_member_membership_by_id( $user->ID );
+					if ( ur_check_module_activation( 'membership' ) ) {
+						static $urcr_active_plan_ids = null;
+						if ( null === $urcr_active_plan_ids ) {
+							$urcr_active_plan_ids = array_map( 'absint', array_keys( get_active_membership_id_name() ) );
+						}
 
 						$sources = ! empty( $logic_map['value'] ) ? $logic_map['value'] : array();
+						$sources = is_array( $sources ) ? $sources : array( $sources );
+
+						// Rule references only deactivated plan(s): stop enforcing so the page isn't a dead end.
+						if ( ! array_intersect( array_map( 'absint', $sources ), $urcr_active_plan_ids ) ) {
+							return true;
+						}
+
+						if ( ! $user->ID ) {
+							break;
+						}
+
+						$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+						$user_membership    = $members_repository->get_member_membership_by_id( $user->ID );
 
 						$team_ids = get_user_meta( $user->ID, 'urm_team_ids', true );
 
