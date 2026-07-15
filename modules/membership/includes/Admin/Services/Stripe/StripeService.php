@@ -1355,14 +1355,17 @@ class StripeService {
 				&& ur_check_module_activation( 'coupon' );
 
 			if ( $is_full_discount_subscription ) {
-				// Server-side re-validation: confirm the coupon truly zeroes the plan amount so a
-				// forged $0 order cannot obtain a free period.
+				// Server-side re-validation: the coupon must exist, be active, and truly zero the
+				// plan amount, so a forged $0 order cannot obtain a free period.
 				$coupon_details = ur_get_coupon_details( $order_detail['coupon'] );
 				$plan_amount    = floatval( $membership_metas['amount'] ?? 0 );
 				$discount_type  = $coupon_details['coupon_discount_type'] ?? 'fixed';
 				$discount_value = floatval( $coupon_details['coupon_discount'] ?? 0 );
 				$discount       = ( 'percent' === $discount_type ) ? ( $plan_amount * $discount_value / 100 ) : $discount_value;
-				$is_zeroed      = ( $plan_amount > 0 ) && ( 0.0 === round( max( 0, $plan_amount - $discount ), 2 ) );
+				$is_zeroed      = ! empty( $coupon_details )
+					&& ! empty( $coupon_details['coupon_status'] )
+					&& ( $plan_amount > 0 )
+					&& ( 0.0 === round( max( 0, $plan_amount - $discount ), 2 ) );
 
 				if ( $is_zeroed ) {
 					$start_ts      = ( new \DateTime( "+ {$subscription_value} {$subscription_duration}" ) )->getTimestamp();
@@ -1392,7 +1395,35 @@ class StripeService {
 						),
 					);
 
-					$schedule = \Stripe\SubscriptionSchedule::create( $schedule_args );
+					try {
+						$schedule = \Stripe\SubscriptionSchedule::create( $schedule_args );
+					} catch ( \Exception $schedule_ex ) {
+						// UR-4386: schedule not created -> keep order/subscription pending (no access);
+						// don't delete the registered user.
+						PaymentGatewayLogging::log_error(
+							'stripe',
+							'Stripe subscription schedule creation failed (100% coupon)' . "\n" . wp_json_encode(
+								array(
+									'error_code'    => 'STRIPE_SCHEDULE_CREATE_FAILED',
+									'error_message' => $schedule_ex->getMessage(),
+									'member_id'     => $member_id,
+								),
+								JSON_PRETTY_PRINT
+							)
+						);
+						$this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'pending' ) );
+						$this->members_subscription_repository->update( $member_order['subscription_id'], array( 'status' => 'pending' ) );
+
+						$response['subscription'] = array(
+							'id'             => '',
+							'status'         => 'pending',
+							'latest_invoice' => array( 'payment_intent' => null ),
+						);
+						$response['message'] = __( 'Registration complete, but the subscription could not be scheduled yet. Your membership is pending.', 'user-registration' );
+						$response['status']  = true;
+
+						return $response;
+					}
 
 					PaymentGatewayLogging::log_api_response(
 						'stripe',
@@ -1404,10 +1435,12 @@ class StripeService {
 						)
 					);
 
-					// The real Stripe subscription id materializes when the schedule starts; store the
-					// schedule id so the webhook handler can back-fill the subscription id later.
+					// Store the schedule id; the webhook back-fills the real subscription id once it starts.
 					update_user_meta( $member_id, 'urm_stripe_schedule_id', sanitize_text_field( $schedule->id ) );
 
+					// UR-4386: schedule created (sub_sched_ returned) -> billing is set up, so activate
+					// now. First charge is one period later; a later charge failure reverts to pending
+					// via handle_failed_invoice().
 					$this->members_orders_repository->update(
 						$member_order['ID'],
 						array(
@@ -1426,15 +1459,14 @@ class StripeService {
 
 					$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
 
-					// Return a subscription-shaped payload the checkout JS already understands
-					// ('active' status + a null payment_intent means "complete, no SCA needed").
+					// Subscription-shaped payload the checkout JS expects (active + null payment_intent => no SCA).
 					$response['subscription'] = array(
 						'id'             => $schedule->id,
 						'status'         => 'active',
 						'schedule'       => $schedule->id,
 						'latest_invoice' => array( 'payment_intent' => null ),
 					);
-					$response['message'] = __( 'New member has been successfully created. The subscription will start after the free coupon period.', 'user-registration' );
+					$response['message'] = __( 'New member has been successfully created. The subscription is scheduled to start after the free coupon period.', 'user-registration' );
 					$response['status']  = true;
 
 					return $response;
@@ -2100,12 +2132,6 @@ class StripeService {
 			array( 'subscription_id' => sanitize_text_field( $real_sub_id ) )
 		);
 
-		$order_repository = new OrdersRepository();
-		$order            = $order_repository->get_order_by_subscription( $local['sub_id'] );
-		if ( ! empty( $order['ID'] ) ) {
-			$order_repository->update( $order['ID'], array( 'transaction_id' => sanitize_text_field( $real_sub_id ) ) );
-		}
-
 		update_user_meta( $local['user_id'], 'ur_stripe_subscription_id', sanitize_text_field( $real_sub_id ) );
 
 		PaymentGatewayLogging::log_general(
@@ -2172,7 +2198,9 @@ class StripeService {
 
 			return;
 		}
-		$subscription_status = ( 'trial' === $current_subscription['status'] ) ? 'active' : $current_subscription['status'];
+		// A 'trial' sub, or a 'pending' delayed-start sub (UR-4386 100% coupon), activates on its
+		// first successful charge; anything else keeps its current status.
+		$subscription_status = in_array( $current_subscription['status'], array( 'trial', 'pending' ), true ) ? 'active' : $current_subscription['status'];
 
 		$member_id         = $current_subscription['user_id'];
 		$membership_id     = $current_subscription['item_id'];
