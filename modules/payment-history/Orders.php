@@ -354,7 +354,7 @@ class Orders {
 			function ( $item ) {
 				$content = json_decode( wp_unslash( $item['post_content'] ), true );
 
-				return $content['status'];
+				return ! empty( $content['status'] );
 			}
 		);
 		$memberships = wp_list_pluck( $memberships, 'post_title', 'ID' );
