@@ -272,7 +272,9 @@ class MembershipService {
 		foreach ( $memberships as $key => $membership ) {
 			$membership_post_content = json_decode( wp_unslash( $membership['post_content'] ), true );
 
-			if ( ! $membership_post_content['status'] ) {
+			// empty() is null-safe: skip memberships with missing/invalid content or falsy status
+			// without a "array offset on null" warning when post_content isn't valid JSON.
+			if ( empty( $membership_post_content['status'] ) ) {
 				unset( $memberships[ $key ] );
 				continue;
 			}
