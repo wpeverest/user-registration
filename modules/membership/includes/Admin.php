@@ -334,6 +334,11 @@ if ( ! class_exists( 'Admin' ) ) :
 				return $success_params;
 			}
 
+			// Client-submitted tax_rate must never be negative (would reduce the charge below base).
+			if ( isset( $data['tax_rate'] ) ) {
+				$data['tax_rate'] = max( 0, floatval( $data['tax_rate'] ) );
+			}
+
 			// Inject user identity from the just-created user
 			$member    = get_userdata( $user_id );
 			$member_id = $user_id;

@@ -236,7 +236,20 @@ class MembersService {
 		update_user_meta( $new_user_id, 'ur_registration_source', 'membership' );
 
 		// UR-4573: Role handling on membership assignment.
-		if ( ! empty( $data['is_initial_registration'] ) ) {
+		// UR-4710: Paid memberships are still pending here — defer the role until payment is confirmed (maybe_grant_pending_role()).
+		if ( ! empty( $data['defer_role'] ) ) {
+			$membership_id = ! empty( $data['membership_data']['membership'] ) ? absint( $data['membership_data']['membership'] ) : ( ! empty( $data['membership_data']['ID'] ) ? absint( $data['membership_data']['ID'] ) : 0 );
+			update_user_meta(
+				$new_user_id,
+				'urm_pending_role',
+				array(
+					'role'          => $data['role'],
+					'membership_id' => $membership_id,
+					'is_initial'    => ! empty( $data['is_initial_registration'] ),
+					'previous_role' => ( ! empty( $data['is_upgrade'] ) && ! empty( $data['previous_role'] ) ) ? $data['previous_role'] : '',
+				)
+			);
+		} elseif ( ! empty( $data['is_initial_registration'] ) ) {
 			// Fresh membership registration: the membership role replaces the default role the
 			// registration assigned, so the member ends up with only the membership role.
 			$user->set_role( $data['role'] );
@@ -255,6 +268,33 @@ class MembersService {
 		}
 
 		return $user;
+	}
+
+	// UR-4710: Apply a deferred membership role once the member's subscription for that membership is active.
+	public function maybe_grant_pending_role( $user_id ) {
+		$pending = get_user_meta( $user_id, 'urm_pending_role', true );
+		if ( empty( $pending ) || empty( $pending['role'] ) || empty( $pending['membership_id'] ) ) {
+			return;
+		}
+
+		$subscription_repository = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+		$subscription            = $subscription_repository->get_subscription_data_by_member_and_membership_id( $user_id, $pending['membership_id'] );
+
+		if ( empty( $subscription ) || ! in_array( ( $subscription['status'] ?? '' ), array( 'active', 'trial' ), true ) ) {
+			return;
+		}
+
+		$user = new \WP_User( $user_id );
+		if ( ! empty( $pending['is_initial'] ) ) {
+			$user->set_role( $pending['role'] );
+		} else {
+			if ( ! empty( $pending['previous_role'] ) && $pending['previous_role'] !== $pending['role'] ) {
+				$user->remove_role( $pending['previous_role'] );
+			}
+			$user->add_role( $pending['role'] );
+		}
+
+		delete_user_meta( $user_id, 'urm_pending_role' );
 	}
 
 	/**
@@ -305,6 +345,8 @@ class MembersService {
 		wp_clear_auth_cookie();
 		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 		wp_set_auth_cookie( $user_id, $remember );
+
+		$this->maybe_grant_pending_role( $user_id );
 
 		return true;
 	}

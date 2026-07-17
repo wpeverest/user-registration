@@ -1926,7 +1926,8 @@ class StripeService {
 		if ( isset( $event['id'] ) ) {
 			try {
 				$event_id        = sanitize_text_field( $event['id'] );
-				$retrieved_event = (array) \Stripe\Event::retrieve( $event_id );
+				$event           = json_decode( wp_json_encode( \Stripe\Event::retrieve( $event_id ) ), true );
+				$subscription_id = $event['data']['object']['subscription'] ?? $subscription_id;
 			} catch ( \Exception $e ) {
 				PaymentGatewayLogging::log_webhook_received(
 					'stripe',
