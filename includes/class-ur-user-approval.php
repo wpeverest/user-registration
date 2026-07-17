@@ -308,8 +308,15 @@ class UR_User_Approval {
 			return $user;
 		} elseif ( 'payment' === $login_option ) {
 
+			if ( $is_membership_active ) {
+				$members_repository       = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+				$membership               = $members_repository->get_member_membership_by_id( $user->ID );
+				$members_order_repository = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
+				$last_order               = $members_order_repository->get_member_orders( $user->ID );
+			}
+
 			$payment_status = get_user_meta( $user->ID, 'ur_payment_status', true );
-			$is_member      = $is_membership_active && ! empty( $membership );
+			$is_member      = $is_membership_active && ! empty( $membership ) && ! empty( $last_order );
 			if ( $is_member ) {
 				$payment_status            = $last_order['status'];
 				$membership_payment_method = $last_order['payment_method'];
@@ -338,7 +345,7 @@ class UR_User_Approval {
 						$payment_service = new \WPEverest\URMembership\Admin\Services\PaymentService( $payment_method, $membership_id, $user->user_email );
 						$response_data   = array(
 							'membership'      => $membership_id,
-							'subscription_id' => $membership['subscription_id'],
+							'subscription_id' => $membership[0]['subscription_id'],
 							'member_id'       => $user_id,
 						);
 						$is_upgrading    = get_user_meta( $user_id, 'urm_is_user_upgraded', true );
