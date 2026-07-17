@@ -1617,22 +1617,48 @@ class StripeService {
 					)
 				);
 
-				PaymentGatewayLogging::log_transaction_success(
-					'stripe',
-					'Stripe subscription activated successfully',
-					array(
-						'subscription_id'     => $subscription->id,
-						'subscription_status' => $subscription_status,
-						'order_id'            => $member_order['ID'],
-						'member_id'           => $member_id,
-						'membership_type'     => $membership_type,
-					)
-				);
+				// Only treat this as a confirmed payment when the first invoice has actually
+				// been paid ($status === 'completed'). When the card requires 3D Secure/SCA the
+				// subscription is still 'incomplete' and the order is 'pending' here: sending the
+				// "Payment Confirmed" email or logging success at this point is premature and
+				// misleading (the customer may still fail/abandon the challenge). The confirmation
+				// email is sent once the payment is truly confirmed in handle_stripe_payment_confirmation().
+				if ( 'completed' === $status ) {
+					PaymentGatewayLogging::log_transaction_success(
+						'stripe',
+						'Stripe subscription activated successfully',
+						array(
+							'subscription_id'     => $subscription->id,
+							'subscription_status' => $subscription_status,
+							'order_id'            => $member_order['ID'],
+							'member_id'           => $member_id,
+							'membership_type'     => $membership_type,
+						)
+					);
 
-				$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
+					$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
+
+					$response['message'] = __( 'New member has been successfully created with successful stripe subscription.', 'user-registration' );
+				} else {
+					PaymentGatewayLogging::log_general(
+						'stripe',
+						'Stripe subscription created, awaiting 3D Secure confirmation' . "\n" . wp_json_encode(
+							array(
+								'subscription_id'     => $subscription->id,
+								'subscription_status' => $subscription_status,
+								'order_id'            => $member_order['ID'],
+								'member_id'           => $member_id,
+								'membership_type'     => $membership_type,
+							),
+							JSON_PRETTY_PRINT
+						),
+						'notice'
+					);
+
+					$response['message'] = __( 'Payment requires additional verification.', 'user-registration' );
+				}
 
 				$response['subscription'] = $subscription;
-				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.', 'user-registration' );
 				$response['status']       = true;
 			} elseif ( 'incomplete' === $subscription_status ) {
 				PaymentGatewayLogging::log_general(
