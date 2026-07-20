@@ -245,11 +245,7 @@ class AJAX {
 			) {
 				wp_send_json_error(
 					array(
-						'message' => sprintf(
-							/* translators: %d: number of years */
-							__( 'Stripe does not support yearly subscription periods greater than 3 years. The value %d years is not allowed. Please set the subscription period to 3 years or less.', 'user-registration' ),
-							(int) $meta_data_check['subscription']['value']
-						),
+						'message' => __( 'Stripe does not support yearly subscription periods greater than 3 years.', 'user-registration' ),
 					)
 				);
 			}

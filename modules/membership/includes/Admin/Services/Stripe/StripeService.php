@@ -2892,11 +2892,7 @@ class StripeService {
 		if ( 'subscription' === $type ) {
 			if ( 'year' === $interval && $interval_count > 3 ) {
 				throw new \Exception(
-					sprintf(
-						/* translators: %d: interval count */
-						__( 'Stripe does not support yearly subscription periods greater than 3 years. The value %d years is not allowed. Please set the subscription period to 3 years or less.', 'user-registration' ),
-						$interval_count
-					)
+					__( 'Stripe does not support yearly subscription periods greater than 3 years.', 'user-registration' )
 				);
 			}
 			$data['recurring'] = array(
