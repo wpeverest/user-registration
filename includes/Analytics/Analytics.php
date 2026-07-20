@@ -64,9 +64,9 @@ class Analytics {
 		 */
 		$controllers = apply_filters(
 			'user_registration_analytics_controllers',
-			[
+			array(
 				AnalyticsController::class,
-			]
+			)
 		);
 		foreach ( $controllers as $controller ) {
 			$instance = new $controller();
@@ -79,6 +79,8 @@ class Analytics {
 		if ( ! file_exists( $asset_file ) ) {
 			return;
 		}
+
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
 			wp_register_style(

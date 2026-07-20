@@ -93,6 +93,31 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		}
 
 		/**
+		 * Get membership payment gateway usage statistics.
+		 *
+		 * Retrieves the total number of orders grouped by payment method
+		 * from the membership orders table.
+		 *
+		 * @since 1.0.0
+		 * 
+		 * @return array An array of payment methods and their corresponding order counts.
+		 */
+		public function get_membership_gateway_usage() {
+			global $wpdb;
+
+			$table = $wpdb->prefix . 'ur_membership_orders';
+
+			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+				return array();
+			}
+
+			return $wpdb->get_results(
+				"SELECT payment_method, COUNT(*) AS total FROM {$table} GROUP BY payment_method ORDER BY total DESC",
+				ARRAY_A
+			);
+		}
+
+		/**
 		 * @param $type
 		 *
 		 * @return string|null
@@ -102,18 +127,18 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			if ( $for_membership ) {
 				return $wpdb->get_results(
 					$wpdb->prepare(
-						'SELECT wum.meta_value AS ur_form_id,
+						"SELECT wum.meta_value AS ur_form_id,
 			                COUNT(DISTINCT wu.ID) AS total
-							FROM wp_users wu
-							         JOIN wp_usermeta wum
+							FROM {$wpdb->users} wu
+							         JOIN {$wpdb->usermeta} wum
 							              ON wum.user_id = wu.ID
 							                  AND wum.meta_key = %s
-							         JOIN wp_usermeta wpum
+							         JOIN {$wpdb->usermeta} wpum
 							              ON wpum.user_id = wu.ID
 							                  AND wpum.meta_key = %s
 							                  AND wpum.meta_value = %s
 							GROUP BY wum.meta_value
-							ORDER BY total DESC;',
+							ORDER BY total DESC;",
 						'ur_form_id',
 						'ur_registration_source',
 						'membership'
@@ -124,19 +149,19 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 			return $wpdb->get_results(
 				$wpdb->prepare(
-					'SELECT wum.meta_value AS ur_form_id,
+					"SELECT wum.meta_value AS ur_form_id,
 				       COUNT(DISTINCT wu.ID) AS total
-						FROM wp_users wu
-						         JOIN wp_usermeta wum
+						FROM {$wpdb->users} wu
+						         JOIN {$wpdb->usermeta} wum
 						              ON wum.user_id = wu.ID
 						                  AND wum.meta_key = %s
 						WHERE NOT EXISTS (SELECT 1
-						                  FROM wp_usermeta wpum
+						                  FROM {$wpdb->usermeta} wpum
 						                  WHERE wpum.user_id = wu.ID
 						                    AND wpum.meta_key = %s
 						                    AND wpum.meta_value = %s)
 						GROUP BY wum.meta_value
-						ORDER BY total DESC;',
+						ORDER BY total DESC;",
 					'ur_form_id',
 					'ur_registration_source',
 					'membership'
@@ -204,8 +229,9 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					'license_key'           => $is_premium ? $license_key : '',
 					'total_form_count'      => $this->get_form_count(),
 					'total_user_count'      => $this->get_user_count(),
-					'membership_form_users' => $form_wise_users['membership_form_users'],
-					'normal_form_users'     => $form_wise_users['normal_form_users'],
+					'membership_form_users'   => $form_wise_users['membership_form_users'],
+					'normal_form_users'       => $form_wise_users['normal_form_users'],
+					'membership_gateway_usage' => $this->get_membership_gateway_usage(),
 				),
 			);
 
@@ -251,12 +277,14 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 				foreach ( $enabled_features as $slug ) {
 					if ( isset( $modules_by_slug[ $slug ] ) ) {
-						$module       = $modules_by_slug[ $slug ];
-						$product_slug = in_array( $slug, $addons_list_moved_into_module ) ? $slug . '/' . $slug . '.php' : $slug;
-						$addon_info   = array(
+						$module               = $modules_by_slug[ $slug ];
+						$is_moved_addon       = in_array( $slug, $addons_list_moved_into_module, true );
+						$is_standalone_active = $is_moved_addon && in_array( $slug . '/' . $slug . '.php', $active_plugins, true );
+						$product_slug         = $is_standalone_active ? $slug . '/' . $slug . '.php' : $slug;
+						$addon_info           = array(
 							'product_name'    => $module['name'],
 							'product_version' => UR()->version,
-							'product_type'    => in_array( $slug, $addons_list_moved_into_module ) ? 'plugin' : 'module',
+							'product_type'    => $is_standalone_active ? 'plugin' : 'module',
 							'product_slug'    => $product_slug,
 							'is_premium'      => $is_premium,
 						);
@@ -647,6 +675,11 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_pro_general_setting_post_submission', 'disable' ),
 					array('user_registration_pro_role_based_redirection', false),//phpcs:ignore
 					array( 'user_registration_payment_currency', 'USD' ),
+					array( 'user_registration_paypal_enabled', false ),
+					array( 'user_registration_stripe_enabled', false ),
+					array( 'user_registration_authorize-net_enabled', false ),
+					array( 'user_registration_mollie_enabled', false ),
+					array( 'user_registration_bank_enabled', false ),
 					array( 'user_registration_content_restriction_enable', true ),
 					array('user_registration_content_restriction_allow_to_roles', '["administrator"]') //phpcs:ignore
 				),

@@ -261,7 +261,7 @@ class UR_OXYGEN_WIDGET extends \OxyEl {
 		);
 
 		$selector = '.ur-label';
-		$section_label->typographySection( __( 'Typography' ), $selector, $this );
+		$section_label->typographySection( __( 'Typography', 'user-registration' ), $selector, $this );
 		$section_label->addStyleControls(
 			array(
 				array(

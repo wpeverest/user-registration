@@ -57,14 +57,14 @@ class ListTable extends \UR_List_Table {
 	public function get_columns() {
 		return apply_filters(
 			'ur_membership_subscriptions_list_table_columns',
-			[
+			array(
 				'cb'         => '<input type="checkbox" />',
 				'id'         => __( 'Subscription ID', 'user-registration' ),
 				'user_id'    => __( 'Member', 'user-registration' ),
 				'item_id'    => __( 'Membership', 'user-registration' ),
 				'start_date' => __( 'Created At', 'user-registration' ),
 				'status'     => __( 'Status', 'user-registration' ),
-			]
+			)
 		);
 	}
 
@@ -133,6 +133,23 @@ class ListTable extends \UR_List_Table {
 	}
 
 	public function column_status( $subscription ) {
+		$pending_cancel_date = get_user_meta( $subscription->user_id, 'urm_pending_cancel_' . $subscription->ID, true );
+
+		if ( $pending_cancel_date ) {
+			$clock_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+			return sprintf(
+				'<span class="subscription-status user-subscription-canceling">%s%s</span>',
+				$clock_icon,
+				esc_html(
+					sprintf(
+						/* translators: %s: cancellation date */
+						__( 'Cancels %s', 'user-registration' ),
+						date_i18n( get_option( 'date_format' ), strtotime( $pending_cancel_date ) )
+					)
+				)
+			);
+		}
+
 		$status_class = 'user-subscription-secondary';
 		if ( 'active' === $subscription->status ) {
 			$status_class = 'user-subscription-active';
@@ -239,9 +256,9 @@ class ListTable extends \UR_List_Table {
 	}
 
 	protected function get_bulk_actions() {
-		return [
+		return array(
 			'delete' => __( 'Delete', 'user-registration' ),
-		];
+		);
 	}
 
 
@@ -375,7 +392,7 @@ class ListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( remove_query_arg( 'paged', $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'First page' ),
+				__( 'First page', 'user-registration' ),
 				'&laquo;'
 			);
 		}
@@ -390,7 +407,7 @@ class ListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Previous page' ),
+				__( 'Previous page', 'user-registration' ),
 				'&lsaquo;'
 			);
 		}
@@ -402,7 +419,7 @@ class ListTable extends \UR_List_Table {
 				'<span id="table-paging" class="paging-input">' .
 				'<span class="tablenav-paging-text">',
 				/* translators: Hidden accessibility text. */
-				__( 'Current Page' )
+				__( 'Current Page', 'user-registration' )
 			);
 		} else {
 			$html_current_page = sprintf(
@@ -411,7 +428,7 @@ class ListTable extends \UR_List_Table {
 					name='paged' value='%s' size='%d' aria-describedby='table-paging' />" .
 				"<span class='tablenav-paging-text'>",
 				/* translators: Hidden accessibility text. */
-				__( 'Current Page' ),
+				__( 'Current Page', 'user-registration' ),
 				$current,
 				strlen( $total_pages )
 			);
@@ -421,7 +438,7 @@ class ListTable extends \UR_List_Table {
 
 		$page_links[] = $total_pages_before . sprintf(
 			/* translators: 1: Current page, 2: Total pages. */
-			_x( '%1$s of %2$s', 'paging' ),
+			_x( '%1$s of %2$s', 'paging', 'user-registration' ),
 			$html_current_page,
 			$html_total_pages
 		) . $total_pages_after;
@@ -436,7 +453,7 @@ class ListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Next page' ),
+				__( 'Next page', 'user-registration' ),
 				'&rsaquo;'
 			);
 		}
@@ -451,7 +468,7 @@ class ListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Last page' ),
+				__( 'Last page', 'user-registration' ),
 				'&raquo;'
 			);
 		}

@@ -66,7 +66,7 @@ class MembersService {
 					'message' => __( 'Invalid coupon type.', 'user-registration' ),
 				);
 			}
-			$coupon_membership = json_decode( $coupon_details['coupon_membership'], true );
+			$coupon_membership = (array) json_decode( $coupon_details['coupon_membership'], true );
 			if ( ! in_array( $data['membership'], $coupon_membership ) ) {
 				return array(
 					'status'  => false,
@@ -130,7 +130,17 @@ class MembersService {
 		}
 
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
-			$response['coupon_data'] = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
+			$coupon_service    = new CouponService();
+			$coupon_validation = $coupon_service->validate(
+				array(
+					'coupon'        => sanitize_text_field( $data['coupon'] ),
+					'membership_id' => isset( $data['membership'] ) ? absint( $data['membership'] ) : 0,
+				)
+			);
+
+			if ( $coupon_validation['status'] ) {
+				$response['coupon_data'] = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
+			}
 		}
 
 		$response['user_data'] = array(
@@ -156,6 +166,10 @@ class MembersService {
 
 			if ( isset( $data['is_purchasing_multiple'] ) ) {
 				$response['is_purchasing_multiple'] = $data['is_purchasing_multiple'];
+			}
+
+			if ( isset( $data['is_initial_registration'] ) ) {
+				$response['is_initial_registration'] = $data['is_initial_registration'];
 			}
 		}
 
@@ -220,7 +234,21 @@ class MembersService {
 	public function update_user_meta( $data, $new_user_id ) {
 		$user = new \WP_User( $new_user_id );
 		update_user_meta( $new_user_id, 'ur_registration_source', 'membership' );
-		$user->set_role( $data['role'] );
+
+		// UR-4573: Role handling on membership assignment.
+		if ( ! empty( $data['is_initial_registration'] ) ) {
+			// Fresh membership registration: the membership role replaces the default role the
+			// registration assigned, so the member ends up with only the membership role.
+			$user->set_role( $data['role'] );
+		} else {
+			// Existing user gaining or upgrading a membership: preserve their other role(s) and
+			// add the membership role on top, instead of overwriting. On an upgrade, drop the
+			// previous membership's role so it does not linger, while still keeping the base role.
+			if ( ! empty( $data['is_upgrade'] ) && ! empty( $data['previous_role'] ) && $data['previous_role'] !== $data['role'] ) {
+				$user->remove_role( $data['previous_role'] );
+			}
+			$user->add_role( $data['role'] );
+		}
 		if ( ! empty( $data['coupon_data'] ) ) {
 			update_user_meta( $new_user_id, 'ur_coupon_discount_type', $data['coupon_data']['coupon_discount_type'] );
 			update_user_meta( $new_user_id, 'ur_coupon_discount', $data['coupon_data']['coupon_discount'] );
@@ -248,7 +276,7 @@ class MembersService {
 
 		$saved_hash = '';
 		if ( $check_just_created ) {
-			$saved_hash = get_user_meta( $user_id, 'urm_user_just_created', true );
+			$saved_hash = get_transient( 'urm_pending_login_' . $user_id );
 		}
 
 		if ( empty( $password ) ) {
@@ -273,7 +301,7 @@ class MembersService {
 			}
 		}
 
-		delete_user_meta( $user_id, 'urm_user_just_created' );
+		delete_transient( 'urm_pending_login_' . $user_id );
 		wp_clear_auth_cookie();
 		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 		wp_set_auth_cookie( $user_id, $remember );

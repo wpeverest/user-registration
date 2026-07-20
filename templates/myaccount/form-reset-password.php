@@ -78,8 +78,8 @@ ur_print_notices(); ?>
 					</span>
 				</p>
 
-				<input type="hidden" name="reset_key" value="<?php echo esc_attr( $args['key'] ); ?>" />
-				<input type="hidden" name="reset_login" value="<?php echo esc_attr( $args['login'] ); ?>" />
+				<input type="hidden" name="reset_key" value="<?php echo esc_attr( $key ); ?>" />
+				<input type="hidden" name="reset_login" value="<?php echo esc_attr( $login ); ?>" />
 
 				<div class="clear"></div>
 

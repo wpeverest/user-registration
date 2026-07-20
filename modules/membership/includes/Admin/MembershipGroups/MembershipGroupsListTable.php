@@ -205,11 +205,10 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	/**
 	 * @return array
 	 * @global string $comment_status
-	 *
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete' => __( 'Delete permanently' ),
+			'delete' => __( 'Delete permanently', 'user-registration' ),
 		);
 
 		return $actions;
@@ -249,9 +248,9 @@ class MembershipGroupsListTable extends \UR_List_Table {
 			return;
 		}
 
-		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action' ) . '</label>';
+		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action', 'user-registration' ) . '</label>';
 		echo '<select name="bulk_action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
-		echo '<option value="-1">' . __( 'Bulk actions' ) . "</option>\n";
+		echo '<option value="-1">' . __( 'Bulk actions', 'user-registration' ) . "</option>\n";
 
 		foreach ( $this->_actions as $key => $value ) {
 			if ( is_array( $value ) ) {
@@ -272,7 +271,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 
 		echo "</select>\n";
 
-		submit_button( __( 'Apply' ), 'action', '', false, array( 'id' => "doaction$two" ) );
+		submit_button( __( 'Apply', 'user-registration' ), 'action', '', false, array( 'id' => "doaction$two" ) );
 		echo "\n";
 	}
 
@@ -406,7 +405,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( remove_query_arg( 'paged', $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'First page' ),
+				__( 'First page', 'user-registration' ),
 				'&laquo;'
 			);
 		}
@@ -421,7 +420,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Previous page' ),
+				__( 'Previous page', 'user-registration' ),
 				'&lsaquo;'
 			);
 		}
@@ -433,7 +432,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 				'<span id="table-paging" class="paging-input">' .
 				'<span class="tablenav-paging-text">',
 				/* translators: Hidden accessibility text. */
-				__( 'Current Page' )
+				__( 'Current Page', 'user-registration' )
 			);
 		} else {
 			$html_current_page = sprintf(
@@ -442,7 +441,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 					name='paged' value='%s' size='%d' aria-describedby='table-paging' />" .
 				"<span class='tablenav-paging-text'>",
 				/* translators: Hidden accessibility text. */
-				__( 'Current Page' ),
+				__( 'Current Page', 'user-registration' ),
 				$current,
 				strlen( $total_pages )
 			);
@@ -452,7 +451,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 
 		$page_links[] = $total_pages_before . sprintf(
 			/* translators: 1: Current page, 2: Total pages. */
-			_x( '%1$s of %2$s', 'paging' ),
+			_x( '%1$s of %2$s', 'paging', 'user-registration' ),
 			$html_current_page,
 			$html_total_pages
 		) . $total_pages_after;
@@ -467,7 +466,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Next page' ),
+				__( 'Next page', 'user-registration' ),
 				'&rsaquo;'
 			);
 		}
@@ -482,7 +481,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 				'</a>',
 				esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
 				/* translators: Hidden accessibility text. */
-				__( 'Last page' ),
+				__( 'Last page', 'user-registration' ),
 				'&raquo;'
 			);
 		}

@@ -123,7 +123,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				}
 			}
 
-			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			if ( ! empty( $start_date ) && ! empty( $end_date ) && empty( $usersearch ) ) {
 				$args['date_query'] = array(
 					array(
 						'after'     => $start_date,
@@ -476,16 +476,16 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			<label class="screen-reader-text" for="<?php echo $id; ?>">
 				<?php
 				/* translators: Hidden accessibility text. */
-				_e( 'Change role to&hellip;' );
+				_e( 'Change role to&hellip;', 'user-registration' );
 				?>
 			</label>
 			<select name="<?php echo $id; ?>" id="<?php echo $id; ?>">
-				<option value=""><?php _e( 'Change role to&hellip;' ); ?></option>
+				<option value=""><?php _e( 'Change role to&hellip;', 'user-registration' ); ?></option>
 				<?php wp_dropdown_roles(); ?>
-				<option value="none"><?php _e( '&mdash; No role for this site &mdash;' ); ?></option>
+				<option value="none"><?php _e( '&mdash; No role for this site &mdash;', 'user-registration' ); ?></option>
 			</select>
 				<?php
-				submit_button( __( 'Change' ), '', $button_id, false );
+				submit_button( __( 'Change', 'user-registration' ), '', $button_id, false );
 			endif;
 
 			/**
@@ -550,7 +550,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 			if ( is_multisite() && current_user_can( 'manage_network_users' ) ) {
 				if ( in_array( $new_user_object->user_login, get_super_admins(), true ) ) {
-					$super_admin = ' &mdash; ' . __( 'Super Admin' );
+					$super_admin = ' &mdash; ' . __( 'Super Admin', 'user-registration' );
 				}
 			}
 
@@ -661,7 +661,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					'<input type="checkbox" name="users[]" id="user_%1$s" class="%3$s" value="%1$s" />',
 					$new_user_object->ID,
 					/* translators: Hidden accessibility text. %s: User login. */
-					sprintf( __( 'Select %s' ), $new_user_object->user_login ),
+					sprintf( __( 'Select %s', 'user-registration' ), $new_user_object->user_login ),
 					$role_classes
 				);
 
@@ -789,6 +789,10 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 								$subscriptions = $new_user_object->subscriptions;
 
 								foreach ( $subscriptions as $key => $sub ) {
+									if ( empty( $sub['expiry_date'] ) ) {
+										continue;
+									}
+
 									$expiry_date = new \DateTime( $sub['expiry_date'] );
 
 									if ( ! empty( $sub['billing_cycle'] ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
@@ -852,10 +856,28 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 									break;
 								}
 
-								$expiry_date = new \DateTime( $user_subs_object['expiry_date'] );
+								$pending_cancel_date = get_user_meta( $new_user_object->ID, 'urm_pending_cancel_' . ( $user_subs_object['subscription_id'] ?? '' ), true );
 
-								if ( ! empty( $user_subs_object['payment_method'] ) && ( 'subscription' == $user_subs_object['payment_method'] ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
-									$status = 'expired';
+								if ( $pending_cancel_date ) {
+									$clock_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+									$row       .= sprintf(
+										'<span id="" class="user-subscription-status user-subscription-canceling">%s%s</span>',
+										$clock_icon,
+										sprintf(
+											/* translators: %s: cancellation date */
+											esc_html__( 'Cancels %s', 'user-registration' ),
+											esc_html( date_i18n( get_option( 'date_format' ), strtotime( $pending_cancel_date ) ) )
+										)
+									);
+									break;
+								}
+
+								if ( ! empty( $user_subs_object['expiry_date'] ) ) {
+									$expiry_date = new \DateTime( $user_subs_object['expiry_date'] );
+
+									if ( ! empty( $user_subs_object['payment_method'] ) && ( 'subscription' == $user_subs_object['payment_method'] ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
+										$status = 'expired';
+									}
 								}
 
 								$status_class = 'user-subscription-secondary';
@@ -872,7 +894,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 							break;
 						case 'team':
-							$teams = is_array( $new_user_object->teams ) ? $new_user_object->teams : [];
+							$teams = is_array( $new_user_object->teams ) ? $new_user_object->teams : array();
 
 							if ( ! empty( $teams ) ) {
 								$escaped_teams = array_map( 'esc_html', $teams );
@@ -1141,7 +1163,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			}
 
 			if ( empty( $role_list ) ) {
-				$role_list['none'] = _x( 'None', 'no user roles' );
+				$role_list['none'] = _x( 'None', 'no user roles', 'user-registration' );
 			}
 
 			/**
@@ -1214,7 +1236,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 		 * @since 3.1.0
 		 *
 		 * @param bool $with_id Whether to set the ID attribute or not
-		*/
+		 */
 		public function print_column_headers( $with_id = true ) {
 			list( $columns, $hidden, $sortable, $primary ) = $this->get_column_info();
 
@@ -1256,7 +1278,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			<label for="cb-select-all-' . $cb_counter . '">' .
 				'<span class="screen-reader-text">' .
 					/* translators: Hidden accessibility text. */
-					__( 'Select All' ) .
+					__( 'Select All', 'user-registration' ) .
 				'</span>' .
 				'</label>';
 				++$cb_counter;
@@ -1328,9 +1350,9 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						$class[] = 'desc' === $order ? 'asc' : 'desc';
 
 						/* translators: Hidden accessibility text. */
-						$asc_text = __( 'Sort ascending.' );
+						$asc_text = __( 'Sort ascending.', 'user-registration' );
 						/* translators: Hidden accessibility text. */
-						$desc_text  = __( 'Sort descending.' );
+						$desc_text  = __( 'Sort descending.', 'user-registration' );
 						$order_text = 'asc' === $order ? $asc_text : $desc_text;
 					}
 
@@ -1414,18 +1436,18 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 		 * @return void
 		 */
 		// protected function footer_text() {
-		//  $total_items    = $this->_pagination_args['total_items'];
-		//  $current        = $this->get_pagenum();
-		//  $users_per_page = $this->_pagination_args['per_page'];
+		// $total_items    = $this->_pagination_args['total_items'];
+		// $current        = $this->get_pagenum();
+		// $users_per_page = $this->_pagination_args['per_page'];
 
-		//  echo esc_html(
-		//      sprintf(
-		//          'Showing results %d-%d of %d users',
-		//          ( ( $current - 1 ) * $users_per_page ) + 1,
-		//          min( ( $current ) * $users_per_page, $total_items ),
-		//          $total_items
-		//      )
-		//  );
+		// echo esc_html(
+		// sprintf(
+		// 'Showing results %d-%d of %d users',
+		// ( ( $current - 1 ) * $users_per_page ) + 1,
+		// min( ( $current ) * $users_per_page, $total_items ),
+		// $total_items
+		// )
+		// );
 		// }
 
 		public function output_custom_column_data( $output, $column_name, $user_id ) {
@@ -1501,7 +1523,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				if ( ! empty( $search_conditions ) ) {
 					$pattern = "/AND\s*\(\s*(?:\w+\.)?(user_login|user_url|user_email|user_nicename|display_name)\s+LIKE\s+'[^']+'\s*(OR\s+(?:\w+\.)?(user_login|user_url|user_email|user_nicename|display_name)\s+LIKE\s+'[^']+'\s*)+\)/i";
 
-					$query->query_where = preg_replace( $pattern, '', $query->query_where );
+					$query->query_where  = preg_replace( $pattern, '', $query->query_where );
 					$query->query_where .= ' AND (' . implode( ' OR ', $search_conditions ) . ')';
 				}
 			}
@@ -1568,7 +1590,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					'</a>',
 					esc_url( remove_query_arg( 'paged', $current_url ) ),
 					/* translators: Hidden accessibility text. */
-					__( 'First page' ),
+					__( 'First page', 'user-registration' ),
 					'&laquo;'
 				);
 			}
@@ -1583,7 +1605,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					'</a>',
 					esc_url( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
 					/* translators: Hidden accessibility text. */
-					__( 'Previous page' ),
+					__( 'Previous page', 'user-registration' ),
 					'&lsaquo;'
 				);
 			}
@@ -1595,7 +1617,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					'<span id="table-paging" class="paging-input">' .
 					'<span class="tablenav-paging-text">',
 					/* translators: Hidden accessibility text. */
-					__( 'Current Page' )
+					__( 'Current Page', 'user-registration' )
 				);
 			} else {
 				$html_current_page = sprintf(
@@ -1604,7 +1626,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					name='paged' value='%s' size='%d' aria-describedby='table-paging' />" .
 					"<span class='tablenav-paging-text'>",
 					/* translators: Hidden accessibility text. */
-					__( 'Current Page' ),
+					__( 'Current Page', 'user-registration' ),
 					$current,
 					strlen( $total_pages )
 				);
@@ -1614,7 +1636,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 			$page_links[] = $total_pages_before . sprintf(
 			/* translators: 1: Current page, 2: Total pages. */
-				_x( '%1$s of %2$s', 'paging' ),
+				_x( '%1$s of %2$s', 'paging', 'user-registration' ),
 				$html_current_page,
 				$html_total_pages
 			) . $total_pages_after;
@@ -1629,7 +1651,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					'</a>',
 					esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
 					/* translators: Hidden accessibility text. */
-					__( 'Next page' ),
+					__( 'Next page', 'user-registration' ),
 					'&rsaquo;'
 				);
 			}
@@ -1644,7 +1666,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					'</a>',
 					esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
 					/* translators: Hidden accessibility text. */
-					__( 'Last page' ),
+					__( 'Last page', 'user-registration' ),
 					'&raquo;'
 				);
 			}

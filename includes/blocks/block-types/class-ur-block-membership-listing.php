@@ -42,11 +42,11 @@ class UR_Block_Membership_Listing extends UR_Block_Abstract {
 			$effective_group = $new_group_id;
 		}
 		$selected_membership_ids = isset( $attr['selected_membership_ids'] ) && is_array( $attr['selected_membership_ids'] ) ? array_map( 'absint', $attr['selected_membership_ids'] ) : array();
-		$uuid                   = isset( $attr['id'] ) ? sanitize_text_field( $attr['id'] ) : ur_generate_random_key();
-		$redirection_page_id = isset( $attr['redirection_page_id'] ) ? absint( $attr['redirection_page_id'] ) : 0;
-		$thank_you_page_id   = isset( $attr['thank_you_page_id'] ) ? absint( $attr['thank_you_page_id'] ) : 0;
-		$type                = isset( $attr['type'] ) ? sanitize_text_field( $attr['type'] ) : 'list';
-		$column_number       = isset( $attr['columnNumber'] ) ? absint( $attr['columnNumber'] ) : 0;
+		$uuid                    = isset( $attr['id'] ) ? sanitize_text_field( $attr['id'] ) : ur_generate_random_key();
+		$redirection_page_id     = isset( $attr['redirection_page_id'] ) ? absint( $attr['redirection_page_id'] ) : 0;
+		$thank_you_page_id       = isset( $attr['thank_you_page_id'] ) ? absint( $attr['thank_you_page_id'] ) : 0;
+		$type                    = isset( $attr['type'] ) ? sanitize_text_field( $attr['type'] ) : 'list';
+		$column_number           = isset( $attr['columnNumber'] ) ? absint( $attr['columnNumber'] ) : 0;
 
 		$open_in_new_tab  = isset( $attr['openInNewTab'] ) ? $attr['openInNewTab'] : false;
 		$show_description = isset( $attr['showDescription'] ) ? $attr['showDescription'] : false;
@@ -65,18 +65,18 @@ class UR_Block_Membership_Listing extends UR_Block_Abstract {
 
 		return ShortCodes::membership_listing(
 			array(
-				'id'                    => $effective_group,
-				'group_id'              => $effective_group,
+				'id'                      => $effective_group,
+				'group_id'                => $effective_group,
 				'selected_membership_ids' => $selected_membership_ids,
-				'uuid'                  => $uuid,
-				'button_text'           => $button_text,
-				'list_type'             => $type,
-				'registration_page_id'  => $redirection_page_id,
-				'thank_you_page_id'     => $thank_you_page_id,
-				'column_number'         => $column_number,
-				'open_in_new_tab'       => $open_in_new_tab,
-				'show_description'      => $show_description,
-				'style'                 => $style,
+				'uuid'                    => $uuid,
+				'button_text'             => $button_text,
+				'list_type'               => $type,
+				'registration_page_id'    => $redirection_page_id,
+				'thank_you_page_id'       => $thank_you_page_id,
+				'column_number'           => $column_number,
+				'open_in_new_tab'         => $open_in_new_tab,
+				'show_description'        => $show_description,
+				'style'                   => $style,
 			),
 			'user_registration_groups'
 		);

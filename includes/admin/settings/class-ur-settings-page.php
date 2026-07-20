@@ -160,6 +160,10 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 					}
 				}
 			}
+
+			if ( 'email' === $this->id && is_string( $current_section ) && 0 === strpos( $current_section, 'ur_settings_custom_email_' ) ) {
+				$active_section = 'custom-email';
+			}
 			$sections = $this->get_sections();
 
 			if ( empty( $sections ) ) {

@@ -42,7 +42,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 		public function prepare_items() {
 			global $role, $usersearch, $wpdb;
 
-			$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : ''; //phpcs:ignore
+			$usersearch = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( trim( $_REQUEST['s'] ) ) ) : ''; //phpcs:ignore
 
 			$users_per_page = $this->get_items_per_page( 'user_registration-membership_page_user_registration_users_per_page' );
 
@@ -72,11 +72,12 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 			}
 
 			if ( isset( $_REQUEST['orderby'] ) ) {
-				$args['orderby'] = wp_unslash( $_REQUEST['orderby'] );
+				$args['orderby'] = sanitize_key( wp_unslash( $_REQUEST['orderby'] ) );
 			}
 
 			if ( isset( $_REQUEST['order'] ) ) {
-				$args['order'] = wp_unslash( $_REQUEST['order'] );
+				$order         = strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
+				$args['order'] = in_array( $order, array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 			}
 
 			/**
@@ -153,7 +154,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 				$actions['view'] = sprintf(
 					'<a href="%s" target="_blank">%s</a>',
 					esc_url( $member_view_url ),
-					__( 'View' )
+					__( 'View', 'user-registration' )
 				);
 
 				if ( current_user_can( 'edit_user', $user_id ) ) {
@@ -228,14 +229,22 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 								$status_class = 'user-registration-badge user-registration-badge--warning';
 							}
 
-							// TODO: Handle Multiple ( Handle Later )
-							// $expiry_date = new \DateTime( $user_object['expiry_date'] );
+							$pending_cancel_date = get_user_meta( $user_id, 'urm_pending_cancel_' . ( $user_object['subscription_id'] ?? '' ), true );
 
-							// if ( ! empty( $user_object['payment_method'] ) && ( 'subscription' == $user_object['payment_method'] ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
-							// $status = 'expired';
-							// }
-
-							$row .= sprintf( '<span id="" class="user-registration-badge %s">%s</span>', $status_class, ucfirst( $status ) );
+							if ( $pending_cancel_date ) {
+								$clock_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+								$row .= sprintf(
+									'<span class="user-registration-badge user-registration-badge--danger-subtle urm-canceling-badge">%s%s</span>',
+									$clock_icon,
+									sprintf(
+										/* translators: %s: cancellation date */
+										esc_html__( 'Cancels %s', 'user-registration' ),
+										esc_html( date_i18n( get_option( 'date_format' ), strtotime( $pending_cancel_date ) ) )
+									)
+								);
+							} else {
+								$row .= sprintf( '<span id="" class="user-registration-badge %s">%s</span>', $status_class, ucfirst( $status ) );
+							}
 							break;
 						case 'user_registered':
 							$row .= date_i18n( 'F j, Y h:i A', strtotime( $user_object['user_registered'] ) );

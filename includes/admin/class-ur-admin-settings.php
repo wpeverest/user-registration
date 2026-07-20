@@ -47,11 +47,15 @@ class UR_Admin_Settings {
 	public static function show_messages() {
 		if ( count( self::$errors ) > 0 ) {
 			foreach ( self::$errors as $key => $error ) {
-				echo '<div id="message" class="inline error"><p><strong>' . wp_kses_post( $error ) . '</strong></p></div>';
+				echo '<div id="' . esc_attr( 'message-' . $key ) . '" class="inline error"><p><strong>'
+				. wp_kses_post( $error )  // second layer — defence in depth
+				. '</strong></p></div>';
 			}
 		} elseif ( count( self::$messages ) > 0 ) {
-			foreach ( self::$messages as $message ) {
-				echo '<div id="message" class="inline updated"><p><strong>' . wp_kses_post( $message ) . '</strong></p></div>';
+			foreach ( self::$messages as $key => $message ) {
+				echo '<div id="' . esc_attr( 'message-' . $key ) . '" class="inline updated"><p><strong>'
+				. wp_kses_post( $message ) // second layer — defence in depth
+				. '</strong></p></div>';
 			}
 		}
 	}
@@ -254,6 +258,8 @@ class UR_Admin_Settings {
 					'pro_install_popup_title'            => esc_html__( 'Install User Registration & Membership Pro to Unlock All Features', 'user-registration' ),
 					'will_install_and_activate_pro_text' => esc_html__( 'This will automatically install and activate the User Registration & Membership Pro Plugin for you.', 'user-registration' ),
 					'installing_plugin_text'             => esc_html__( 'Installing Plugin', 'user-registration' ),
+					'invalid_stripe_test_publishable_key' => esc_html__( 'Invalid Stripe test publishable key. It must start with pk_test_.', 'user-registration' ),
+					'invalid_stripe_live_publishable_key' => esc_html__( 'Invalid Stripe live publishable key. It must start with pk_live_.', 'user-registration' ),
 					'pro_activated_success_title'        => esc_html__( 'Success!', 'user-registration' ),
 					'pro_activated_success_text'         => esc_html__( 'URM Pro has been successfully installed and activated. You now have access to all premium features!', 'user-registration' ),
 					'continue_to_dashboard_text'         => esc_html__( 'Continue to dashboard', 'user-registration' ),
@@ -436,10 +442,13 @@ class UR_Admin_Settings {
 	 * @param string $type Error Type.
 	 */
 	public static function add_error( $text, $type = '' ) {
+		// Sanitize at input — safe HTML tags allowed (links, strong etc. in error messages)
+		$sanitized = wp_kses_post( $text );
+
 		if ( ! empty( $type ) ) {
-			self::$errors[ $type ] = $text;
+			self::$errors[ sanitize_key( $type ) ] = $sanitized;
 		} else {
-			self::$errors[] = $text;
+			self::$errors[] = $sanitized;
 		}
 	}
 
@@ -452,7 +461,6 @@ class UR_Admin_Settings {
 	 */
 	public static function output_fields( $options ) {
 
-		error_log( print_r( $options, true ) );
 		$settings = '';
 
 		if ( is_array( $options ) && ! empty( $options ) ) {
@@ -617,7 +625,7 @@ class UR_Admin_Settings {
 							$settings .= '<div class="ur-feature__title">';
 							$settings .= esc_html__( $section['title'] . ' payment feature only available in Pro.', 'user-registration' );
 							$settings .= '</div>';
-							$settings .= '<a class="ur-feature__btn" href="https://wpuserregistration.com/upgrade/?utm_source=ur-membership-create&utm_medium=upgrade-link&utm-campaign=lite-version">';
+							$settings .= '<a target="_blank" class="ur-feature__btn" href="https://wpuserregistration.com/upgrade/?utm_source=ur-membership-create&utm_medium=upgrade-link&utm-campaign=lite-version">';
 							$settings .= '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>';
 							$settings .= esc_html__( 'Upgrade to Pro', 'user-registration' );
 							$settings .= '</a>';

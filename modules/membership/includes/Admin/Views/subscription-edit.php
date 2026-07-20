@@ -49,6 +49,7 @@ $status_badge_classes = array(
 	'expired'  => 'ur-subscription__badge--status-refunded',
 );
 $status_badge_class   = isset( $status_badge_classes[ $subscription['status'] ] ) ? $status_badge_classes[ $subscription['status'] ] : '';
+$pending_cancel_date  = get_user_meta( $subscription['user_id'], 'urm_pending_cancel_' . $subscription['ID'], true );
 $product_amount       = isset( $subscription['billing_amount'] ) ? (float) $subscription['billing_amount'] : 0;
 
 $has_active_trial = false;
@@ -135,8 +136,9 @@ $delete_url = wp_nonce_url(
 	'ur_subscription_delete'
 );
 
-$payment_method = $subscription_order['payment_method'] ?? 'bank';
-$edit_style     = 'bank' !== $payment_method ? disabled( true ) : '';
+$payment_method       = $subscription_order['payment_method'] ?? 'bank';
+$is_admin_created_meta = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'is_admin_created' );
+$is_admin_created      = ! empty( $is_admin_created_meta['meta_value'] );
 ?>
 <div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
 	<div class="ur-page-title__wrapper">
@@ -240,6 +242,20 @@ $edit_style     = 'bank' !== $payment_method ? disabled( true ) : '';
 									class="ur-subscription__badge ur-subscription__badge--status <?php echo esc_attr( $status_badge_class ); ?>">
 									<?php echo esc_html( ucfirst( $subscription['status'] ) ); ?>
 								</span>
+								<?php if ( $pending_cancel_date ) : ?>
+								<span class="ur-subscription__badge ur-subscription__badge--status ur-subscription__badge--status-canceling" style="display:inline-flex;align-items:center;gap:5px;">
+									<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+									<?php
+									echo esc_html(
+										sprintf(
+											/* translators: %s: cancellation date */
+											__( 'Cancels %s', 'user-registration' ),
+											date_i18n( get_option( 'date_format' ), strtotime( $pending_cancel_date ) )
+										)
+									);
+									?>
+								</span>
+								<?php endif; ?>
 							</div>
 						</div>
 						<div class="ur-subscription__section-content">
@@ -455,7 +471,7 @@ $edit_style     = 'bank' !== $payment_method ? disabled( true ) : '';
 						</div>
 					</div>
 					<?php
-					if ( UR_PRO_ACTIVE ) {
+					if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URMembership\Admin\Services\SubscriptionEventsService' ) ) {
 						$subscription_events_service = new WPEverest\URMembership\Admin\Services\SubscriptionEventsService();
 						$limit                       = 10;
 						$events                      = $subscription_events_service->get_events( $subscription['ID'], $limit );
@@ -551,7 +567,7 @@ $edit_style     = 'bank' !== $payment_method ? disabled( true ) : '';
 								);
 								$status_options = apply_filters( 'ur_membership_subscription_edit_status_options', $status_options, $subscription );
 								?>
-								<select name="status" id="ur-subscription-status" class="ur-enhanced-select" required <?php echo esc_attr( $edit_style ); ?>>
+								<select name="status" id="ur-subscription-status" class="ur-enhanced-select" required <?php echo esc_attr( ( ! in_array( $payment_method, array( 'bank', 'paypal' ), true ) && ! $is_admin_created ) ? disabled( true ) : '' ); ?>>
 									<?php foreach ( $status_options as $status_value => $status_label ) : ?>
 									<option value="<?php echo esc_attr( $status_value ); ?>"
 										<?php selected( $subscription['status'], $status_value ); ?>>

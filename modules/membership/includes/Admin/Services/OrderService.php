@@ -21,7 +21,7 @@ class OrderService {
 	public function prepare_orders_data( $data, $member_id, $subscription, $upgrade_details = null, $is_renewal = false ) {
 
 		$current_user = wp_get_current_user();
-		$is_admin     = ( isset( $current_user->roles ) && ! empty( $current_user->roles ) && $current_user->roles[0] == 'administrator' );
+		$is_admin     = ( ! empty( $current_user->roles ) && in_array( 'administrator', (array) $current_user->roles, true ) );
 
 		$membership = get_post( $data['membership_data']['membership'], ARRAY_A );
 
@@ -36,7 +36,7 @@ class OrderService {
 		if ( isset( $data['team'] ) && ! empty( $data['team'] ) ) {
 			$team_data      = $data['team'];
 			$team_plan_type = isset( $team_data['team_plan_type'] ) ? $team_data['team_plan_type'] : null;
-			if ( $team_plan_type ){
+			if ( $team_plan_type ) {
 				if ( 'subscription' === $team_plan_type ) {
 					$order_type = 'subscription';
 				} else {
@@ -53,43 +53,52 @@ class OrderService {
 				if ( 'per_seat' === $pricing_model ) {
 					// Per seat pricing: team_seats × per_seat_price
 					$per_seat_price = isset( $team_data['per_seat_price'] ) ? floatval( $team_data['per_seat_price'] ) : 0;
-					$total = $team_seats * $per_seat_price;
+					$total          = $team_seats * $per_seat_price;
 				} elseif ( 'tier' === $pricing_model ) {
 					// Tier pricing: team_seats × tier_per_seat_price (from selected tier)
 					if ( isset( $data['tier'] ) && isset( $data['tier']['tier_per_seat_price'] ) ) {
 						$tier_per_seat_price = floatval( $data['tier']['tier_per_seat_price'] );
-						$total      = $team_seats * $tier_per_seat_price;
+						$total               = $team_seats * $tier_per_seat_price;
 					}
 				}
 			}
-		}else{
+		} else {
 			$order_type = sanitize_text_field( $membership_meta['type'] );
-			$total = number_format( $membership_meta['amount'], 2, '.', '' );
+			$total      = number_format( $membership_meta['amount'], 2, '.', '' );
 		}
+
+		$coupon_discount_amount = 0;
 
 		if ( isset( $membership_meta['trial_status'] ) && 'on' == $membership_meta['trial_status'] ) {
 			$total = 0;
-		} else {
+		} elseif ( ur_check_module_activation( 'coupon' ) && ! empty( $data['coupon_data'] ) ) {
+			$coupon_discount_amount = ( isset( $data['coupon_data']['coupon_discount_type'] ) && 'fixed' === $data['coupon_data']['coupon_discount_type'] )
+				? floatval( $data['coupon_data']['coupon_discount'] )
+				: $total * floatval( $data['coupon_data']['coupon_discount'] ) / 100;
+			$total                  = max( 0, $total - $coupon_discount_amount );
+		}
 
-			if ( 'bank' === $data['membership_data']['payment_method'] && ur_check_module_activation( 'coupon' ) && ! empty( $data['coupon_data'] ) ) {
-				$discount_amount = ( isset( $data['coupon_data']['coupon_discount_type'] ) && 'fixed' === $data['coupon_data']['coupon_discount_type'] ) ? $data['coupon_data']['coupon_discount'] : $total * $data['coupon_data']['coupon_discount'] / 100;
-				$total           = $total - $discount_amount;
-			}
+		// For upgrades, replace $total with the pre-tax prorated amount so that
+		// tax and total_amount are both calculated on the correct base.
+		$is_proration_upgrade_order = false;
+		if ( ! empty( $upgrade_details ) && isset( $upgrade_details['chargeable_amount'] ) ) {
+			$total                      = floatval( $upgrade_details['chargeable_amount'] );
+			$is_proration_upgrade_order = true;
 		}
 
 		$local_currency_converted_amount = 0;
 
 		if ( ! empty( $data['local_currency_details'] ) ) {
-			$local_currency  = ! empty( $data['local_currency_details']['switched_currency' ] ) ? $data['local_currency_details']['switched_currency' ] : '';
-			$ur_zone_id 	 = ! empty( $data['local_currency_details']['urm_zone_id' ] ) ? $data['local_currency_details']['urm_zone_id' ] : '';
+			$local_currency = ! empty( $data['local_currency_details']['switched_currency'] ) ? $data['local_currency_details']['switched_currency'] : '';
+			$ur_zone_id     = ! empty( $data['local_currency_details']['urm_zone_id'] ) ? $data['local_currency_details']['urm_zone_id'] : '';
 
-			if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
-				$currency = $local_currency;
-				$pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
+			if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) && UR_PRO_ACTIVE && class_exists( CoreFunctions::class ) ) {
+				$currency            = $local_currency;
+				$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
 				$local_currency_data = ! empty( $membership_meta['local_currency'] ) ? $membership_meta['local_currency'] : array();
 
-				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data[ 'is_enable'] ) ) {
-					$total = CoreFunctions::ur_get_amount_after_conversion( $total, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
+					$total                           = CoreFunctions::ur_get_amount_after_conversion( $total, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 					$local_currency_converted_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_meta['amount'], $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 				}
 			}
@@ -98,20 +107,20 @@ class OrderService {
 		$tax_details = isset( $data['tax_data'] ) ? $data['tax_data'] : array();
 
 		if ( ! empty( $data['tax_data']['tax_rate'] ) ) {
-			$tax_rate  = floatval( $data['tax_data']['tax_rate'] );
-			$tax_amount  = $total * $tax_rate / 100;
-			$total     = $total + $tax_amount;
+			$tax_rate   = floatval( $data['tax_data']['tax_rate'] );
+			$tax_amount = $total * $tax_rate / 100;
+			$total      = $total + $tax_amount;
 
 			$tax_details['tax_amount']      = number_format( $tax_amount, 2, '.', '' );
 			$tax_details['total_after_tax'] = number_format( $total, 2, '.', '' );
 		}
 
 		$creator = $is_admin ? 'admin' : 'member';
-		$type = $is_renewal ? 'Renewal' : (!empty($upgrade_details) ? 'Upgrade' : '');
+		$type    = $is_renewal ? 'Renewal' : ( ! empty( $upgrade_details ) ? 'Upgrade' : '' );
 		if ( ! empty( $type ) ) {
-			$note = sprintf(__('%s created order for %s of %s', 'user-registration'), $creator , $type , $membership['post_title']);
+			$note = sprintf( __( '%1$s created order for %2$s of %3$s', 'user-registration' ), $creator, $type, $membership['post_title'] );
 		} else {
-			$note = sprintf(__('%s created order for %s', 'user-registration'), $creator, $membership['post_title'] );
+			$note = sprintf( __( '%1$s created order for %2$s', 'user-registration' ), $creator, $membership['post_title'] );
 		}
 
 		$orders_data = array(
@@ -121,10 +130,10 @@ class OrderService {
 			'created_by'      => isset( $current_user ) && $current_user->ID != 0 ? $current_user->ID : absint( $member_id ),
 			'transaction_id'  => $transaction_id,
 			'payment_method'  => ( $data['membership_data']['payment_method'] ) ? sanitize_text_field( $data['membership_data']['payment_method'] ) : '',
-			'total_amount'    => ! empty( $upgrade_details ) ? $upgrade_details['chargeable_amount'] : $total,
+			'total_amount'    => number_format( $total, 2, '.', '' ),
 			'status'          => ( 'free' === $membership_meta['type'] || $is_admin ) ? 'completed' : 'pending',
 			'order_type'      => $order_type,
-			'trial_status'    => ( ! empty( $upgrade_details ) && ( "on" === $upgrade_details['trial_status'] ) ) ? 'on' : ( isset( $membership_meta['trial_status'] ) ? sanitize_text_field( $membership_meta['trial_status'] ) : 'off' ),
+			'trial_status'    => ( ! empty( $upgrade_details ) && ( 'on' === $upgrade_details['trial_status'] ) ) ? 'on' : ( isset( $membership_meta['trial_status'] ) ? sanitize_text_field( $membership_meta['trial_status'] ) : 'off' ),
 			'notes'           => $note,
 		);
 
@@ -132,36 +141,57 @@ class OrderService {
 			array(
 				'meta_key'   => 'is_admin_created',
 				'meta_value' => $is_admin,
-			)
+			),
 		);
 
 		if ( ! empty( $tax_details ) ) {
-			$orders_meta[] = [
+			$orders_meta[] = array(
 				'meta_key'   => 'tax_data',
-				'meta_value' => json_encode( $tax_details )
-			];
+				'meta_value' => json_encode( $tax_details ),
+			);
+		}
+
+		if ( $is_proration_upgrade_order ) {
+			$orders_meta[] = array(
+				'meta_key'   => 'is_proration_upgrade',
+				'meta_value' => '1',
+			);
+		}
+
+		if ( ! empty( $data['coupon_data'] ) && $coupon_discount_amount > 0 ) {
+			$orders_meta[] = array(
+				'meta_key'   => 'coupon_data',
+				'meta_value' => json_encode(
+					array(
+						'coupon_code'          => isset( $data['coupon_data']['coupon_code'] ) ? $data['coupon_data']['coupon_code'] : '',
+						'coupon_discount_type' => isset( $data['coupon_data']['coupon_discount_type'] ) ? $data['coupon_data']['coupon_discount_type'] : '',
+						'coupon_discount'      => isset( $data['coupon_data']['coupon_discount'] ) ? $data['coupon_data']['coupon_discount'] : 0,
+						'discount_amount'      => number_format( $coupon_discount_amount, 2, '.', '' ),
+					)
+				),
+			);
 		}
 
 		if ( ! empty( $currency ) ) {
-			$orders_meta[] = [
+			$orders_meta[] = array(
 				'meta_key'   => 'local_currency',
 				'meta_value' => $currency,
-				];
+			);
 		}
 
 		if ( ! empty( $local_currency_converted_amount ) ) {
-			$orders_meta[] = [
+			$orders_meta[] = array(
 				'meta_key'   => 'local_currency_converted_amount',
 				'meta_value' => $local_currency_converted_amount,
 
-			];
+			);
 		}
 
 		if ( ! empty( $upgrade_details ) && ! empty( $upgrade_details['delayed_until'] ) ) {
-			$orders_meta[] = [
+			$orders_meta[] = array(
 				'meta_key'   => 'delayed_until',
 				'meta_value' => $upgrade_details['delayed_until'],
-			];
+			);
 		}
 
 		return array(
@@ -169,5 +199,4 @@ class OrderService {
 			'orders_meta_data' => $orders_meta,
 		);
 	}
-
 }

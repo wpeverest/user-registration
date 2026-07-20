@@ -22,7 +22,6 @@
 	}
 
 	input {
-
 		&[type="text"],
 		&[type="password"],
 		&[type="email"],
@@ -112,5 +111,20 @@
 			box-shadow: none;
 			border-color: var(--ur-primary-color, $primary_color);
 		}
+	}
+}
+
+input[name="user_registration_pdf_template"],
+input[name="user_registration_pdf_orientation"] {
+	border: 1px solid #8c8f94;
+	&:checked {
+		background: none;
+		border-color: #3582c4;
+		&:before {
+			background-color: #3582c4;
+		}
+	}
+	&:focus {
+		box-shadow: none;
 	}
 }

@@ -702,7 +702,7 @@ abstract class UR_List_Table extends WP_List_Table {
 				$this->page,
 				$status_name,
 				$current_status ? 'current' : '',
-				esc_html__( $status->label, $this->page ), //phpcs:ignore
+				esc_html__( $status->label, 'user-registration' ), //phpcs:ignore
 				number_format_i18n( $post_counts->$status_name )
 			);
 		}

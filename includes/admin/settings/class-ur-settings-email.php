@@ -90,7 +90,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			);
 			$this->initialize_email_classes();
 
-			$email_content_default_values = [];
+			$email_content_default_values = array();
 			foreach ( $this->emails as $key => $email ) {
 				$method_name = 'ur_get_' . $email->id;
 				//for membership, the naming convention is different.
@@ -391,7 +391,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				$settings .= '</label>';
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
-				$settings .= '<a class="button tips user-registration-email-preview " rel="noreferrer noopener" target="__blank" data-tip="' . esc_attr__( 'Preview', 'user-registration' ) . '" href="' . esc_url(
+				$settings .= '<a class="button tips user-registration-email-preview urm-btn-comp-v7 " rel="noreferrer noopener" target="__blank" data-tip="' . esc_attr__( 'Preview', 'user-registration' ) . '" href="' . esc_url(
 					add_query_arg(
 						array(
 							'ur_email_preview' => $email->id,

@@ -338,12 +338,36 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 						"user-registration"
 					),
 					required: false
+				},
+				{
+					param_name: "list_type",
+					param_description: __(
+						"The display type for the list. Accepted values: list (List), row (Row), and block (Column).",
+						"user-registration"
+					),
+					required: false
+				},
+				{
+					param_name: "column_number",
+					param_description: __(
+						"Number of columns to show on type block.",
+						"user-registration"
+					),
+					required: false
+				},
+				{
+					param_name: "show_description",
+					param_description: __(
+						"Show or hide the description of the membership on type row and block.",
+						"user-registration"
+					),
+					required: false
 				}
 			],
 			example: [
 				{
 					example_name:
-						'[user_registration_groups id="5" button_text="Join Now"]',
+						'[user_registration_groups id="5" button_text="Join Now" list_type="block" column_number="4" show_description="true"]',
 					example_description: __(
 						"Displays Membership listing attached to group with id 5",
 						"user-registration"

@@ -134,14 +134,26 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 				$reason_text = sanitize_text_field( wp_unslash( $_POST["reason_{$reason_slug}"] ) );
 			}
 
+			$form_wise_users = array(
+				'membership_form_users' => array(),
+				'normal_form_users'     => array(),
+			);
+
+			if ( class_exists( 'UR_Stats' ) ) {
+				$stats           = new UR_Stats();
+				$form_wise_users = $stats->get_form_wise_user();
+			}
+
 			$deactivation_data = json_encode( array(
-				'type'        => 'deactivate',
-				'slug'        => 'user-registration',
-				'version'     => UR()->version,
-				'comment'     => $reason_text,
-				'id'          => $reason_slug,
-				'active_time' => current_time( 'timestamp' ),
-				'url'         => esc_url_raw( get_bloginfo( 'url' ) ),
+				'type'                  => 'deactivate',
+				'slug'                  => 'user-registration',
+				'version'               => UR()->version,
+				'comment'               => $reason_text,
+				'id'                    => $reason_slug,
+				'active_time'           => current_time( 'timestamp' ),
+				'url'                   => esc_url_raw( get_bloginfo( 'url' ) ),
+				'membership_form_users' => $form_wise_users['membership_form_users'],
+				'normal_form_users'     => $form_wise_users['normal_form_users'],
 			) );
 
 			$this->send_api_request( $deactivation_data );

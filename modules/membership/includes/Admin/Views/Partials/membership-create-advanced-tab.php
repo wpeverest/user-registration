@@ -119,12 +119,10 @@
 							<span class="slider round" <?php echo ! $can_set_upgrade ? 'style="opacity: 0.7;"' : ''; ?>></span>
 						</span>
 						<?php if ( ! $can_set_upgrade ) : ?>
-							<div class="ur-membership-upgrade-action-notice" style="padding: 6px; background: #f8f9fc; border: 1px solid #475bb2; border-radius: 6px; color: #383838; font-size: 13px; line-height: 1.5;">
+							<div class="ur-membership-upgrade-action-notice" style="margin-bottom: 24px; margin-top:8px; padding: 10px 12px 10px 16px; font-weight: 400; color: #383838; border-radius: 4px; font-size: 14px; line-height: 22px; font-style: normal; border-left: 4px solid #475bb2; background: #f1f2f9;">
 								<?php
-								$create_membership_url = admin_url( 'admin.php?page=user-registration-membership' );
-								echo esc_html__( 'Please create more memberships to set an upgrade action.', 'user-registration' );
+								echo esc_html__( 'No upgradable memberships found, please create more or if you have configured groups use group\'s upgrade action', 'user-registration' );
 								?>
-								<a href="<?php echo esc_url( $create_membership_url ); ?>" rel="noopener noreferrer" style="color: #2271b1; text-decoration: underline;"><?php esc_html_e( 'Create a Membership', 'user-registration' ); ?></a>
 							</div>
 						<?php endif; ?>
 					</div>
@@ -215,6 +213,19 @@
 			}
 
 			?>
+			<?php
+			$ur_email_marketing_addon_keys = apply_filters( 'user_registration_email_marketing_addon_keys', array( 'activecampaign', 'brevo', 'convertkit', 'klaviyo', 'mailchimp', 'mailerlite', 'mailpoet', 'salesforce', 'zapier' ) );
+			$ur_any_email_marketing_active = false;
+			if ( function_exists( 'ur_is_marketing_addon_active' ) ) {
+				foreach ( $ur_email_marketing_addon_keys as $ur_addon_key ) {
+					if ( ur_is_marketing_addon_active( $ur_addon_key ) ) {
+						$ur_any_email_marketing_active = true;
+						break;
+					}
+				}
+			}
+			if ( $ur_any_email_marketing_active ) :
+			?>
 				<!-- Sync Membership to email marketing addons. -->
 				<div class="ur-membership-sync-to-email-marketing-addons <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?> ">
 					<div class="ur-membership-selection-container ur-d-flex ur-mt-2 ur-align-items-center"
@@ -256,6 +267,7 @@
 				if ( UR_PRO_ACTIVE && function_exists( 'ur_render_email_marketing_sync_settings' ) ) {
 					ur_render_email_marketing_sync_settings( $membership_details );
 				}
+			endif;
 
 				/**
 				 * Local Currency Settings Render.

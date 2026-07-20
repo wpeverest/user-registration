@@ -190,20 +190,7 @@ class UR_User_Approval {
 
 		$membership           = array();
 		$is_membership_active = ur_check_module_activation( 'membership' );
-		if ( $is_membership_active ) {
-			$members_repository       = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-			$membership               = $members_repository->get_member_membership_by_id( $user->ID );
-			$members_order_repository = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
-			$last_order               = $members_order_repository->get_member_orders( $user->ID );
-			if ( ! empty( $membership ) ) {
-				$check_membership = $this->check_user_membership( $membership, $user, $last_order, $login_option );
-
-				if ( $check_membership instanceof WP_Error ) {
-					return $check_membership;
-				}
-			}
-		}
-		$is_disabled = get_user_meta( $user->ID, 'ur_disable_users', true );
+		$is_disabled          = get_user_meta( $user->ID, 'ur_disable_users', true );
 
 		if ( $is_disabled ) {
 			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . apply_filters( 'user_registration_user_disabled_message', __( 'Sorry! You are disabled. Please Contact Your Administrator.', 'user-registration' ) );
@@ -457,7 +444,12 @@ class UR_User_Approval {
 	 * @return bool
 	 */
 	protected function is_admin_creation_process() {
-		return ( isset( $_REQUEST['action'] ) && 'createuser' == $_REQUEST['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return (
+			is_admin() &&
+			current_user_can( 'create_users' ) &&
+			isset( $_REQUEST['action'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			'createuser' === $_REQUEST['action'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		);
 	}
 
 	/**

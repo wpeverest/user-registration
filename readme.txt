@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: membership, subscription, content restriction, user profile, user registration
 Requires at least: 5.5
 Requires PHP: 7.4
-Tested up to: 6.9.1
-Stable tag: 5.1.5
+Tested up to: 7.0
+Stable tag: 5.2.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -252,13 +252,136 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 5.1.5    - -/03/2026 =
+= 5.2.5    - 08/07/2026 =
+* Enhance  - Defer expiry to period end.
+* Enhance  - Pin Stripe subscription payment method for reliable renewals.
+* Fix      - User and admin email order.
+* Fix      - Payment fail case for paypal.
+* Fix      - Lost Password Carrot adjustment.
+* Fix      - Unnecessary payment retry checks.
+* Fix      - Required Nonce Error on registration.
+* Fix      - Fatal error on WooCommerce shop page.
+* Fix      - Setup wizard membership duration issue.
+* Fix      - Loader timing issue during registration.
+* Fix      - Unwanted settings showing up in free version.
+* Fix      - Prevent formula injection in user CSV export.
+* Fix      - Reject underpaid PayPal subscription payments.
+* Fix      - Harden signup notice against malicious content.
+* Fix      - Stop users from cancelling others' email changes.
+* Fix      - Remove unwanted fields from payment confirmed email.
+* Fix      - Pending subscription blocked the user from logging in.
+* Fix      - Design issues in promotional notices after WordPress v7.0.
+* Fix      - Use server membership state for multiple-membership policy.
+* Fix      - Block tampered PayPal payments from activating memberships.
+* Fix      - Stripe payment and nonce validation failed on Membership form.
+* Fix      - Field Visibility add-on hides fields in My Account read-only profiles.
+* Fix      - Security: prevent unauthorized login during membership signup payment.
+* Fix      - Check coupon eligibility before discount on public membership purchase.
+* Fix      - Super admin bypass missing for admin content access in membership rules.
+* Fix      - Check PayPal payment is complete before activating one-time memberships.
+
+= 5.2.4    - 25/06/2026 =
+* Enhance  - User role overwritten on new membership assignment.
+* Enhance  - Add customizable membership registration success message in settings.
+* Fix      - Duplicate variable.
+* Fix      - Invoice dynamic content not translatable.
+* Fix      - Missing users in user registration members section.
+* Fix      - Validation of key while saving the stripe payment settings.
+* Fix      - My Account payment tab pulling footer content inside the tab area.
+* Fix      - Address incomplete PayPal setup error when adding PayPal for old user.
+* Fix      - hCaptcha enabled on registration form blocks users from completing signup.
+* Fix      - Reset content button not working in the prevent concurrent login email template.
+* Fix      - New Member Registered email not sent when Admin Approval Request email is enabled.
+* Fix      - Harden membership coupon apply paths against PHP 8 TypeError (free membership module).
+* Fix      - File upload attachments not updating correctly when admin edits another user's profile.
+* Fix      - Registration failure causes missing member records and prevents Stripe payment processing.
+
+
+= 5.2.3    - 23/06/2026 =
+* Fix      - validation for receiver email and payment amount in PayPal IPN handling.
+* Fix      - Selected membership tier during registration missed proper validation, allowing assignment of off-form membership tiers.
+* Fix      - Stripe subscription requests could trigger unintended deletion of pending member accounts due to insufficient authorization validation.
+
+= 5.2.2    - 19/06/2026 =
+* Dev      - Add UR_WPML compatibility service class.
+* Fix      - Password reset link shows "invalid or expired" error.
+* Fix      - Membership subscriptions stuck pending on 3D Secure (SCA) cards.
+* Fix      - Hardcoded database table names causing failures on custom table prefixes.
+* Fix      - Checkbox visibility issue on WP user profile/edit page  caused by CSS conflict.
+* Fix      - PayPal credentials not detected during registration despite valid saved settings.
+* Fix      - Password reset link shows invalid or expired on hosts that do not support PHP cookies.
+* Fix      - Webhook not configured but still can bypass PayPal payments.
+* Fix      - Payment Method Bypass Allows Free Access to Paid Memberships via Tampered Registration Request.
+* Fix      - Payment method field during registration could be manipulated to bypass payment for paid memberships.
+* Fix      - Authenticated users could modify other members' subscriptions by supplying an arbitrary subscription ID during upgrade.
+* Fix      - Membership tier submitted during registration was not validated against the memberships configured on the form, allowing substitution with an off-form tier.
+
+= 5.2.1    - 28/05/2026 =
+* Fix      - Stripe order validation issue.
+* Fix      - Membership upgrade action not available after disabling group add-on.
+* Fix      - Custom emails addon cannot be enabled with plus plan even available in personal.
+* Fix      - Nav menu items disappear for logged-out users when logout endpoint set to slash.
+* Fix      - File upload addon shows upgrade to premium prompt despite user having an active plan.
+* Fix      - Ensure meta_query is initialized before adding payment status condition in user payments query.
+
+= 5.2.0    - 20/05/2026 =
+* Refactor - Members registration process.
+* Refactor - Migrated PayPal integration from PayPal Standard to PayPal APIs.
+* Feature  - Membership pricing widget for Elementor.
+* Enhance  - Added new {{urm_bank_details}} smart tags for emails.
+* Enhance  - Improved Content Restriction compatibility with  Object Caching.
+* Enhance  - Validate payment gateways test api key before updating the settings.
+* Enhance  - Payment backfill cron for missed payment and subscription updates for PayPal.
+* Enhance  - Check "Login Methods" setting before validating the provided detail by user while login.
+* Dev      - Updated Stripe SDK version to 19.4.0.
+* Dev      - Updated vulnerable packages dependencies.
+* Dev 	   - Security audit to identify vulnerabilities and resolve them.
+* Fix      - Coupon, Tax and Upgrade Conflicts.
+* Fix      - Hide label not working in Login form.
+* Fix      - Cookie and error message handling on lost password.
+* Fix      - Wrong smart tag used in membership expiring soon email.
+* Fix      - User Export Not Ordered by Date When Using Date Range Filter.
+* Fix      - Content Restriction message not rendering smart tags properly.
+* Fix      - Update subscription status handling for manually created orders.
+* Fix      - Missing or incorrect text-domain for improving translation support.
+* Fix      - Validate user ownership before deleting profile picture attachments.
+* Fix      - Properly store Paypal transaction id and subscription id in database.
+* Fix      - Content Restriction Message Appears in UAE Header and Footer Templates.
+* Fix      - Update success message icon and cookie settings for pro version activation.
+* Fix      - Emails not being sent if the registration success state is not broadcasted properly.
+* Fix      - Stripe Credit card details reset when switching membership plans in registration forms.
+* Fix      - Members table showing Membership and Subscription status even when membership is not used.
+* Fix      - Prevented PayPal payment status from being changed from pending to completed without a successful payment.
+* Fix      - Content restriction only applied to the main content area, leaving page titles and featured images visible in Elementor.
+
+= 5.1.6   - 27/04/2026 =
+* Enhance  - Logger structure.
+* Fix      - Stripe payment bypass.
+* Fix      - Admin approval bypass.
+* Fix      - Hide comments for restricted posts.
+* Fix      - User created even when payments fails.
+* Fix      - Open redirect security issue on logout.
+* Fix      - Fatal error while updating profile details.
+* Fix      - Registration submitted without card details.
+* Fix      - Country not displaying in WordPress users menu.
+* Fix      - HCaptcha loads reCAPTCHA and endless intervals.
+* Fix      - Payment history page reflects unescaped action parameter value.
+* Fix      - Duplicate transaction id issue when using 3D secure card in stripe.
+* Fix      - Export Members causes fatal memory exhaustion on large user datasets.
+* Fix      - Sanitize OrdersRepository::get_all() query params to prevent SQL injection.
+* Fix      - File upload data synced to admin profile during user approval or media access.
+* Fix      - Handle array value from get_user_meta for country field in edit profile template.
+* Fix      - Cloudflare turnstile error appears on second form submission after validation failure.
+* Fix      - Stripe card mode validation to prevent test or live card mismatch during registration.
+* Fix      - Payment stuck on 'Invalid Request' and network error after successful Stripe subscription.
+
+= 5.1.5    - 18/3/2026 =
 
 * Feature  - Feature to show bank details directly within the form.
 * Feature  - Payment fetch cron added for better subscription sync with Stripe.
 
 * Enhance  - Better search for addons page.
-* Enhance  - Better UI/UX for the Membership field. 
+* Enhance  - Better UI/UX for the Membership field.
 * Enhance  - Addition of Members Directory to the content rules.
 * Enhance  - Addition of navigational UI to better find plugin features.
 * Enhance  - Improved price transparency for prorated membership upgrades.
@@ -277,6 +400,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 * Fix      - Added proper capability checks.
 * Fix      - Missing .css file throwing errors.
+* Fix      - Capability check issue on embed form.
+* Fix      - Global hidden css conflicting on site.
 * Fix      - Create subscription table, excessive gap.
 * Fix      - Raw CSS showing for certain email platforms.
 * Fix      - Membership fields draggable outside of bounds.
@@ -291,14 +416,20 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - Missing connection indicators for mailing integrations.
 * Fix      - Edit profile failing when permalinks were set to plain.
 * Fix      - Email settings container showing irrelevant notice messages.
+* Fix      - Trash, published filters missing in registration form table.
 * Fix      - Content restriction block styles and shortcode not rendering.
+* Fix      - Full amount upgrade providing full amount discount in stripe.
+* Fix      - Payment gateway layout overflow and inconsistent option width.
 * Fix      - Login | Logout option not working properly with certain themes.
 * Fix      - URM shortcode contents appearing twice when used with Elementor.
 * Fix      - Stripe registrations encountering fatal error in some instances.
 * Fix      - Auto Approval and auto login not working in case of PayPal payments.
+* Fix      - Paypal one time payment error with four digit price membership plan.
 * Fix      - Masteriyo course unassigned to membership still showing sign up button.
+* Fix      - Duplicate order created in payment history after successful payment with stripe.
 * Fix      - Fatal error when upgrading from one-time payment to subscription plan with stripe.
 * Fix      - Legacy my account dashboard content visible in profile details tab on some old instances.
+* Fix      - Upon reactivation of stripe subscription, the cancel at expiry is not being removed in stripe.
 
 = 5.1.4    - 25/02/2026 =
 * Fix - Updated .org deploy code

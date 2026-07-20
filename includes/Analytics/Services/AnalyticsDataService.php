@@ -14,106 +14,111 @@ class AnalyticsDataService {
 	use DateUtils;
 
 	/**
-	 * @param int $start_date
-	 * @param int $end_date
+	 * @param int    $start_date
+	 * @param int    $end_date
 	 * @param string $unit
 	 * @return array
 	 */
 	public function get_date_range_members_data( $start_date, $end_date, $unit = 'day' ) {
 		global $wpdb;
 
-		$new_members      = 0;
-		$approved_members = 0;
-		$pending_members  = 0;
-		$denied_members   = 0;
-
-		$date_keys = $this->generate_date_keys( $start_date, $end_date, $unit );
-
-		$default_value = [
+		$date_keys     = $this->generate_date_keys( $start_date, $end_date, $unit );
+		$default_value = array(
 			'new_members_in_a_day'      => 0,
 			'approved_members_in_a_day' => 0,
 			'pending_members_in_a_day'  => 0,
 			'denied_members_in_a_day'   => 0,
-		];
+		);
+		$daily_data    = $this->initialize_data_structure( $date_keys, $default_value );
 
-		$daily_data = $this->initialize_data_structure( $date_keys, $default_value );
+		// %% escapes MySQL format specifiers from wpdb::prepare
+		$group_by_map = array(
+			'hour'  => "DATE_FORMAT(u.user_registered, '%%Y-%%m-%%d %%H')",
+			'day'   => 'DATE(u.user_registered)',
+			'week'  => 'DATE(DATE_SUB(u.user_registered, INTERVAL WEEKDAY(u.user_registered) DAY))',
+			'month' => "DATE_FORMAT(u.user_registered, '%%Y-%%m')",
+			'year'  => "DATE_FORMAT(u.user_registered, '%%Y')",
+		);
+		$group_by     = $group_by_map[ $unit ] ?? $group_by_map['day'];
 
-		$members = $wpdb->get_results(
+		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT u.ID, u.user_registered
-					FROM {$wpdb->users} u
-					INNER JOIN {$wpdb->usermeta} um ON u.ID = um.user_id
-					WHERE um.meta_key = %s
-					AND u.user_registered BETWEEN %s AND %s",
+				"SELECT {$group_by} AS time_key,
+					COUNT(DISTINCT u.ID) AS total_count,
+					SUM(CASE
+						WHEN um_email.meta_value IS NOT NULL AND um_email.meta_value != '' THEN
+							CASE WHEN CAST(um_email.meta_value AS UNSIGNED) = 1 THEN 1 ELSE 0 END
+						WHEN um_status.meta_value IS NULL OR um_status.meta_value = '' THEN 1
+						WHEN CAST(um_status.meta_value AS UNSIGNED) = 1 THEN 1
+						ELSE 0
+					END) AS approved_count,
+					SUM(CASE
+						WHEN um_email.meta_value IS NOT NULL AND um_email.meta_value != '' THEN
+							CASE WHEN CAST(um_email.meta_value AS UNSIGNED) != 1 THEN 1 ELSE 0 END
+						WHEN um_status.meta_value IS NOT NULL AND um_status.meta_value != ''
+							AND CAST(um_status.meta_value AS UNSIGNED) = 0 THEN 1
+						ELSE 0
+					END) AS pending_count,
+					SUM(CASE
+						WHEN ( um_email.meta_value IS NULL OR um_email.meta_value = '' )
+							AND um_status.meta_value IS NOT NULL AND um_status.meta_value != ''
+							AND CAST(um_status.meta_value AS UNSIGNED) != 0
+							AND CAST(um_status.meta_value AS UNSIGNED) != 1 THEN 1
+						ELSE 0
+					END) AS denied_count
+				FROM {$wpdb->users} u
+				INNER JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = %s
+				LEFT JOIN {$wpdb->usermeta} um_status ON u.ID = um_status.user_id AND um_status.meta_key = %s
+				LEFT JOIN {$wpdb->usermeta} um_email ON u.ID = um_email.user_id AND um_email.meta_key = %s
+				WHERE u.user_registered BETWEEN %s AND %s
+				GROUP BY time_key ORDER BY time_key",
 				'ur_form_id',
+				'ur_user_status',
+				'ur_confirm_email',
 				wp_date( 'Y-m-d H:i:s', $start_date ),
 				wp_date( 'Y-m-d H:i:s', $end_date )
 			)
 		);
 
-		if ( empty( $members ) ) {
-			return [
+		if ( empty( $results ) ) {
+			return array(
 				'new_members'      => 0,
 				'approved_members' => 0,
 				'pending_members'  => 0,
 				'denied_members'   => 0,
 				'date_difference'  => human_time_diff( $start_date, $end_date ),
 				'daily_data'       => $daily_data,
-			];
+			);
 		}
 
-		$member_ids       = wp_list_pluck( $members, 'ID' );
-		$member_meta_data = $this->fetch_member_meta_bulk( $member_ids );
+		$new_members      = 0;
+		$approved_members = 0;
+		$pending_members  = 0;
+		$denied_members   = 0;
 
-		foreach ( $members as $member ) {
-			$member_id              = $member->ID;
-			$registration_timestamp = strtotime( $member->user_registered );
-			$registration_date      = $this->get_date_key_for_timestamp( $registration_timestamp, $unit );
+		foreach ( $results as $row ) {
+			$time_key = $row->time_key;
+			$total    = (int) $row->total_count;
+			$approved = (int) $row->approved_count;
+			$pending  = (int) $row->pending_count;
+			$denied   = (int) $row->denied_count;
 
-			++$new_members;
+			$new_members      += $total;
+			$approved_members += $approved;
+			$pending_members  += $pending;
+			$denied_members   += $denied;
 
-			$status       = $member_meta_data[ $member_id ]['user_status'] ?? '';
-			$email_status = $member_meta_data[ $member_id ]['user_email_status'] ?? '';
-
-			if ( '' === $status && '' === $email_status ) {
-				++$approved_members;
-				$member_status = 'approved';
-			} elseif ( '' !== $status && '' === $email_status ) {
-				if ( 1 === (int) $status ) {
-					++$approved_members;
-					$member_status = 'approved';
-				} elseif ( 0 === (int) $status ) {
-					++$pending_members;
-					$member_status = 'pending';
-				} else {
-					++$denied_members;
-					$member_status = 'denied';
-				}
-			} elseif ( '' !== $email_status ) {
-				if ( 1 === (int) $email_status ) {
-					++$approved_members;
-					$member_status = 'approved';
-				} else {
-					++$pending_members;
-					$member_status = 'pending';
-				}
-			}
-
-			if ( isset( $daily_data[ $registration_date ] ) ) {
-				++$daily_data[ $registration_date ]['new_members_in_a_day'];
-				if ( 'approved' === $member_status ) {
-					++$daily_data[ $registration_date ]['approved_members_in_a_day'];
-				} elseif ( 'pending' === $member_status ) {
-					++$daily_data[ $registration_date ]['pending_members_in_a_day'];
-				} elseif ( 'denied' === $member_status ) {
-					++$daily_data[ $registration_date ]['denied_members_in_a_day'];
-				}
+			if ( isset( $daily_data[ $time_key ] ) ) {
+				$daily_data[ $time_key ]['new_members_in_a_day']      = $total;
+				$daily_data[ $time_key ]['approved_members_in_a_day'] = $approved;
+				$daily_data[ $time_key ]['pending_members_in_a_day']  = $pending;
+				$daily_data[ $time_key ]['denied_members_in_a_day']   = $denied;
 			}
 		}
 
 		$total_members = max( $new_members, 1 );
 
-		return [
+		return array(
 			'new_members'                 => $new_members,
 			'approved_members'            => $approved_members,
 			'approved_members_percentage' => round( ( $approved_members / $total_members ) * 100, 2 ),
@@ -123,7 +128,7 @@ class AnalyticsDataService {
 			'denied_members_percentage'   => round( ( $denied_members / $total_members ) * 100, 2 ),
 			'date_difference'             => human_time_diff( $start_date, $end_date ),
 			'daily_data'                  => $daily_data,
-		];
+		);
 	}
 
 
@@ -133,20 +138,35 @@ class AnalyticsDataService {
 	 */
 	protected function fetch_member_meta_bulk( $member_ids ) {
 		if ( empty( $member_ids ) ) {
-			return [];
+			return array();
 		}
 
-		update_meta_cache( 'user', $member_ids );
+		global $wpdb;
 
-		$meta_data = [];
-		foreach ( $member_ids as $member_id ) {
-			$user_status       = get_user_meta( $member_id, 'ur_user_status', true );
-			$user_email_status = get_user_meta( $member_id, 'ur_confirm_email', true );
+		$meta_data = array_fill_keys(
+			$member_ids,
+			array(
+				'user_status'       => '',
+				'user_email_status' => '',
+			)
+		);
 
-			$meta_data[ $member_id ] = [
-				'user_status'       => $user_status,
-				'user_email_status' => $user_email_status,
-			];
+		foreach ( array_chunk( $member_ids, 500 ) as $chunk ) {
+			$placeholders = implode( ',', array_fill( 0, count( $chunk ), '%d' ) );
+			$rows         = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT user_id, meta_key, meta_value FROM {$wpdb->usermeta}
+					 WHERE user_id IN ({$placeholders}) AND meta_key IN ('ur_user_status', 'ur_confirm_email')",
+					...$chunk
+				)
+			);
+			foreach ( $rows as $row ) {
+				if ( 'ur_user_status' === $row->meta_key ) {
+					$meta_data[ (int) $row->user_id ]['user_status'] = $row->meta_value;
+				} elseif ( 'ur_confirm_email' === $row->meta_key ) {
+					$meta_data[ (int) $row->user_id ]['user_email_status'] = $row->meta_value;
+				}
+			}
 		}
 
 		return $meta_data;
@@ -213,13 +233,13 @@ class AnalyticsDataService {
 	}
 
 	/**
-	 * @param int $start_date
-	 * @param int $end_date
+	 * @param int    $start_date
+	 * @param int    $end_date
 	 * @param string $unit
 	 * @return array
 	 */
 	protected function generate_date_keys( $start_date, $end_date, $unit = 'day' ) {
-		$date_keys = [];
+		$date_keys = array();
 
 		if ( 'hour' === $unit ) {
 			$date_format = 'Y-m-d H';
@@ -285,7 +305,7 @@ class AnalyticsDataService {
 	 * @return array
 	 */
 	protected function initialize_data_structure( $date_keys, $default_value ) {
-		$data = [];
+		$data = array();
 		foreach ( $date_keys as $key ) {
 			$data[ $key ] = $default_value;
 		}
@@ -293,15 +313,15 @@ class AnalyticsDataService {
 	}
 
 	/**
-	 * @param int $start_date
-	 * @param int $end_date
+	 * @param int    $start_date
+	 * @param int    $end_date
 	 * @param string $unit
 	 * @return array
 	 */
 	public function initialize_daily_data_structure( $start_date, $end_date, $unit = 'day' ) {
 		$date_keys = $this->generate_date_keys( $start_date, $end_date, $unit );
 
-		$default_value = [
+		$default_value = array(
 			'total_revenue'        => 0,
 			'paid_revenue'         => 0,
 			'refunded_revenue'     => 0,
@@ -310,16 +330,16 @@ class AnalyticsDataService {
 			'new_payments_revenue' => 0,
 			'single_item_revenue'  => 0,
 			'average_order_value'  => 0,
-		];
+		);
 
 		return $this->initialize_data_structure( $date_keys, $default_value );
 	}
 
 	/**
-	 * @param int $start_date
-	 * @param int $end_date
-	 * @param string $unit
-	 * @param string $scope 'all'|'membership'|'others'
+	 * @param int      $start_date
+	 * @param int      $end_date
+	 * @param string   $unit
+	 * @param string   $scope 'all'|'membership'|'others'
 	 * @param int|null $membership
 	 * @return array
 	 */
@@ -330,7 +350,7 @@ class AnalyticsDataService {
 
 		$include_single_items = ( 'others' === $scope || 'all' === $scope );
 
-		$single_item_revenue = [];
+		$single_item_revenue = array();
 		if ( $include_single_items ) {
 			$single_item_revenue = $this->get_single_item_revenue_data( $start_date, $end_date, $unit );
 		}
@@ -347,7 +367,7 @@ class AnalyticsDataService {
 				}
 			}
 
-			return [
+			return array(
 				'total_revenue'        => $total_single_item_revenue,
 				'net_revenue'          => $total_single_item_revenue,
 				'refunded_revenue'     => 0,
@@ -357,7 +377,7 @@ class AnalyticsDataService {
 				'single_item_revenue'  => $total_single_item_revenue,
 				'average_order_value'  => 0,
 				'daily_data'           => $daily_data,
-			];
+			);
 		}
 
 		if ( ! $this->table_exists( $orders_table ) ) {
@@ -373,7 +393,7 @@ class AnalyticsDataService {
 					}
 				}
 
-				return [
+				return array(
 					'total_revenue'        => $total_single_item_revenue,
 					'net_revenue'          => $total_single_item_revenue,
 					'refunded_revenue'     => 0,
@@ -383,10 +403,10 @@ class AnalyticsDataService {
 					'single_item_revenue'  => $total_single_item_revenue,
 					'average_order_value'  => 0,
 					'daily_data'           => $daily_data,
-				];
+				);
 			}
 
-			return [
+			return array(
 				'total_revenue'        => 0,
 				'net_revenue'          => 0,
 				'refunded_revenue'     => 0,
@@ -396,17 +416,17 @@ class AnalyticsDataService {
 				'single_item_revenue'  => 0,
 				'average_order_value'  => 0,
 				'daily_data'           => $daily_data,
-			];
+			);
 		}
 
 		$membership   = ( 'membership' === $scope && null !== $membership ) ? absint( $membership ) : null;
-		$group_by_map = [
+		$group_by_map = array(
 			'hour'  => "DATE_FORMAT(created_at, '%Y-%m-%d %H')",
 			'day'   => 'DATE(created_at)',
 			'week'  => 'DATE(DATE_SUB(created_at, INTERVAL WEEKDAY(created_at) DAY))',
 			'month' => "DATE_FORMAT(created_at, '%Y-%m')",
 			'year'  => "DATE_FORMAT(created_at, '%Y')",
-		];
+		);
 
 		$group_by       = $group_by_map[ $unit ] ?? $group_by_map['day'];
 		$start_date_str = wp_date( 'Y-m-d H:i:s', $start_date );
@@ -415,7 +435,7 @@ class AnalyticsDataService {
 		$daily_data = $this->initialize_daily_data_structure( $start_date, $end_date, $unit );
 
 		$membership_filter = '';
-		$query_params      = [ $start_date_str, $end_date_str ];
+		$query_params      = array( $start_date_str, $end_date_str );
 		if ( ! empty( $membership ) ) {
 			$membership_filter = ' AND item_id = %d';
 			$query_params[]    = absint( $membership );
@@ -446,7 +466,7 @@ class AnalyticsDataService {
 			$average_order_value  = $completed_orders > 0 ? ( (float) $row->total_revenue ) / $completed_orders : 0;
 
 			if ( isset( $daily_data[ $time_key ] ) ) {
-				$daily_data[ $time_key ] = [
+				$daily_data[ $time_key ] = array(
 					'total_revenue'        => (float) $row->total_revenue,
 					'paid_revenue'         => $paid_revenue,
 					'refunded_revenue'     => (float) $row->refunded_revenue,
@@ -455,7 +475,7 @@ class AnalyticsDataService {
 					'new_payments_revenue' => $new_payments_revenue,
 					'average_order_value'  => $average_order_value,
 					'single_item_revenue'  => 0,
-				];
+				);
 			}
 		}
 
@@ -485,7 +505,7 @@ class AnalyticsDataService {
 		$total_single_item_revenue  = array_sum( array_column( $daily_data, 'single_item_revenue' ) );
 		$total_average_order_value  = $total_orders > 0 ? $total_revenue / $total_orders : 0;
 
-		return [
+		return array(
 			'total_revenue'        => $total_revenue,
 			'net_revenue'          => $net_revenue,
 			'refunded_revenue'     => $total_refunded,
@@ -495,7 +515,7 @@ class AnalyticsDataService {
 			'single_item_revenue'  => $total_single_item_revenue,
 			'average_order_value'  => $total_average_order_value,
 			'daily_data'           => $daily_data,
-		];
+		);
 	}
 
 	public function get_single_item_revenue_data( $start_date, $end_date, $unit = 'day' ) {
@@ -504,22 +524,30 @@ class AnalyticsDataService {
 
 		$daily_data = $this->initialize_daily_data_structure( $start_date, $end_date, $unit );
 
-		$invoices = array_unique(
-			$wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT meta_value FROM {$wpdb->usermeta} WHERE meta_key = %s",
-					'ur_payment_invoices'
-				)
+		$start_year  = (int) wp_date( 'Y', $start_date );
+		$end_year    = (int) wp_date( 'Y', $end_date );
+		$year_params = array();
+		foreach ( range( $start_year, $end_year ) as $y ) {
+			$year_params[] = '%"' . $y . '-%';
+		}
+		$year_likes = implode( ' OR ', array_fill( 0, count( $year_params ), 'meta_value LIKE %s' ) );
+
+		$invoices = $wpdb->get_col(
+			$wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+				"SELECT DISTINCT meta_value FROM {$wpdb->usermeta}
+				 WHERE meta_key = %s AND ({$year_likes})",
+				'ur_payment_invoices',
+				...$year_params
 			)
 		);
 
-		$format_map = [
+		$format_map = array(
 			'hour'  => 'Y-m-d H',
 			'day'   => 'Y-m-d',
 			'week'  => 'Y-m-d',
 			'month' => 'Y-m',
 			'year'  => 'Y',
-		];
+		);
 
 		$format = $format_map[ $unit ] ?? $format_map['day'];
 

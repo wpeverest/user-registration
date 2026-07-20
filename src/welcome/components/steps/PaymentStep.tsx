@@ -43,6 +43,7 @@ interface PaymentGatewayData {
 	paypal_production_email?: string;
 	paypal_production_client_id?: string;
 	paypal_production_client_secret?: string;
+	is_new_installation?: boolean;
 	bank_details?: string;
 	stripe_test_mode?: boolean;
 	stripe_test_publishable_key?: string;
@@ -216,6 +217,7 @@ const PaymentStep: React.FC = () => {
 	const { paymentSettings } = state;
 	const [isLoadingSettings, setIsLoadingSettings] = useState(false);
 	const [currencies, setCurrencies] = useState<CurrencyData[]>([]);
+	const [isNewInstallation, setIsNewInstallation] = useState(true);
 
 	const textColor = useColorModeValue("gray.800", "white");
 	const subtextColor = useColorModeValue("gray.600", "gray.300");
@@ -335,6 +337,9 @@ const PaymentStep: React.FC = () => {
 										value: gateway.paypal_production_client_secret
 									}
 								});
+							}
+							if (typeof gateway.is_new_installation === "boolean") {
+								setIsNewInstallation(gateway.is_new_installation);
 							}
 						} else if (gateway.id === "stripe") {
 							dispatch({
@@ -555,25 +560,27 @@ const PaymentStep: React.FC = () => {
 
 						{paymentSettings.paypalMode === "test" ? (
 							<>
-								<FieldRow
-									label={__("PayPal Email", "user-registration")}
-									tooltip={__(
-										"Enter the email address associated with your PayPal account",
-										"user-registration"
-									)}
-								>
-									<Input
-										type="email"
-										value={paymentSettings.paypalTestEmail || ""}
-										onChange={(e) =>
-											handlePaymentSettingChange(
-												"paypalTestEmail",
-												e.target.value
-											)
-										}
-										{...inputStyles}
-									/>
-								</FieldRow>
+								{!isNewInstallation && paymentSettings.paypalTestEmail && (
+									<FieldRow
+										label={__("PayPal Email", "user-registration")}
+										tooltip={__(
+											"Enter the email address associated with your PayPal account",
+											"user-registration"
+										)}
+									>
+										<Input
+											type="email"
+											value={paymentSettings.paypalTestEmail || ""}
+											onChange={(e) =>
+												handlePaymentSettingChange(
+													"paypalTestEmail",
+													e.target.value
+												)
+											}
+											{...inputStyles}
+										/>
+									</FieldRow>
+								)}
 
 								<FieldRow
 									label={__("Client ID", "user-registration")}
@@ -617,25 +624,27 @@ const PaymentStep: React.FC = () => {
 							</>
 						) : (
 							<>
-								<FieldRow
-									label={__("PayPal Email", "user-registration")}
-									tooltip={__(
-										"Enter the email address associated with your PayPal account",
-										"user-registration"
-									)}
-								>
-									<Input
-										type="email"
-										value={paymentSettings.paypalProductionEmail || ""}
-										onChange={(e) =>
-											handlePaymentSettingChange(
-												"paypalProductionEmail",
-												e.target.value
-											)
-										}
-										{...inputStyles}
-									/>
-								</FieldRow>
+								{!isNewInstallation && paymentSettings.paypalProductionEmail && (
+									<FieldRow
+										label={__("PayPal Email", "user-registration")}
+										tooltip={__(
+											"Enter the email address associated with your PayPal account",
+											"user-registration"
+										)}
+									>
+										<Input
+											type="email"
+											value={paymentSettings.paypalProductionEmail || ""}
+											onChange={(e) =>
+												handlePaymentSettingChange(
+													"paypalProductionEmail",
+													e.target.value
+												)
+											}
+											{...inputStyles}
+										/>
+									</FieldRow>
+								)}
 
 								<FieldRow
 									label={__("Client ID", "user-registration")}
