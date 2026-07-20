@@ -1003,7 +1003,7 @@ class StripeService {
 			$member_order = $this->members_orders_repository->get_member_orders( $member_id );
 
 			if ( 'completed' === $member_order['status'] ) {
-				$response['message'] = $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) : __( 'New member has been successfully created with successful stripe payment.', 'user-registration' );
+				$response['message'] = $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) : get_option( 'user_registration_successful_membership_creation_message', esc_html__( 'New member has been successfully created.', 'user-registration' ) );
 				$response['status']  = true;
 
 				return $response;
@@ -1144,7 +1144,7 @@ class StripeService {
 		}
 
 		return array(
-			'message' => $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) : __( 'New member has been successfully created with successful stripe payment.', 'user-registration' ),
+			'message' => $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) : get_option( 'user_registration_successful_membership_creation_message', esc_html__( 'New member has been successfully created.', 'user-registration' ) ),
 			'status'  => true,
 		);
 	}
@@ -1661,7 +1661,7 @@ class StripeService {
 				$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
 
 				$response['subscription'] = $subscription;
-				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.', 'user-registration' );
+				$response['message']      = get_option( 'user_registration_successful_membership_creation_message', esc_html__( 'New member has been successfully created.', 'user-registration' ) );
 				$response['status']       = true;
 			} elseif ( 'incomplete' === $subscription_status ) {
 				PaymentGatewayLogging::log_general(
