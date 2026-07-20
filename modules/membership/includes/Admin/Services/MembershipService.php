@@ -272,7 +272,7 @@ class MembershipService {
 		foreach ( $memberships as $key => $membership ) {
 			$membership_post_content = json_decode( wp_unslash( $membership['post_content'] ), true );
 
-			if ( ! $membership_post_content['status'] ) {
+			if ( empty( $membership_post_content ) || empty( $membership_post_content['status'] ) ) {
 				unset( $memberships[ $key ] );
 				continue;
 			}
