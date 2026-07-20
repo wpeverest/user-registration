@@ -1119,10 +1119,10 @@ class UR_Smart_Tags {
 
 					case 'payment_amount':
 						$payment_amount = '';
-						// Check if user is a member by checking if membership_tags exists and has payment amount.
-						if ( ! empty( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_payment_amount'] ) ) {
-							// User is a member, use membership payment amount.
-							$payment_amount = $values['membership_tags']['membership_plan_payment_amount'];
+						// Member payment: use the actual paid total, not the plan's list price.
+						if ( ! empty( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_total'] ) ) {
+							// membership_plan_total is discount-applied, so a 100% coupon shows $0.00.
+							$payment_amount = $values['membership_tags']['membership_plan_total'];
 						} else {
 							// User is not a member, find single_item field value.
 							// Look for any key in $values that starts with 'single_item'.

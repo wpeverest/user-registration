@@ -1326,11 +1326,17 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 					return;
 				}
 
-				check_admin_referer( 'bulk-users' );
+				$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
+
+				// edit/view only render the member for display (no state change), so they are not
+				// nonce-gated — lets the payment-success admin email "Click Here" deep link work.
+				// State-changing actions below stay nonce-protected.
+				if ( ! in_array( $action, array( 'edit', 'view' ), true ) ) {
+					check_admin_referer( 'bulk-users' );
+				}
 
 				if ( current_user_can( 'edit_users' ) ) {
 
-					$action  = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
 					$userids = array();
 
 					if ( ! empty( $_REQUEST['users'] ) ) {

@@ -388,11 +388,17 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					return;
 				}
 
-				check_admin_referer( 'bulk-users' );
+				$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
+
+				// edit/view only render the member for display (no state change), so they are not
+				// nonce-gated — lets the payment-success admin email "Click Here" deep link work.
+				// State-changing actions below stay nonce-protected.
+				if ( ! in_array( $action, array( 'edit', 'view' ), true ) ) {
+					check_admin_referer( 'bulk-users' );
+				}
 
 				if ( current_user_can( 'edit_users' ) ) {
 
-					$action  = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
 					$userids = array();
 
 					if ( ! empty( $_REQUEST['users'] ) ) {
@@ -1065,11 +1071,11 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 		 * @since 4.1
 		 */
 		public function render_members_view_page() {
-			// Verify nonce using the same action used in single_row()
-			if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
-				sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ),
-				'bulk-users'
-			) ) {
+			// Read-only member view: protect by capability, not a nonce, so the payment-success
+			// admin email "Click Here" deep link works (a background email can't carry a valid
+			// nonce). A valid nonce still passes.
+			$has_valid_nonce = isset( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-users' );
+			if ( ! $has_valid_nonce && ! current_user_can( 'list_users' ) && ! current_user_can( 'manage_user_registration' ) ) {
 				wp_die( esc_html__( 'Security check failed.', 'user-registration' ) );
 			}
 
