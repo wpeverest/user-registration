@@ -18,6 +18,7 @@ use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
 use WPEverest\URMembership\Admin\Services\PaymentGatewaysWebhookActions;
@@ -143,6 +144,15 @@ if ( ! class_exists( 'Admin' ) ) :
 				2
 			);
 			add_filter(
+				'user_registration_success_params',
+				array(
+					$this,
+					'set_payment_process_for_membership',
+				),
+				10,
+				4
+			);
+			add_filter(
 				'user_registration_success_params_before_send_json',
 				array(
 					$this,
@@ -187,6 +197,11 @@ if ( ! class_exists( 'Admin' ) ) :
 		 * @param int   $member_id Newly created WP user ID.
 		 */
 		public function send_registration_emails( $data, $member_id ) {
+			static $queued = array();
+			if ( isset( $queued[ $member_id ] ) ) {
+				return;
+			}
+			$queued[ $member_id ] = true;
 			add_action(
 				'shutdown',
 				function () use ( $data, $member_id ) {
@@ -251,6 +266,24 @@ if ( ! class_exists( 'Admin' ) ) :
 			return $settings;
 		}
 
+		/**
+		 * Set payment_process = true for paid membership registrations so the welcome email
+		 * is not sent during form submission — it should only fire after payment is confirmed.
+		 */
+		public function set_payment_process_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
+			if ( empty( $_POST['is_membership_active'] ) && empty( $_POST['membership_type'] ) ) {
+				return $success_params;
+			}
+
+			$data = isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array();
+			if ( empty( $data['payment_method'] ) || 'free' === $data['payment_method'] ) {
+				return $success_params;
+			}
+
+			$success_params['payment_process'] = true;
+			return $success_params;
+		}
+
 		public function update_success_params_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
 			$keyFound = false;
 
@@ -280,10 +313,12 @@ if ( ! class_exists( 'Admin' ) ) :
 				return $success_params;
 			}
 			// Guard 3: form has a membership field
-			$has_membership_field = false;
+			$has_membership_field  = false;
+			$membership_field_data = null;
 			foreach ( $valid_form_data as $field_data ) {
 				if ( isset( $field_data->extra_params['field_key'] ) && 'membership' === $field_data->extra_params['field_key'] ) {
-					$has_membership_field = true;
+					$has_membership_field  = true;
+					$membership_field_data = $field_data;
 					break;
 				}
 			}
@@ -304,6 +339,70 @@ if ( ! class_exists( 'Admin' ) ) :
 			$member_id = $user_id;
 			if ( ! $member ) {
 				return $success_params;
+			}
+
+			// Validate that the submitted membership ID is one the form is actually configured to offer.
+			// Read field config from the stored form definition (post_content), not the runtime
+			// submission object — submission objects do not carry general_setting at this point.
+			$stored_membership_config = null;
+			$form_post                = get_post( absint( $form_id ) );
+			if ( $form_post && ! empty( $form_post->post_content ) ) {
+				$form_rows = json_decode( $form_post->post_content );
+				foreach ( (array) $form_rows as $row ) {
+					foreach ( (array) $row as $grid ) {
+						foreach ( (array) $grid as $field ) {
+							if ( isset( $field->field_key ) && 'membership' === $field->field_key ) {
+								$stored_membership_config = $field;
+								break 3;
+							}
+						}
+					}
+				}
+			}
+
+			if ( ! $stored_membership_config ) {
+				wp_delete_user( absint( $member_id ) );
+				wp_send_json_error( array( 'message' => esc_html__( 'Invalid membership selection.', 'user-registration' ) ) );
+			}
+
+			$listing_option         = isset( $stored_membership_config->general_setting->membership_listing_option )
+				? $stored_membership_config->general_setting->membership_listing_option
+				: 'all';
+			$allowed_membership_ids = array();
+
+			if ( 'group' === $listing_option ) {
+				$group_id = isset( $stored_membership_config->general_setting->membership_group )
+					? absint( $stored_membership_config->general_setting->membership_group )
+					: 0;
+				if ( $group_id ) {
+					$group_service     = new MembershipGroupService();
+					$group_memberships = $group_service->get_group_memberships( $group_id );
+					foreach ( $group_memberships as $m ) {
+						$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
+						if ( $id ) {
+							$allowed_membership_ids[] = $id;
+						}
+					}
+				}
+			} elseif ( 'selected' === $listing_option ) {
+				$selected_ids           = isset( $stored_membership_config->general_setting->membership_active_memberships )
+					? $stored_membership_config->general_setting->membership_active_memberships
+					: array();
+				$selected_ids           = is_array( $selected_ids ) ? $selected_ids : (array) maybe_unserialize( $selected_ids );
+				$allowed_membership_ids = array_values( array_filter( array_map( 'absint', $selected_ids ) ) );
+			} else {
+				$membership_service_temp = new MembershipService();
+				foreach ( $membership_service_temp->list_active_memberships() as $m ) {
+					$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
+					if ( $id ) {
+						$allowed_membership_ids[] = $id;
+					}
+				}
+			}
+
+			if ( empty( $allowed_membership_ids ) || ! in_array( absint( $data['membership'] ), $allowed_membership_ids, true ) ) {
+				wp_delete_user( absint( $member_id ) );
+				wp_send_json_error( array( 'message' => esc_html__( 'Invalid membership selection.', 'user-registration' ) ) );
 			}
 			$data['username'] = $member->user_login;
 			$data['email']    = $member->user_email;
@@ -330,6 +429,33 @@ if ( ! class_exists( 'Admin' ) ) :
 			$membership_meta       = json_decode( wp_unslash( $membership_data['meta_value'] ), true );
 			$membership_type       = $membership_meta['type'] ?? 'unknown';
 			$payment_gateway       = $data['payment_method'] ?? 'unknown';
+
+			// Reject attacker-supplied payment_method values that don't match the membership.
+			// A paid/subscription membership must use one of its configured gateways; 'free'
+			// is never a valid gateway for a non-free membership.
+			if ( 'free' !== $membership_type ) {
+				if ( 'free' === $data['payment_method'] ) {
+					wp_delete_user( absint( $member_id ) );
+					wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
+				}
+				$configured_gateways = array();
+				if ( ! empty( $membership_meta['payment_gateways'] ) && is_array( $membership_meta['payment_gateways'] ) ) {
+					foreach ( $membership_meta['payment_gateways'] as $gw_key => $gw_data ) {
+						if ( isset( $gw_data['status'] ) && 'on' === $gw_data['status'] ) {
+							$configured_gateways[] = $gw_key;
+						}
+					}
+				}
+				// Also include globally active gateways (Settings > Payments) so that
+				// gateways enabled site-wide are accepted even if not per-membership saved.
+				$global_gateways     = array_keys( urm_get_all_active_payment_gateways( $membership_type ) );
+				$configured_gateways = array_unique( array_merge( $configured_gateways, $global_gateways ) );
+
+				if ( ! empty( $configured_gateways ) && ! in_array( $data['payment_method'], $configured_gateways, true ) ) {
+					wp_delete_user( absint( $member_id ) );
+					wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
+				}
+			}
 
 			// PaymentGatewayLogging — session start + form submission
 			if ( class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
@@ -364,8 +490,11 @@ if ( ! class_exists( 'Admin' ) ) :
 			}
 
 			// Create order + subscription
-			$membership_service = new MembershipService();
-			$response           = $membership_service->create_membership_order_and_subscription( $data );
+			// UR-4573: This is a fresh membership registration, so the membership role should
+			// replace the default role the registration assigned (not stack on top of it).
+			$data['is_initial_registration'] = true;
+			$membership_service              = new MembershipService();
+			$response                        = $membership_service->create_membership_order_and_subscription( $data );
 
 			// PaymentGatewayLogging — order creation + free activation
 			if ( $response['status'] && class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
@@ -440,7 +569,11 @@ if ( ! class_exists( 'Admin' ) ) :
 					}
 				}
 
-				do_action( 'urm_member_registered', $data, $member_id );
+				if ( 'free' === $data['payment_method'] ) {
+					do_action( 'urm_member_registered', $data, $member_id );
+				} else {
+					update_user_meta( $member_id, 'ur_membership_registration_data', $data );
+				}
 
 				$response_data = apply_filters(
 					'user_registration_membership_after_register_member',
@@ -448,7 +581,7 @@ if ( ! class_exists( 'Admin' ) ) :
 						'member_id'      => absint( $member_id ),
 						'transaction_id' => esc_html( $transaction_id ),
 						'order_id'       => esc_html( $data['order_id'] ),
-						'message'        => esc_html__( 'New member has been successfully created.', 'user-registration' ),
+						'message'        => get_option( 'user_registration_successful_membership_creation_message', esc_html__( 'New member has been successfully created.', 'user-registration' ) ),
 					)
 				);
 				if ( ur_check_module_activation( 'team' ) ) {
@@ -734,9 +867,16 @@ if ( ! class_exists( 'Admin' ) ) :
 
 			$installed_version = get_option( 'ur_membership_db_version', '0.0.0' );
 
-			if ( version_compare( $installed_version, '1.0.0', '<' ) ) {
+			if ( version_compare( $installed_version, '1.0.0', '<' ) || ! Database::tables_exist() ) {
 				self::on_activation();
-				update_option( 'ur_membership_db_version', '1.0.0' );
+				if ( Database::tables_exist() ) {
+					update_option( 'ur_membership_db_version', '1.0.0' );
+				}
+			}
+
+			if ( version_compare( $installed_version, '1.0.1', '<' ) ) {
+				self::on_activation();
+				update_option( 'ur_membership_db_version', '1.0.1' );
 			}
 		}
 
@@ -799,7 +939,23 @@ if ( ! class_exists( 'Admin' ) ) :
 								<tr>
 									<td><?php echo esc_html( $membership['post_title'] ); ?></td>
 									<td><?php echo esc_html( $amount ); ?></td>
-									<td class="status-<?php echo esc_attr( $membership['status'] ); ?>"><?php echo esc_html( ucfirst( $membership['status'] ) ); ?></td>
+									<?php $pending_cancel_date = get_user_meta( $user_id, 'urm_pending_cancel_' . ( $membership['subscription_id'] ?? '' ), true ); ?>
+								<td class="<?php echo $pending_cancel_date ? 'status-pending' : 'status-' . esc_attr( $membership['status'] ); ?>">
+										<?php
+										if ( $pending_cancel_date ) {
+											echo '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'; // phpcs:ignore WordPress.Security.EscapeOutput
+											echo esc_html(
+												sprintf(
+													/* translators: %s: cancellation date */
+													__( 'Cancels %s', 'user-registration' ),
+													date_i18n( get_option( 'date_format' ), strtotime( $pending_cancel_date ) )
+												)
+											);
+										} else {
+											echo esc_html( ucfirst( $membership['status'] ) );
+										}
+										?>
+									</td>
 									<td><?php echo ! empty( $membership['start_date'] ) ? esc_html( date_i18n( 'Y-m-d', strtotime( $membership['start_date'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
 									<td><?php echo esc_html( $expiry_date ); ?></td>
 									<td><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-subscriptions&action=edit&id=' . ( $membership['subscription_id'] ?? 0 ) ) ); ?>"><?php esc_html_e( 'View', 'user-registration' ); ?></a></td>

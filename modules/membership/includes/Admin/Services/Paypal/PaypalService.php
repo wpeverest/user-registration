@@ -10,6 +10,7 @@ use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+use WPEverest\URMembership\Admin\Services\CouponService;
 use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\OrderService;
@@ -144,9 +145,14 @@ class PaypalService {
 		$membership_process = urm_get_membership_process( $member_id );
 		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $data['current_membership_id'], $membership_process['renew'] );
 
-		$local_currency = ! empty( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
-		$ur_zone_id     = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
-		$currency       = get_option( 'user_registration_payment_currency', 'USD' );
+		$base_membership_amount = $membership_amount;
+
+		$local_currency         = ! empty( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
+		$ur_zone_id             = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
+		$currency               = get_option( 'user_registration_payment_currency', 'USD' );
+		$pricing_data           = null;
+		$local_currency_data    = array();
+		$local_currency_applies = false;
 
 		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) && UR_PRO_ACTIVE && class_exists( CoreFunctions::class ) ) {
 			$currency            = $local_currency;
@@ -154,7 +160,8 @@ class PaypalService {
 			$local_currency_data = ! empty( $data['local_currency'] ) ? $data['local_currency'] : array();
 
 			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
-				$membership_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+				$local_currency_applies = true;
+				$membership_amount      = CoreFunctions::ur_get_amount_after_conversion( $membership_amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 			}
 		}
 
@@ -163,11 +170,39 @@ class PaypalService {
 		$discount_amount = 0;
 
 		if ( isset( $data['upgrade'] ) && $data['upgrade'] ) {
-			$final_amount = $data['amount'];
+			// $data['amount'] is the prorated delta in the base currency — scale it by the plan's local/base ratio.
+			$chargeable_amount_base = (float) $data['amount'];
+			$final_amount           = ( $local_currency_applies && $base_membership_amount > 0 )
+				? $membership_amount * ( $chargeable_amount_base / $base_membership_amount )
+				: $chargeable_amount_base;
 		} elseif ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
-			$coupon_details  = ur_get_coupon_details( $data['coupon'] );
-			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
-			$final_amount    = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+			$coupon_service    = new CouponService();
+			$coupon_validation = $coupon_service->validate(
+				array(
+					'coupon'        => $data['coupon'],
+					'membership_id' => absint( $membership ),
+				)
+			);
+
+			if ( $coupon_validation['status'] ) {
+				$coupon_details  = ur_get_coupon_details( $data['coupon'] );
+				$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
+
+				if ( $local_currency_applies && 'fixed' === $coupon_details['coupon_discount_type'] ) {
+					$discounted_base  = max( 0, $base_membership_amount - $discount_amount );
+					$discounted_local = CoreFunctions::ur_get_amount_after_conversion(
+						$discounted_base,
+						$currency,
+						$pricing_data,
+						$local_currency_data,
+						$ur_zone_id,
+						$base_membership_amount
+					);
+					$discount_amount = max( 0, $membership_amount - $discounted_local );
+				}
+
+				$final_amount = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+			}
 		}
 
 		if ( ( 'subscription' === ( $membership_type ) && ! $is_renewing ) || ( $is_automatic && $is_renewing ) ) {
@@ -610,6 +645,28 @@ class PaypalService {
 			);
 			return;
 		}
+
+		// Bind the client-supplied custom field to server-created state before any activation.
+		$order_bound = ! empty( $latest_order )
+			&& (int) $latest_order['user_id'] === (int) $member_id
+			&& (int) $latest_order['subscription_id'] === (int) $subscription_id;
+		$item_bound  = (int) ( $subscription['item_id'] ?? 0 ) === (int) $membership_id;
+
+		if ( ! $order_bound || ! $item_bound ) {
+			PaymentGatewayLogging::log_error(
+				'paypal',
+				'IPN custom field does not match server order/subscription',
+				array(
+					'error_code'      => 'IPN_CUSTOM_MISMATCH',
+					'member_id'       => $member_id,
+					'membership_id'   => $membership_id,
+					'subscription_id' => $subscription_id,
+					'txn_id'          => $data['txn_id'] ?? 'N/A',
+				)
+			);
+			return;
+		}
+
 		if ( 'subscr_cancel' === $txn_type ) { // handle cancel ipn.
 			PaymentGatewayLogging::log_subscription_cancellation(
 				'paypal',
@@ -663,6 +720,33 @@ class PaypalService {
 					'membership_type'   => $membership_type,
 				)
 			);
+
+			// Validate receiver email and payment amount before any state changes.
+			$ipn_error = '';
+			if ( empty( $receiver_email ) || ! is_email( $receiver_email )
+				|| strtolower( $data['business'] ?? '' ) !== strtolower( trim( $receiver_email ) ) ) {
+				$ipn_error = esc_html__( 'Payment failed: recipient emails do not match', 'user-registration' );
+			} elseif ( 'web_accept' === $txn_type
+				&& ( empty( $latest_order['total_amount'] )
+					|| number_format( (float) ( $data['mc_gross'] ?? 0 ), 2 ) !== number_format( (float) $latest_order['total_amount'], 2 ) ) ) {
+				// Amount check applies only to web_accept (one-time payment), against the
+				// server-stored order total. subscr_signup carries no payment — the first
+				// real charge arrives via subscr_payment.
+				$ipn_error = esc_html__( 'Payment failed: payment amounts do not match ', 'user-registration' );
+			}
+
+			if ( ! empty( $ipn_error ) ) {
+				PaymentGatewayLogging::log_transaction_failure(
+					'paypal',
+					$ipn_error,
+					array(
+						'subscription_id' => $subscription_id,
+						'member_id'       => $member_id,
+					)
+				);
+				$this->members_orders_repository->update( $latest_order['ID'], array( 'status' => 'failed' ) );
+				return;
+			}
 
 			$this->members_orders_repository->update(
 				$latest_order['ID'],
@@ -747,6 +831,14 @@ class PaypalService {
 				)
 			);
 
+			$email_service->send_email( $email_data, 'payment_successful_admin' );
+
+			$reg_data = get_user_meta( $member_id, 'ur_membership_registration_data', true );
+			if ( ! empty( $reg_data ) && empty( get_user_meta( $member_id, 'ur_membership_welcome_email_sent', true ) ) ) {
+				do_action( 'urm_member_registered', $reg_data, $member_id );
+				update_user_meta( $member_id, 'ur_membership_welcome_email_sent', true );
+			}
+
 			return;
 		}
 		$payment_date = \DateTime::createFromFormat( 'H:i:s M d, Y T', $data['payment_date'] ?? date( 'Y-m-d' ), new \DateTimeZone( 'PDT' ) );
@@ -754,6 +846,24 @@ class PaypalService {
 		$payment_date = $payment_date->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Y-m-d' );
 		// handle first ipn of the day appart from the signup ipn.
 		if ( 'subscr_payment' === $txn_type && $payment_date == date( 'Y-m-d' ) ) {
+			// Verify receiver email and amount before activating — this path must not
+			// skip the checks that run below for later payments.
+			if ( empty( $receiver_email ) || ! is_email( $receiver_email )
+				|| strtolower( $data['business'] ?? '' ) !== strtolower( trim( $receiver_email ) )
+				|| empty( $amount )
+				|| number_format( (float) ( $data['mc_gross'] ?? 0 ), 2 ) !== number_format( (float) $amount, 2 ) ) {
+				PaymentGatewayLogging::log_transaction_failure(
+					'paypal',
+					esc_html__( 'Payment failed: receiver email or amount mismatch', 'user-registration' ),
+					array(
+						'subscription_id' => $subscription_id,
+						'member_id'       => $member_id,
+					)
+				);
+				$this->members_orders_repository->update( $latest_order['ID'], array( 'status' => 'failed' ) );
+
+				return;
+			}
 			$this->members_subscription_repository->update(
 				$subscription_id,
 				array(
@@ -1185,21 +1295,19 @@ class PaypalService {
 		if ( ! $is_paypal_enabled ) {
 			return true;
 		}
-		$mode                    = get_option( 'user_registration_global_paypal_mode', 'test' ) == 'test' ? 'test' : 'live';
-		$paypal_options['email'] = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address' ) );
-		if ( 'subscription' === $membership_type ) {
-			$paypal_options['client_id']     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id' ) );
-			$paypal_options['client_secret'] = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret' ) );
+		if ( 'free' === $membership_type ) {
+			return false;
 		}
 
-		$is_incomplete = false;
-		foreach ( $paypal_options as $k => $option ) {
-			if ( empty( $option ) ) {
-				$is_incomplete = true;
-			}
-		}
+		$mode          = get_option( 'user_registration_global_paypal_mode', 'test' ) == 'test' ? 'test' : 'live';
+		$email         = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address' ) );
+		$client_id     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id' ) );
+		$client_secret = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret' ) );
 
-		return $is_incomplete;
+		$has_rest_credentials = ! empty( $client_id ) && ! empty( $client_secret );
+
+		// Subscription and one-time (paid): valid with REST credentials OR legacy email.
+		return ! $has_rest_credentials && empty( $email );
 	}
 
 	public function retry_subscription( $subscription ) {

@@ -7,6 +7,7 @@ use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
+use WPEverest\URMembership\Admin\Services\CouponService;
 use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\OrderService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
@@ -330,6 +331,11 @@ class StripeService {
 			return;
 		}
 
+		$stripe_settings = self::get_stripe_settings();
+		if ( empty( $stripe_settings['secret_key'] ) ) {
+			return;
+		}
+
 		$membership_metas = $membership['meta_value'] ?? array();
 
 		if ( ! is_array( $membership_metas ) ) {
@@ -524,14 +530,23 @@ class StripeService {
 		);
 
 		if ( isset( $payment_data['upgrade'] ) && $payment_data['upgrade'] ) {
-			$amount = $payment_data['amount'];
-
+			// $amount already holds the resolved (and converted) chargeable_amount — nothing to do.
 		} elseif ( isset( $payment_data['coupon'] ) && ! empty( $payment_data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
-			$coupon_details = ur_get_coupon_details( $payment_data['coupon'] );
+			$coupon_service    = new CouponService();
+			$coupon_validation = $coupon_service->validate(
+				array(
+					'coupon'        => $payment_data['coupon'],
+					'membership_id' => isset( $payment_data['item_id'] ) ? absint( $payment_data['item_id'] ) : 0,
+				)
+			);
 
-			if ( isset( $coupon_details['coupon_discount_type'] ) && isset( $coupon_details['coupon_discount'] ) ) {
-				$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
-				$amount          = $amount - $discount_amount;
+			if ( $coupon_validation['status'] ) {
+				$coupon_details = ur_get_coupon_details( $payment_data['coupon'] );
+
+				if ( isset( $coupon_details['coupon_discount_type'] ) && isset( $coupon_details['coupon_discount'] ) ) {
+					$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
+					$amount          = $amount - $discount_amount;
+				}
 			}
 		}
 
@@ -776,6 +791,29 @@ class StripeService {
 			'status' => true,
 		);
 
+		// A failed client-side confirmation (card validation error, decline, 3DS
+		// abandonment) is a normal gateway outcome, not a verification anomaly:
+		// surface the gateway's own message and leave the order pending for retry.
+		if ( 'failed' === $payment_status ) {
+			$client_error_message = sanitize_text_field( wp_unslash( $data['payment_result']['error']['message'] ?? '' ) );
+			$client_error_code    = sanitize_text_field( wp_unslash( $data['payment_result']['error']['code'] ?? '' ) );
+
+			if ( '' === $client_error_message ) {
+				$client_error_message = __( 'Payment could not be completed. Please check your card details and try again.', 'user-registration' );
+			}
+
+			return $this->update_order_error(
+				$response,
+				$client_error_message,
+				'Stripe payment confirmation failed on the client side.',
+				array(
+					'error_code' => '' !== $client_error_code ? $client_error_code : 'PAYMENT_FAILED',
+					'member_id'  => $member_id,
+					'order_id'   => $order_id,
+				)
+			);
+		}
+
 		$stripe_settings = self::get_stripe_settings();
 
 		if ( empty( $stripe_settings['secret_key'] ) ) {
@@ -846,9 +884,6 @@ class StripeService {
 		$payment_status = $intent->status;
 
 		$latest_order = $this->orders_repository->get_order_by_transaction_id( $intent->id );
-		if ( empty( $latest_order ) ) {
-			$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
-		}
 		$latest_order = is_array( $latest_order ) ? $latest_order : ( $latest_order ? (array) $latest_order : array() );
 
 		if ( empty( $latest_order ) || (int) $member_id !== (int) $latest_order['user_id'] ) {
@@ -880,7 +915,11 @@ class StripeService {
 			return $response;
 		}
 
-		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id, $order_id ) ) {
+		// Exclude the order that actually owns this transaction (already fetched above), not the
+		// client-supplied order_id which can arrive empty on the registration/first-purchase
+		// flow. Otherwise the order's own transaction is treated as a duplicate and the payment
+		// is reported "already verified" without ever completing the order/subscription.
+		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id, $latest_order['ID'] ) ) {
 
 			$duplicate_order = $this->orders_repository->get_order_by_transaction_id( $transaction_id );
 			if ( ! empty( $duplicate_order ) && absint( $duplicate_order['user_id'] ) === $member_id ) {
@@ -944,7 +983,9 @@ class StripeService {
 			do_action( 'ur_membership_order_status_failed', $latest_order['ID'], $latest_order, 'failed' );
 
 			if ( ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
-				wp_delete_user( absint( $member_id ) );
+				if ( absint( $member_id ) === get_current_user_id() || current_user_can( 'edit_users' ) ) {
+					wp_delete_user( absint( $member_id ) );
+				}
 				$this->members_orders_repository->delete_member_order( $member_id );
 			}
 			if ( $is_renewing ) {
@@ -962,7 +1003,7 @@ class StripeService {
 			$member_order = $this->members_orders_repository->get_member_orders( $member_id );
 
 			if ( 'completed' === $member_order['status'] ) {
-				$response['message'] = $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) : __( 'New member has been successfully created with successful stripe payment.', 'user-registration' );
+				$response['message'] = $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) : get_option( 'user_registration_successful_membership_creation_message', esc_html__( 'New member has been successfully created.', 'user-registration' ) );
 				$response['status']  = true;
 
 				return $response;
@@ -1094,8 +1135,16 @@ class StripeService {
 			);
 		}
 
+		$email_service->send_email( $email_data, 'payment_successful_admin' );
+
+		$reg_data = get_user_meta( $member_id, 'ur_membership_registration_data', true );
+		if ( ! empty( $reg_data ) && empty( get_user_meta( $member_id, 'ur_membership_welcome_email_sent', true ) ) ) {
+			do_action( 'urm_member_registered', $reg_data, $member_id );
+			update_user_meta( $member_id, 'ur_membership_welcome_email_sent', true );
+		}
+
 		return array(
-			'message' => $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) : __( 'New member has been successfully created with successful stripe payment.', 'user-registration' ),
+			'message' => $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) : get_option( 'user_registration_successful_membership_creation_message', esc_html__( 'New member has been successfully created.', 'user-registration' ) ),
 			'status'  => true,
 		);
 	}
@@ -1266,14 +1315,22 @@ class StripeService {
 				)
 			);
 
-			// For team subscriptions the total amount differs from the base membership price,
-			// so resolve a Stripe price that matches the actual charged amount.
-			if ( $team_id && $total_amount > 0 ) {
+			// Re-resolve the Stripe price for team pricing, local currency, or a missing stored price_id.
+			$is_local_currency_subscription = ! $team_id && ! empty( $local_currency['meta_value'] );
+			$stored_price_id                = $stripe_product_details['price_id'] ?? '';
+
+			// Use the pre-tax amount so Stripe applies the tax rate on top (visible on its invoice).
+			$price_amount = $total_amount;
+			if ( $is_local_currency_subscription && ! empty( $tax_data['tax_rate'] ) ) {
+				$price_amount = (int) round( $total_amount / ( 1 + floatval( $tax_data['tax_rate'] ) / 100 ) );
+			}
+
+			if ( $team_id || $is_local_currency_subscription || empty( $stored_price_id ) ) {
 				$effective_price_id = $this->ensure_price_in_stripe(
 					'subscription',
 					$stripe_product_details['product_id'] ?? '',
-					$stripe_product_details['price_id'] ?? '',
-					$total_amount,
+					$stored_price_id,
+					$price_amount,
 					$currency,
 					array(
 						'subscription_duration' => $subscription_duration,
@@ -1281,15 +1338,18 @@ class StripeService {
 					)
 				);
 			} else {
-				$effective_price_id = $stripe_product_details['price_id'];
+				$effective_price_id = $stored_price_id;
 			}
 
 			$subscription_details = array(
-				'customer' => $customer->id,
-				'items'    => array(
+				'customer'         => $customer->id,
+				'items'            => array(
 					array(
 						'price' => $effective_price_id,
 					),
+				),
+				'payment_settings' => array(
+					'save_default_payment_method' => 'on_subscription',
 				),
 			);
 
@@ -1340,8 +1400,31 @@ class StripeService {
 						$previous_membership_metas = json_decode( wp_unslash( $previous_membership['meta_value'] ), true );
 
 						if ( isset( $previous_membership_metas['type'], $previous_membership_metas['amount'] ) && 'free' !== $previous_membership_metas['type'] ) {
-							$new_price     = isset( $membership_metas['amount'] ) ? $membership_metas['amount'] : 0;
-							$current_price = $previous_membership_metas['amount'];
+							$new_price     = isset( $membership_metas['amount'] ) ? (float) $membership_metas['amount'] : 0;
+							$current_price = (float) $previous_membership_metas['amount'];
+
+							// Convert both plans' base prices into $currency (resolved above from the order).
+							$global_currency = strtoupper( get_option( 'user_registration_payment_currency', 'USD' ) );
+
+							if ( $currency !== $global_currency && class_exists( CoreFunctions::class ) ) {
+								if ( ! empty( $membership_metas['local_currency'] ) && ur_string_to_bool( $membership_metas['local_currency']['is_enable'] ) ) {
+									$new_zone_id = CoreFunctions::ur_get_zone_id_by_currency( $membership_metas['local_currency'], $currency );
+									if ( ! empty( $new_zone_id ) ) {
+										$new_pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $new_zone_id );
+										$new_price        = CoreFunctions::ur_get_amount_after_conversion( $new_price, $currency, $new_pricing_data, $membership_metas['local_currency'], $new_zone_id );
+									}
+								}
+
+								if ( ! empty( $previous_membership_metas['local_currency'] ) && ur_string_to_bool( $previous_membership_metas['local_currency']['is_enable'] ) ) {
+									$current_zone_id = CoreFunctions::ur_get_zone_id_by_currency( $previous_membership_metas['local_currency'], $currency );
+									if ( ! empty( $current_zone_id ) ) {
+										$current_pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $current_zone_id );
+										$current_price        = CoreFunctions::ur_get_amount_after_conversion( $current_price, $currency, $current_pricing_data, $previous_membership_metas['local_currency'], $current_zone_id );
+									}
+								}
+							}
+
+							$previous_membership_metas['amount'] = $current_price;
 
 							$membership_upgrade_service      = new UpgradeMembershipService();
 							$previous_membership_metas['ID'] = $previous_membership['ID'];
@@ -1374,8 +1457,7 @@ class StripeService {
 									$amount           = max( 0, $new_price - $chargeable );
 								}
 
-								$currency = get_option( 'user_registration_payment_currency', 'USD' );
-								$amount   = ( 'JPY' === $currency ) ? (int) round( $amount ) : (int) round( $amount * 100 );
+								$amount = ( 'JPY' === $currency ) ? (int) round( $amount ) : (int) round( $amount * 100 );
 
 								PaymentGatewayLogging::log_general(
 									'stripe',
@@ -1395,7 +1477,7 @@ class StripeService {
 								$coupon = \Stripe\Coupon::create(
 									array(
 										'amount_off' => $amount,
-										'currency'   => $currency,
+										'currency'   => strtolower( $currency ),
 										'duration'   => 'once',
 										'name'       => 'UpgradeCoupon',
 									)
@@ -1493,6 +1575,24 @@ class StripeService {
 			$payments_data  = isset( $subscription->latest_invoice->payments->data ) ? (array) $subscription->latest_invoice->payments->data : array();
 			$payment_intent = ! empty( $payments_data ) ? ( $payments_data[0]->payment->payment_intent ?? null ) : null;
 
+			if ( empty( $payment_intent ) && isset( $subscription->latest_invoice->payment_intent ) ) {
+				$payment_intent = $subscription->latest_invoice->payment_intent;
+			}
+
+			// Retrieve the PaymentIntent (newer Stripe API returns only an id) and expose it on the
+			// invoice so the front-end can run 3D Secure / SCA.
+			if ( ! empty( $payment_intent ) && is_string( $payment_intent ) ) {
+				try {
+					$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent );
+				} catch ( \Exception $e ) {
+					$payment_intent = null;
+				}
+			}
+
+			if ( ! empty( $payment_intent ) && ! is_string( $payment_intent ) && isset( $subscription->latest_invoice ) ) {
+				$subscription->latest_invoice->payment_intent = $payment_intent;
+			}
+
 			$three_ds2_source = '';
 			if ( ! empty( $payment_intent ) && ! is_string( $payment_intent ) ) {
 				$three_ds2_source = $payment_intent->next_action->use_stripe_sdk->three_d_secure_2_source ?? '';
@@ -1561,7 +1661,7 @@ class StripeService {
 				$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
 
 				$response['subscription'] = $subscription;
-				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.', 'user-registration' );
+				$response['message']      = get_option( 'user_registration_successful_membership_creation_message', esc_html__( 'New member has been successfully created.', 'user-registration' ) );
 				$response['status']       = true;
 			} elseif ( 'incomplete' === $subscription_status ) {
 				PaymentGatewayLogging::log_general(
@@ -1608,7 +1708,9 @@ class StripeService {
 			);
 
 			if ( ! $is_upgrading && ! $is_renewing ) {
-				wp_delete_user( absint( $member_id ) );
+				if ( absint( $member_id ) === get_current_user_id() || current_user_can( 'edit_users' ) ) {
+					wp_delete_user( absint( $member_id ) );
+				}
 				$this->members_orders_repository->delete_member_order( $member_id );
 				$customer = \Stripe\Customer::retrieve( $customer_id );
 				$customer->delete();
@@ -1781,24 +1883,19 @@ class StripeService {
 
 			if ( 'active' === $subscription->status ) {
 
-				if ( 'canceled' === $local_subscription['status'] && true === $subscription->cancel_at_period_end ) {
+				if ( true === $subscription->cancel_at_period_end ) {
 					\Stripe\Subscription::update(
 						$subscription_id,
 						array(
 							'cancel_at_period_end' => false,
 						)
 					);
-
-					return array(
-						'status'  => true,
-						'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
-					);
-				} else {
-					return array(
-						'status'  => true,
-						'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
-					);
 				}
+
+				return array(
+					'status'  => true,
+					'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
+				);
 			} elseif ( 'canceled' !== $subscription->status && true === $subscription->cancel_at_period_end ) {
 				\Stripe\Subscription::update(
 					$subscription_id,
@@ -2890,6 +2987,11 @@ class StripeService {
 		);
 
 		if ( 'subscription' === $type ) {
+			if ( 'year' === $interval && $interval_count > 3 ) {
+				throw new \Exception(
+					__( 'Stripe does not support yearly subscription periods greater than 3 years.', 'user-registration' )
+				);
+			}
 			$data['recurring'] = array(
 				'interval'       => $interval,
 				'interval_count' => $interval_count,

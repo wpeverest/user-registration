@@ -533,13 +533,26 @@ if ( ! function_exists( 'urm_is_divi_active' ) ) {
 	/**
 	 * Check divi is active or not.
 	 *
-	 * @return array
+	 * @return bool
 	 */
 	function urm_is_divi_active() {
 		$active_theme_details = wp_get_theme();
 		$theme_name           = $active_theme_details->Name;
 
 		return 'Divi' === $theme_name;
+	}
+}
+
+if ( ! function_exists( 'urm_is_divi5_active' ) ) {
+	/**
+	 * Check if Divi 5 (Visual Builder 5) is active.
+	 *
+	 * Divi 5 defines ET_BUILDER_5_DIR; Divi 4 does not.
+	 *
+	 * @return bool
+	 */
+	function urm_is_divi5_active() {
+		return urm_is_divi_active() && defined( 'ET_BUILDER_5_DIR' );
 	}
 }
 

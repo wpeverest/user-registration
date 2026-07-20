@@ -342,7 +342,7 @@ class UR_AJAX {
 			 *
 			 * @param array $response The profile update response.
 			 */
-			$response = apply_filters( 'user_registration_profile_update_response', $response );
+			$response = apply_filters( 'user_registration_profile_update_response', $response, $user_id );
 
 			wp_send_json_success(
 				$response
@@ -1812,6 +1812,10 @@ class UR_AJAX {
 		$user_id = isset( $_POST['cancel_email_change'] ) ? absint( wp_unslash( $_POST['cancel_email_change'] ) ) : false;
 
 		if ( ! $user_id ) {
+			wp_die( - 1 );
+		}
+
+		if ( $user_id !== get_current_user_id() && ! current_user_can( 'edit_user', $user_id ) ) {
 			wp_die( - 1 );
 		}
 

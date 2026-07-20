@@ -513,11 +513,13 @@ class Membership {
 			$group_id         = $membership_group['ID'] ?? 0;
 		}
 
-		foreach ( $memberships as $key => $_membership ) {
-			$current_membership_group = $membership_group_repository->get_membership_group_by_membership_id( $_membership['ID'] );
+		if ( ur_check_module_activation( 'membership-groups' ) ) {
+			foreach ( $memberships as $key => $_membership ) {
+				$current_membership_group = $membership_group_repository->get_membership_group_by_membership_id( $_membership['ID'] );
 
-			if ( ! empty( $current_membership_group ) && absint( $current_membership_group['ID'] ) !== $group_id ) {
-				unset( $memberships[ $key ] );
+				if ( ! empty( $current_membership_group ) && absint( $current_membership_group['ID'] ) !== $group_id ) {
+					unset( $memberships[ $key ] );
+				}
 			}
 		}
 

@@ -439,17 +439,22 @@ function ur_help_tip( $tip, $allow_html = false, $classname = 'user-registration
 }
 
 function ur_render_premium_feature_gate_template( $args = array() ) {
-	if ( UR_PRO_ACTIVE ) {
-		return;
-	}
-
 	$args = wp_parse_args(
 		$args,
 		array(
 			'template_id' => 'ur-pro-feature',
 			'utm_source'  => 'ur-membership-create',
+			'plan_gated'  => false,
+			'title'       => esc_html__( 'You have run into a premium feature, please upgrade to URM Pro', 'user-registration' ),
+			'button_text' => esc_html__( 'Upgrade to Pro', 'user-registration' ),
 		)
 	);
+
+	// Render for free installs, or when a higher plan is required even though Pro is active.
+	if ( UR_PRO_ACTIVE && empty( $args['plan_gated'] ) ) {
+		return;
+	}
+
 	if ( empty( $args['upgrade_url'] ) ) {
 		$args['upgrade_url'] = 'https://wpuserregistration.com/upgrade/?utm_source=' . esc_attr( $args['utm_source'] ) . '&utm_medium=upgrade-link&utm-campaign=lite-version';
 	}
@@ -463,11 +468,11 @@ function ur_render_premium_feature_gate_template( $args = array() ) {
 	<template id="<?php echo esc_attr( $args['template_id'] ); ?>">
 		<div class="ur-feature">
 			<div class="ur-feature__title">
-				<?php esc_html_e( 'You have run into a premium feature, please upgrade to URM Pro', 'user-registration' ); ?>
+				<?php echo esc_html( $args['title'] ); ?>
 			</div>
 			<a class="ur-feature__btn" target="_blank" href="<?php echo esc_url( $args['upgrade_url'] ); ?>">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
-				<?php esc_html_e( 'Upgrade to Pro', 'user-registration' ); ?>
+				<?php echo esc_html( $args['button_text'] ); ?>
 			</a>
 		</div>
 	</template>
@@ -475,18 +480,23 @@ function ur_render_premium_feature_gate_template( $args = array() ) {
 }
 
 function ur_render_premium_feature_gate( $args = array() ) {
-	if ( UR_PRO_ACTIVE ) {
-		return;
-	}
-
-	$args                = wp_parse_args(
+	$args = wp_parse_args(
 		$args,
 		array(
 			'template_id'     => 'ur-pro-feature',
 			'utm_source'      => 'ur-membership-create',
 			'render_template' => true,
+			'plan_gated'      => false,
+			'title'           => esc_html__( 'You have run into a premium feature, please upgrade to URM Pro', 'user-registration' ),
+			'button_text'     => esc_html__( 'Upgrade to Pro', 'user-registration' ),
 		)
 	);
+
+	// Render for free installs, or when a higher plan is required even though Pro is active.
+	if ( UR_PRO_ACTIVE && empty( $args['plan_gated'] ) ) {
+		return;
+	}
+
 	$args['upgrade_url'] = 'https://wpuserregistration.com/upgrade/?utm_source=' . esc_attr( $args['utm_source'] ) . '&utm_medium=upgrade-link&utm-campaign=lite-version';
 
 	if ( ! empty( $args['render_template'] ) ) {
@@ -1249,12 +1259,6 @@ function ur_load_form_field_class( $class_key ) {
 	$class_path = apply_filters( 'user_registration_form_field_' . $class_key . '_path', $class_path );
 	/* Backward Compat since 1.4.0 */
 	if ( null != $class_path && file_exists( $class_path ) ) {
-		// Validate the resolved path to prevent directory traversal.
-		$real_class_path = realpath( $class_path );
-		$real_base_path  = realpath( UR_FORM_PATH );
-		if ( false === $real_class_path || false === $real_base_path || 0 !== strpos( $real_class_path, $real_base_path . DIRECTORY_SEPARATOR ) ) {
-			return null;
-		}
 		$class_name = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
 		if ( ! class_exists( $class_name ) ) {
 			include_once $class_path;
@@ -3065,9 +3069,9 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		if ( isset( $form_data->field_type ) && 'repeater' === $form_data->field_type ) {
 			$data_html .= '<td class="user-registration-email__entries-data">' . $value . '</td></tr>';
 		} elseif ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
-			$data_html .= '<tr class="user-registration-email__entries-tr"><td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data"><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
+			$data_html .= '<td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data"><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
 		} else {
-			$data_html .= '<tr class="user-registration-email__entries-tr"><td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data">' . $value . '</td></tr>';
+			$data_html .= '<td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data">' . $value . '</td></tr>';
 		}
 
 		$name_value[ $field_name ] = $value;
@@ -3234,7 +3238,8 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '</div>';
 		$output .= '</div>';
 
-		$output                .= '<div class="form-row ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
+		$wrapper_style          = '' === $checked ? ' style="display:none;"' : '';
+		$output                .= '<div class="form-row ur_conditional_logic_wrapper"' . $wrapper_style . ' data-source="' . esc_attr( $integration ) . '">';
 		$output                .= '<label class="ur-label checkbox">' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</label>';
 		$output                .= '<div class="ur-logic"><p>' . esc_html__( 'Send data only if the following matches.', 'user-registration' ) . '</p></div>';
 		$output                .= '<div class="ur-conditional-wrapper">';
@@ -5519,21 +5524,6 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			);
 		}
 
-		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) && empty( $_POST['ur_fallback_submit'] ) ) {
-			$logger->error(
-				sprintf( '[Form #%d] AJAX nonce verification failed for form submission.', $form_id ) . "\n   ",
-				array(
-					'source'  => 'form-submission',
-					'form_id' => $form_id,
-				)
-			);
-
-			wp_send_json_error(
-				array(
-					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
-				)
-			);
-		}
 
 		$logger->info(
 			sprintf( '[Form #%d] Processing form submission.', $form_id ),
@@ -5543,9 +5533,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			)
 		);
 
-		$nonce            = $nonce_value;
 		$captcha_response = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
-		$flag             = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 
 		$recaptcha_enabled   = ur_string_to_bool( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false ) );
 		$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
@@ -5662,21 +5650,6 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			}
 		}
 
-		if ( true != $flag || is_wp_error( $flag ) ) {
-			$logger->error(
-				sprintf( '[Form #%d] Frontend form nonce verification failed. Please reload and try again.', $form_id ) . "\n  ",
-				array(
-					'source'  => 'form-submission',
-					'form_id' => $form_id,
-				)
-			);
-
-			wp_send_json_error(
-				array(
-					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
-				)
-			);
-		}
 		/**
 		 * Filter to override the register settings.
 		 * Default value is the get_option('users_can_register')
@@ -7685,7 +7658,8 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 		$active_memberships = array_filter(
 			array_map(
 				function ( $user_memberships ) {
-					if ( ! empty( $user_memberships['status'] ) && ! in_array( $user_memberships['status'], array( 'pending', 'inactive' ) ) ) {
+					// 'pending' no longer forces a logout (UR-4633) — only 'inactive' does.
+					if ( ! empty( $user_memberships['status'] ) && ! in_array( $user_memberships['status'], array( 'inactive' ), true ) ) {
 						return $user_memberships['post_id'];
 					}
 				},
@@ -12287,6 +12261,10 @@ if ( ! function_exists( 'user_registration_create_product_and_price_for_stripe' 
 	 * @param array $data The data array.
 	 */
 	function user_registration_create_product_and_price_for_stripe( $data ) {
+		if ( ! function_exists( 'urm_is_payment_gateway_configured' ) || ! urm_is_payment_gateway_configured( 'stripe' ) ) {
+			return;
+		}
+
 		$stripe_service        = new StripeService();
 		$membership_repository = new MembershipRepository();
 		$memberships           = $membership_repository->get_all_memberships_without_status_filter();

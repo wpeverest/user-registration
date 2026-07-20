@@ -78,8 +78,8 @@ class CouponService {
 			return $this->set_coupon_response( false, 422, 'Invalid coupon type.', );
 		}
 
-		$coupon_membership = json_decode( $coupon_details['coupon_membership'], true );
-		if ( ! in_array( $data['membership_id'], $coupon_membership ) ) {
+		$coupon_membership = (array) json_decode( $coupon_details['coupon_membership'], true );
+		if ( ! in_array( $membership_id, $coupon_membership ) ) {
 			return $this->set_coupon_response( false, 422, 'Coupon cannot be applied for the selected membership.' );
 		}
 
@@ -87,6 +87,10 @@ class CouponService {
 			return $this->set_coupon_response( false, 422, 'Coupon is not valid until ' . date_i18n( get_option( 'date_format' ), strtotime( $coupon_details['coupon_start_date'] ) ) . '.', );
 		}
 		$membership_details = $this->membership_repository->get_single_membership_by_ID( $membership_id );
+
+		if ( empty( $membership_details['meta_value'] ) ) {
+			return $this->set_coupon_response( false, 404, 'Membership does not exist.' );
+		}
 
 		$membership_meta = json_decode( $membership_details['meta_value'], true );
 		if ( 'free' === $membership_meta['type'] ) {
@@ -123,9 +127,12 @@ class CouponService {
 				$local_currency_data = ! empty( $membership_meta['local_currency'] ) ? $membership_meta['local_currency'] : array();
 
 				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
-					$amount = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+					// Pass $membership_amount as the ratio reference so a manual (flat) local price scales with the discount.
+					$local_full_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+					$amount            = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id, $membership_amount );
+
 					if ( $coupon_details['coupon_discount_type'] === 'fixed' ) {
-						$coupon_details['coupon_discount'] = CoreFunctions::ur_get_amount_after_conversion( $coupon_details['coupon_discount'], $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+						$coupon_details['coupon_discount'] = max( 0, $local_full_amount - $amount );
 					}
 				}
 			}

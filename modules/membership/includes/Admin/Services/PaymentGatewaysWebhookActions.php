@@ -67,7 +67,7 @@ class PaymentGatewaysWebhookActions {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'handle_paypal_webhook' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( $this, 'verify_paypal_webhook_signature' ),
 			)
 		);
 	}
@@ -274,9 +274,7 @@ class PaymentGatewaysWebhookActions {
 	/**
 	 * Verify PayPal webhook signature via the PayPal REST verification API.
 	 *
-	 * Fail-open when no webhook ID is stored (mirrors Stripe behaviour when
-	 * no webhook secret is configured), so existing sites are not broken before
-	 * credentials are saved for the first time.
+	 * Rejects the request when no webhook ID is configured (fail-closed).
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return bool
@@ -298,12 +296,11 @@ class PaymentGatewaysWebhookActions {
 		);
 
 		if ( empty( $webhook_id ) ) {
-			PaymentGatewayLogging::log_general(
+			PaymentGatewayLogging::log_error(
 				'paypal',
-				'PayPal webhook ID not configured — skipping signature verification (fail-open).',
-				'notice'
+				'PayPal webhook ID not configured — request rejected.'
 			);
-			return true;
+			return false;
 		}
 
 		$headers = array(

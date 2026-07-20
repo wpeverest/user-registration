@@ -309,10 +309,27 @@ $border-color_6: #475bb2;
 						}
 
 						.button {
+							display: inline-flex !important;
+							align-items: center;
+							justify-content: center;
 							width: 28px !important;
 							min-width: 28px !important;
 							min-height: 26px !important;
 							background: #eeeeee !important;
+
+							.dashicons {
+								display: flex !important;
+								align-items: center;
+								justify-content: center;
+								width: 20px !important;
+								height: 20px !important;
+								line-height: 20px !important;
+
+								&::before {
+									font-size: 18px !important;
+									line-height: 20px !important;
+								}
+							}
 
 							&.urcr-remove-field-button {
 								margin-left: 0;

@@ -141,11 +141,9 @@ $gateway_labels = array(
 
 		</div>
 
-		<!--
 		<?php
 		if ( $total_pages > 1 ) :
 			?>
-			-->
 			<div class="ur-pagination">
 				<?php
 				echo paginate_links(

@@ -3,6 +3,8 @@
 	var elements = {};
 	var stripe_mode_validated = false;
 	var validated_stripe_pm_id = null;
+	var stripe_card_state = { complete: false, error: null };
+	var stripe_validation_in_progress = false;
 	var ur_membership_frontend_utils = {
 		/**
 		 * Appends a spinner element to the specified element.
@@ -55,6 +57,7 @@
 			var $submitButton = $buttonContainer.find(".ur-submit-button");
 
 			$submitButton.find("span").removeClass("ur-front-spinner");
+			$submitButton.prop("disabled", false);
 		},
 
 		/**
@@ -452,7 +455,7 @@
 				is_upgrade = false;
 			}
 			var no_errors = true,
-				pg_inputs = $('input[name="urm_payment_method"]:visible'),
+				pg_inputs = $('input[name="urm_payment_method"]:checked'),
 				selected_tier = $(".urm-team-pricing-tier.selected"),
 				seat_input = selected_tier.find(".ur-team-tier-seats-input");
 
@@ -477,6 +480,25 @@
 							};
 
 							elements.card.emit("change", event);
+						} else if (!stripe_card_state.complete) {
+							// Card element has input but Stripe.js reports it
+							// incomplete/invalid (e.g. missing postal code).
+							// Block the submit here, before the registration
+							// request creates the user, instead of letting
+							// confirmCardPayment fail afterwards.
+							no_errors = false;
+							var incomplete_event = {
+								error: {
+									message:
+										stripe_card_state.error &&
+										stripe_card_state.error.message
+											? stripe_card_state.error.message
+											: urmf_data.labels
+													.i18n_empty_card_details
+								}
+							};
+
+							elements.card.emit("change", incomplete_event);
 						}
 					}
 				});
@@ -686,9 +708,6 @@
 					);
 					break;
 				case "stripe":
-					ur_membership_frontend_utils.show_success_message(
-						response.data.message
-					);
 					stripe_settings.handle_stripe_response(
 						response,
 						prepare_members_data,
@@ -1083,6 +1102,9 @@
 				);
 			} else {
 				var taxDetailsEl = $(document).find("#ur-tax-details");
+				var $upgradeCurrencyEl = $(
+					"#ur-local-currency-switch-currency"
+				);
 				this.send_data(
 					{
 						_wpnonce: urmf_data.upgrade_membership_nonce,
@@ -1094,6 +1116,12 @@
 						current_subscription_id: current_subscription_id,
 						selected_pg: selected_pg,
 						coupon: data.coupon,
+						switched_currency: $upgradeCurrencyEl.length
+							? $upgradeCurrencyEl.val()
+							: "",
+						urm_zone_id: $upgradeCurrencyEl.length
+							? $upgradeCurrencyEl.data("urm-zone-id")
+							: "",
 						tax_rate: taxDetailsEl.length
 							? taxDetailsEl.data("tax-rate")
 							: "",
@@ -1222,10 +1250,16 @@
 						"manual" ==
 						localCurrencyDetails[currency].pricing_method
 					) {
-						newCalculatedValue = parseFloat(
+						// "rate" is a flat local price here, not a multiplier — scale by the discount ratio.
+						var fullManualPrice = parseFloat(
 							localCurrencyDetails[currency].rate
 						);
-						newSubTotal = newCalculatedValue;
+						var discountRatio =
+							subTotal > 0 ? total / subTotal : 1;
+
+						newCalculatedValue = fullManualPrice * discountRatio;
+						newSubTotal = fullManualPrice;
+						newDiscount = fullManualPrice - newCalculatedValue;
 					}
 
 					if (urmf_data.curreny_pos === "left") {
@@ -1460,6 +1494,12 @@
 					type
 				);
 			} else {
+				var taxDetailsElMultiple = $(document).find(
+					"#ur-tax-details"
+				);
+				var $multipleCurrencyEl = $(
+					"#ur-local-currency-switch-currency"
+				);
 				this.send_data(
 					{
 						_wpnonce: urmf_data.upgrade_membership_nonce,
@@ -1469,7 +1509,21 @@
 						form_data: data.form_data,
 						coupon: data.coupon,
 						form_id: data.form_id,
-						type: type
+						type: type,
+						switched_currency: $multipleCurrencyEl.length
+							? $multipleCurrencyEl.val()
+							: "",
+						urm_zone_id: $multipleCurrencyEl.length
+							? $multipleCurrencyEl.data("urm-zone-id")
+							: "",
+						tax_rate: taxDetailsElMultiple.length
+							? taxDetailsElMultiple.data("tax-rate")
+							: "",
+						tax_calculation_method: taxDetailsElMultiple.length
+							? taxDetailsElMultiple.data(
+									"tax-calculation-method"
+								)
+							: ""
 					},
 					{
 						success: function (response) {
@@ -1589,6 +1643,9 @@
 			};
 
 			var taxDetailsElAuth = $(document).find("#ur-tax-details");
+			var $upgradeAuthCurrencyEl = $(
+				"#ur-local-currency-switch-currency"
+			);
 			$(document).trigger("urm_before_upgrade_membership_submit", {
 				data: data,
 				onComplete: function (data) {
@@ -1604,6 +1661,12 @@
 							ur_authorize_data: data.ur_authorize_data,
 							form_data: submittedData.form_data,
 							coupon: submittedData.coupon,
+							switched_currency: $upgradeAuthCurrencyEl.length
+								? $upgradeAuthCurrencyEl.val()
+								: "",
+							urm_zone_id: $upgradeAuthCurrencyEl.length
+								? $upgradeAuthCurrencyEl.data("urm-zone-id")
+								: "",
 							tax_rate: taxDetailsElAuth.length
 								? taxDetailsElAuth.data("tax-rate")
 								: "",
@@ -1662,6 +1725,7 @@
 			});
 		},
 		handle_authorize_multiple_purchase: function (
+			submittedData,
 			selected_membership_id,
 			selected_pg,
 			btn,
@@ -1674,6 +1738,13 @@
 				type: type
 			};
 
+			var taxDetailsElAuthMultiple = $(document).find(
+				"#ur-tax-details"
+			);
+			var $authMultipleCurrencyEl = $(
+				"#ur-local-currency-switch-currency"
+			);
+
 			$(document).trigger("urm_before_multiple_membership_submit", {
 				data: data,
 				onComplete: function (data) {
@@ -1683,7 +1754,25 @@
 							action: "user_registration_membership_add_multiple_membership",
 							selected_membership_id: data.selected_membership_id,
 							selected_pg: data.selected_pg,
-							ur_authorize_data: data.ur_authorize_data
+							ur_authorize_data: data.ur_authorize_data,
+							form_data: submittedData.form_data,
+							coupon: submittedData.coupon,
+							form_id: submittedData.form_id,
+							type: data.type,
+							switched_currency: $authMultipleCurrencyEl.length
+								? $authMultipleCurrencyEl.val()
+								: "",
+							urm_zone_id: $authMultipleCurrencyEl.length
+								? $authMultipleCurrencyEl.data("urm-zone-id")
+								: "",
+							tax_rate: taxDetailsElAuthMultiple.length
+								? taxDetailsElAuthMultiple.data("tax-rate")
+								: "",
+							tax_calculation_method: taxDetailsElAuthMultiple.length
+								? taxDetailsElAuthMultiple.data(
+										"tax-calculation-method"
+									)
+								: ""
 						},
 						{
 							success: function (response) {
@@ -2159,6 +2248,13 @@
 			elements.card.addEventListener("change", function (e) {
 				stripe_mode_validated = false;
 				validated_stripe_pm_id = null;
+				// Genuine Stripe change events always carry a boolean `complete`;
+				// synthetic events emitted from validate_membership_form don't,
+				// and must not overwrite the tracked card state.
+				if (typeof e.complete !== "undefined") {
+					stripe_card_state.complete = e.complete;
+					stripe_card_state.error = e.error || null;
+				}
 				if (e.error) {
 					stripe_settings.show_stripe_error(e.error.message);
 				} else {
@@ -2271,7 +2367,6 @@
 						prepare_members_data,
 						form_response
 					);
-					ur_membership_frontend_utils.hide_payment_processing_overlay();
 				});
 		},
 		update_order_status: function (
@@ -2303,6 +2398,10 @@
 				{
 					success: function (response) {
 						if (response.success) {
+							ur_membership_frontend_utils.hide_payment_processing_overlay();
+							ur_membership_frontend_utils.show_success_message(
+								response.data.message
+							);
 							if (
 								response.data.is_upgrading ||
 								response.data.is_renewing ||
@@ -2343,7 +2442,6 @@
 									}
 								);
 							}
-							//first show successful toast
 						} else {
 							ur_membership_frontend_utils.hide_payment_processing_overlay();
 							stripe_settings.show_stripe_error(
@@ -2518,59 +2616,85 @@
 			ur_membership_frontend_utils.show_payment_processing_overlay();
 
 			return new Promise(function (resolve, reject) {
+				var subscription = data.subscription || {};
+				var resolvePayload = {
+					subscription: subscription,
+					response_data: data.response_data,
+					message: data.message,
+					prepare_members_data: data.prepare_members_data,
+					form_response: data.form_response
+				};
+
 				if (
-					data.subscription &&
-					(data.subscription.status === "active" ||
-						data.subscription.status === "trialing")
+					subscription.status === "active" ||
+					subscription.status === "trialing"
 				) {
-					resolve({
-						subscription: data.subscription,
-						response_data: data.response_data,
-						message: data.message,
-						prepare_members_data: data.prepare_members_data,
-						form_response: data.form_response
-					});
 					ur_membership_frontend_utils.hide_payment_processing_overlay();
+					resolve(resolvePayload);
+					return;
 				}
 
-				var paymentIntent =
-					data.subscription.latest_invoice.payment_intent;
+				// Only an expanded PaymentIntent with a client_secret allows SCA / 3D Secure on the client.
+				var latestInvoice = subscription.latest_invoice || {};
+				var paymentIntent = latestInvoice.payment_intent;
+				var clientSecret =
+					paymentIntent && typeof paymentIntent === "object"
+						? paymentIntent.client_secret
+						: null;
+				var piStatus =
+					paymentIntent && typeof paymentIntent === "object"
+						? paymentIntent.status
+						: null;
+				var needsAction =
+					piStatus === "requires_action" ||
+					piStatus === "requires_source_action" ||
+					piStatus === "requires_confirmation";
 
-				if ("trialing" !== data.subscription.status) {
-					if ("requires_action" === paymentIntent.status) {
-						data.paymentElements.stripe
-							.confirmCardPayment(paymentIntent.client_secret, {
-								payment_method: data.paymentMethodId
-							})
-							.then(function (result) {
-								if (result.error) {
-									var message = result.error.message;
-									reject(message, data);
-									return;
-								}
+				if (clientSecret && needsAction) {
+					data.paymentElements.stripe
+						.confirmCardPayment(clientSecret)
+						.then(function (result) {
+							ur_membership_frontend_utils.hide_payment_processing_overlay();
+							if (result.error) {
+								reject(result.error.message, data);
+								return;
+							}
 
-								if (
-									"succeeded" === result.paymentIntent.status
-								) {
-									data.subscription.status = "active";
-									resolve({
-										subscription: data.subscription,
-										form_id: data.form_response.form_id,
-										response_data: data.response_data,
-										prepare_members_data:
-											data.prepare_members_data,
-										form_response: data.form_response,
-										three_d_secure: true
-									});
-								} else {
-									var message =
-										"Unable to complete the payment.";
-									reject(message, data);
-								}
-								ur_membership_frontend_utils.hide_payment_processing_overlay();
-							});
-					}
+							if (
+								result.paymentIntent &&
+								"succeeded" === result.paymentIntent.status
+							) {
+								subscription.status = "active";
+								resolve({
+									subscription: subscription,
+									form_id: data.form_response.form_id,
+									response_data: data.response_data,
+									prepare_members_data:
+										data.prepare_members_data,
+									form_response: data.form_response,
+									three_d_secure: true
+								});
+							} else {
+								reject(
+									"Unable to complete the payment.",
+									data
+								);
+							}
+						})
+						.catch(function (error) {
+							ur_membership_frontend_utils.hide_payment_processing_overlay();
+							reject(
+								error && error.message
+									? error.message
+									: "Unable to complete the payment.",
+								data
+							);
+						});
+					return;
 				}
+
+				ur_membership_frontend_utils.hide_payment_processing_overlay();
+				resolve(resolvePayload);
 			});
 		},
 
@@ -2631,6 +2755,159 @@
 			return { success: true };
 		}
 	};
+	var ur_membership_currency_gateway_utils = {
+		gateway_labels: {
+			paypal: "PayPal",
+			mollie: "Mollie",
+			authorize: "Authorize.Net"
+		},
+		get_unsupported_gateways: function (currency) {
+			var unsupported = [];
+
+			if (!currency || !urmf_data.supported_currencies) {
+				return unsupported;
+			}
+
+			$.each(urmf_data.supported_currencies, function (
+				gateway,
+				currencies
+			) {
+				if ($.inArray(currency, currencies) === -1) {
+					unsupported.push(gateway);
+				}
+			});
+
+			return unsupported;
+		},
+		get_active_currency: function () {
+			var $switcher = $("#ur-local-currency-switch-currency"),
+				$checkedMembership = $('input[name="urm_membership"]:checked');
+
+			if ($switcher.length) {
+				var switcherCurrency = $switcher.val();
+
+				if (!$checkedMembership.length) {
+					return switcherCurrency;
+				}
+
+				// A membership only charges in the switcher's currency if it has a matching zone.
+				var localCurrencyDetails =
+					$checkedMembership.data("urm-local-currency-details") ||
+					{};
+
+				if (localCurrencyDetails.hasOwnProperty(switcherCurrency)) {
+					return switcherCurrency;
+				}
+
+				return urmf_data.currency || switcherCurrency;
+			}
+
+			var checkoutCurrency = $checkedMembership.data("currency");
+
+			return checkoutCurrency || urmf_data.currency || "";
+		},
+		toggle_submit: function ($form_context, blocked) {
+			var submit_selector = ".ur-submit-button, .urm-update-membership-button",
+				$submit = $form_context.find(submit_selector);
+
+			if (!$submit.length) {
+				$submit = $(submit_selector);
+			}
+
+			if (blocked) {
+				$submit
+					.prop("disabled", true)
+					.addClass("urm-submit-currency-blocked")
+					.data("urm-currency-gateway-blocked", true);
+			} else if ($submit.data("urm-currency-gateway-blocked")) {
+				$submit
+					.prop("disabled", false)
+					.removeClass("urm-submit-currency-blocked")
+					.data("urm-currency-gateway-blocked", false);
+			}
+		},
+		build_message: function (currency, unsupported) {
+			var self = this,
+				labels = $.map(unsupported, function (gateway) {
+					return self.gateway_labels[gateway] || gateway;
+				});
+
+			return (
+				currency +
+				" " +
+				urmf_data.labels.i18n_currency_not_supported_by +
+				" " +
+				labels.join(", ") +
+				". " +
+				urmf_data.labels.i18n_choose_another_gateway_or_currency
+			);
+		},
+		build_no_gateway_message: function (currency) {
+			return (
+				urmf_data.labels.i18n_no_gateway_available_for_currency ||
+				""
+			).replace("%s", currency);
+		},
+		evaluate: function ($context) {
+			var self = this,
+				$form_context =
+					$context && $context.length
+						? $context
+						: $(
+								"#ur-membership-registration, .membership-upgrade-container"
+							),
+				currency = self.get_active_currency(),
+				unsupported = self.get_unsupported_gateways(currency),
+				$notice = $("#payment-gateway-notice"),
+				$checked = $('input[name="urm_payment_method"]:checked'),
+				checkedValue = $checked.val(),
+				submit_blocked = false;
+
+			$(".ur_payment_gateway_container input.pg-list").each(function () {
+				var $input = $(this),
+					$label = $input.closest("label"),
+					$container = $input.closest(".ur_payment_gateway_container"),
+					gateway = $input.val(),
+					isUnsupported = $.inArray(gateway, unsupported) !== -1;
+
+				if ($container.hasClass("urm-d-none")) {
+					return;
+				}
+
+				if (isUnsupported) {
+					if (!$label.hasClass("urm-d-none")) {
+						$label.addClass("urm-d-none urm-pg-currency-hidden");
+						$input.prop("disabled", true);
+					}
+				} else if ($label.hasClass("urm-pg-currency-hidden")) {
+					$label
+						.removeClass("urm-d-none")
+						.removeClass("urm-pg-currency-hidden");
+					$input.prop("disabled", false);
+				}
+			});
+
+			if (checkedValue && $.inArray(checkedValue, unsupported) !== -1) {
+				$checked.prop("checked", false);
+			}
+
+			var $visiblePgContainer = $(
+					".ur_payment_gateway_container"
+				).not(".urm-d-none"),
+				$remainingGateways = $visiblePgContainer
+					.find('label[for^="ur-membership-"]')
+					.not(".urm-d-none");
+
+			if ($visiblePgContainer.length && $remainingGateways.length === 0) {
+				$notice.text(self.build_no_gateway_message(currency));
+				submit_blocked = true;
+			} else {
+				$notice.text("");
+			}
+
+			self.toggle_submit($form_context, submit_blocked);
+		}
+	};
 	var register_events = {
 		init: function () {
 			$(document).on(
@@ -2641,7 +2918,11 @@
 						stripe_container = $(".stripe-container"),
 						stripe_error_container = $("#stripe-errors");
 
-					// register_events.validateSwitchCurrency( selected_method );
+					ur_membership_currency_gateway_utils.evaluate(
+						$(this).closest(
+							"#ur-membership-registration, .membership-upgrade-container"
+						)
+					);
 
 					var authorize_container = $(".authorize-net-container");
 					var authorize_error_container = $("#authorize-errors");
@@ -2840,6 +3121,7 @@
 					} else {
 						stripe_container.addClass("urm-d-none");
 					}
+					ur_membership_currency_gateway_utils.evaluate($form_context);
 				}
 			);
 			// membership input change trigger for page with membership id as params.
@@ -2869,6 +3151,27 @@
 							: $(
 									'input[name="urm_payment_method"]:checked'
 								).val();
+
+					if (selected_pg && selected_pg !== "free") {
+						var upgrade_currency =
+								ur_membership_currency_gateway_utils.get_active_currency(),
+							upgrade_unsupported_gateways =
+								ur_membership_currency_gateway_utils.get_unsupported_gateways(
+									upgrade_currency
+								);
+
+						if (
+							$.inArray(selected_pg, upgrade_unsupported_gateways) !== -1
+						) {
+							$("#upgrade-membership-notice").text(
+								ur_membership_currency_gateway_utils.build_message(
+									upgrade_currency,
+									upgrade_unsupported_gateways
+								)
+							);
+							return;
+						}
+					}
 
 					//validation end
 					var action = searchParams.get("action"),
@@ -3121,7 +3424,7 @@
 				"user_registration_frontend_validate_before_form_submit",
 				function (e, $form) {
 					var stripe_selected = false;
-					$('input[name="urm_payment_method"]:visible').each(
+					$('input[name="urm_payment_method"]:checked').each(
 						function () {
 							if (
 								$(this).val() === "stripe" &&
@@ -3150,9 +3453,61 @@
 						return;
 					}
 
-					stripe_settings.show_stripe_error(
-						urmf_data.labels.i18n_validating_stripe_card
+					// Prevent double submission
+					if (stripe_validation_in_progress) return;
+					stripe_validation_in_progress = true;
+
+					var $submit_button =
+						$form && $form.length
+							? $form.find(".ur-submit-button")
+							: $(".ur-submit-button");
+					$submit_button.prop("disabled", true);
+					$submit_button
+						.find("span")
+						.addClass("ur-front-spinner");
+
+					// The core submit handler's `#stripe-errors:visible` guard is
+					// what stops this first submit from racing straight to
+					// registration while the card is still being validated (the
+					// button's own disabled state only protects *later* clicks,
+					// not this first synchronous pass). We still need that
+					// element to exist, but the user already sees the button's
+					// spinner, so this one is collapsed out of the layout
+					// entirely (zero size, taken out of normal flow) rather
+					// than just visually hidden — otherwise the `.user-
+					// registration-error` class's own border/padding still
+					// renders an empty box and reserves a gap. jQuery's
+					// `:visible` only requires the element to generate a box
+					// (any `getClientRects()` entry) — it doesn't need to have
+					// non-zero size — so this still satisfies that guard.
+					var $validating_marker = $(
+						'<label id="stripe-errors" class="user-registration-error" role="alert" style="position:absolute;width:0;height:0;margin:0;padding:0;border:0;overflow:hidden;"></label>'
 					);
+					$membership_registration_form
+						.find(".stripe-container")
+						.closest(".ur_membership_frontend_input_container")
+						.append($validating_marker);
+
+					// show_stripe_error() reuses an existing #stripe-errors
+					// element via .show(), which only toggles `display` and
+					// would leave the marker's collapsing inline styles in
+					// place — silently hiding a real error. Remove the marker
+					// first so a genuine failure always renders a fresh,
+					// fully-visible label.
+					var show_real_stripe_error = function (message) {
+						$membership_registration_form
+							.find("#stripe-errors")
+							.remove();
+						stripe_settings.show_stripe_error(message);
+					};
+
+					var release_submit = function () {
+						stripe_validation_in_progress = false;
+						$submit_button.prop("disabled", false);
+						$submit_button
+							.find("span")
+							.removeClass("ur-front-spinner");
+					};
 
 					elements.stripe
 						.createPaymentMethod({
@@ -3161,9 +3516,10 @@
 						})
 						.then(function (pmResult) {
 							if (pmResult.error) {
-								stripe_settings.show_stripe_error(
+								show_real_stripe_error(
 									pmResult.error.message
 								);
+								release_submit();
 								return;
 							}
 
@@ -3171,7 +3527,7 @@
 								urmf_data.ajax_url,
 								{
 									action: "user_registration_membership_validate_stripe_card_mode",
-									_nonce: urmf_data._nonce,
+									security: urmf_data._nonce,
 									payment_method_id: pmResult.paymentMethod.id
 								},
 								function (response) {
@@ -3182,6 +3538,7 @@
 										validated_stripe_pm_id =
 											pmResult.paymentMethod.id;
 										stripe_mode_validated = true;
+										stripe_validation_in_progress = false;
 										if ($form && $form.length) {
 											$form
 												.find(".ur-submit-button")
@@ -3189,16 +3546,22 @@
 											$form.submit();
 										}
 									} else {
-										stripe_settings.show_stripe_error(
+										show_real_stripe_error(
 											response.data &&
 												response.data.message
 												? response.data.message
 												: urmf_data.labels
 														.i18n_stripe_mode_error
 										);
+										release_submit();
 									}
 								}
-							);
+							).fail(function () {
+								release_submit();
+							});
+						})
+						.catch(function () {
+							release_submit();
 						});
 				}
 			);
@@ -3209,6 +3572,30 @@
 						$(pointer).find("#ur-membership-registration").length >
 						0
 					) {
+						var checkedGateway = $(pointer)
+							.find('input[name="urm_payment_method"]:checked')
+							.val();
+
+						if (checkedGateway) {
+							var activeCurrency =
+									ur_membership_currency_gateway_utils.get_active_currency(),
+								unsupportedGateways =
+									ur_membership_currency_gateway_utils.get_unsupported_gateways(
+										activeCurrency
+									);
+
+							if (
+								$.inArray(checkedGateway, unsupportedGateways) !== -1
+							) {
+								$error_message.message =
+									ur_membership_currency_gateway_utils.build_message(
+										activeCurrency,
+										unsupportedGateways
+									);
+								return;
+							}
+						}
+
 						var membersData = ur_membership_ajax_utils.prepare_members_data();
 						if (validated_stripe_pm_id) {
 							membersData.payment_method_id = validated_stripe_pm_id;
@@ -3304,6 +3691,10 @@
 					if (selected_method === "authorize") {
 						authorize_container.removeClass("urm-d-none");
 					}
+
+					ur_membership_currency_gateway_utils.evaluate(
+						$(this).closest(".membership-upgrade-container")
+					);
 				}
 			);
 			//cancel membership button
@@ -3540,8 +3931,18 @@
 									localCurrencyDetails[currency]
 										.pricing_method
 								) {
-									newCalculatedValue =
-										localCurrencyDetails[currency].rate;
+									// "rate" is a flat local price here, not a multiplier — scale by the discount ratio.
+									var fullManualPrice = parseFloat(
+										localCurrencyDetails[currency].rate
+									);
+									var discountRatio =
+										calculatedAmount > 0
+											? total / calculatedAmount
+											: 1;
+
+									newCalculatedValue = (
+										fullManualPrice * discountRatio
+									).toFixed(2);
 								}
 
 								if (urmf_data.curreny_pos === "left") {
@@ -3634,6 +4035,8 @@
 							}
 						}
 					});
+
+					ur_membership_currency_gateway_utils.evaluate();
 				}
 			);
 

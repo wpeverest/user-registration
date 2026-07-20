@@ -8071,6 +8071,10 @@ body.user-registration {
 				.status-inactive {
 					color: $pending_user;
 				}
+
+				.status-pending {
+					color: #374151;
+				}
 			}
 		}
 	}
@@ -8697,6 +8701,24 @@ body.user-registration-page {
 					float: none;
 					border-radius: 50%;
 					line-height: 0.71428571;
+				}
+			}
+		}
+	}
+}
+
+// Additive bugfix: the checkbox/radio rule above sets background:#fff with higher specificity than WP core's
+// input:checked{background:theme-color}, so a checked box stays white and WP's white checkmark SVG is invisible.
+// Restore the theme-color background on :checked only (scope = WP profile/user-edit pages) so the check shows.
+body.user-registration-page {
+	#profile-page {
+		#your-profile {
+			table.form-table,
+			#application-passwords-section {
+				input[type="checkbox"]:checked,
+				input[type="radio"]:checked {
+					background: var(--wp-admin-theme-color, #2271b1);
+					border-color: var(--wp-admin-theme-color, #2271b1);
 				}
 			}
 		}
@@ -9459,6 +9481,14 @@ body.user-registration-page {
 .user-subscription-expired,
 .user-payment-failed {
 	color: $deny_color;
+}
+
+.user-subscription-canceling,
+.user-registration-badge.urm-canceling-badge {
+	color: #374151;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
 }
 
 .ur-admin-template {

@@ -127,18 +127,18 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			if ( $for_membership ) {
 				return $wpdb->get_results(
 					$wpdb->prepare(
-						'SELECT wum.meta_value AS ur_form_id,
+						"SELECT wum.meta_value AS ur_form_id,
 			                COUNT(DISTINCT wu.ID) AS total
-							FROM wp_users wu
-							         JOIN wp_usermeta wum
+							FROM {$wpdb->users} wu
+							         JOIN {$wpdb->usermeta} wum
 							              ON wum.user_id = wu.ID
 							                  AND wum.meta_key = %s
-							         JOIN wp_usermeta wpum
+							         JOIN {$wpdb->usermeta} wpum
 							              ON wpum.user_id = wu.ID
 							                  AND wpum.meta_key = %s
 							                  AND wpum.meta_value = %s
 							GROUP BY wum.meta_value
-							ORDER BY total DESC;',
+							ORDER BY total DESC;",
 						'ur_form_id',
 						'ur_registration_source',
 						'membership'
@@ -149,19 +149,19 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 			return $wpdb->get_results(
 				$wpdb->prepare(
-					'SELECT wum.meta_value AS ur_form_id,
+					"SELECT wum.meta_value AS ur_form_id,
 				       COUNT(DISTINCT wu.ID) AS total
-						FROM wp_users wu
-						         JOIN wp_usermeta wum
+						FROM {$wpdb->users} wu
+						         JOIN {$wpdb->usermeta} wum
 						              ON wum.user_id = wu.ID
 						                  AND wum.meta_key = %s
 						WHERE NOT EXISTS (SELECT 1
-						                  FROM wp_usermeta wpum
+						                  FROM {$wpdb->usermeta} wpum
 						                  WHERE wpum.user_id = wu.ID
 						                    AND wpum.meta_key = %s
 						                    AND wpum.meta_value = %s)
 						GROUP BY wum.meta_value
-						ORDER BY total DESC;',
+						ORDER BY total DESC;",
 					'ur_form_id',
 					'ur_registration_source',
 					'membership'

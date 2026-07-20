@@ -17,6 +17,7 @@ use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 use WPEverest\URMembership\Admin\Services\CouponService;
 use WPEverest\URMembership\Admin\Services\Paypal\NewPaypalService;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 
 class SubscriptionService {
 
@@ -227,6 +228,8 @@ class SubscriptionService {
 				$stripe_service = new StripeService();
 				return $stripe_service->reactivate_subscription( $subscription['subscription_id'] );
 				break;
+			case 'bank':
+				return array( 'status' => true );
 			default:
 				return apply_filters( 'urm_reactivate_membership_subscription', $response, $order, $subscription );
 		}
@@ -341,6 +344,23 @@ class SubscriptionService {
 		$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
 		$symbol   = ur_get_currency_symbol( $currency );
 
+		// Convert the plan's base price into $currency so it matches $symbol/$total above.
+		$plan_amount = isset( $membership_metas['amount'] ) ? (float) $membership_metas['amount'] : 0;
+
+		if (
+			$currency !== get_option( 'user_registration_payment_currency', 'USD' ) &&
+			! empty( $membership_metas['local_currency'] ) &&
+			ur_string_to_bool( $membership_metas['local_currency']['is_enable'] ) &&
+			class_exists( CoreFunctions::class )
+		) {
+			$plan_zone_id = CoreFunctions::ur_get_zone_id_by_currency( $membership_metas['local_currency'], $currency );
+
+			if ( ! empty( $plan_zone_id ) ) {
+				$plan_pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $plan_zone_id );
+				$plan_amount       = CoreFunctions::ur_get_amount_after_conversion( $plan_amount, $currency, $plan_pricing_data, $membership_metas['local_currency'], $plan_zone_id );
+			}
+		}
+
 		if ( ! empty( $data['context'] ) && 'thank_you_page' == $data['context'] ) {
 			$data['payment_method'] = ! empty( $member_order['payment_method'] ) ? $member_order['payment_method'] : '';
 			$data['transaction_id'] = ! empty( $member_order['transaction_id'] ) ? $member_order['transaction_id'] : '';
@@ -407,7 +427,7 @@ class SubscriptionService {
 			'membership_plan_status'            => isset( $subscription['status'] ) ? esc_html( ucwords( $subscription['status'] ) ) : '',
 			'membership_plan_payment_date'      => ! empty( $order['created_at'] ) ? esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ) : '',
 			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
-			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $membership_metas['amount'] ?? 0, 2 ) : number_format( $membership_metas['amount'] ?? 0, 2 ) . $symbol,
+			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $plan_amount, 2 ) : number_format( $plan_amount, 2 ) . $symbol,
 			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ?? '' ) ),
 			'membership_plan_trial_amount'      => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) : number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) . $symbol,
 			'membership_plan_coupon_discount'   => (
@@ -461,6 +481,16 @@ class SubscriptionService {
 
 		$current_subscription_id                   = $data['current_subscription_id'];
 		$subscription                              = $this->subscription_repository->retrieve( $data['current_subscription_id'] );
+
+		if ( empty( $subscription ) || (int) $subscription['user_id'] !== get_current_user_id() ) {
+			return array(
+				'response' => array(
+					'status'  => false,
+					'message' => __( 'You do not have permission to upgrade this subscription.', 'user-registration' ),
+				),
+			);
+		}
+
 		$user                                      = get_userdata( $subscription['user_id'] );
 		$payment_method                            = $data['selected_pg'];
 		$membership                                = $this->membership_repository->get_single_membership_by_ID( $subscription['item_id'] );
@@ -470,6 +500,26 @@ class SubscriptionService {
 		$selected_membership_details               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$selected_membership_details['post_title'] = $membership['post_title'];
 		$selected_membership_details['membership'] = $data['selected_membership_id'];
+
+		// Validate that the submitted payment method is one the destination membership actually supports.
+		if ( 'free' !== ( $selected_membership_details['type'] ?? '' ) ) {
+			$configured_gateways = array();
+			if ( ! empty( $selected_membership_details['payment_gateways'] ) && is_array( $selected_membership_details['payment_gateways'] ) ) {
+				foreach ( $selected_membership_details['payment_gateways'] as $gw_key => $gw_data ) {
+					if ( isset( $gw_data['status'] ) && 'on' === $gw_data['status'] ) {
+						$configured_gateways[] = $gw_key;
+					}
+				}
+			}
+			if ( ! empty( $configured_gateways ) && ! in_array( $payment_method, $configured_gateways, true ) ) {
+				return array(
+					'response' => array(
+						'status'  => false,
+						'message' => __( 'Invalid payment method for this membership.', 'user-registration' ),
+					),
+				);
+			}
+		}
 
 		$selected_membership_details['payment_method'] = $payment_method;
 		$membership_process                            = urm_get_membership_process( $user->ID );
@@ -507,6 +557,14 @@ class SubscriptionService {
 			'membership_data' => $selected_membership_details,
 		);
 
+		// Forward the local-currency zone so the new order is charged in it (see OrderService::prepare_orders_data()).
+		if ( ! empty( $data['switched_currency'] ) && ! empty( $data['urm_zone_id'] ) ) {
+			$members_data['local_currency_details'] = array(
+				'switched_currency' => $data['switched_currency'],
+				'urm_zone_id'       => $data['urm_zone_id'],
+			);
+		}
+
 		if ( ! empty( $data['tax_rate'] ) ) {
 			$members_data['tax_data'] = array(
 				'tax_rate'               => floatval( $data['tax_rate'] ),
@@ -536,6 +594,11 @@ class SubscriptionService {
 		if ( ! empty( $membership_details ) ) {
 			$members_data['role'] = ! empty( $membership_details['role'] ) ? $membership_details['role'] : 'subscriber';
 		}
+
+		// UR-4573: Flag the upgrade so the previous membership's role is swapped out (instead of
+		// accumulating) while the user's base role is preserved.
+		$members_data['is_upgrade']    = true;
+		$members_data['previous_role'] = ! empty( $current_membership_details['role'] ) ? sanitize_text_field( $current_membership_details['role'] ) : '';
 
 		$member_service = new MembersService();
 		$member_service->update_user_meta( $members_data, $user->ID );
@@ -591,6 +654,8 @@ class SubscriptionService {
 			'order_id'               => $order['ID'],
 			'tax_rate'               => ! empty( $data['tax_rate'] ) ? $data['tax_rate'] : '',
 			'tax_calculation_method' => ! empty( $data['tax_calculation_method'] ) ? $data['tax_calculation_method'] : '',
+			'switched_currency'      => ! empty( $data['switched_currency'] ) ? $data['switched_currency'] : '',
+			'urm_zone_id'            => ! empty( $data['urm_zone_id'] ) ? $data['urm_zone_id'] : '',
 		);
 
 		if ( ! empty( $coupon ) ) {
@@ -739,6 +804,14 @@ class SubscriptionService {
 		}
 
 		$subscription                = $this->subscription_repository->retrieve( $data['current_subscription_id'] );
+
+		if ( empty( $subscription ) || (int) $subscription['user_id'] !== get_current_user_id() ) {
+			return array(
+				'status'  => false,
+				'message' => __( 'You do not have permission to upgrade this subscription.', 'user-registration' ),
+			);
+		}
+
 		$membership                  = $this->membership_repository->get_single_membership_by_ID( $data['selected_membership_id'] );
 		$selected_membership_details = wp_unslash( json_decode( $membership['meta_value'], true ) );
 
@@ -957,6 +1030,30 @@ class SubscriptionService {
 			'membership_data' => $membership_details,
 		);
 
+		// Re-derive the member's local-currency zone from their most recent order for this renewal.
+		$switched_currency = '';
+		$switched_zone_id  = null;
+
+		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( CoreFunctions::class ) ) {
+			$previous_order = $this->orders_repository->get_order_by_subscription( $member_subscription['ID'] );
+
+			if ( ! empty( $previous_order['ID'] ) ) {
+				$previous_local_currency = $this->orders_repository->get_order_meta_by_order_id_and_meta_key( $previous_order['ID'], 'local_currency' );
+				$switched_currency        = ! empty( $previous_local_currency['meta_value'] ) ? $previous_local_currency['meta_value'] : '';
+
+				if ( ! empty( $switched_currency ) && ! empty( $membership_details['local_currency'] ) && ur_string_to_bool( $membership_details['local_currency']['is_enable'] ) ) {
+					$switched_zone_id = CoreFunctions::ur_get_zone_id_by_currency( $membership_details['local_currency'], $switched_currency );
+				}
+			}
+		}
+
+		if ( ! empty( $switched_currency ) && ! empty( $switched_zone_id ) ) {
+			$members_data['local_currency_details'] = array(
+				'switched_currency' => $switched_currency,
+				'urm_zone_id'       => $switched_zone_id,
+			);
+		}
+
 		$membership_process = urm_get_membership_process( $member_id );
 		if ( $membership_process && ! in_array( $membership_id, $membership_process['renew'] ) ) {
 			$membership_process['renew'][] = $membership_id;
@@ -982,6 +1079,11 @@ class SubscriptionService {
 			'subscription_data' => $member_subscription,
 			'order_id'          => $order['ID'],
 		);
+
+		if ( ! empty( $switched_currency ) && ! empty( $switched_zone_id ) ) {
+			$data['switched_currency'] = $switched_currency;
+			$data['urm_zone_id']       = $switched_zone_id;
+		}
 
 		$renew_response           = $payment_service->build_response( $data );
 		$renew_response['status'] = false;
@@ -1123,7 +1225,9 @@ class SubscriptionService {
 	 * @return void
 	 */
 	public function daily_membership_expiration_check() {
-		$date          = new \DateTime( 'today' );
+		// Grace period gives the hourly missed-payment backfill time to catch a renewal
+		$grace_hours   = (int) apply_filters( 'urm_expiry_grace_hours', 12 );
+		$date          = new \DateTime( "-{$grace_hours} hours" );
 		$check_date    = $date->format( 'Y-m-d H:i:s' );
 		$subscriptions = $this->members_subscription_repository->get_subscriptions_to_expire( $check_date );
 		if ( empty( $subscriptions ) ) {
@@ -1144,12 +1248,17 @@ class SubscriptionService {
 			$subscription_id = $subscription['subscription_id'];
 			$user_id         = $subscription['member_id'];
 			$membership_id   = isset( $subscription['membership'] ) ? absint( $subscription['membership'] ) : 0;
-			$last_order      = $this->members_orders_repository->get_member_orders( $user_id );
+			$order           = $this->orders_repository->get_order_by_subscription( $subscription_id );
 
-			if ( $last_order['order_type'] !== 'subscription' ) {
+			if ( ( $order['order_type'] ?? '' ) !== 'subscription' ) {
 				continue;
 			}
-			// Update subscription status to expired
+			// If this was a pending-cancel PayPal subscription, now truly cancel it on PayPal's end.
+			$pending_cancel_meta = get_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id, true );
+			if ( $pending_cancel_meta && 'paypal' === ( $order['payment_method'] ?? '' ) && ! empty( $subscription['gateway_subscription_id'] ) ) {
+				( new NewPaypalService() )->cancel_suspended_subscription( $subscription['gateway_subscription_id'] );
+			}
+			delete_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id );
 			$update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => 'expired' ) );
 
 			if ( $update_result ) {

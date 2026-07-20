@@ -69,7 +69,7 @@ class URCR_Shortcodes {
 
 			$get_meta_data_memberships = get_post_meta( $post->ID, 'urcr_meta_memberships', true );
 			$get_meta_data_roles       = get_post_meta( $post->ID, 'urcr_meta_roles', $single = true );
-			$current_user_role         = is_user_logged_in() ? wp_get_current_user()->roles[0] : 'guest';
+			$current_user_roles        = ( is_user_logged_in() && ! empty( wp_get_current_user()->roles ) ) ? (array) wp_get_current_user()->roles : array( 'guest' );
 
 			foreach ( $atts as $key => $value ) {
 				if ( is_string( $value ) ) {
@@ -126,7 +126,7 @@ class URCR_Shortcodes {
 							return do_shortcode( $content );
 						}
 					} elseif ( '1' == get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-						if ( is_array( $allowed_roles ) && in_array( $current_user_role, $allowed_roles ) ) {
+						if ( is_array( $allowed_roles ) && array_intersect( $current_user_roles, (array) $allowed_roles ) ) {
 							return do_shortcode( $content );
 						}
 					} elseif ( '2' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
@@ -149,7 +149,7 @@ class URCR_Shortcodes {
 							break;
 						case '1':
 							if ( isset( $get_meta_data_roles ) && ! empty( $get_meta_data_roles ) ) {
-								if ( is_array( $get_meta_data_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
+								if ( is_array( $get_meta_data_roles ) && array_intersect( $current_user_roles, (array) $get_meta_data_roles ) ) {
 									return do_shortcode( $content );
 								}
 							}
@@ -202,7 +202,7 @@ class URCR_Shortcodes {
 						break;
 
 					case 'choose_specific_roles':
-						if ( ! empty( $specific_roles ) && in_array( $current_user_role, $specific_roles, true ) ) {
+						if ( ! empty( $specific_roles ) && array_intersect( $current_user_roles, (array) $specific_roles ) ) {
 							$matched = true;
 						}
 						break;

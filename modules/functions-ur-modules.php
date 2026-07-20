@@ -582,11 +582,15 @@ if ( ! function_exists( 'urm_check_user_membership_has_access' ) ) {
 	 * @param array $allowed_memberships Allowed memberships for access.
 	 */
 	function urm_check_user_membership_has_access( $allowed_memberships ) {
-		$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+		if ( is_super_admin() ) {
+			return true;
+		}
 
 		if ( ! is_user_logged_in() ) {
 			return false;
 		}
+
+		$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
 
 		$user_memberships = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 
@@ -618,9 +622,13 @@ if ( ! function_exists( 'urm_get_form_user_payments' ) ) {
 	 * @param array $args Arguments.
 	 */
 	function urm_get_form_user_payments( $args ) {
-		$args['meta_key']               = 'ur_payment_status';
-		$args['meta_compare']           = 'EXISTS';
-		$args['meta_query']['relation'] = 'AND';
+		if ( ! isset( $args['meta_query'] ) ) {
+			$args['meta_query'] = array( 'relation' => 'AND' );
+		}
+		$args['meta_query'][] = array(
+			'key'     => 'ur_payment_status',
+			'compare' => 'EXISTS',
+		);
 
 		$user_query = new \WP_User_Query( $args );
 		$users      = $user_query->get_results();
@@ -762,7 +770,7 @@ if ( ! function_exists( 'urwc_handle_shop_restriction' ) ) {
 		remove_all_actions( 'woocommerce_after_shop_loop' );
 
 		add_action( 'woocommerce_no_products_found', 'ob_start', 0 );
-		add_action( 'woocommerce_no_products_found', 'ob_end_clean', PHP_INT_MAX );
+		add_action( 'woocommerce_no_products_found', 'ob_end_clean', PHP_INT_MAX, 0 );
 
 		add_action(
 			'wp_head',
@@ -808,6 +816,26 @@ if ( ! function_exists( 'urwc_handle_shop_restriction' ) ) {
 		);
 
 		return true;
+	}
+}
+
+if ( ! function_exists( 'ur_membership_parse_display_date' ) ) {
+	/**
+	 * Parse a membership date string that SubscriptionService formats as 'Y, F d'
+	 * (e.g. "2027, July 02") back into a timestamp.
+	 *
+	 * strtotime() can't reliably parse that format — it silently drops the year —
+	 * so this tries the exact format first and falls back to strtotime() for any
+	 * other date string shape.
+	 *
+	 * @param string $date_string Date string to parse.
+	 *
+	 * @return int|false Timestamp on success, false on failure.
+	 */
+	function ur_membership_parse_display_date( $date_string ) {
+		$parsed = DateTime::createFromFormat( 'Y, F d', $date_string );
+
+		return $parsed ? $parsed->getTimestamp() : strtotime( $date_string );
 	}
 }
 

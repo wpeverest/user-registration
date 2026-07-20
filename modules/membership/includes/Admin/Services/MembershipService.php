@@ -272,7 +272,7 @@ class MembershipService {
 		foreach ( $memberships as $key => $membership ) {
 			$membership_post_content = json_decode( wp_unslash( $membership['post_content'] ), true );
 
-			if ( ! $membership_post_content['status'] ) {
+			if ( empty( $membership_post_content ) || empty( $membership_post_content['status'] ) ) {
 				unset( $memberships[ $key ] );
 				continue;
 			}
@@ -548,8 +548,13 @@ class MembershipService {
 			}
 		}
 
-		$response['status']           = $membership_field_exists;
-		$response['message']          = ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.', 'user-registration' ) : '';
+		// Warn only when at least one active membership exists, since the field is
+		// pointless with none (see UR-4604).
+		$active_memberships_count = count( ( new MembershipRepository() )->get_all_membership() );
+		$show_notice              = ! $membership_field_exists && $active_memberships_count >= 1;
+
+		$response['status']           = ! $show_notice;
+		$response['message']          = $show_notice ? __( 'The selected page consist a User Registration & Membership Form but no membership field.', 'user-registration' ) : '';
 		$response['disable_save_btn'] = 'no';
 
 		return $response;

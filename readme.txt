@@ -4,7 +4,7 @@ Tags: membership, subscription, content restriction, user profile, user registra
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 5.2.0
+Stable tag: 5.2.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -28,7 +28,7 @@ User Registration & Membership (URM) helps you monetize your site by creating me
 
 [👉 Get Started Today](https://wpuserregistration.com/?utm_source=wporg&utm_medium=readme&utm_campaign=urm-free)
 
-[👉 Try Our Demo](https://userregistration.demoswp.net/?utm_source=wporg&utm_medium=readme&utm_campaign=try-demo)
+[👉 Try Our Demo](https://app.instawp.io/launch?d=v2&s=user-registration-and-membership-pro)
 
 ==Complete Membership Solution==
 
@@ -251,6 +251,78 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 9. Subscription Management
 
 == Changelog ==
+
+= 5.2.5    - 08/07/2026 =
+* Enhance  - Defer expiry to period end.
+* Enhance  - Pin Stripe subscription payment method for reliable renewals.
+* Fix      - User and admin email order.
+* Fix      - Payment fail case for paypal.
+* Fix      - Lost Password Carrot adjustment.
+* Fix      - Unnecessary payment retry checks.
+* Fix      - Required Nonce Error on registration.
+* Fix      - Fatal error on WooCommerce shop page.
+* Fix      - Setup wizard membership duration issue.
+* Fix      - Loader timing issue during registration.
+* Fix      - Unwanted settings showing up in free version.
+* Fix      - Prevent formula injection in user CSV export.
+* Fix      - Reject underpaid PayPal subscription payments.
+* Fix      - Harden signup notice against malicious content.
+* Fix      - Stop users from cancelling others' email changes.
+* Fix      - Remove unwanted fields from payment confirmed email.
+* Fix      - Pending subscription blocked the user from logging in.
+* Fix      - Design issues in promotional notices after WordPress v7.0.
+* Fix      - Use server membership state for multiple-membership policy.
+* Fix      - Block tampered PayPal payments from activating memberships.
+* Fix      - Stripe payment and nonce validation failed on Membership form.
+* Fix      - Field Visibility add-on hides fields in My Account read-only profiles.
+* Fix      - Security: prevent unauthorized login during membership signup payment.
+* Fix      - Check coupon eligibility before discount on public membership purchase.
+* Fix      - Super admin bypass missing for admin content access in membership rules.
+* Fix      - Check PayPal payment is complete before activating one-time memberships.
+
+= 5.2.4    - 25/06/2026 =
+* Enhance  - User role overwritten on new membership assignment.
+* Enhance  - Add customizable membership registration success message in settings.
+* Fix      - Duplicate variable.
+* Fix      - Invoice dynamic content not translatable.
+* Fix      - Missing users in user registration members section.
+* Fix      - Validation of key while saving the stripe payment settings.
+* Fix      - My Account payment tab pulling footer content inside the tab area.
+* Fix      - Address incomplete PayPal setup error when adding PayPal for old user.
+* Fix      - hCaptcha enabled on registration form blocks users from completing signup.
+* Fix      - Reset content button not working in the prevent concurrent login email template.
+* Fix      - New Member Registered email not sent when Admin Approval Request email is enabled.
+* Fix      - Harden membership coupon apply paths against PHP 8 TypeError (free membership module).
+* Fix      - File upload attachments not updating correctly when admin edits another user's profile.
+* Fix      - Registration failure causes missing member records and prevents Stripe payment processing.
+
+
+= 5.2.3    - 23/06/2026 =
+* Fix      - validation for receiver email and payment amount in PayPal IPN handling.
+* Fix      - Selected membership tier during registration missed proper validation, allowing assignment of off-form membership tiers.
+* Fix      - Stripe subscription requests could trigger unintended deletion of pending member accounts due to insufficient authorization validation.
+
+= 5.2.2    - 19/06/2026 =
+* Dev      - Add UR_WPML compatibility service class.
+* Fix      - Password reset link shows "invalid or expired" error.
+* Fix      - Membership subscriptions stuck pending on 3D Secure (SCA) cards.
+* Fix      - Hardcoded database table names causing failures on custom table prefixes.
+* Fix      - Checkbox visibility issue on WP user profile/edit page  caused by CSS conflict.
+* Fix      - PayPal credentials not detected during registration despite valid saved settings.
+* Fix      - Password reset link shows invalid or expired on hosts that do not support PHP cookies.
+* Fix      - Webhook not configured but still can bypass PayPal payments.
+* Fix      - Payment Method Bypass Allows Free Access to Paid Memberships via Tampered Registration Request.
+* Fix      - Payment method field during registration could be manipulated to bypass payment for paid memberships.
+* Fix      - Authenticated users could modify other members' subscriptions by supplying an arbitrary subscription ID during upgrade.
+* Fix      - Membership tier submitted during registration was not validated against the memberships configured on the form, allowing substitution with an off-form tier.
+
+= 5.2.1    - 28/05/2026 =
+* Fix      - Stripe order validation issue.
+* Fix      - Membership upgrade action not available after disabling group add-on.
+* Fix      - Custom emails addon cannot be enabled with plus plan even available in personal.
+* Fix      - Nav menu items disappear for logged-out users when logout endpoint set to slash.
+* Fix      - File upload addon shows upgrade to premium prompt despite user having an active plan.
+* Fix      - Ensure meta_query is initialized before adding payment status condition in user payments query.
 
 = 5.2.0    - 20/05/2026 =
 * Refactor - Members registration process.

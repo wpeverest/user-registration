@@ -1,5 +1,7 @@
 wpeverest/user-registration-pro@develop:
-    - assets
+    - source: assets
+      exclude: |
+        js/divi-vb-modules.js
     - includes
     - modules
     - src

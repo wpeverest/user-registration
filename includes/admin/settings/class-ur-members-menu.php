@@ -1517,7 +1517,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					'value' => $user_id,
 				),
 				'user_role'       => array(
-					'value' => esc_html( ucfirst( implode( ' ', $user->roles ) ) ),
+					'value' => esc_html( implode( ', ', array_map( 'ucfirst', (array) $user->roles ) ) ),
 				),
 				'user_status'     => array(
 					'value' => $status,

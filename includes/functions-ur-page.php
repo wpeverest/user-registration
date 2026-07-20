@@ -316,6 +316,8 @@ function ur_nav_menu_items( $items ) {
 	if ( ! is_user_logged_in() ) {
 		$customer_logout = get_option( 'user_registration_logout_endpoint', 'user-logout' );
 
+		$customer_logout = trim( $customer_logout, '/' );
+
 		if ( ! empty( $customer_logout ) && is_array( $items ) ) {
 			foreach ( $items as $key => $item ) {
 				if ( empty( $item->url ) ) {

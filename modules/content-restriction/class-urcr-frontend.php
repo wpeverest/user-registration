@@ -838,7 +838,7 @@ class URCR_Frontend {
 
 		$allowed_roles = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
 
-		$current_user_role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
+		$current_user_roles = ( is_user_logged_in() && ! empty( wp_get_current_user()->roles ) ) ? (array) wp_get_current_user()->roles : array();
 
 		$get_meta_data_roles = get_post_meta( $product_id, 'urcr_meta_roles', $single = true );
 
@@ -887,7 +887,7 @@ class URCR_Frontend {
 						return $result = $this->compareTaxonomy( $product_terms, $terms );
 					}
 				} elseif ( '1' === $get_meta_data_allow_to ) {
-					if ( is_array( $allowed_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
+					if ( is_array( $allowed_roles ) && array_intersect( $current_user_roles, (array) $get_meta_data_roles ) ) {
 						return $result = $this->compareTaxonomy( $product_terms, $terms );
 					}
 				} elseif ( '2' === $get_meta_data_allow_to ) {
@@ -1025,6 +1025,10 @@ class URCR_Frontend {
 	 */
 	public function run_content_restrictions() {
 		global $post;
+
+		if ( is_super_admin() ) {
+			return;
+		}
 
 		$content_restriction_enabled = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
 
@@ -1209,7 +1213,7 @@ class URCR_Frontend {
 		$allowed_roles       = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
 		$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships' );
 
-		$current_user_role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
+		$current_user_roles = ( is_user_logged_in() && ! empty( wp_get_current_user()->roles ) ) ? (array) wp_get_current_user()->roles : array();
 
 		$get_meta_data_roles = get_post_meta( $post_id, 'urcr_meta_roles', $single = true );
 
@@ -1230,7 +1234,7 @@ class URCR_Frontend {
 						$template = $this->urcr_restrict_contents_template( $template, $post );
 					}
 				} elseif ( '1' == get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( is_array( $allowed_roles ) && in_array( $current_user_role, $allowed_roles ) ) {
+					if ( is_array( $allowed_roles ) && array_intersect( $current_user_roles, (array) $allowed_roles ) ) {
 						return $template;
 					}
 					$template = $this->urcr_restrict_contents_template( $template, $post );
@@ -1252,7 +1256,7 @@ class URCR_Frontend {
 				}
 			} elseif ( $get_meta_data_allow_to == '1' ) {
 				if ( isset( $get_meta_data_roles ) && ! empty( $get_meta_data_roles ) ) {
-					if ( is_array( $get_meta_data_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
+					if ( is_array( $get_meta_data_roles ) && array_intersect( $current_user_roles, (array) $get_meta_data_roles ) ) {
 						return $template;
 					}
 					$template = $this->urcr_restrict_contents_template( $template, $post );
@@ -1299,7 +1303,7 @@ class URCR_Frontend {
 
 		$allowed_roles = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
 
-		$current_user_role = is_user_logged_in() && ! empty( wp_get_current_user()->roles ) ? wp_get_current_user()->roles[0] : '';
+		$current_user_roles = ( is_user_logged_in() && ! empty( wp_get_current_user()->roles ) ) ? (array) wp_get_current_user()->roles : array();
 
 		$get_meta_data_roles = get_post_meta( $post_id, 'urcr_meta_roles', $single = true );
 
@@ -1317,7 +1321,7 @@ class URCR_Frontend {
 				}
 				return $post;
 			} elseif ( '1' == get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-				if ( is_array( $allowed_roles ) && in_array( $current_user_role, $allowed_roles ) ) {
+				if ( is_array( $allowed_roles ) && array_intersect( $current_user_roles, (array) $allowed_roles ) ) {
 					return;
 				}
 				$this->urcr_apply_basic_restriction_template();
@@ -1339,7 +1343,7 @@ class URCR_Frontend {
 			return $post;
 		} elseif ( $get_meta_data_allow_to == '1' ) {
 			if ( isset( $get_meta_data_roles ) && ! empty( $get_meta_data_roles ) ) {
-				if ( is_array( $get_meta_data_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
+				if ( is_array( $get_meta_data_roles ) && array_intersect( $current_user_roles, (array) $get_meta_data_roles ) ) {
 					return;
 				}
 				$this->urcr_apply_basic_restriction_template();
