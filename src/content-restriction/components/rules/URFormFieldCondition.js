@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { __ } from "@wordpress/i18n";
 import { getURCRData } from "../../utils/localized-data";
+import FormFieldValueInput from "../inputs/FormFieldValueInput";
 
 const URFormFieldCondition = ({
 	condition,
@@ -94,9 +95,9 @@ const URFormFieldCondition = ({
 			return [];
 		}
 		const fields = urFormData[formId];
-		return Object.entries(fields).map(([fieldName, fieldLabel]) => ({
+		return Object.entries(fields).map(([fieldName, fieldData]) => ({
 			value: fieldName,
-			label: fieldLabel || fieldName
+			label: (fieldData && typeof fieldData === "object" ? fieldData.label : fieldData) || fieldName
 		}));
 	};
 
@@ -199,14 +200,12 @@ const URFormFieldCondition = ({
 
 							{(field.operator !== "empty" && field.operator !== "not empty") && (
 								<div className="urcr-form-field-value ur-flex-1" style={{ minWidth: 0 }}>
-									<input
-										type="text"
-										className="components-text-control__input urcr-condition-value-input urcr-condition-value-text"
-										value={field.value || ""}
-										onChange={(e) => handleFieldUpdate(index, { value: e.target.value })}
-										placeholder={__("Enter value", "user-registration")}
+									<FormFieldValueInput
+										fieldMeta={urFormData[formId] ? urFormData[formId][field.field_name] : null}
+										value={field.value}
+										onChange={(newValue) => handleFieldUpdate(index, { value: newValue })}
 										disabled={disabled}
-										style={{ width: "150px" }}
+										style={{ width: "100%" }}
 									/>
 								</div>
 							)}

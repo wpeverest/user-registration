@@ -184,7 +184,8 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId,
 				// Add form fields from ur_form_data
 				Object.entries(urFormData).forEach(([formId, formFields]) => {
 					if (formFields && typeof formFields === 'object') {
-						Object.entries(formFields).forEach(([fieldName, fieldLabel]) => {
+						Object.entries(formFields).forEach(([fieldName, fieldData]) => {
+							const fieldLabel = fieldData && typeof fieldData === "object" ? fieldData.label : fieldData;
 							formOptions.push({
 								value: `${formId}:${fieldName}`,
 								label: `${urForms[formId] || formId} - ${fieldLabel || fieldName}`,
