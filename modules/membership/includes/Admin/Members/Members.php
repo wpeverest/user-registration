@@ -13,6 +13,7 @@ use WPEverest\URMembership\Admin\Members\MembersListTable;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -304,16 +305,38 @@ if ( ! class_exists( 'Members' ) ) {
 				$subscription_repository = new MembersSubscriptionRepository();
 				$membership_repository   = new MembershipRepository();
 
-				$member_subscription = $subscription_repository->get_member_subscription( $member_id );
+				$member_subscriptions = $subscription_repository->get_member_subscription( $member_id );
+				$member_subscription  = ! empty( $member_subscriptions[0] ) ? $member_subscriptions[0] : array();
 
-				$member_membership = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
+				$member_membership = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] ?? 0 );
 
-				$member_membership_details['ID']           = $member_subscription['item_id'];
+				$member_membership_details['ID']           = $member_subscription['item_id'] ?? 0;
 				$member_membership_details['post_title']   = $member_membership['post_title'];
 				$member_membership_details['post_content'] = json_decode( $member_membership['post_content'], true );
 				$member_membership_details['meta_value']   = json_decode( $member_membership['meta_value'], true );
 
 				$membership_price_details = apply_filters( 'build_membership_list_frontend', array( (array) $member_membership_details ) )[0];
+
+				// Override the plan's base price with what the member actually paid (may differ under Local Currency).
+				if ( ! empty( $member_subscription['ID'] ) && 'free' !== ( $member_membership_details['meta_value']['type'] ?? '' ) ) {
+					$orders_repository = new OrdersRepository();
+					$member_order      = $orders_repository->get_order_by_subscription( $member_subscription['ID'] );
+
+					if ( ! empty( $member_order['ID'] ) ) {
+						$local_currency_meta = $orders_repository->get_order_meta_by_order_id_and_meta_key( $member_order['ID'], 'local_currency' );
+						$order_currency       = ! empty( $local_currency_meta['meta_value'] ) ? $local_currency_meta['meta_value'] : get_option( 'user_registration_payment_currency', 'USD' );
+						$order_symbol         = ur_get_currency_symbol( $order_currency );
+						$order_amount_display = $order_symbol . number_format( (float) $member_order['total_amount'], 2 );
+
+						$duration_suffix = '';
+						$every_pos        = strpos( $membership_price_details['period'], ' ' . __( 'every', 'user-registration' ) . ' ' );
+						if ( false !== $every_pos ) {
+							$duration_suffix = substr( $membership_price_details['period'], $every_pos );
+						}
+
+						$membership_price_details['period'] = $order_amount_display . $duration_suffix;
+					}
+				}
 			}
 			include __DIR__ . '/../Views/member-create.php';
 		}

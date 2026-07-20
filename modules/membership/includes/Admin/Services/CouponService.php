@@ -127,9 +127,12 @@ class CouponService {
 				$local_currency_data = ! empty( $membership_meta['local_currency'] ) ? $membership_meta['local_currency'] : array();
 
 				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
-					$amount = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+					// Pass $membership_amount as the ratio reference so a manual (flat) local price scales with the discount.
+					$local_full_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+					$amount            = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id, $membership_amount );
+
 					if ( $coupon_details['coupon_discount_type'] === 'fixed' ) {
-						$coupon_details['coupon_discount'] = CoreFunctions::ur_get_amount_after_conversion( $coupon_details['coupon_discount'], $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+						$coupon_details['coupon_discount'] = max( 0, $local_full_amount - $amount );
 					}
 				}
 			}
