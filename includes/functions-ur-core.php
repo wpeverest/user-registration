@@ -3228,7 +3228,8 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '</div>';
 		$output .= '</div>';
 
-		$output                .= '<div class="form-row ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
+		$wrapper_style          = '' === $checked ? ' style="display:none;"' : '';
+		$output                .= '<div class="form-row ur_conditional_logic_wrapper"' . $wrapper_style . ' data-source="' . esc_attr( $integration ) . '">';
 		$output                .= '<label class="ur-label checkbox">' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</label>';
 		$output                .= '<div class="ur-logic"><p>' . esc_html__( 'Send data only if the following matches.', 'user-registration' ) . '</p></div>';
 		$output                .= '<div class="ur-conditional-wrapper">';
