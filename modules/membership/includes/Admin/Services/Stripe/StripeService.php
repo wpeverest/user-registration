@@ -2585,6 +2585,10 @@ class StripeService {
 		$last_order   = $this->members_orders_repository->get_member_orders( $member_id );
 		$subscription = $this->members_subscription_repository->retrieve( $subscription_id );
 
+		if ( 'stripe' === ( $last_order['payment_method'] ?? '' ) && $this->stripe_charge_succeeded( $last_order, $subscription ) ) {
+			return;
+		}
+
 		$this->members_subscription_repository->update( $subscription_id, $last_subscription );
 		$this->members_orders_repository->delete_member_order( $member_id, false );
 		$refund_response = $this->refund( $last_order, $subscription ); // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
@@ -2596,6 +2600,22 @@ class StripeService {
 			unset( $membership_process['upgrade'][ $_POST['current_membership_id'] ] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			update_user_meta( $member_id, 'urm_membership_process', $membership_process );
 		}
+	}
+
+	private function stripe_charge_succeeded( $order, $subscription ) {
+		try {
+			if ( 'subscription' === ( $order['order_type'] ?? '' ) && ! empty( $subscription['subscription_id'] ) ) {
+				$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
+				return in_array( $stripe_subscription->status, array( 'active', 'trialing' ), true );
+			}
+			if ( ! empty( $order['transaction_id'] ) ) {
+				$intent = \Stripe\PaymentIntent::retrieve( $order['transaction_id'] );
+				return 'succeeded' === $intent->status;
+			}
+		} catch ( \Stripe\Exception\ApiErrorException $e ) {
+			PaymentGatewayLogging::log_error( 'stripe', 'Failed to verify Stripe charge before revert: ' . $e->getMessage() );
+		}
+		return false;
 	}
 
 	/**

@@ -534,25 +534,38 @@ class SubscriptionService {
 		}
 
 		$selected_membership_details['payment_method'] = $payment_method;
-		$membership_process                            = urm_get_membership_process( $user->ID );
 
-		$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $data['current_membership_id'] ] );
+		$lock_name = 'urm_upgrade_lock_' . (int) $user->ID;
+		$lock      = $this->subscription_repository->acquire_lock( $lock_name );
 
-		if ( $is_upgrading ) {
+		$membership_process = urm_get_membership_process( $user->ID );
+		$in_progress        = $membership_process['upgrade'][ $data['current_membership_id'] ] ?? array();
+		// A stale guard means a previous attempt died or was abandoned before completing; let it be retried.
+		$is_upgrading = ! empty( $in_progress ) && ( time() - (int) ( $in_progress['started_at'] ?? 0 ) ) < 15 * MINUTE_IN_SECONDS;
+
+		if ( false === $lock || $is_upgrading ) {
+			if ( true === $lock ) {
+				$this->subscription_repository->release_lock( $lock_name );
+			}
 			$response['response']['status']  = false;
 			$response['response']['message'] = __( 'Membership upgrade process already initiated.', 'user-registration' );
 
 			return $response;
 		}
 
-		$membership_process = urm_get_membership_process( $subscription['user_id'] );
-		$is_upgrading       = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $data['current_membership_id'] ] );
+		if ( 'free' !== $payment_method ) {
+			$membership_process['upgrade'][ $data['current_membership_id'] ] = array(
+				'from'            => $data['current_membership_id'],
+				'to'              => $data['selected_membership_id'],
+				'subscription_id' => $data['current_subscription_id'],
+				'started_at'      => time(),
+			);
 
-		if ( $is_upgrading ) {
-			$response['response']['status']  = false;
-			$response['response']['message'] = __( 'Membership upgrade process already initiated.', 'user-registration' );
+			update_user_meta( $user->ID, 'urm_membership_process', $membership_process );
+		}
 
-			return $response;
+		if ( true === $lock ) {
+			$this->subscription_repository->release_lock( $lock_name );
 		}
 
 		$current_membership_details['ID']  = $data['current_membership_id'];
@@ -560,6 +573,8 @@ class SubscriptionService {
 		$upgrade_details                   = $this->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
 
 		if ( isset( $upgrade_details['status'] ) && ! $upgrade_details['status'] ) {
+			$this->release_upgrade_guard( $user->ID, $data['current_membership_id'] );
+
 			return array(
 				'response' => $upgrade_details,
 			);
@@ -622,6 +637,8 @@ class SubscriptionService {
 			if ( ! $cancel_subscription['status'] ) {
 				$response['status'] = false;
 
+				$this->release_upgrade_guard( $user->ID, $data['current_membership_id'] );
+
 				return $response;
 			} else {
 				$this->subscription_repository->cancel_subscription_by_id( $current_subscription_id, false );
@@ -638,19 +655,6 @@ class SubscriptionService {
 		$payment_service       = new PaymentService( $payment_method, $data['selected_membership_id'], $user->data->user_email );
 		$ur_authorize_net_data = isset( $data['ur_authorize_net'] ) ? $data['ur_authorize_net'] : array();
 		$coupon                = isset( $data['coupon'] ) ? $data['coupon'] : '';
-
-		if ( 'free' !== $payment_method ) {
-			$membership_process = urm_get_membership_process( $user->ID );
-			if ( ! isset( $membership_process['upgrade'][ $data['current_membership_id'] ] ) ) {
-				$membership_process['upgrade'][ $data['current_membership_id'] ] = array(
-					'from'            => $data['current_membership_id'],
-					'to'              => $data['selected_membership_id'],
-					'subscription_id' => $data['current_subscription_id'],
-				);
-
-				update_user_meta( $user->ID, 'urm_membership_process', $membership_process );
-			}
-		}
 
 		$data = array(
 			'membership'             => $data['selected_membership_id'],
@@ -682,12 +686,7 @@ class SubscriptionService {
 			$response['status'] = true;
 
 		} else {
-			$membership_process = urm_get_membership_process( $user->ID );
-			if ( ! empty( $membership_process['upgrade'][ $data['current_membership_id'] ] ) ) {
-				unset( $membership_process['upgrade'][ $data['current_membership_id'] ] );
-				update_user_meta( $user->ID, 'urm_membership_process', $membership_process );
-			}
-
+			$this->release_upgrade_guard( $user->ID, $data['current_membership_id'] );
 			$this->orders_repository->delete( $order['ID'] );
 		}
 
@@ -701,6 +700,14 @@ class SubscriptionService {
 			),
 			'response' => $response,
 		);
+	}
+
+	private function release_upgrade_guard( $member_id, $current_membership_id ) {
+		$membership_process = urm_get_membership_process( $member_id );
+		if ( ! empty( $membership_process['upgrade'][ $current_membership_id ] ) ) {
+			unset( $membership_process['upgrade'][ $current_membership_id ] );
+			update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+		}
 	}
 
 	/**
