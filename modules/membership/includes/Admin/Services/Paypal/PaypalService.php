@@ -863,7 +863,6 @@ class PaypalService {
 		$order_id       = null;
 
 		// Verify receiver's email address.
-		// ponytail: recurring path still checks base $amount, not the recurring order total — revisit once recurring-amount semantics (coupon/proration first payment) are confirmed safe.
 		if ( empty( $receiver_email ) || ! is_email( $receiver_email ) || strtolower( $data['business'] ) !== strtolower( trim( $receiver_email ) ) ) {
 			$error = esc_html__( 'Payment failed: recipient emails do not match', 'user-registration' );
 		} elseif ( empty( $amount ) || number_format( (float) $data['mc_gross'] ) !== number_format( (float) $amount ) ) {
