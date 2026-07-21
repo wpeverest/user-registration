@@ -858,21 +858,12 @@ class AJAX {
 	}
 
 	/**
-	 * Verify that a logged-out payment-confirmation request genuinely belongs to
-	 * the browser that created this pending registration.
+	 * Verify a logged-out payment confirmation belongs to the browser that created
+	 * this pending registration: the cookie must match the signup transient, or
+	 * (UR-4727) the server-recomputed HMAC when the transient was cleared mid-flow.
 	 *
-	 * Primary check: the per-registration transient set at signup matches the
-	 * browser cookie. Fallback (UR-4727): if that transient was already consumed
-	 * or deleted by another step while the browser is still logged out — e.g.
-	 * auto-login (MembersService::login_member) or the Stripe failure webhooks
-	 * (handle_invoice_payment_failed / handle_failed_payment_intent) — accept the
-	 * request when the cookie matches the server-recomputed HMAC, i.e. the same
-	 * value login_member() validates against. That HMAC depends on
-	 * wp_salt( 'auth' ), so a third party cannot forge it, and the pending-order
-	 * gate in the callers still blocks replays after the order is no longer pending.
-	 *
-	 * @param int $member_id Member/user ID whose pending payment is being confirmed.
-	 * @return bool True when the request is bound to this member's registration session.
+	 * @param int $member_id Pending member/user ID.
+	 * @return bool
 	 */
 	private static function verify_pending_member_session( $member_id ) {
 		$cookie_key   = 'urm_pending_login_' . $member_id;
