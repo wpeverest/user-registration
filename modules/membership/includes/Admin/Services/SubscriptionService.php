@@ -1194,7 +1194,13 @@ class SubscriptionService {
 		$email_service = new EmailService();
 		foreach ( $subscriptions as $subscription ) {
 
-			$user_id      = $subscription['member_id'];
+			$user_id = $subscription['member_id'];
+
+			// Skip memberships already scheduled to cancel; no "expiring soon / renew" reminder for them.
+			if ( get_user_meta( $user_id, 'urm_pending_cancel_' . ( $subscription['subscription_id'] ?? '' ), true ) ) {
+				continue;
+			}
+
 			$checked_date = get_user_meta( $user_id, 'urm_expiring_reminder_sent_for_date', true );
 
 			if ( $checked_date === $subscription['next_billing_date'] ) {
@@ -1211,8 +1217,10 @@ class SubscriptionService {
 	 * @return void
 	 */
 	public function daily_membership_ended_check() {
-		$date          = new \DateTime( 'today' );
-		$check_date    = $date->modify( '-1 day' )->format( 'Y-m-d H:i:s' );
+		// Look back a window (not a single day) and dedupe per subscription, so a late status flip,
+		// cron-order drift, or a missed cron day can't permanently skip the ended email.
+		$lookback_days = (int) apply_filters( 'urm_ended_email_lookback_days', 7 );
+		$check_date    = ( new \DateTime( "-{$lookback_days} days" ) )->format( 'Y-m-d H:i:s' );
 		$subscriptions = $this->members_subscription_repository->get_expired_subscriptions( $check_date );
 
 		if ( empty( $subscriptions ) ) {
@@ -1220,13 +1228,12 @@ class SubscriptionService {
 		}
 		$email_service = new EmailService();
 		foreach ( $subscriptions as $subscription ) {
-			$user_id      = $subscription['member_id'];
-			$checked_date = get_user_meta( $user_id, 'urm_expired_reminder_sent_for_date', true );
-			if ( $checked_date === $subscription['expiry_date'] ) {
+			$sent_key = 'urm_ended_email_sent_' . ( $subscription['subscription_id'] ?? '' );
+			if ( get_user_meta( $subscription['member_id'], $sent_key, true ) ) {
 				continue;
 			}
 			$email_service->send_email( $subscription, 'membership_ended' );
-			update_user_meta( $subscription['member_id'], 'urm_expired_reminder_sent_for_date', $subscription['expiry_date'] );
+			update_user_meta( $subscription['member_id'], $sent_key, $subscription['expiry_date'] );
 		}
 	}
 
@@ -1271,7 +1278,9 @@ class SubscriptionService {
 				( new NewPaypalService() )->cancel_suspended_subscription( $subscription['gateway_subscription_id'] );
 			}
 			delete_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id );
-			$update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => 'expired' ) );
+			// A pending-cancel subscription reaching its date is a cancellation, not a natural expiry.
+			$new_status    = $pending_cancel_meta ? 'canceled' : 'expired';
+			$update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => $new_status ) );
 
 			if ( $update_result ) {
 				++$expired_count;
@@ -1293,13 +1302,14 @@ class SubscriptionService {
 					array( 'source' => 'urm-membership-expiration' )
 				);
 
-				// Prepare data to trigger subscription expired event.
+				// Cancellation email already went out at cancel time; the membership_ended cron only targets 'expired', so a canceled sub gets no expiry email either.
 				$payload = array(
 					'subscription_id' => $subscription_id,
 					'member_id'       => $user_id,
-					'event_type'      => 'expired',
+					'event_type'      => $pending_cancel_meta ? 'canceled' : 'expired',
 					'meta'            => array(
 						'membership_id' => $membership_id,
+						'mode'          => 'expiry',
 					),
 				);
 
