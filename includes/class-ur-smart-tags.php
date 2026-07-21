@@ -67,6 +67,7 @@ class UR_Smart_Tags {
 		$smart_tags = array(
 			'{{blog_info}}'        => esc_html__( 'Blog Info', 'user-registration' ),
 			'{{home_url}}'         => esc_html__( 'Home URL', 'user-registration' ),
+			'{{ur_reset_pass_slug}}' => esc_html__( 'Reset Password Slug', 'user-registration' ),
 			'{{admin_email}}'      => esc_html__( 'Site Admin Email', 'user-registration' ),
 			'{{site_name}}'        => esc_html__( 'Site Name', 'user-registration' ),
 			'{{site_url}}'         => esc_html__( 'Site URL', 'user-registration' ),
