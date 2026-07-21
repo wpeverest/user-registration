@@ -341,8 +341,7 @@ class UR_Admin_Export_Users {
 						}
 						$user_extra_row[ $user_extra_data_key ] = $file_link;
 					} elseif ( isset( $field_data['field_key'] ) && ( 'checkbox' === $field_data['field_key'] || 'multi_select2' === $field_data['field_key'] ) ) {
-						$values = ( is_array( $user_extra_data ) && ! empty( $user_extra_data ) ) ? implode( ',', $user_extra_data ) : ""; //phpcs:ignore
-						$user_extra_row[ $user_extra_data_key ] = $values;
+						$user_extra_row[ $user_extra_data_key ] = is_array( $user_extra_data ) ? implode( ',', $user_extra_data ) : $user_extra_data;
 					}
 				}
 			}
