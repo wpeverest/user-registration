@@ -1626,7 +1626,7 @@ class NewPaypalService {
 
 		if ( ! empty( $new_subscription_data ) ) {
 			if ( empty( $new_subscription_data['delayed_until'] ) && ! empty( $get_user_old_subscription['subscription_id'] ) ) {
-				$cancel_subscription = $this->cancel_subscription( $get_user_old_order, $get_user_old_subscription );
+				$cancel_subscription = $subscription_service->cancel_subscription( $get_user_old_order, $get_user_old_subscription, true );
 
 				if ( empty( $cancel_subscription['status'] ) ) {
 					PaymentGatewayLogging::log_error(
@@ -2413,7 +2413,7 @@ class NewPaypalService {
 	 *
 	 * @return array
 	 */
-	public function cancel_subscription( $order, $subscription ) {
+	public function cancel_subscription( $order, $subscription, $force_cancel = false ) {
 		if ( empty( $subscription['subscription_id'] ) ) {
 			$message = esc_html__( 'PayPal subscription ID not present.', 'user-registration' );
 			return array(
@@ -2424,13 +2424,23 @@ class NewPaypalService {
 
 		$paypal_options = $this->get_paypal_rest_credentials();
 
-		$response = $this->suspend_paypal_subscription(
-			$subscription['subscription_id'],
-			array(
-				'reason' => 'User initiated cancellation',
-			),
-			$paypal_options
-		);
+		if ( $force_cancel ) {
+			$response = $this->cancel_paypal_subscription(
+				$subscription['subscription_id'],
+				array(
+					'reason' => 'Membership upgrade',
+				),
+				$paypal_options
+			);
+		} else {
+			$response = $this->suspend_paypal_subscription(
+				$subscription['subscription_id'],
+				array(
+					'reason' => 'User initiated cancellation',
+				),
+				$paypal_options
+			);
+		}
 
 		if ( is_wp_error( $response ) ) {
 			PaymentGatewayLogging::log_transaction_failure(
