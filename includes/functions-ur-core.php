@@ -6020,7 +6020,10 @@ if ( ! function_exists( 'ur_get_ip_address' ) ) {
 		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) { // WPCS: input var ok, CSRF ok.
 			// Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2
 			// Make sure we always only send through the first IP in the list which should always be the client IP.
-			return (string) rest_is_ip_address( trim( current( preg_split( '/[,:]/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) ); // WPCS: input var ok, CSRF ok.
+			$forwarded_ip = trim( current( preg_split( '/,/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ); // WPCS: input var ok, CSRF ok.
+			// Remove the port from '<IPv4>:<port>', '[<IPv6>]' and '[<IPv6>]:<port>' while leaving bare IPv4/IPv6 intact.
+			$forwarded_ip = preg_replace( '/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\:.*|\[([^]]+)\].*/', '$1$2', $forwarded_ip );
+			return (string) rest_is_ip_address( $forwarded_ip );
 		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) { // @codingStandardsIgnoreLine
 			return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ); // @codingStandardsIgnoreLine
 		}
@@ -6410,7 +6413,10 @@ if ( ! function_exists( 'ur_get_ip_address' ) ) {
 		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) { // WPCS: input var ok, CSRF ok.
 			// Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2.
 			// Make sure we always only send through the first IP in the list which should always be the client IP.
-			return (string) rest_is_ip_address( trim( current( preg_split( '/[,:]/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) ); // WPCS: input var ok, CSRF ok.
+			$forwarded_ip = trim( current( preg_split( '/,/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ); // WPCS: input var ok, CSRF ok.
+			// Remove the port from '<IPv4>:<port>', '[<IPv6>]' and '[<IPv6>]:<port>' while leaving bare IPv4/IPv6 intact.
+			$forwarded_ip = preg_replace( '/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\:.*|\[([^]]+)\].*/', '$1$2', $forwarded_ip );
+			return (string) rest_is_ip_address( $forwarded_ip );
 		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) { // @codingStandardsIgnoreLine
 			return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ); // @codingStandardsIgnoreLine
 		}
