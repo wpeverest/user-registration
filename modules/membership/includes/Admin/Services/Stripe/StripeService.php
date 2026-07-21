@@ -1785,12 +1785,8 @@ class StripeService {
 					)
 				);
 
-				// Only treat this as a confirmed payment when the first invoice has actually
-				// been paid ($status === 'completed'). When the card requires 3D Secure/SCA the
-				// subscription is still 'incomplete' and the order is 'pending' here: sending the
-				// "Payment Confirmed" email or logging success at this point is premature and
-				// misleading (the customer may still fail/abandon the challenge). The confirmation
-				// email is sent once the payment is truly confirmed in handle_stripe_payment_confirmation().
+				// Send the confirmation email / log success only once the first invoice is paid.
+				// On 3D Secure/SCA the order is still pending here; the email is sent later in handle_stripe_payment_confirmation().
 				if ( 'completed' === $status ) {
 					PaymentGatewayLogging::log_transaction_success(
 						'stripe',
