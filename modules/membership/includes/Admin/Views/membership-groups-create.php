@@ -87,7 +87,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 			<div id="ur-membership-group-create-form" class="user-registration-card">
 				<div class="user-registration-card__body">
 					<div id="ur-membership-main-fields">
-						<!--					membership group name-->
+						<!--membership group name-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-1" style="gap:20px;">
 							<div class="ur-label" style="width: 62%">
 								<label
@@ -165,7 +165,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 								</div>
 							</div>
 						</div>
-						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3 <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>" style="gap:20px" >
+						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3 <?php echo ( ! UR_PRO_ACTIVE || ! urm_check_if_plus_and_above_plan() ) ? 'upgradable-type' : ''; ?>" style="gap:20px" >
 							<div class="ur-label" style="width: 62%;">
 									<label class="ur-membership-group-enable-multiple-memberships"
 										for="ur-membership-group-multiple-memberships">
@@ -186,7 +186,20 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 									<?php echo UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() ? '' : 'disabled'; ?>
 									>
 									<span class="slider round"></span>
-									<?php ur_render_premium_feature_gate();?>
+									<?php
+									if ( ! UR_PRO_ACTIVE ) {
+										ur_render_premium_feature_gate();
+									} elseif ( ! urm_check_if_plus_and_above_plan() ) {
+										ur_render_premium_feature_gate(
+											array(
+												'plan_gated' => true,
+												'template_id' => 'ur-plan-feature-plus',
+												'title' => esc_html__( 'This feature is available on the Plus plan and above. Upgrade your plan to unlock it.', 'user-registration' ),
+												'button_text' => esc_html__( 'Upgrade Plan', 'user-registration' ),
+											)
+										);
+									}
+									?>
 								</span>
 							</div>
 						</div>
@@ -194,7 +207,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 						$upgrade_style = ( ! isset( $membership_group['mode'] ) || ( isset( $membership_group['mode'] ) && ( empty( $membership_group['mode'] ) || 'upgrade' === $membership_group['mode'] ) ) ) ? '' : 'display:none;';
 						?>
 						<div class="ur-membership-enable-upgrade-container" style="<?php echo esc_attr( $upgrade_style ); ?>">
-							<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3  <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>" style="gap:20px">
+							<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3  <?php echo ( ! UR_PRO_ACTIVE || ! urm_check_if_plus_and_above_plan() ) ? 'upgradable-type' : ''; ?>" style="gap:20px">
 								<div class="ur-label" style="width: 62%;">
 										<label class="ur-membership-group-enable-upgrade"
 												for="ur-membership-group-upgrade"><?php esc_html_e( 'Upgrade action', 'user-registration' ); ?>
@@ -214,7 +227,20 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 											<?php echo UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() ? '' : 'disabled'; ?>
 											>
 										<span class="slider round"></span>
-										<?php ur_render_premium_feature_gate(); ?>
+										<?php
+										if ( ! UR_PRO_ACTIVE ) {
+											ur_render_premium_feature_gate();
+										} elseif ( ! urm_check_if_plus_and_above_plan() ) {
+											ur_render_premium_feature_gate(
+												array(
+													'plan_gated'  => true,
+													'template_id' => 'ur-plan-feature-plus',
+													'title'       => esc_html__( 'This feature is available on the Plus plan and above. Upgrade your plan to unlock it.', 'user-registration' ),
+													'button_text' => esc_html__( 'Upgrade Plan', 'user-registration' ),
+												)
+											);
+										}
+										?>
 									</span>
 								</div>
 							</div>

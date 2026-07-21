@@ -81,7 +81,7 @@ class UR_Base_Layout {
 
 						case 'manage_pricing_zone':
 							$external_class = 'ur-local-currency-add-pricing-zone';
-							$inline_attr    = 'data-action=\"add\"';
+							$inline_attr    = 'data-action="add"';
 							break;
 
 						default:

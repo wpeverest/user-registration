@@ -255,17 +255,23 @@ class NewPaypalService {
 		$membership_process = urm_get_membership_process( $member_id );
 		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $data['current_membership_id'], $membership_process['renew'], true );
 
-		$currency       = get_option( 'user_registration_payment_currency', 'USD' );
-		$local_currency = isset( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
-		$ur_zone_id     = isset( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
+		$base_membership_amount = $membership_amount;
+
+		$currency               = get_option( 'user_registration_payment_currency', 'USD' );
+		$local_currency         = isset( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
+		$ur_zone_id             = isset( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
+		$pricing_data           = null;
+		$local_currency_data    = array();
+		$local_currency_applies = false;
 
 		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
 			$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
 			$local_currency_data = ! empty( $data['local_currency'] ) ? $data['local_currency'] : array();
 
 			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
-				$currency          = $local_currency;
-				$membership_amount = CoreFunctions::ur_get_amount_after_conversion(
+				$currency               = $local_currency;
+				$local_currency_applies = true;
+				$membership_amount      = CoreFunctions::ur_get_amount_after_conversion(
 					$membership_amount,
 					$currency,
 					$pricing_data,
@@ -281,7 +287,11 @@ class NewPaypalService {
 		$discount_value = 0.0;
 
 		if ( $is_upgrading ) {
-			$final_amount = (float) ( isset( $data['amount'] ) ? $data['amount'] : $final_amount );
+			// $data['amount'] is the prorated delta in the base currency — scale it by the plan's local/base ratio.
+			$chargeable_amount_base = (float) ( isset( $data['amount'] ) ? $data['amount'] : $final_amount );
+			$final_amount           = ( $local_currency_applies && $base_membership_amount > 0 )
+				? $membership_amount * ( $chargeable_amount_base / $base_membership_amount )
+				: $chargeable_amount_base;
 		} elseif ( ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_service    = new CouponService();
 			$coupon_validation = $coupon_service->validate(
@@ -292,10 +302,25 @@ class NewPaypalService {
 			);
 
 			if ( $coupon_validation['status'] ) {
-				$coupon_details = ur_get_coupon_details( $data['coupon'] );
-				$discount_value = ( 'fixed' === ( isset( $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount_type'] : '' ) )
+				$coupon_details       = ur_get_coupon_details( $data['coupon'] );
+				$coupon_discount_type = isset( $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount_type'] : '';
+				$discount_value       = ( 'fixed' === $coupon_discount_type )
 					? (float) ( isset( $coupon_details['coupon_discount'] ) ? $coupon_details['coupon_discount'] : 0 )
 					: ( $final_amount * (float) ( isset( $coupon_details['coupon_discount'] ) ? $coupon_details['coupon_discount'] : 0 ) / 100 );
+
+				// Fixed discounts are configured in the base currency — convert before subtracting.
+				if ( $local_currency_applies && 'fixed' === $coupon_discount_type ) {
+					$discounted_base  = max( 0.0, $base_membership_amount - $discount_value );
+					$discounted_local = CoreFunctions::ur_get_amount_after_conversion(
+						$discounted_base,
+						$currency,
+						$pricing_data,
+						$local_currency_data,
+						$ur_zone_id,
+						$base_membership_amount
+					);
+					$discount_value = max( 0.0, $final_amount - $discounted_local );
+				}
 
 				$final_amount = max( 0.0, (float) user_registration_sanitize_amount( $final_amount - $discount_value ) );
 			}
@@ -388,6 +413,13 @@ class NewPaypalService {
 			'existing_paypal_subscription_id' => $paypal_subscription_id,
 			'is_subscription_upgrade_revise'  => false,
 		);
+
+		// UR-4386: a valid 100% coupon zeroes a subscription's amount. Bill nothing now and start
+		// one period later (future start_time) with a plain REGULAR plan, instead of a $0 TRIAL cycle.
+		$context['is_full_discount_sub'] = $context['is_subscription']
+			&& ! $is_upgrading
+			&& ! empty( $coupon_details )
+			&& 0.0 === (float) $final_amount;
 
 		if (
 			$context['is_subscription'] &&
@@ -724,8 +756,10 @@ class NewPaypalService {
 		// }
 		$has_trial = ! empty( $context['data']['trial_status'] ) && 'on' === $context['data']['trial_status'];
 
+		// UR-4386: full-discount subs use a plain REGULAR plan + future start_time (below), not a
+		// discounted/$0 TRIAL override cycle.
 		$plan_override = array();
-		if ( ! $has_trial ) {
+		if ( ! $has_trial && empty( $context['is_full_discount_sub'] ) ) {
 			$plan_override = $this->build_subscription_plan_override( $context );
 		}
 
@@ -748,8 +782,21 @@ class NewPaypalService {
 			$payload['plan'] = $plan_override;
 		}
 
-		// Start time can help prevent immediate timezone confusion.
-		$payload['start_time'] = gmdate( 'Y-m-d\TH:i:s\Z', time() + 60 );
+		// Start time. UR-4386: for a 100% coupon the first period is free, so start billing one full
+		// billing period out (nothing charged now); otherwise start almost immediately.
+		if ( ! empty( $context['is_full_discount_sub'] ) ) {
+			$sub_data = ! empty( $context['has_team'] )
+				? array(
+					'duration' => $context['data']['team_data']['team_duration_period'] ?? 'month',
+					'value'    => $context['data']['team_data']['team_duration_value'] ?? 1,
+				)
+				: ( $context['data']['subscription'] ?? array() );
+			$value    = max( 1, (int) ( $sub_data['value'] ?? 1 ) );
+			$duration = strtolower( (string) ( $sub_data['duration'] ?? 'month' ) );
+			$payload['start_time'] = gmdate( 'Y-m-d\TH:i:s\Z', strtotime( "+{$value} {$duration}" ) );
+		} else {
+			$payload['start_time'] = gmdate( 'Y-m-d\TH:i:s\Z', time() + 60 );
+		}
 
 		$response = $this->create_paypal_subscription( $payload, $context['paypal_options'] );
 
@@ -1314,11 +1361,48 @@ class NewPaypalService {
 
 			$new_status = 'ACTIVE' === strtoupper( isset( $subscription_details['status'] ) ? $subscription_details['status'] : '' ) ? 'active' : 'pending';
 
+			// Try to get the real transaction ID from PayPal's subscription transactions API.
+			$transaction_id     = $paypal_subscription_id;
+			$transaction_source = 'subscription_id_placeholder';
+
+			$txn_response = $this->get_paypal_subscription_transactions(
+				$paypal_subscription_id,
+				$this->get_paypal_rest_credentials()
+			);
+
+			if ( ! is_wp_error( $txn_response ) && ! empty( $txn_response['transactions'] ) ) {
+				foreach ( $txn_response['transactions'] as $txn ) {
+					if ( ! empty( $txn['id'] ) && 'Completed' === ( isset( $txn['status'] ) ? $txn['status'] : '' ) ) {
+						$transaction_id     = sanitize_text_field( $txn['id'] );
+						$transaction_source = 'subscription_transactions_api';
+						break;
+					}
+				}
+			}
+
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				sprintf(
+					'[Member ID #%s] Subscription transaction ID resolution on redirect.',
+					$member_id
+				) . "\n" . wp_json_encode(
+					array(
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'transaction_id'         => $transaction_id,
+						'source'                 => $transaction_source,
+						'api_error'              => is_wp_error( $txn_response ) ? $txn_response->get_error_message() : null,
+						'transactions_found'     => ! is_wp_error( $txn_response ) ? count( isset( $txn_response['transactions'] ) ? $txn_response['transactions'] : array() ) : 0,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'subscription_id_placeholder' === $transaction_source ? 'notice' : 'info'
+			);
+
 			$this->members_orders_repository->update(
 				$member_order['ID'],
 				array(
 					'status'         => 'completed',
-					'transaction_id' => sanitize_text_field( $paypal_subscription_id ),
+					'transaction_id' => $transaction_id,
 				)
 			);
 
@@ -1343,7 +1427,8 @@ class NewPaypalService {
 				) . "\n" . wp_json_encode(
 					array(
 						'paypal_subscription_id' => $paypal_subscription_id,
-						'transaction_id'         => $paypal_subscription_id,
+						'transaction_id'         => $transaction_id,
+						'transaction_source'     => $transaction_source,
 						'paypal_status'          => isset( $subscription_details['status'] ) ? $subscription_details['status'] : '',
 						'subscription_status'    => $resolved_status,
 						'member_id'              => $member_id,
@@ -1648,7 +1733,7 @@ class NewPaypalService {
 				break;
 
 			case 'PAYMENT.SALE.COMPLETED':
-				$result = $this->handle_subscription_payment_completed( $resource );
+				$result = $this->handle_subscription_sale_webhook_event( $resource );
 				break;
 
 			default:
@@ -2117,6 +2202,142 @@ class NewPaypalService {
 				JSON_PRETTY_PRINT
 			),
 			'success'
+		);
+
+		return true;
+	}
+
+	/**
+	 * Handle PAYMENT.SALE.COMPLETED webhook for subscription payments.
+	 * Stores the real PayPal sale/transaction ID, replacing any subscription-ID placeholder.
+	 *
+	 * @param array $resource Webhook resource payload.
+	 *
+	 * @return bool
+	 */
+	private function handle_subscription_sale_webhook_event( $resource ) {
+		$transaction_id         = sanitize_text_field( isset( $resource['id'] ) ? $resource['id'] : '' );
+		$paypal_subscription_id = sanitize_text_field( isset( $resource['billing_agreement_id'] ) ? $resource['billing_agreement_id'] : '' );
+
+		if ( empty( $transaction_id ) || empty( $paypal_subscription_id ) ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[PAYMENT.SALE.COMPLETED] Skipped — missing transaction_id or billing_agreement_id.' . "\n" . wp_json_encode(
+					array(
+						'transaction_id'         => $transaction_id ?: null,
+						'paypal_subscription_id' => $paypal_subscription_id ?: null,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
+			);
+			return false;
+		}
+
+		// Already have an order for this exact sale — nothing to update.
+		$existing = $this->orders_repository->get_order_by_transaction_id( $transaction_id );
+		if ( ! empty( $existing ) ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[PAYMENT.SALE.COMPLETED] Order already exists for this transaction — skipped.' . "\n" . wp_json_encode(
+					array(
+						'transaction_id' => $transaction_id,
+						'order_id'       => $existing['ID'],
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
+			);
+			return true;
+		}
+
+		// Find local subscription record by PayPal subscription ID.
+		$membership_subscription = $this->members_subscription_repository->get_subscription_by_subscription_id_meta( $paypal_subscription_id );
+		if ( empty( $membership_subscription ) ) {
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[PAYMENT.SALE.COMPLETED] No local subscription found for PayPal subscription ID.' . "\n" . wp_json_encode(
+					array(
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'transaction_id'         => $transaction_id,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'info'
+			);
+			return false;
+		}
+
+		$local_sub_id = $membership_subscription['ID'];
+		$user_id      = $membership_subscription['user_id'];
+
+		// Replace placeholder order whose transaction_id is the subscription ID (not a real sale ID).
+		$placeholder = $this->orders_repository->get_order_by_transaction_id( $paypal_subscription_id );
+		if ( ! empty( $placeholder ) && ! empty( $placeholder['ID'] ) ) {
+			$this->orders_repository->update(
+				$placeholder['ID'],
+				array(
+					'status'         => 'completed',
+					'transaction_id' => $transaction_id,
+				)
+			);
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[PAYMENT.SALE.COMPLETED] Placeholder order updated with real transaction ID.' . "\n" . wp_json_encode(
+					array(
+						'order_id'               => $placeholder['ID'],
+						'member_id'              => $user_id,
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'transaction_id'         => $transaction_id,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'success'
+			);
+			return true;
+		}
+
+		// Update a pending order that has no transaction_id yet.
+		$pending_order = $this->orders_repository->get_order_by_subscription( $local_sub_id );
+		if (
+			! empty( $pending_order['ID'] ) &&
+			'pending' === ( $pending_order['status'] ?? '' ) &&
+			'' === (string) ( $pending_order['transaction_id'] ?? '' )
+		) {
+			$this->orders_repository->update(
+				$pending_order['ID'],
+				array(
+					'status'         => 'completed',
+					'transaction_id' => $transaction_id,
+				)
+			);
+			PaymentGatewayLogging::log_general(
+				'paypal',
+				'[PAYMENT.SALE.COMPLETED] Pending order completed with real transaction ID.' . "\n" . wp_json_encode(
+					array(
+						'order_id'               => $pending_order['ID'],
+						'member_id'              => $user_id,
+						'paypal_subscription_id' => $paypal_subscription_id,
+						'transaction_id'         => $transaction_id,
+					),
+					JSON_PRETTY_PRINT
+				),
+				'success'
+			);
+			return true;
+		}
+
+		// No matching order found — likely a renewal payment handled by the backfill job.
+		PaymentGatewayLogging::log_general(
+			'paypal',
+			'[PAYMENT.SALE.COMPLETED] No matching order found for transaction — skipped (backfill will handle renewals).' . "\n" . wp_json_encode(
+				array(
+					'paypal_subscription_id' => $paypal_subscription_id,
+					'transaction_id'         => $transaction_id,
+				),
+				JSON_PRETTY_PRINT
+			),
+			'info'
 		);
 
 		return true;
@@ -2635,6 +2856,26 @@ class NewPaypalService {
 	}
 
 	/**
+	 * Fetch transaction list for a PayPal subscription.
+	 *
+	 * @param string $subscription_id
+	 * @param array  $paypal_options
+	 *
+	 * @return array|WP_Error
+	 */
+	private function get_paypal_subscription_transactions( $subscription_id, $paypal_options ) {
+		$start_time = gmdate( 'Y-m-d\TH:i:s\Z', strtotime( '-1 hour' ) );
+		$end_time   = gmdate( 'Y-m-d\TH:i:s\Z' );
+
+		return $this->paypal_rest_request(
+			'GET',
+			'/v1/billing/subscriptions/' . rawurlencode( $subscription_id ) . '/transactions?start_time=' . $start_time . '&end_time=' . $end_time,
+			null,
+			$paypal_options
+		);
+	}
+
+	/**
 	 * Revise subscription.
 	 *
 	 * @param string $paypal_subscription_id
@@ -2883,9 +3124,12 @@ class NewPaypalService {
 				),
 			),
 		);
-		// Coupon: plan must define a TRIAL cycle so the subscription override can set a discounted first-cycle price.
+		// Coupon: plan must define a TRIAL cycle so the subscription override can set a discounted
+		// first-cycle price. Skipped for full-discount subs (UR-4386) — they use a plain REGULAR plan
+		// + future start_time instead.
 		if (
 			! empty( $context['coupon_details'] ) &&
+			empty( $context['is_full_discount_sub'] ) &&
 			( empty( $context['data']['trial_status'] ) || 'on' !== $context['data']['trial_status'] )
 		) {
 			$billing_cycles = array(
@@ -3011,7 +3255,7 @@ class NewPaypalService {
 				'trial_status'     => isset( $context['data']['trial_status'] ) ? $context['data']['trial_status'] : '',
 				'trial_data'       => isset( $context['data']['trial_data'] ) ? $context['data']['trial_data'] : array(),
 				'tax_rate'         => isset( $context['tax_rate'] ) ? $context['tax_rate'] : 0,
-				'has_coupon_cycle' => ! empty( $context['coupon_details'] ) && ( empty( $context['data']['trial_status'] ) || 'on' !== $context['data']['trial_status'] ),
+				'has_coupon_cycle' => ! empty( $context['coupon_details'] ) && empty( $context['is_full_discount_sub'] ) && ( empty( $context['data']['trial_status'] ) || 'on' !== $context['data']['trial_status'] ),
 			)
 		);
 	}

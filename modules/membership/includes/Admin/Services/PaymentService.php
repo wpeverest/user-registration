@@ -8,6 +8,7 @@ use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URM\Mollie\Services\PaymentService as MollieService;
 use WPEverest\URMembership\Admin\Services\Paypal\NewPaypalService;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 
 class PaymentService {
 	/**
@@ -182,7 +183,27 @@ class PaymentService {
 		$success_params    = array();
 		$data['plan_name'] = 'membership';
 
-		// Apply coupon discount before tax, mirroring Stripe's approach in process_stripe_payment.
+		$base_amount            = floatval( $data['amount'] );
+		$currency               = get_option( 'user_registration_payment_currency', 'USD' );
+		$local_currency         = ! empty( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
+		$ur_zone_id             = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
+		$pricing_data           = null;
+		$local_currency_data    = array();
+		$local_currency_applies = false;
+
+		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( CoreFunctions::class ) ) {
+			$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
+			$local_currency_data = ! empty( $data['local_currency'] ) ? $data['local_currency'] : array();
+
+			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
+				$currency               = $local_currency;
+				$local_currency_applies = true;
+				$data['amount']         = CoreFunctions::ur_get_amount_after_conversion( $base_amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+			}
+		}
+
+		$data['currency'] = $currency;
+
 		// Skip for upgrades: SubscriptionService already bakes the coupon into chargeable_amount.
 		$coupon_discount = 0;
 		if ( ur_check_module_activation( 'coupon' ) && ! empty( $data['coupon'] ) && empty( $data['upgrade'] ) ) {
@@ -200,6 +221,21 @@ class PaymentService {
 					$coupon_discount = ( 'fixed' === $coupon_details['coupon_discount_type'] )
 						? floatval( $coupon_details['coupon_discount'] )
 						: floatval( $data['amount'] ) * floatval( $coupon_details['coupon_discount'] ) / 100;
+
+					// Fixed discounts are configured in the base currency — convert before subtracting.
+					if ( $local_currency_applies && 'fixed' === $coupon_details['coupon_discount_type'] ) {
+						$discounted_base  = max( 0, $base_amount - $coupon_discount );
+						$discounted_local = CoreFunctions::ur_get_amount_after_conversion(
+							$discounted_base,
+							$currency,
+							$pricing_data,
+							$local_currency_data,
+							$ur_zone_id,
+							$base_amount
+						);
+						$coupon_discount = max( 0, floatval( $data['amount'] ) - $discounted_local );
+					}
+
 					$data['amount']  = max( 0, floatval( $data['amount'] ) - $coupon_discount );
 				}
 			}

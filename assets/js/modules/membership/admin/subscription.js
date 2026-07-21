@@ -23,6 +23,49 @@
 	var selectedPlanData = null;
 	var billingCycleValue = null;
 
+	// Validate required fields manually. The forms use `novalidate` so the
+	// browser never tries to focus a hidden required control (which throws
+	// "An invalid form control ... is not focusable" and silently aborts the
+	// submit in Safari). We still must enforce required fields ourselves so a
+	// recurring/paid plan can't be saved without a start/expiry date.
+	function validateRequiredFields($form) {
+		var firstInvalid = null;
+
+		$form.find("[required]").each(function () {
+			var $field = $(this);
+			var value = $field.val();
+
+			if (value === null || $.trim(String(value)) === "") {
+				$field.addClass("ur-field-invalid");
+				if (!firstInvalid) {
+					firstInvalid = $field;
+				}
+			} else {
+				$field.removeClass("ur-field-invalid");
+			}
+		});
+
+		if (firstInvalid) {
+			if (snackbar) {
+				snackbar.add({
+					type: "failed",
+					message:
+						ur_subscription_data.i18n_required_fields ||
+						"Please fill in all required fields.",
+					duration: 5
+				});
+			}
+			// Only focus the field if it is actually visible, to avoid the
+			// same "not focusable" error we are guarding against.
+			if (firstInvalid.is(":visible")) {
+				firstInvalid.trigger("focus");
+			}
+			return false;
+		}
+
+		return true;
+	}
+
 	function updatePlanFields(plan) {
 		if (!plan || !plan.meta_value) {
 			return;
@@ -189,6 +232,11 @@
 		"submit",
 		function (e) {
 			e.preventDefault();
+
+			if (!validateRequiredFields($(this))) {
+				return;
+			}
+
 			var $btn = $(
 				'button[form="ur-membership-subscription-create-form"]'
 			);
@@ -240,6 +288,11 @@
 		"submit",
 		function (e) {
 			e.preventDefault();
+
+			if (!validateRequiredFields($(this))) {
+				return;
+			}
+
 			var $btn = $('button[form="ur-membership-subscription-edit-form"]');
 
 			$btn.prop("disabled", true).append(
