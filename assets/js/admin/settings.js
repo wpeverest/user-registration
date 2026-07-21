@@ -1126,7 +1126,6 @@
 
 		data.user_registration_selected_lost_password_page = $this.val();
 
-		$this.prop("disabled", true);
 		$this.css("border", "1px solid #e1e1e1");
 
 		$this
@@ -1143,13 +1142,13 @@
 					if (
 						$this
 							.closest(
-								".user-registration-login-form-global-settings"
+								".user-registration-global-settings--field"
 							)
 							.find(".error.inline").length === 0
 					) {
 						$this
 							.closest(
-								".user-registration-login-form-global-settings"
+								".user-registration-global-settings--field"
 							)
 							.append(
 								"<div id='message' class='error inline' style='padding:10px;'>" +
@@ -1158,32 +1157,19 @@
 							);
 					}
 					$this.css("border", "1px solid red");
-					var login_form = $this.closest(
-						".user-registration-login-form-container"
-					);
-					$(login_form)
-						.closest("#wpbody-content")
-						.find("#ur-lists-page-topnav")
-						.find('button[name="save_login_form"]')
-						.prop("disabled", true);
+					$('input[name="save"]').prop("disabled", true);
 				} else {
-					var login_form = $this.closest(
-						".user-registration-login-form-container"
-					);
-					$(login_form)
-						.closest("#wpbody-content")
-						.find("#ur-lists-page-topnav")
-						.find('button[name="save_login_form"]')
-						.prop("disabled", false);
+					$this.css("border", "1px solid #e1e1e1");
 					$this
 						.closest(
-							".user-registration-login-form-global-settings"
+							".user-registration-global-settings--field"
 						)
 						.find(".error.inline")
 						.remove();
+					if ($(".error.inline").length === 0) {
+						$('input[name="save"]').prop("disabled", false);
+					}
 				}
-
-				$this.prop("disabled", false);
 			}
 		});
 	});
