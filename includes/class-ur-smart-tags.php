@@ -272,7 +272,8 @@ class UR_Smart_Tags {
 						} else {
 							$name = isset( $values['username'] ) ? $values['username'] : '';
 						}
-						$content = str_replace( '{{' . $other_tag . '}}', $name, $content );
+						$name    = strip_shortcodes( $name );
+						$content = str_replace( '{{' . $other_tag . '}}', esc_html( $name ), $content );
 						break;
 
 					case 'ur_login':
@@ -381,7 +382,8 @@ class UR_Smart_Tags {
 							$all_fields = '';
 						}
 
-						$content = str_replace( '{{' . $other_tag . '}}', $all_fields, $content );
+						$all_fields = strip_shortcodes( $all_fields );
+						$content    = str_replace( '{{' . $other_tag . '}}', $all_fields, $content );
 						break;
 
 					case 'admin_email':
@@ -503,6 +505,7 @@ class UR_Smart_Tags {
 
 					case 'author_name':
 						$author  = get_the_author_meta( 'display_name' );
+						$author  = strip_shortcodes( $author );
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
 						break;
 					case 'unique_id':
@@ -579,6 +582,7 @@ class UR_Smart_Tags {
 						$user_id      = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						$user_obj     = get_userdata( $user_id );
 						$display_name = isset( $user_obj->display_name ) ? $user_obj->display_name : '';
+						$display_name = strip_shortcodes( $display_name );
 						$content      = str_replace( '{{' . $tag . '}}', esc_html( $display_name ), $content );
 						break;
 
@@ -603,7 +607,8 @@ class UR_Smart_Tags {
 							$userdata  = get_userdata( get_current_user_id() );
 							$full_name = isset( $userdata->display_name ) ? $userdata->display_name : '';
 						}
-						$content = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
+						$full_name = strip_shortcodes( $full_name );
+						$content   = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
 						break;
 					case 'profile_details_link':
 						$endpoint             = ur_string_translation( 0, 'user_registration_edit-profile_slug', 'edit-profile' );
@@ -842,21 +847,24 @@ class UR_Smart_Tags {
 						$user       = get_user_by( 'login', $username );
 						$user_id    = isset( $user->ID ) ? $user->ID : 0;
 						$first_name = get_user_meta( $user_id, 'first_name', true );
-						$content    = str_replace( '{{' . $other_tag . '}}', $first_name, $content );
+						$first_name = strip_shortcodes( $first_name );
+						$content    = str_replace( '{{' . $other_tag . '}}', esc_html( $first_name ), $content );
 						break;
 					case 'first_name':
 						$username   = $values['username'] ?? $values['membership_tags']['username'] ?? null;
 						$user       = get_user_by( 'login', $username );
 						$user_id    = isset( $user->ID ) ? $user->ID : get_current_user_id();
 						$first_name = get_user_meta( $user_id, 'first_name', true );
-						$content    = str_replace( '{{' . $other_tag . '}}', $first_name, $content );
+						$first_name = strip_shortcodes( $first_name );
+						$content    = str_replace( '{{' . $other_tag . '}}', esc_html( $first_name ), $content );
 						break;
 					case 'last_name':
 						$username  = $values['username'] ?? $values['membership_tags']['username'] ?? null;
 						$user      = get_user_by( 'login', $username );
 						$user_id   = isset( $user->ID ) ? $user->ID : get_current_user_id();
 						$last_name = get_user_meta( $user_id, 'last_name', true );
-						$content   = str_replace( '{{' . $other_tag . '}}', $last_name, $content );
+						$last_name = strip_shortcodes( $last_name );
+						$content   = str_replace( '{{' . $other_tag . '}}', esc_html( $last_name ), $content );
 						break;
 					case 'membership_end_date':
 						$membership_end_date = ( isset( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_expiry_date'] ) ) ? $values['membership_tags']['membership_plan_expiry_date'] : '';
