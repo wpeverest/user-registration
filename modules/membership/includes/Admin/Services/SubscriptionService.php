@@ -103,7 +103,19 @@ class SubscriptionService {
 			$status      = 'pending';
 		}
 
-		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
+		// UR-4386: a ONE-TIME (paid) plan fully covered by a 100% coupon is a free order (no gateway),
+		// so activate it immediately like a free plan. Subscriptions are excluded here — they are
+		// activated by their gateway flow (e.g. the Stripe delayed-start schedule).
+		$is_full_discount_paid = false;
+		if ( 'paid' === $membership_meta['type'] && ! empty( $data['coupon_data'] ) ) {
+			$plan_amount    = floatval( $membership_meta['amount'] ?? 0 );
+			$discount_type  = $data['coupon_data']['coupon_discount_type'] ?? 'fixed';
+			$discount_value = floatval( $data['coupon_data']['coupon_discount'] ?? 0 );
+			$discount       = ( 'percent' === $discount_type ) ? ( $plan_amount * $discount_value / 100 ) : $discount_value;
+			$is_full_discount_paid = ( $plan_amount > 0 ) && ( 0.0 === round( max( 0, $plan_amount - $discount ), 2 ) );
+		}
+
+		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] || $is_full_discount_paid ) {
 			$status = 'active';
 		}
 

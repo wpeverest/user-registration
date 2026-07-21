@@ -1116,7 +1116,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				function ( $item ) {
 					$content = json_decode( wp_unslash( $item['post_content'] ), true );
 
-					return $content['status'];
+					return ! empty( $content['status'] );
 				}
 			);
 

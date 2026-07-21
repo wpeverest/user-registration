@@ -414,6 +414,13 @@ class NewPaypalService {
 			'is_subscription_upgrade_revise'  => false,
 		);
 
+		// UR-4386: a valid 100% coupon zeroes a subscription's amount. Bill nothing now and start
+		// one period later (future start_time) with a plain REGULAR plan, instead of a $0 TRIAL cycle.
+		$context['is_full_discount_sub'] = $context['is_subscription']
+			&& ! $is_upgrading
+			&& ! empty( $coupon_details )
+			&& 0.0 === (float) $final_amount;
+
 		if (
 			$context['is_subscription'] &&
 			$context['is_upgrading'] &&
@@ -749,8 +756,10 @@ class NewPaypalService {
 		// }
 		$has_trial = ! empty( $context['data']['trial_status'] ) && 'on' === $context['data']['trial_status'];
 
+		// UR-4386: full-discount subs use a plain REGULAR plan + future start_time (below), not a
+		// discounted/$0 TRIAL override cycle.
 		$plan_override = array();
-		if ( ! $has_trial ) {
+		if ( ! $has_trial && empty( $context['is_full_discount_sub'] ) ) {
 			$plan_override = $this->build_subscription_plan_override( $context );
 		}
 
@@ -773,8 +782,21 @@ class NewPaypalService {
 			$payload['plan'] = $plan_override;
 		}
 
-		// Start time can help prevent immediate timezone confusion.
-		$payload['start_time'] = gmdate( 'Y-m-d\TH:i:s\Z', time() + 60 );
+		// Start time. UR-4386: for a 100% coupon the first period is free, so start billing one full
+		// billing period out (nothing charged now); otherwise start almost immediately.
+		if ( ! empty( $context['is_full_discount_sub'] ) ) {
+			$sub_data = ! empty( $context['has_team'] )
+				? array(
+					'duration' => $context['data']['team_data']['team_duration_period'] ?? 'month',
+					'value'    => $context['data']['team_data']['team_duration_value'] ?? 1,
+				)
+				: ( $context['data']['subscription'] ?? array() );
+			$value    = max( 1, (int) ( $sub_data['value'] ?? 1 ) );
+			$duration = strtolower( (string) ( $sub_data['duration'] ?? 'month' ) );
+			$payload['start_time'] = gmdate( 'Y-m-d\TH:i:s\Z', strtotime( "+{$value} {$duration}" ) );
+		} else {
+			$payload['start_time'] = gmdate( 'Y-m-d\TH:i:s\Z', time() + 60 );
+		}
 
 		$response = $this->create_paypal_subscription( $payload, $context['paypal_options'] );
 
@@ -3102,9 +3124,12 @@ class NewPaypalService {
 				),
 			),
 		);
-		// Coupon: plan must define a TRIAL cycle so the subscription override can set a discounted first-cycle price.
+		// Coupon: plan must define a TRIAL cycle so the subscription override can set a discounted
+		// first-cycle price. Skipped for full-discount subs (UR-4386) — they use a plain REGULAR plan
+		// + future start_time instead.
 		if (
 			! empty( $context['coupon_details'] ) &&
+			empty( $context['is_full_discount_sub'] ) &&
 			( empty( $context['data']['trial_status'] ) || 'on' !== $context['data']['trial_status'] )
 		) {
 			$billing_cycles = array(
@@ -3230,7 +3255,7 @@ class NewPaypalService {
 				'trial_status'     => isset( $context['data']['trial_status'] ) ? $context['data']['trial_status'] : '',
 				'trial_data'       => isset( $context['data']['trial_data'] ) ? $context['data']['trial_data'] : array(),
 				'tax_rate'         => isset( $context['tax_rate'] ) ? $context['tax_rate'] : 0,
-				'has_coupon_cycle' => ! empty( $context['coupon_details'] ) && ( empty( $context['data']['trial_status'] ) || 'on' !== $context['data']['trial_status'] ),
+				'has_coupon_cycle' => ! empty( $context['coupon_details'] ) && empty( $context['is_full_discount_sub'] ) && ( empty( $context['data']['trial_status'] ) || 'on' !== $context['data']['trial_status'] ),
 			)
 		);
 	}
