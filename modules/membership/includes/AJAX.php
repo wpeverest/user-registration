@@ -857,6 +857,42 @@ class AJAX {
 		}
 	}
 
+	/**
+	 * Verify that a logged-out payment-confirmation request genuinely belongs to
+	 * the browser that created this pending registration.
+	 *
+	 * Primary check: the per-registration transient set at signup matches the
+	 * browser cookie. Fallback (UR-4727): if that transient was already consumed
+	 * or deleted by another step while the browser is still logged out — e.g.
+	 * auto-login (MembersService::login_member) or the Stripe failure webhooks
+	 * (handle_invoice_payment_failed / handle_failed_payment_intent) — accept the
+	 * request when the cookie matches the server-recomputed HMAC, i.e. the same
+	 * value login_member() validates against. That HMAC depends on
+	 * wp_salt( 'auth' ), so a third party cannot forge it, and the pending-order
+	 * gate in the callers still blocks replays after the order is no longer pending.
+	 *
+	 * @param int $member_id Member/user ID whose pending payment is being confirmed.
+	 * @return bool True when the request is bound to this member's registration session.
+	 */
+	private static function verify_pending_member_session( $member_id ) {
+		$cookie_key   = 'urm_pending_login_' . $member_id;
+		$cookie_token = isset( $_COOKIE[ $cookie_key ] ) ? wp_unslash( $_COOKIE[ $cookie_key ] ) : '';
+
+		if ( empty( $cookie_token ) ) {
+			return false;
+		}
+
+		$saved_hash = get_transient( $cookie_key );
+		if ( ! empty( $saved_hash ) && hash_equals( (string) $saved_hash, (string) $cookie_token ) ) {
+			return true;
+		}
+
+		// Fallback: transient gone but the cookie still proves this browser registered.
+		$expected_hash = hash_hmac( 'sha256', (string) $member_id, wp_salt( 'auth' ) );
+
+		return hash_equals( $expected_hash, (string) $cookie_token );
+	}
+
 	public static function confirm_payment() {
 
 		ur_membership_verify_nonce( 'urm_confirm_payment' );
@@ -903,9 +939,7 @@ class AJAX {
 			}
 		} else {
 			// Nopriv: bind to the registration session that created this pending member.
-			$saved_hash   = get_transient( 'urm_pending_login_' . $member_id );
-			$cookie_token = isset( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) ? wp_unslash( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) : '';
-			if ( empty( $saved_hash ) || empty( $cookie_token ) || ! hash_equals( (string) $saved_hash, (string) $cookie_token ) ) {
+			if ( ! self::verify_pending_member_session( $member_id ) ) {
 				wp_send_json_error(
 					array(
 						'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
@@ -1154,9 +1188,7 @@ class AJAX {
 			}
 		} else {
 			// Nopriv: bind to the registration session that created this pending member.
-			$saved_hash   = get_transient( 'urm_pending_login_' . $member_id );
-			$cookie_token = isset( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) ? wp_unslash( $_COOKIE[ 'urm_pending_login_' . $member_id ] ) : '';
-			if ( empty( $saved_hash ) || empty( $cookie_token ) || ! hash_equals( (string) $saved_hash, (string) $cookie_token ) ) {
+			if ( ! self::verify_pending_member_session( $member_id ) ) {
 				wp_send_json_error(
 					array(
 						'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
