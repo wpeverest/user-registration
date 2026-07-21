@@ -17,6 +17,7 @@ use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 use WPEverest\URMembership\Admin\Services\CouponService;
 use WPEverest\URMembership\Admin\Services\Paypal\NewPaypalService;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 
 class SubscriptionService {
 
@@ -355,6 +356,23 @@ class SubscriptionService {
 		$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
 		$symbol   = ur_get_currency_symbol( $currency );
 
+		// Convert the plan's base price into $currency so it matches $symbol/$total above.
+		$plan_amount = isset( $membership_metas['amount'] ) ? (float) $membership_metas['amount'] : 0;
+
+		if (
+			$currency !== get_option( 'user_registration_payment_currency', 'USD' ) &&
+			! empty( $membership_metas['local_currency'] ) &&
+			ur_string_to_bool( $membership_metas['local_currency']['is_enable'] ) &&
+			class_exists( CoreFunctions::class )
+		) {
+			$plan_zone_id = CoreFunctions::ur_get_zone_id_by_currency( $membership_metas['local_currency'], $currency );
+
+			if ( ! empty( $plan_zone_id ) ) {
+				$plan_pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $plan_zone_id );
+				$plan_amount       = CoreFunctions::ur_get_amount_after_conversion( $plan_amount, $currency, $plan_pricing_data, $membership_metas['local_currency'], $plan_zone_id );
+			}
+		}
+
 		if ( ! empty( $data['context'] ) && 'thank_you_page' == $data['context'] ) {
 			$data['payment_method'] = ! empty( $member_order['payment_method'] ) ? $member_order['payment_method'] : '';
 			$data['transaction_id'] = ! empty( $member_order['transaction_id'] ) ? $member_order['transaction_id'] : '';
@@ -421,7 +439,7 @@ class SubscriptionService {
 			'membership_plan_status'            => isset( $subscription['status'] ) ? esc_html( ucwords( $subscription['status'] ) ) : '',
 			'membership_plan_payment_date'      => ! empty( $order['created_at'] ) ? esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ) : '',
 			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
-			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $membership_metas['amount'] ?? 0, 2 ) : number_format( $membership_metas['amount'] ?? 0, 2 ) . $symbol,
+			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $plan_amount, 2 ) : number_format( $plan_amount, 2 ) . $symbol,
 			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ?? '' ) ),
 			'membership_plan_trial_amount'      => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) : number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) . $symbol,
 			'membership_plan_coupon_discount'   => (
@@ -551,6 +569,14 @@ class SubscriptionService {
 			'membership_data' => $selected_membership_details,
 		);
 
+		// Forward the local-currency zone so the new order is charged in it (see OrderService::prepare_orders_data()).
+		if ( ! empty( $data['switched_currency'] ) && ! empty( $data['urm_zone_id'] ) ) {
+			$members_data['local_currency_details'] = array(
+				'switched_currency' => $data['switched_currency'],
+				'urm_zone_id'       => $data['urm_zone_id'],
+			);
+		}
+
 		if ( ! empty( $data['tax_rate'] ) ) {
 			$members_data['tax_data'] = array(
 				'tax_rate'               => floatval( $data['tax_rate'] ),
@@ -640,6 +666,8 @@ class SubscriptionService {
 			'order_id'               => $order['ID'],
 			'tax_rate'               => ! empty( $data['tax_rate'] ) ? $data['tax_rate'] : '',
 			'tax_calculation_method' => ! empty( $data['tax_calculation_method'] ) ? $data['tax_calculation_method'] : '',
+			'switched_currency'      => ! empty( $data['switched_currency'] ) ? $data['switched_currency'] : '',
+			'urm_zone_id'            => ! empty( $data['urm_zone_id'] ) ? $data['urm_zone_id'] : '',
 		);
 
 		if ( ! empty( $coupon ) ) {
@@ -1014,6 +1042,30 @@ class SubscriptionService {
 			'membership_data' => $membership_details,
 		);
 
+		// Re-derive the member's local-currency zone from their most recent order for this renewal.
+		$switched_currency = '';
+		$switched_zone_id  = null;
+
+		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( CoreFunctions::class ) ) {
+			$previous_order = $this->orders_repository->get_order_by_subscription( $member_subscription['ID'] );
+
+			if ( ! empty( $previous_order['ID'] ) ) {
+				$previous_local_currency = $this->orders_repository->get_order_meta_by_order_id_and_meta_key( $previous_order['ID'], 'local_currency' );
+				$switched_currency        = ! empty( $previous_local_currency['meta_value'] ) ? $previous_local_currency['meta_value'] : '';
+
+				if ( ! empty( $switched_currency ) && ! empty( $membership_details['local_currency'] ) && ur_string_to_bool( $membership_details['local_currency']['is_enable'] ) ) {
+					$switched_zone_id = CoreFunctions::ur_get_zone_id_by_currency( $membership_details['local_currency'], $switched_currency );
+				}
+			}
+		}
+
+		if ( ! empty( $switched_currency ) && ! empty( $switched_zone_id ) ) {
+			$members_data['local_currency_details'] = array(
+				'switched_currency' => $switched_currency,
+				'urm_zone_id'       => $switched_zone_id,
+			);
+		}
+
 		$membership_process = urm_get_membership_process( $member_id );
 		if ( $membership_process && ! in_array( $membership_id, $membership_process['renew'] ) ) {
 			$membership_process['renew'][] = $membership_id;
@@ -1039,6 +1091,11 @@ class SubscriptionService {
 			'subscription_data' => $member_subscription,
 			'order_id'          => $order['ID'],
 		);
+
+		if ( ! empty( $switched_currency ) && ! empty( $switched_zone_id ) ) {
+			$data['switched_currency'] = $switched_currency;
+			$data['urm_zone_id']       = $switched_zone_id;
+		}
 
 		$renew_response           = $payment_service->build_response( $data );
 		$renew_response['status'] = false;

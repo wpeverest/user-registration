@@ -439,17 +439,22 @@ function ur_help_tip( $tip, $allow_html = false, $classname = 'user-registration
 }
 
 function ur_render_premium_feature_gate_template( $args = array() ) {
-	if ( UR_PRO_ACTIVE ) {
-		return;
-	}
-
 	$args = wp_parse_args(
 		$args,
 		array(
 			'template_id' => 'ur-pro-feature',
 			'utm_source'  => 'ur-membership-create',
+			'plan_gated'  => false,
+			'title'       => esc_html__( 'You have run into a premium feature, please upgrade to URM Pro', 'user-registration' ),
+			'button_text' => esc_html__( 'Upgrade to Pro', 'user-registration' ),
 		)
 	);
+
+	// Render for free installs, or when a higher plan is required even though Pro is active.
+	if ( UR_PRO_ACTIVE && empty( $args['plan_gated'] ) ) {
+		return;
+	}
+
 	if ( empty( $args['upgrade_url'] ) ) {
 		$args['upgrade_url'] = 'https://wpuserregistration.com/upgrade/?utm_source=' . esc_attr( $args['utm_source'] ) . '&utm_medium=upgrade-link&utm-campaign=lite-version';
 	}
@@ -463,11 +468,11 @@ function ur_render_premium_feature_gate_template( $args = array() ) {
 	<template id="<?php echo esc_attr( $args['template_id'] ); ?>">
 		<div class="ur-feature">
 			<div class="ur-feature__title">
-				<?php esc_html_e( 'You have run into a premium feature, please upgrade to URM Pro', 'user-registration' ); ?>
+				<?php echo esc_html( $args['title'] ); ?>
 			</div>
 			<a class="ur-feature__btn" target="_blank" href="<?php echo esc_url( $args['upgrade_url'] ); ?>">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
-				<?php esc_html_e( 'Upgrade to Pro', 'user-registration' ); ?>
+				<?php echo esc_html( $args['button_text'] ); ?>
 			</a>
 		</div>
 	</template>
@@ -475,18 +480,23 @@ function ur_render_premium_feature_gate_template( $args = array() ) {
 }
 
 function ur_render_premium_feature_gate( $args = array() ) {
-	if ( UR_PRO_ACTIVE ) {
-		return;
-	}
-
-	$args                = wp_parse_args(
+	$args = wp_parse_args(
 		$args,
 		array(
 			'template_id'     => 'ur-pro-feature',
 			'utm_source'      => 'ur-membership-create',
 			'render_template' => true,
+			'plan_gated'      => false,
+			'title'           => esc_html__( 'You have run into a premium feature, please upgrade to URM Pro', 'user-registration' ),
+			'button_text'     => esc_html__( 'Upgrade to Pro', 'user-registration' ),
 		)
 	);
+
+	// Render for free installs, or when a higher plan is required even though Pro is active.
+	if ( UR_PRO_ACTIVE && empty( $args['plan_gated'] ) ) {
+		return;
+	}
+
 	$args['upgrade_url'] = 'https://wpuserregistration.com/upgrade/?utm_source=' . esc_attr( $args['utm_source'] ) . '&utm_medium=upgrade-link&utm-campaign=lite-version';
 
 	if ( ! empty( $args['render_template'] ) ) {
@@ -3228,7 +3238,8 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '</div>';
 		$output .= '</div>';
 
-		$output                .= '<div class="form-row ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
+		$wrapper_style          = '' === $checked ? ' style="display:none;"' : '';
+		$output                .= '<div class="form-row ur_conditional_logic_wrapper"' . $wrapper_style . ' data-source="' . esc_attr( $integration ) . '">';
 		$output                .= '<label class="ur-label checkbox">' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</label>';
 		$output                .= '<div class="ur-logic"><p>' . esc_html__( 'Send data only if the following matches.', 'user-registration' ) . '</p></div>';
 		$output                .= '<div class="ur-conditional-wrapper">';
