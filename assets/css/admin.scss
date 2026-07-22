@@ -10256,7 +10256,8 @@ body.user-registration-page {
 }
 
 @import "components/wp7-compat";
-#user-registration-base-list-table-page.ur-tax-region-layout {
+#user-registration-base-list-table-page.ur-tax-region-layout,
+#user-registration-base-list-table-page.ur-pricing-zone-layout {
 	.user-registration-base-list-table-heading {
 		position: relative;
 		margin-bottom: 16px;

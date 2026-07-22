@@ -185,6 +185,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 						       wu.ID as member_id,
 						       wp.post_title as membership_plan_name,
 						       wums.item_id as membership,
+						       wums.ID as subscription_id,
 						       wums.next_billing_date,
 						       wums.expiry_date
 						FROM  $this->table wums
@@ -216,13 +217,14 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 						       wu.ID as member_id,
 						       wp.post_title as membership_plan_name,
 						       wums.item_id as membership,
+						       wums.ID as subscription_id,
 						       wums.next_billing_date,
 						       wums.expiry_date
 						FROM  $this->table wums
 					    LEFT JOIN $this->users_table wu ON wums.user_id = wu.ID
 					    LEFT JOIN $this->posts_table wp ON wums.item_id = wp.ID
 						WHERE wums.status = 'expired'
-						AND DATE(wums.expiry_date) = DATE('%s')
+						AND wums.expiry_date >= '%s'
 						",
 			$check_date
 		);

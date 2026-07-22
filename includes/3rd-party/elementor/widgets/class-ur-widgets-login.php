@@ -99,6 +99,10 @@ class UR_Elementor_Widget_Login extends Widget_Base {
 		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_login_form', $shortcode, $settings ) );
 		return $shortcode;
 	}
+	public function get_style_depends() {
+		return array( 'user-registration-general' );
+	}
+
 	/**
 	 * Render widget output.
 	 *

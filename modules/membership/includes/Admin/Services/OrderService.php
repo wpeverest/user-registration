@@ -93,11 +93,11 @@ class OrderService {
 			$ur_zone_id     = ! empty( $data['local_currency_details']['urm_zone_id'] ) ? $data['local_currency_details']['urm_zone_id'] : '';
 
 			if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) && UR_PRO_ACTIVE && class_exists( CoreFunctions::class ) ) {
-				$currency            = $local_currency;
 				$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
 				$local_currency_data = ! empty( $membership_meta['local_currency'] ) ? $membership_meta['local_currency'] : array();
 
 				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
+					$currency                        = $local_currency;
 					$total                           = CoreFunctions::ur_get_amount_after_conversion( $total, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 					$local_currency_converted_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_meta['amount'], $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 				}
@@ -131,7 +131,9 @@ class OrderService {
 			'transaction_id'  => $transaction_id,
 			'payment_method'  => ( $data['membership_data']['payment_method'] ) ? sanitize_text_field( $data['membership_data']['payment_method'] ) : '',
 			'total_amount'    => number_format( $total, 2, '.', '' ),
-			'status'          => ( 'free' === $membership_meta['type'] || $is_admin ) ? 'completed' : 'pending',
+			// UR-4386: a one-time free order (paid plan + 100% coupon, payment_method="free") has no
+			// gateway step, so complete it immediately like a free plan.
+			'status'          => ( 'free' === $membership_meta['type'] || $is_admin || ( 'free' === ( $data['membership_data']['payment_method'] ?? '' ) && 0.0 === (float) $total && $coupon_discount_amount > 0 ) ) ? 'completed' : 'pending',
 			'order_type'      => $order_type,
 			'trial_status'    => ( ! empty( $upgrade_details ) && ( 'on' === $upgrade_details['trial_status'] ) ) ? 'on' : ( isset( $membership_meta['trial_status'] ) ? sanitize_text_field( $membership_meta['trial_status'] ) : 'off' ),
 			'notes'           => $note,

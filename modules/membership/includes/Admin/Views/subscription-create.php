@@ -39,7 +39,7 @@ var ur_membership_plans = <?php echo wp_json_encode( $membership_plans ); ?>;
 
 <div class="ur-membership">
 	<div class="ur-membership-tab-contents-wrapper ur-subscription">
-		<form id="ur-membership-subscription-create-form" method="post"
+		<form id="ur-membership-subscription-create-form" method="post" novalidate
 			class="ur-membership-subscription-create-form ur-subscription__form">
 			<?php do_action( 'ur_membership_subscription_create_form_start' ); ?>
 			<div class="user-registration-card">

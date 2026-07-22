@@ -67,6 +67,7 @@ class UR_Smart_Tags {
 		$smart_tags = array(
 			'{{blog_info}}'        => esc_html__( 'Blog Info', 'user-registration' ),
 			'{{home_url}}'         => esc_html__( 'Home URL', 'user-registration' ),
+			'{{ur_reset_pass_slug}}' => esc_html__( 'Reset Password Slug', 'user-registration' ),
 			'{{admin_email}}'      => esc_html__( 'Site Admin Email', 'user-registration' ),
 			'{{site_name}}'        => esc_html__( 'Site Name', 'user-registration' ),
 			'{{site_url}}'         => esc_html__( 'Site URL', 'user-registration' ),
@@ -272,7 +273,8 @@ class UR_Smart_Tags {
 						} else {
 							$name = isset( $values['username'] ) ? $values['username'] : '';
 						}
-						$content = str_replace( '{{' . $other_tag . '}}', $name, $content );
+						$name    = strip_shortcodes( $name );
+						$content = str_replace( '{{' . $other_tag . '}}', esc_html( $name ), $content );
 						break;
 
 					case 'ur_login':
@@ -381,7 +383,8 @@ class UR_Smart_Tags {
 							$all_fields = '';
 						}
 
-						$content = str_replace( '{{' . $other_tag . '}}', $all_fields, $content );
+						$all_fields = strip_shortcodes( $all_fields );
+						$content    = str_replace( '{{' . $other_tag . '}}', $all_fields, $content );
 						break;
 
 					case 'admin_email':
@@ -503,6 +506,7 @@ class UR_Smart_Tags {
 
 					case 'author_name':
 						$author  = get_the_author_meta( 'display_name' );
+						$author  = strip_shortcodes( $author );
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
 						break;
 					case 'unique_id':
@@ -579,6 +583,7 @@ class UR_Smart_Tags {
 						$user_id      = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						$user_obj     = get_userdata( $user_id );
 						$display_name = isset( $user_obj->display_name ) ? $user_obj->display_name : '';
+						$display_name = strip_shortcodes( $display_name );
 						$content      = str_replace( '{{' . $tag . '}}', esc_html( $display_name ), $content );
 						break;
 
@@ -603,7 +608,8 @@ class UR_Smart_Tags {
 							$userdata  = get_userdata( get_current_user_id() );
 							$full_name = isset( $userdata->display_name ) ? $userdata->display_name : '';
 						}
-						$content = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
+						$full_name = strip_shortcodes( $full_name );
+						$content   = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
 						break;
 					case 'profile_details_link':
 						$endpoint             = ur_string_translation( 0, 'user_registration_edit-profile_slug', 'edit-profile' );
@@ -842,21 +848,24 @@ class UR_Smart_Tags {
 						$user       = get_user_by( 'login', $username );
 						$user_id    = isset( $user->ID ) ? $user->ID : 0;
 						$first_name = get_user_meta( $user_id, 'first_name', true );
-						$content    = str_replace( '{{' . $other_tag . '}}', $first_name, $content );
+						$first_name = strip_shortcodes( $first_name );
+						$content    = str_replace( '{{' . $other_tag . '}}', esc_html( $first_name ), $content );
 						break;
 					case 'first_name':
 						$username   = $values['username'] ?? $values['membership_tags']['username'] ?? null;
 						$user       = get_user_by( 'login', $username );
 						$user_id    = isset( $user->ID ) ? $user->ID : get_current_user_id();
 						$first_name = get_user_meta( $user_id, 'first_name', true );
-						$content    = str_replace( '{{' . $other_tag . '}}', $first_name, $content );
+						$first_name = strip_shortcodes( $first_name );
+						$content    = str_replace( '{{' . $other_tag . '}}', esc_html( $first_name ), $content );
 						break;
 					case 'last_name':
 						$username  = $values['username'] ?? $values['membership_tags']['username'] ?? null;
 						$user      = get_user_by( 'login', $username );
 						$user_id   = isset( $user->ID ) ? $user->ID : get_current_user_id();
 						$last_name = get_user_meta( $user_id, 'last_name', true );
-						$content   = str_replace( '{{' . $other_tag . '}}', $last_name, $content );
+						$last_name = strip_shortcodes( $last_name );
+						$content   = str_replace( '{{' . $other_tag . '}}', esc_html( $last_name ), $content );
 						break;
 					case 'membership_end_date':
 						$membership_end_date = ( isset( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_expiry_date'] ) ) ? $values['membership_tags']['membership_plan_expiry_date'] : '';
@@ -1064,14 +1073,24 @@ class UR_Smart_Tags {
 									$order_detail      = $orders_repository->get_order_detail( $latest_order['ID'] );
 									if ( ! empty( $order_detail ) && isset( $order_detail['total_amount'] ) ) {
 										$renewal_amount = $order_detail['total_amount'];
+
+										if ( ! empty( $order_detail['order_id'] ) ) {
+											$renewal_order_currency = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
+										}
 									}
 								}
 							}
 						}
 						if ( ! empty( $renewal_amount ) ) {
-							// Format amount with currency if available.
-							$currency = get_option( 'user_registration_payment_currency', 'USD' );
-							if ( function_exists( 'ur_payment_integration_get_currencies' ) ) {
+							// Prefer the order's own currency over the store's global default.
+							$currency = ! empty( $renewal_order_currency['meta_value'] )
+								? $renewal_order_currency['meta_value']
+								: get_option( 'user_registration_payment_currency', 'USD' );
+
+							if ( function_exists( 'ur_get_currency_symbol' ) ) {
+								$symbol         = ur_get_currency_symbol( $currency );
+								$renewal_amount = $symbol . number_format( floatval( $renewal_amount ), 2 );
+							} elseif ( function_exists( 'ur_payment_integration_get_currencies' ) ) {
 								$currencies     = ur_payment_integration_get_currencies();
 								$symbol         = isset( $currencies[ $currency ]['symbol'] ) ? $currencies[ $currency ]['symbol'] : $currency;
 								$renewal_amount = $symbol . number_format( floatval( $renewal_amount ), 2 );
@@ -1119,10 +1138,10 @@ class UR_Smart_Tags {
 
 					case 'payment_amount':
 						$payment_amount = '';
-						// Check if user is a member by checking if membership_tags exists and has payment amount.
-						if ( ! empty( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_payment_amount'] ) ) {
-							// User is a member, use membership payment amount.
-							$payment_amount = $values['membership_tags']['membership_plan_payment_amount'];
+						// Member payment: use the actual paid total, not the plan's list price.
+						if ( ! empty( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_total'] ) ) {
+							// membership_plan_total is discount-applied, so a 100% coupon shows $0.00.
+							$payment_amount = $values['membership_tags']['membership_plan_total'];
 						} else {
 							// User is not a member, find single_item field value.
 							// Look for any key in $values that starts with 'single_item'.

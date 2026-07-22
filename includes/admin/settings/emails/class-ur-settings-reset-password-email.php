@@ -51,6 +51,25 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 			$this->title       = __( 'Reset Password', 'user-registration' );
 			$this->description = __( 'Sends a secure password reset link to the user who requested a reset.', 'user-registration' );
 			$this->receiver    = 'User';
+
+			add_filter( 'user_registration_admin_settings_sanitize_option_user_registration_reset_password_email', array( $this, 'validate_reset_link_smart_tag' ), 10, 2 );
+		}
+
+		public function validate_reset_link_smart_tag( $value, $option ) {
+			$required_url = '{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}';
+			$content      = html_entity_decode( (string) $value, ENT_QUOTES );
+
+			if ( false === strpos( $content, $required_url ) ) {
+				UR_Admin_Settings::add_error(
+					sprintf(
+						/* translators: %s: required reset password link. */
+						__( 'Reset Password email not saved: the reset link <code>%s</code> is required and cannot be removed or modified.', 'user-registration' ),
+						esc_html( $required_url )
+					)
+				);
+				return UR_Admin_Settings::get_option( $option['id'], $option['default'] );
+			}
+			return $value;
 		}
 
 		/**
