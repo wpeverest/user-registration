@@ -103,7 +103,10 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 					'message' => esc_html__( 'Subscription Cancelled Successfully', 'user-registration' ),
 				);
 			} else {
-				return $cancel_sub;
+				return array(
+					'status'  => false,
+					'message' => esc_html__( 'We could not cancel your subscription automatically. Please try again, or contact support if the problem continues.', 'user-registration' ),
+				);
 			}
 		}
 	}

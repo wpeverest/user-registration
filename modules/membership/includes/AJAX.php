@@ -1112,6 +1112,19 @@ class AJAX {
 			);
 		} else {
 			$message = isset( $cancel_status['message'] ) ? $cancel_status['message'] : esc_html__( 'Something went wrong while cancelling your subscription. Please contact support', 'user-registration' );
+
+			$payload = array(
+				'subscription_id' => $order['subscription_id'],
+				'member_id'       => $order['user_id'],
+				'event_type'      => 'cancellation_failed',
+				'meta'            => array(
+					'order_id'       => $order ? $order['ID'] : 0,
+					'payment_method' => $payment_gateway,
+				),
+			);
+
+			do_action( 'ur_membership_subscription_event_triggered', $payload );
+
 			wp_send_json_error(
 				array(
 					'message' => $message,
