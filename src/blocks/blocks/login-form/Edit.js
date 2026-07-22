@@ -36,7 +36,7 @@ const Edit = (props) => {
 					title={__("Login Form Settings", "user-registration")}
 				>
 					<p>
-						Want to configure where users will be redirected to after login or logout? Click <a target="_blank" href="/wp-admin/admin.php?page=user-registration-login-forms&tab=ur-tab-login-form-settings&tab-item=advanced-settings">here.</a>
+						Want to control where users land after they log in or log out? Configure it <a target="_blank" href="/wp-admin/admin.php?page=user-registration-login-forms&tab=ur-tab-login-form-settings&tab-item=advanced-settings&highlight=user_registration_login_options_enable_custom_redirect">here</a>.
 					</p>
 					<SelectControl
 						key="ur-gutenberg-login-user-login-state"
