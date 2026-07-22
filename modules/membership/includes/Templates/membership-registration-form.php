@@ -173,13 +173,20 @@
 
 					$converted_amount = number_format( $converted_amount, 2 );
 
-					$period_text = html_entity_decode( $membership['period'] );
-					$parts       = explode( '/', $period_text );
-					$duration    = isset( $parts[1] ) ? '/ ' . trim( $parts[1] ) : '';
+					$period_text  = html_entity_decode( $membership['period'] );
+					$every_needle = ' ' . __( 'every', 'user-registration' ) . ' ';
+					$every_pos    = strpos( $period_text, $every_needle );
+					if ( false !== $every_pos ) {
+						$duration = substr( $period_text, $every_pos );
+					} else {
+						// Legacy slash format: "$200.00 / 2 Weeks".
+						$parts    = explode( '/', $period_text, 2 );
+						$duration = isset( $parts[1] ) ? ' / ' . trim( $parts[1] ) : '';
+					}
 
 					$currency_symbol = ur_get_currency_symbol( $local_currency_by_country );
 
-					$final_period = $currency_symbol . $converted_amount . ' ' . $duration;
+					$final_period = $currency_symbol . $converted_amount . $duration;
 				}
 
 				$trial_label       = '';

@@ -3985,10 +3985,22 @@
 							var oldText = $periodText.length
 								? $periodText.text()
 								: $span.text();
-							var parts = oldText.split("/");
-							var durationPart = parts[1]
-								? "/ " + parts[1].trim()
-								: "";
+							var durationPart = "";
+							var everyIndex = oldText
+								.toLowerCase()
+								.indexOf(" every ");
+
+							if (everyIndex !== -1) {
+								durationPart = oldText
+									.substring(everyIndex)
+									.trim();
+							} else {
+								// Legacy slash format: "$200.00 / 2 Weeks".
+								var parts = oldText.split("/");
+								durationPart = parts[1]
+									? "/ " + parts[1].trim()
+									: "";
+							}
 
 							if (localCurrencyDetails[currency]) {
 								var newCalculatedValue =
