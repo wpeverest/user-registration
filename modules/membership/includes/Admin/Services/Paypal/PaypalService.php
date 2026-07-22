@@ -145,9 +145,14 @@ class PaypalService {
 		$membership_process = urm_get_membership_process( $member_id );
 		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $data['current_membership_id'], $membership_process['renew'] );
 
-		$local_currency = ! empty( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
-		$ur_zone_id     = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
-		$currency       = get_option( 'user_registration_payment_currency', 'USD' );
+		$base_membership_amount = $membership_amount;
+
+		$local_currency         = ! empty( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
+		$ur_zone_id             = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
+		$currency               = get_option( 'user_registration_payment_currency', 'USD' );
+		$pricing_data           = null;
+		$local_currency_data    = array();
+		$local_currency_applies = false;
 
 		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) && UR_PRO_ACTIVE && class_exists( CoreFunctions::class ) ) {
 			$currency            = $local_currency;
@@ -155,7 +160,8 @@ class PaypalService {
 			$local_currency_data = ! empty( $data['local_currency'] ) ? $data['local_currency'] : array();
 
 			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
-				$membership_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+				$local_currency_applies = true;
+				$membership_amount      = CoreFunctions::ur_get_amount_after_conversion( $membership_amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 			}
 		}
 
@@ -164,7 +170,11 @@ class PaypalService {
 		$discount_amount = 0;
 
 		if ( isset( $data['upgrade'] ) && $data['upgrade'] ) {
-			$final_amount = $data['amount'];
+			// $data['amount'] is the prorated delta in the base currency — scale it by the plan's local/base ratio.
+			$chargeable_amount_base = (float) $data['amount'];
+			$final_amount           = ( $local_currency_applies && $base_membership_amount > 0 )
+				? $membership_amount * ( $chargeable_amount_base / $base_membership_amount )
+				: $chargeable_amount_base;
 		} elseif ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_service    = new CouponService();
 			$coupon_validation = $coupon_service->validate(
@@ -177,7 +187,21 @@ class PaypalService {
 			if ( $coupon_validation['status'] ) {
 				$coupon_details  = ur_get_coupon_details( $data['coupon'] );
 				$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
-				$final_amount    = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+
+				if ( $local_currency_applies && 'fixed' === $coupon_details['coupon_discount_type'] ) {
+					$discounted_base  = max( 0, $base_membership_amount - $discount_amount );
+					$discounted_local = CoreFunctions::ur_get_amount_after_conversion(
+						$discounted_base,
+						$currency,
+						$pricing_data,
+						$local_currency_data,
+						$ur_zone_id,
+						$base_membership_amount
+					);
+					$discount_amount = max( 0, $membership_amount - $discounted_local );
+				}
+
+				$final_amount = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 			}
 		}
 
@@ -865,8 +889,8 @@ class PaypalService {
 		// Verify receiver's email address.
 		if ( empty( $receiver_email ) || ! is_email( $receiver_email ) || strtolower( $data['business'] ) !== strtolower( trim( $receiver_email ) ) ) {
 			$error = esc_html__( 'Payment failed: recipient emails do not match', 'user-registration' );
-		} elseif ( empty( $amount ) || number_format( (float) $data['mc_gross'] ) !== number_format( (float) $amount ) ) {
-			// Verify amount.
+		} elseif ( empty( $latest_order['total_amount'] ) || number_format( (float) ( $data['mc_gross'] ?? 0 ), 2 ) !== number_format( (float) $latest_order['total_amount'], 2 ) ) {
+			// Verify amount against the server-stored order total, not the client-influenced base amount.
 			$error = esc_html__( 'Payment failed: payment amounts do not match ', 'user-registration' );
 		}
 

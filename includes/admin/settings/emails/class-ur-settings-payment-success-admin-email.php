@@ -159,7 +159,7 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Admin_Email', false ) ) :
 					</p>
 				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					View full payment details: <br>
-					<a href="{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}" style="color: #4A90E2; text-decoration: none;">Click Here</a>
+					<a href="{{home_url}}/wp-admin/admin.php?page=user-registration-users&view_user&action=edit&user_id={{user_id}}" style="color: #4A90E2; text-decoration: none;">Click Here</a>
 				</p>
 				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				Thanks

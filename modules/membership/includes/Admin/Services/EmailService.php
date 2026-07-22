@@ -487,7 +487,7 @@ class EmailService {
 			'membership_tags' => $membership_tags,
 		);
 		$values  = $data + $values;
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_user_email() ), $values, $form_id );
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_user_email', $settings->user_registration_get_membership_cancellation_user_email() ), $values, $form_id );
 
 		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
@@ -549,7 +549,7 @@ class EmailService {
 		);
 		$values = $data + $values;
 
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_admin_email() ), $values, $form_id );
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email', $settings->user_registration_get_membership_cancellation_admin_email() ), $values, $form_id );
 
 		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );

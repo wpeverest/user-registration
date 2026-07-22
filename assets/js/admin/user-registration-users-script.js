@@ -358,7 +358,7 @@ jQuery(function ($) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			var deleteUrl = $(e.target).attr("href");
+			var deleteUrl = $(e.currentTarget).attr("href");
 
 			URUsers.handleDeletePrompt(deleteUrl, "single");
 		},

@@ -440,25 +440,30 @@ if ( ! class_exists( 'Admin' ) ) :
 			// is never a valid gateway for a non-free membership.
 			if ( 'free' !== $membership_type ) {
 				if ( 'free' === $data['payment_method'] ) {
-					wp_delete_user( absint( $member_id ) );
-					wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
-				}
-				$configured_gateways = array();
-				if ( ! empty( $membership_meta['payment_gateways'] ) && is_array( $membership_meta['payment_gateways'] ) ) {
-					foreach ( $membership_meta['payment_gateways'] as $gw_key => $gw_data ) {
-						if ( isset( $gw_data['status'] ) && 'on' === $gw_data['status'] ) {
-							$configured_gateways[] = $gw_key;
+					// UR-4386: 'free' on a paid plan is only valid when a 100% coupon zeroes a
+					// one-time plan (free order, no gateway). Re-validate server-side; reject a forge.
+					if ( ! $this->is_full_discount_free_order( $membership_type, $membership_meta, $data ) ) {
+						wp_delete_user( absint( $member_id ) );
+						wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
+					}
+				} else {
+					$configured_gateways = array();
+					if ( ! empty( $membership_meta['payment_gateways'] ) && is_array( $membership_meta['payment_gateways'] ) ) {
+						foreach ( $membership_meta['payment_gateways'] as $gw_key => $gw_data ) {
+							if ( isset( $gw_data['status'] ) && 'on' === $gw_data['status'] ) {
+								$configured_gateways[] = $gw_key;
+							}
 						}
 					}
-				}
-				// Also include globally active gateways (Settings > Payments) so that
-				// gateways enabled site-wide are accepted even if not per-membership saved.
-				$global_gateways     = array_keys( urm_get_all_active_payment_gateways( $membership_type ) );
-				$configured_gateways = array_unique( array_merge( $configured_gateways, $global_gateways ) );
+					// Also include globally active gateways (Settings > Payments) so that
+					// gateways enabled site-wide are accepted even if not per-membership saved.
+					$global_gateways     = array_keys( urm_get_all_active_payment_gateways( $membership_type ) );
+					$configured_gateways = array_unique( array_merge( $configured_gateways, $global_gateways ) );
 
-				if ( ! empty( $configured_gateways ) && ! in_array( $data['payment_method'], $configured_gateways, true ) ) {
-					wp_delete_user( absint( $member_id ) );
-					wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
+					if ( ! empty( $configured_gateways ) && ! in_array( $data['payment_method'], $configured_gateways, true ) ) {
+						wp_delete_user( absint( $member_id ) );
+						wp_send_json_error( array( 'message' => esc_html__( 'Invalid payment method for this membership.', 'user-registration' ) ) );
+					}
 				}
 			}
 
@@ -601,6 +606,32 @@ if ( ! class_exists( 'Admin' ) ) :
 				$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while registering the user.', 'user-registration' );
 				wp_send_json_error( array( 'message' => $message ) );
 			}
+		}
+
+		/**
+		 * Whether a payment_method="free" submission on a non-free plan is a legitimate 100%-coupon
+		 * free order. Only ONE-TIME (paid) plans qualify; the coupon is re-validated against the DB
+		 * so a forged payment_method="free" cannot bypass payment. UR-4386.
+		 *
+		 * @param string $membership_type Membership type (free|paid|subscription).
+		 * @param array  $membership_meta Membership meta.
+		 * @param array  $data            Submitted registration data.
+		 * @return bool
+		 */
+		private function is_full_discount_free_order( $membership_type, $membership_meta, $data ) {
+			if ( 'paid' !== $membership_type || empty( $data['coupon'] ) || ! ur_check_module_activation( 'coupon' ) ) {
+				return false;
+			}
+			$coupon_details = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
+			if ( empty( $coupon_details ) || empty( $coupon_details['coupon_status'] ) ) {
+				return false;
+			}
+			$plan_amount    = floatval( $membership_meta['amount'] ?? 0 );
+			$discount_type  = $coupon_details['coupon_discount_type'] ?? 'fixed';
+			$discount_value = floatval( $coupon_details['coupon_discount'] ?? 0 );
+			$discount       = ( 'percent' === $discount_type ) ? ( $plan_amount * $discount_value / 100 ) : $discount_value;
+
+			return ( $plan_amount > 0 ) && ( 0.0 === round( max( 0, $plan_amount - $discount ), 2 ) );
 		}
 
 		public function update_redirect_url_for_membership( $redirect_url, $form_id ) {

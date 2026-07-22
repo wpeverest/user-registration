@@ -6,6 +6,7 @@ use WPEverest\URMembership\Admin\Members\MembersListTable;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Payment\Admin\OrdersListTable;
 use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 use WPEverest\URMembership\TableList;
 use WPEverest\URTeamMembership\Admin\TeamRepository;
 
@@ -354,7 +355,7 @@ class Orders {
 			function ( $item ) {
 				$content = json_decode( wp_unslash( $item['post_content'] ), true );
 
-				return $content['status'];
+				return ! empty( $content['status'] );
 			}
 		);
 		$memberships = wp_list_pluck( $memberships, 'post_title', 'ID' );
@@ -500,7 +501,25 @@ class Orders {
 		// Amounts and tax.
 		$raw_total   = floatval( $order['total_amount'] );
 		$is_trial    = isset( $order['trial_status'] ) && 'on' === $order['trial_status'];
-		$plan_amount = ! empty( $membership['amount'] ) ? floatval( $membership['amount'] ) : $raw_total;
+		$plan_amount      = ! empty( $membership['amount'] ) ? floatval( $membership['amount'] ) : $raw_total;
+		$plan_amount_base = $plan_amount;
+		$fx_ratio         = 1.0;
+
+		// Convert $plan_amount into $currency for the "Original Plan Amount" row; $fx_ratio also scales the coupon below.
+		if (
+			$currency !== get_option( 'user_registration_payment_currency', 'USD' ) &&
+			! empty( $membership['local_currency'] ) &&
+			ur_string_to_bool( $membership['local_currency']['is_enable'] ) &&
+			class_exists( CoreFunctions::class )
+		) {
+			$plan_zone_id = CoreFunctions::ur_get_zone_id_by_currency( $membership['local_currency'], $currency );
+
+			if ( ! empty( $plan_zone_id ) ) {
+				$plan_pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $plan_zone_id );
+				$plan_amount       = CoreFunctions::ur_get_amount_after_conversion( $plan_amount, $currency, $plan_pricing_data, $membership['local_currency'], $plan_zone_id );
+				$fx_ratio          = $plan_amount_base > 0 ? ( $plan_amount / $plan_amount_base ) : 1.0;
+			}
+		}
 
 		$order_meta_data = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
 		$tax_data        = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data['meta_value'], true ) : array();
@@ -541,7 +560,8 @@ class Orders {
 				$coupon_raw            = round( $post_proration_amount * $pct / 100, 2 );
 				$coupon_label          = 'Coupon ( ' . $pct . '% )';
 			} else {
-				$coupon_raw            = round( $discount_value, 2 );
+				// $discount_value is fixed in the base currency — scale by $fx_ratio before mixing with $invoice_pre_tax.
+				$coupon_raw            = round( $discount_value * $fx_ratio, 2 );
 				$post_proration_amount = round( $invoice_pre_tax + $coupon_raw, 4 );
 				$coupon_name           = ! empty( $coupon_data['coupon_name'] ) ? $coupon_data['coupon_name'] : $coupon_code;
 				$coupon_label          = 'Coupon ( ' . $coupon_name . ' )';

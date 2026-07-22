@@ -1019,6 +1019,10 @@ class UR_AJAX {
 
 		check_ajax_referer( 'ur_login_settings_save_nonce', 'security' );
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission.', 'user-registration' ) ) );
+		}
+
 		$settings_data = $_POST['data']['setting_data'];
 
 		$settings_data = array_values(

@@ -154,7 +154,7 @@ class ListTable extends \UR_List_Table {
 	 */
 	public function column_status( $membership ) {
 		$membership_content = json_decode( $membership->post_content, true );
-		$enabled            = $membership_content['status'] == 'true';
+		$enabled            = isset( $membership_content['status'] ) && 'true' == $membership_content['status'];
 		$actions            = '<div class="ur-status-toggle ur-d-flex ur-align-items-center visible" style="gap: 5px">';
 		$actions           .= '<div class="ur-toggle-section">';
 		$actions           .= '<span class="user-registration-toggle-form">';
@@ -180,9 +180,10 @@ class ListTable extends \UR_List_Table {
 	 */
 	public function column_membership_type( $membership ) {
 		$data         = json_decode( wp_unslash( $membership->post_content ), true );
-		$status_class = ( 'free' == $data['type'] ? 'user-registration-badge user-registration-badge--success-subtle' : ( 'paid' == $data['type'] ? 'user-registration-badge user-registration-badge--secondary-subtle' : 'user-registration-badge user-registration-badge--danger-subtle' ) );
+		$type         = isset( $data['type'] ) ? $data['type'] : '';
+		$status_class = ( 'free' == $type ? 'user-registration-badge user-registration-badge--success-subtle' : ( 'paid' == $type ? 'user-registration-badge user-registration-badge--secondary-subtle' : 'user-registration-badge user-registration-badge--danger-subtle' ) );
 
-		return sprintf( '<span class="%s">%s</span>', $status_class, esc_html( $data['type'] ) );
+		return sprintf( '<span class="%s">%s</span>', $status_class, esc_html( $type ) );
 	}
 
 	/**

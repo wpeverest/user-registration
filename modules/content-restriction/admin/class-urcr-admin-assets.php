@@ -137,7 +137,11 @@ class URCR_Admin_Assets {
 				if( !empty($data['field_key']) && "membership" === $data['field_key'] ) {
 					continue;
 				}
-				$form_fields[ $field_name ] = $data['label'];
+				$form_fields[ $field_name ] = array(
+					'label'   => isset( $data['label'] ) ? $data['label'] : $field_name,
+					'type'    => isset( $data['type'] ) ? $data['type'] : '',
+					'options' => isset( $data['options'] ) ? $data['options'] : array(),
+				);
 			}
 			$ur_forms[ $form_id ] = $form_fields;
 		}

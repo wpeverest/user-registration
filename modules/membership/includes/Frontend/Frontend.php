@@ -203,6 +203,7 @@ class Frontend {
 				'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 				'login_url'                        => wp_login_url(),
 				'labels'                           => $this->get_i18_labels(),
+				'currency'                         => $currency,
 				'currency_symbol'                  => $symbol,
 				'curreny_pos'                      => isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left',
 				'membership_registration_page_url' => $redirect_page_url,
@@ -270,6 +271,9 @@ class Frontend {
 			'i18n_payment_completing_message'              => __( 'Your payment has been verified. Please wait while we complete your registration.', 'user-registration' ),
 			'i18n_validating_stripe_card'                  => __( 'Validating payment card, please wait...', 'user-registration' ),
 			'i18n_stripe_mode_error'                       => __( 'Card validation failed. Please try again.', 'user-registration' ),
+			'i18n_currency_not_supported_by'               => __( 'is not currently supported by', 'user-registration' ),
+			'i18n_choose_another_gateway_or_currency'      => __( 'Please choose another payment method or currency.', 'user-registration' ),
+			'i18n_no_gateway_available_for_currency'       => __( 'No payment gateway is currently available for %s. Please choose a different currency to continue.', 'user-registration' ),
 		);
 	}
 
