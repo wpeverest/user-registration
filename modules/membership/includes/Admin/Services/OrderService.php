@@ -21,7 +21,9 @@ class OrderService {
 	public function prepare_orders_data( $data, $member_id, $subscription, $upgrade_details = null, $is_renewal = false ) {
 
 		$current_user = wp_get_current_user();
-		$is_admin     = ( ! empty( $current_user->roles ) && in_array( 'administrator', (array) $current_user->roles, true ) );
+		// Only treat as admin-created when the order is built from the admin Members UI.
+		$is_frontend = isset( $data['context'] ) && 'frontend' === $data['context'];
+		$is_admin    = ! $is_frontend && ( ! empty( $current_user->roles ) && in_array( 'administrator', (array) $current_user->roles, true ) );
 
 		$membership = get_post( $data['membership_data']['membership'], ARRAY_A );
 

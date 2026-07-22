@@ -9,6 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
 "POT-Creation-Date: 2026-07-21T07:45:51+00:00\n"
@@ -18,6 +19,9 @@ msgstr ""
 =======
 "POT-Creation-Date: 2026-07-22T07:33:38+00:00\n"
 >>>>>>> master
+=======
+"POT-Creation-Date: 2026-07-22T07:42:13+00:00\n"
+>>>>>>> Stashed changes
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -102,7 +106,11 @@ msgstr ""
 #, php-format
 =======
 #: includes/functions-ur-core.php:5691
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "You are currently logged in as %1$1s. %2$2s"
 msgstr ""
 
@@ -2105,10 +2113,14 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:652
 #: includes/admin/functions-ur-admin.php:977
 #: includes/admin/functions-ur-admin.php:988
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Registration %s"
 msgstr ""
 
@@ -3095,10 +3107,14 @@ msgid "Free vs Pro"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:1079
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "You are currently using User Registration & Membership %1$s v%2$s"
 msgstr ""
 
@@ -3373,6 +3389,7 @@ msgstr ""
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:146
 #: modules/membership/includes/Admin/Views/subscription-edit.php:252
 #: templates/myaccount/membership.php:176
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 msgid "Cancels %s"
@@ -3398,6 +3415,9 @@ msgid "Denied"
 msgstr ""
 
 =======
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Cancels %s"
 msgstr ""
 
@@ -3854,7 +3874,11 @@ msgstr ""
 #, php-format
 =======
 #: includes/admin/settings/class-ur-members-menu.php:465
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Sorry, you are not allowed to delete the user %s."
 msgstr ""
 
@@ -3879,7 +3903,11 @@ msgstr ""
 #, php-format
 =======
 #: includes/admin/settings/class-ur-members-menu.php:561
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Sorry, you are not allowed to change role for user %s."
 msgstr ""
 
@@ -3942,13 +3970,18 @@ msgstr ""
 =======
 #: includes/admin/settings/class-ur-members-menu.php:834
 #: includes/admin/settings/class-ur-users-menu.php:1752
+#, php-format
 msgid "Reset password email sent %s successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:840
 #: includes/admin/settings/class-ur-users-menu.php:1758
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Roles updated for %s users successfully."
 msgstr ""
 
@@ -3960,7 +3993,11 @@ msgstr ""
 =======
 #: includes/admin/settings/class-ur-members-menu.php:847
 #: includes/admin/settings/class-ur-users-menu.php:1765
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "%s approved successfully."
 msgstr ""
 
@@ -3972,7 +4009,11 @@ msgstr ""
 =======
 #: includes/admin/settings/class-ur-members-menu.php:854
 #: includes/admin/settings/class-ur-users-menu.php:1772
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Verification email sent to %s successfully."
 msgstr ""
 
@@ -3984,7 +4025,11 @@ msgstr ""
 =======
 #: includes/admin/settings/class-ur-members-menu.php:861
 #: includes/admin/settings/class-ur-users-menu.php:1779
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "%s denied successfully."
 msgstr ""
 
@@ -3996,7 +4041,11 @@ msgstr ""
 =======
 #: includes/admin/settings/class-ur-members-menu.php:868
 #: includes/admin/settings/class-ur-users-menu.php:1786
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "%s deleted successfully."
 msgstr ""
 
@@ -4014,7 +4063,11 @@ msgstr ""
 #, php-format
 =======
 #: includes/admin/settings/class-ur-members-menu.php:883
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "%s enabled successfully."
 msgstr ""
 
@@ -4024,7 +4077,11 @@ msgstr ""
 #, php-format
 =======
 #: includes/admin/settings/class-ur-members-menu.php:886
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "%s disabled successfully."
 msgstr ""
 
@@ -4515,10 +4572,14 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-registration-login.php:302
 #: includes/admin/settings/class-ur-settings-registration-login.php:324
 #: includes/admin/settings/class-ur-settings-registration-login.php:373
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Get site key from google %1$s reCAPTCHA %2$s."
 msgstr ""
 
@@ -4534,10 +4595,14 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-registration-login.php:313
 #: includes/admin/settings/class-ur-settings-registration-login.php:336
 #: includes/admin/settings/class-ur-settings-registration-login.php:385
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Get secret key from google %1$s reCAPTCHA %2$s."
 msgstr ""
 
@@ -4590,10 +4655,14 @@ msgstr ""
 #. translators: %1$s - hCaptcha docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:357
 #: includes/admin/settings/class-ur-settings-registration-login.php:425
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Get site key from %1$s hCaptcha %2$s."
 msgstr ""
 
@@ -4605,10 +4674,14 @@ msgstr ""
 #. translators: %1$s - hCaptcha docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:369
 #: includes/admin/settings/class-ur-settings-registration-login.php:437
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Get secret key from %1$s hCaptcha %2$s."
 msgstr ""
 
@@ -4620,10 +4693,14 @@ msgstr ""
 #. translators: %1$s - Cloudflare Turnstile docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:396
 #: includes/admin/settings/class-ur-settings-registration-login.php:464
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Get site key from %1$s Cloudflare Turnstile %2$s."
 msgstr ""
 
@@ -4635,10 +4712,14 @@ msgstr ""
 #. translators: %1$s - Cloudflare Turnstile docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:409
 #: includes/admin/settings/class-ur-settings-registration-login.php:477
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Get secret key from %1$s Cloudflare Turnstile %2$s."
 msgstr ""
 
@@ -4654,10 +4735,14 @@ msgstr ""
 #. translators: %1$s - Cloudflare Turnstile docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:421
 #: includes/admin/settings/class-ur-settings-registration-login.php:489
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Please select theme mode for your Cloudflare Turnstile. <a href=\"%1$s\" rel=\"noreferrer noopener\" target=\"_blank\">Learn More</a>"
 msgstr ""
 
@@ -5705,19 +5790,27 @@ msgstr ""
 
 #. translators: %s: Author's display name.
 #: includes/admin/settings/class-ur-users-list-table.php:415
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "View details for %s"
 msgstr ""
 
 #. translators: 1: User's first name, 2: Last name.
 #: includes/admin/settings/class-ur-users-list-table.php:523
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgctxt "Display name based on first name and last name"
 msgid "%1$s %2$s"
 msgstr ""
@@ -6398,6 +6491,7 @@ msgstr ""
 
 #. translators: %s: required reset password link.
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:66
+#, php-format
 msgid "Reset Password email not saved: the reset link <code>%s</code> is required and cannot be removed or modified."
 msgstr ""
 
@@ -7385,7 +7479,11 @@ msgstr ""
 #, php-format
 =======
 #: includes/class-ur-ajax.php:1613
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Seems like you haven't added the reCAPTCHA Keys. <a href=\"%s\" >Add Now.</a>"
 msgstr ""
 
@@ -7493,6 +7591,7 @@ msgid "Insufficient Data"
 msgstr ""
 
 #: includes/class-ur-ajax.php:2088
+#, php-format
 msgid "Payment Setting for %s has been saved successfully."
 msgstr ""
 
@@ -7505,6 +7604,7 @@ msgid "Captcha settings saved successfully."
 msgstr ""
 
 #: includes/class-ur-ajax.php:2126
+#, php-format
 msgid "Captcha Setting for %s has been saved successfully."
 msgstr ""
 
@@ -7658,6 +7758,7 @@ msgstr ""
 #: includes/class-ur-ajax.php:2749
 =======
 #: includes/class-ur-ajax.php:2223
+#, php-format
 msgid "Payment method settings for %s have been reset successfully."
 msgstr ""
 
@@ -7666,6 +7767,7 @@ msgid "Invalid captcha type."
 msgstr ""
 
 #: includes/class-ur-ajax.php:2311
+#, php-format
 msgid "Captcha keys for %s have been reset successfully."
 msgstr ""
 
@@ -7688,6 +7790,7 @@ msgstr ""
 
 #: includes/class-ur-ajax.php:2399
 #: modules/membership/includes/AJAX.php:2855
+#, php-format
 msgid "%1$s is not currently supported by %2$s."
 msgstr ""
 
@@ -7917,10 +8020,14 @@ msgstr ""
 #: includes/class-ur-email-confirmation.php:453
 #: includes/class-ur-user-approval.php:259
 #: includes/class-ur-user-approval.php:303
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s"
 msgstr ""
 
@@ -9114,6 +9221,7 @@ msgstr ""
 #: includes/class-ur-user-approval.php:484
 =======
 #: includes/class-ur-user-approval.php:361
+#, php-format
 msgid "Your account is still pending payment. Process the payment by clicking on this: <a id=\"payment-link\" href=\"%s\">link</a>"
 msgstr ""
 
@@ -11339,7 +11447,11 @@ msgstr ""
 #, php-format
 =======
 #: includes/functions-ur-core.php:1714
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Enable %1$s %2$s Captcha %3$s Support"
 msgstr ""
 
@@ -11411,7 +11523,11 @@ msgstr ""
 #, php-format
 =======
 #: includes/functions-ur-core.php:2046
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "The class <code>%s</code> provided by user_registration_logging_class filter must implement <code>UR_Logger_Interface</code>."
 msgstr ""
 
@@ -11447,7 +11563,11 @@ msgstr ""
 #: includes/functions-ur-core.php:3456
 #: includes/functions-ur-core.php:3461
 #: includes/functions-ur-core.php:3474
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "<strong>Activation error:</strong> %1$s"
 msgstr ""
 
@@ -11660,7 +11780,11 @@ msgstr ""
 =======
 #: includes/functions-ur-core.php:4893
 #: includes/functions-ur-core.php:5039
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "You have been subscribed to %s plan. Please upgrade to higher plans to use this feature."
 msgstr ""
 
@@ -11672,7 +11796,11 @@ msgstr ""
 =======
 #: includes/functions-ur-core.php:4917
 #: includes/functions-ur-core.php:5058
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Please %1$s %2$s addon to use this feature."
 msgstr ""
 
@@ -11684,7 +11812,11 @@ msgstr ""
 =======
 #: includes/functions-ur-core.php:4926
 #: includes/functions-ur-core.php:5068
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "%s Addon"
 msgstr ""
 
@@ -11728,6 +11860,7 @@ msgstr ""
 #: includes/functions-ur-core.php:9063
 =======
 #: includes/functions-ur-core.php:5042
+#, php-format
 msgid "To unlock this setting, consider upgrading to %s"
 msgstr ""
 
@@ -11754,7 +11887,11 @@ msgstr ""
 =======
 #: includes/functions-ur-core.php:5134
 #: includes/functions-ur-core.php:9160
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "The password you entered for the %label% %email% is incorrect."
 msgstr ""
 
@@ -11963,6 +12100,7 @@ msgid "plugin has not been properly configured. For more"
 msgstr ""
 
 #: includes/functions-ur-core.php:8140
+#, php-format
 msgid "Please check the `ur_mail_logs` log under <a target=\"_blank\" href=\"%s\">Status Log</a> section."
 msgstr ""
 
@@ -12387,6 +12525,7 @@ msgid "Enable Captcha"
 msgstr ""
 
 #: includes/functions-ur-core.php:9290
+#, php-format
 msgid "Enable %1$s %2$s Captcha %3$s support"
 msgstr ""
 
@@ -12754,6 +12893,7 @@ msgstr ""
 #: includes/functions-ur-core.php:12014
 =======
 #: includes/functions-ur-core.php:9568
+#, php-format
 msgid "It is recommended to use the same page as the global login page that is set %s. This ensures no conflicts. The above page selector may be merged and removed in further updates."
 msgstr ""
 
@@ -14081,6 +14221,7 @@ msgstr ""
 <<<<<<< HEAD
 #: includes/Functions/CoreFunctions.php:958
 #: includes/Functions/CoreFunctions.php:1051
+<<<<<<< Updated upstream
 =======
 #: includes/Functions/CoreFunctions.php:945
 #: includes/Functions/CoreFunctions.php:1038
@@ -14090,6 +14231,9 @@ msgstr ""
 #: includes/Functions/CoreFunctions.php:958
 #: includes/Functions/CoreFunctions.php:1051
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "%s Rule"
 msgstr ""
 
@@ -16524,10 +16668,14 @@ msgid "Payment Approved!"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:340
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Hi <b><i>%1$s</i></b>, Your payment of amount %2$s for the membership: <b>%3$s</b> has been approved by admin."
 msgstr ""
 
@@ -16570,26 +16718,38 @@ msgid "Congratulations! Registration completed"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:654
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Hi, %s"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:655
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Account created successfully under membership <b><i>%s</i></b>."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:656
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "<b>Username: </b><i>%1$s</i> <b>Password: </b><i>%2$s</i> "
 msgstr ""
 
@@ -16721,11 +16881,13 @@ msgstr ""
 #: modules/membership/includes/Admin/Services/MembershipService.php:1114
 =======
 #: modules/membership/includes/Admin/Services/MembershipService.php:878
+#, php-format
 msgid "You already have a scheduled upgrade to the <b>%1$s</b> plan at the end of your current subscription cycle (<i><b>%2$s</b></i>). <br> If you'd like to cancel this upcoming change, please proceed from my account page."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/MembershipService.php:908
 #: modules/membership/includes/Admin/Services/MembershipService.php:974
+#, php-format
 msgid "You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again."
 msgstr ""
 
@@ -16807,10 +16969,14 @@ msgid "Invalid tier selection."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/MembersService.php:209
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Number of seats must be between %1$d and %2$d for the selected tier."
 msgstr ""
 
@@ -16967,6 +17133,7 @@ msgstr ""
 #: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2601
 #: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1549
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:3004
+#, php-format
 msgid "Subscription status is %s and cannot be retried"
 msgstr ""
 
@@ -17560,6 +17727,7 @@ msgid "Sorry, multiple memberships are not allowed with your selected plan."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:919
+#, php-format
 msgid "Scheduled Subscriptions job started for the date: (%s)"
 msgstr ""
 
@@ -17568,6 +17736,7 @@ msgid "No delayed orders found."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:972
+#, php-format
 msgid "Subscription updated for %s"
 msgstr ""
 
@@ -17576,19 +17745,26 @@ msgid "Membership renew process already initiated."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:1262
+#, php-format
 msgid "No memberships found to expire for date: %s"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:1327
+#, php-format
 msgid "Failed to expire membership for user %1$s (ID: %2$d) - Subscription ID: %3$d"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:1499
+#, php-format
 msgid "Error fetching missed events for Stripe: %s"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:1517
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Error fetching missed events for PayPal: %s"
 msgstr ""
 
@@ -18039,10 +18215,14 @@ msgstr ""
 
 #. translators: %d Subscription id
 #: modules/membership/includes/Admin/Views/subscription-edit.php:160
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Edit Subscription #%d"
 msgstr ""
 
@@ -18062,28 +18242,40 @@ msgstr ""
 
 #. translators: %1$d: number of days, %2$s: formatted date
 #: modules/membership/includes/Admin/Views/subscription-edit.php:210
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "%1$d days remaining. Converts to paid on %2$s"
 msgstr ""
 
 #. translators: %s: formatted date
 #: modules/membership/includes/Admin/Views/subscription-edit.php:217
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Trial ended. Converts to paid on %s"
 msgstr ""
 
 #. translators: %d Subscription id
 #: modules/membership/includes/Admin/Views/subscription-edit.php:235
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Subscription #%d"
 msgstr ""
 
@@ -18132,10 +18324,14 @@ msgstr ""
 
 #. translators: %1$s: tier range
 #: modules/membership/includes/Admin/Views/subscription-edit.php:369
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Per seat (tier %1$s)"
 msgstr ""
 
@@ -18566,7 +18762,11 @@ msgstr ""
 #, php-format
 =======
 #: modules/membership/includes/AJAX.php:1314
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Recurring subscription created by %s"
 msgstr ""
 
@@ -18948,6 +19148,7 @@ msgstr ""
 >>>>>>> master
 =======
 #: modules/membership/includes/AJAX.php:1319
+#, php-format
 msgid "One-time membership created by %s"
 msgstr ""
 
@@ -19656,6 +19857,7 @@ msgid "Please choose another payment method or currency."
 msgstr ""
 
 #: modules/membership/includes/Frontend/Frontend.php:268
+#, php-format
 msgid "No payment gateway is currently available for %s. Please choose a different currency to continue."
 msgstr ""
 
@@ -19709,10 +19911,14 @@ msgid "Coupon Discount"
 msgstr ""
 
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:126
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 #, php-format
 =======
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Per seat (tier %s)"
 msgstr ""
 
@@ -20076,7 +20282,11 @@ msgstr ""
 #, php-format
 =======
 #: modules/payment-history/Orders.php:675
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Questions? Contact us at %s"
 msgstr ""
 
@@ -20132,7 +20342,11 @@ msgstr ""
 #, php-format
 =======
 #: modules/payment-history/Views/payment-edit.php:178
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Edit Payment #%d"
 msgstr ""
 
@@ -20142,7 +20356,11 @@ msgstr ""
 #, php-format
 =======
 #: modules/payment-history/Views/payment-edit.php:211
+<<<<<<< Updated upstream
 >>>>>>> master
+=======
+#, php-format
+>>>>>>> Stashed changes
 msgid "Payment #%d"
 msgstr ""
 
@@ -21505,6 +21723,12 @@ msgstr ""
 #: src/content-restriction/components/inputs/ConditionValueInput.js:316
 #: src/content-restriction/components/inputs/FormFieldValueInput.js:50
 msgid "Enter value"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/inputs/FormFieldValueInput.js:34
+msgid "Select value"
 msgstr ""
 
 #: chunks/content-access-rules.js:1
@@ -23596,6 +23820,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
 #: chunks/welcome.js:42614
@@ -23737,6 +23962,8 @@ msgid "Select value"
 msgstr ""
 
 >>>>>>> master
+=======
+>>>>>>> Stashed changes
 #: src/dashboard/components/Header/Header.js:148
 #, js-format
 msgid "You are currently using User Registration & Membership %s"

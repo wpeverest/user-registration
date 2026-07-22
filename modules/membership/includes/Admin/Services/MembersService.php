@@ -110,8 +110,9 @@ class MembersService {
 			$data['role']       = isset( $membership_detail['role'] ) ? sanitize_text_field( $membership_detail['role'] ) : 'subscriber';
 		}
 
-		$response         = array();
-		$response['role'] = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : 'subscriber';
+		$response            = array();
+		$response['context'] = $context;
+		$response['role']    = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : 'subscriber';
 
 		if ( isset( $data['tax_rate'] ) && ! empty( $data['tax_rate'] ) ) {
 			$tax_details = array(
