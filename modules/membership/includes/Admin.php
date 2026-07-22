@@ -572,6 +572,9 @@ if ( ! class_exists( 'Admin' ) ) :
 				if ( 'free' === $data['payment_method'] ) {
 					do_action( 'urm_member_registered', $data, $member_id );
 				} else {
+					// Paid path skips user_registration_after_register_user_action (payment_process=true),
+					// so the core login-gate setters never run. Seed the gate here. UR-4681.
+					$this->set_login_gate_for_pending_member( $member_id );
 					update_user_meta( $member_id, 'ur_membership_registration_data', $data );
 				}
 
@@ -595,6 +598,40 @@ if ( ! class_exists( 'Admin' ) ) :
 			} else {
 				$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while registering the user.', 'user-registration' );
 				wp_send_json_error( array( 'message' => $message ) );
+			}
+		}
+
+		/**
+		 * Seed the admin-approval / email-confirmation login gate for a paid member, since the
+		 * core setters on user_registration_after_register_user_action are skipped for paid
+		 * registrations. Writes only the gate meta (no emails), so email order is unchanged.
+		 * The 'payment' option is gated separately in UR_User_Approval::check_status_on_login().
+		 * UR-4681.
+		 *
+		 * @param int $member_id New member user ID.
+		 */
+		private function set_login_gate_for_pending_member( $member_id ) {
+			$login_option = ur_get_user_login_option( $member_id );
+
+			// Only the approval / email-confirmation gates need seeding here.
+			if ( ! in_array( $login_option, array( 'admin_approval', 'email_confirmation', 'admin_approval_after_email_confirmation' ), true ) ) {
+				return;
+			}
+
+			// Never override a status that has somehow already been written (e.g. the core hook ran).
+			if ( metadata_exists( 'user', $member_id, 'ur_user_status' ) || metadata_exists( 'user', $member_id, 'ur_confirm_email' ) ) {
+				return;
+			}
+
+			if ( 'admin_approval' === $login_option ) {
+				$user_manager = new \UR_Admin_User_Manager( $member_id );
+				$user_manager->save_status( \UR_Admin_User_Manager::PENDING, false );
+			} elseif ( 'email_confirmation' === $login_option ) {
+				update_user_meta( $member_id, 'ur_confirm_email', 0 );
+			} elseif ( 'admin_approval_after_email_confirmation' === $login_option ) {
+				update_user_meta( $member_id, 'ur_confirm_email', 0 );
+				update_user_meta( $member_id, 'ur_admin_approval_after_email_confirmation', 'false' );
+				update_user_meta( $member_id, 'ur_user_status', \UR_Admin_User_Manager::PENDING );
 			}
 		}
 
