@@ -9,7 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2026-07-21T07:45:51+00:00\n"
+=======
+"POT-Creation-Date: 2026-07-08T10:02:53+00:00\n"
+>>>>>>> master
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -217,7 +221,11 @@ msgstr ""
 #: includes/functions-ur-core.php:1512
 #: includes/functions-ur-core.php:8492
 #: includes/functions-ur-core.php:8517
+<<<<<<< HEAD
 #: chunks/blocks.js:42358
+=======
+#: chunks/blocks.js:280
+>>>>>>> master
 #: src/blocks/blocks/myaccount/Edit.js:46
 #: chunks/blocks.js:36064
 msgid "Redirect URL"
@@ -299,7 +307,11 @@ msgstr ""
 #: includes/3rd-party/DiviBuilder/Modules/MembershipGroups.php:66
 #: includes/admin/class-ur-admin-menus.php:563
 #: includes/Functions/CoreFunctions.php:494
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:746
+=======
+#: modules/membership/includes/Admin.php:741
+>>>>>>> master
 #: modules/membership/includes/Admin/Membership/Membership.php:383
 msgid "Membership Groups"
 msgstr ""
@@ -312,9 +324,13 @@ msgstr ""
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-membership-listing.php:119
 #: includes/admin/settings/class-ur-settings-general.php:159
 #: includes/functions-ur-core.php:9086
+<<<<<<< HEAD
 #: chunks/blocks.js:41194
 #: chunks/blocks.js:41924
 #: chunks/blocks.js:41933
+=======
+#: chunks/blocks.js:280
+>>>>>>> master
 #: src/blocks/blocks/membership-buy-now/Edit.js:358
 #: src/blocks/blocks/membership-listing/Edit.js:645
 #: src/blocks/blocks/membership-listing/Edit.js:655
@@ -419,7 +435,11 @@ msgid "Membership Pricing"
 msgstr ""
 
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-membership-listing.php:81
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:747
+=======
+#: modules/membership/includes/Admin.php:742
+>>>>>>> master
 msgid "Membership Group"
 msgstr ""
 
@@ -555,7 +575,11 @@ msgstr ""
 
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-membership-listing.php:322
 #: includes/admin/settings/class-ur-members-list-table.php:946
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:698
+=======
+#: modules/membership/includes/Admin.php:693
+>>>>>>> master
 msgid "All Memberships"
 msgstr ""
 
@@ -1069,8 +1093,13 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:870
 #: includes/admin/class-ur-admin-menus.php:1515
 #: includes/functions-ur-core.php:6518
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:700
 #: modules/membership/includes/Admin.php:750
+=======
+#: modules/membership/includes/Admin.php:695
+#: modules/membership/includes/Admin.php:745
+>>>>>>> master
 #: modules/membership/includes/Admin/Members/Members.php:251
 #: chunks/content-access-rules.js:24354
 #: chunks/dashboard.js:86351
@@ -1267,6 +1296,7 @@ msgstr ""
 #: modules/payment-history/Orders.php:391
 #: modules/payment-history/Views/footer-actions.php:4
 #: templates/myaccount/membership.php:265
+<<<<<<< HEAD
 #: chunks/content-access-rules.js:26671
 #: chunks/content-access-rules.js:26831
 #: chunks/content-access-rules.js:26928
@@ -1274,6 +1304,11 @@ msgstr ""
 #: chunks/dashboard.js:88828
 #: chunks/dashboard.js:88925
 #: chunks/dashboard.js:95302
+=======
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: chunks/dashboard.js:280
+>>>>>>> master
 #: src/content-restriction/components/modals/AddNewRuleModal.js:47
 #: src/content-restriction/components/modals/DeleteRuleModal.js:48
 #: src/content-restriction/components/modals/DuplicateRuleModal.js:48
@@ -1854,7 +1889,11 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:545
 #: includes/admin/functions-ur-admin.php:952
 #: includes/Functions/CoreFunctions.php:481
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:696
+=======
+#: modules/membership/includes/Admin.php:691
+>>>>>>> master
 #: modules/membership/includes/Admin/Membership/ListTable.php:217
 #: modules/membership/includes/Admin/Membership/Membership.php:368
 #: modules/membership/includes/Admin/Membership/Membership.php:369
@@ -1912,7 +1951,11 @@ msgstr ""
 #: includes/functions-ur-core.php:6527
 #: includes/Functions/CoreFunctions.php:506
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:304
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:668
+=======
+#: modules/membership/includes/Admin.php:663
+>>>>>>> master
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:103
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:332
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:388
@@ -1970,7 +2013,11 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:826
 #: includes/admin/functions-ur-admin.php:935
+<<<<<<< HEAD
 #: chunks/dashboard.js:93199
+=======
+#: chunks/dashboard.js:280
+>>>>>>> master
 #: src/dashboard/Constants/index.js:21
 #: chunks/dashboard.js:79980
 msgid "Site Assistant"
@@ -2140,8 +2187,13 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-list-table.php:420
 #: includes/class-ur-post-types.php:62
 #: modules/content-restriction/class-urcr-post-types.php:59
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:702
 #: modules/membership/includes/Admin.php:752
+=======
+#: modules/membership/includes/Admin.php:697
+#: modules/membership/includes/Admin.php:747
+>>>>>>> master
 #: modules/membership/includes/Admin/Members/MembersListTable.php:161
 #: modules/membership/includes/Admin/Membership/ListTable.php:112
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:112
@@ -2362,7 +2414,11 @@ msgid "Your settings has not been saved. Please select valid pages for the field
 msgstr ""
 
 #: includes/admin/class-ur-admin-settings.php:800
+<<<<<<< HEAD
 #: chunks/blocks.js:42096
+=======
+#: chunks/blocks.js:280
+>>>>>>> master
 #: src/blocks/blocks/membership-listing/Edit.js:841
 #: chunks/blocks.js:35873
 msgid "Normal"
@@ -2372,7 +2428,11 @@ msgstr ""
 #: includes/class-ur-smart-tags.php:783
 #: modules/membership/includes/Admin/Views/subscription-edit.php:563
 #: templates/myaccount/membership.php:157
+<<<<<<< HEAD
 #: chunks/dashboard.js:98757
+=======
+#: chunks/dashboard.js:280
+>>>>>>> master
 #: src/dashboard/screens/Products/components/ProductCard.js:142
 #: chunks/dashboard.js:86065
 msgid "Active"
@@ -2747,7 +2807,11 @@ msgid "Content Rules"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:1067
+<<<<<<< HEAD
 #: chunks/dashboard.js:93209
+=======
+#: chunks/dashboard.js:280
+>>>>>>> master
 #: src/dashboard/Constants/index.js:35
 #: chunks/dashboard.js:79994
 msgid "Help"
@@ -2763,7 +2827,10 @@ msgid "You are currently using User Registration & Membership %1$s v%2$s"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:1085
+<<<<<<< HEAD
 #: chunks/dashboard.js:93782
+=======
+>>>>>>> master
 #: src/dashboard/components/Header/Header.js:140
 #: chunks/dashboard.js:80500
 msgid "Upgrade To Pro"
@@ -2960,7 +3027,11 @@ msgstr ""
 #: includes/admin/settings/class-ur-members-list-table.php:488
 #: includes/admin/settings/class-ur-users-list-table.php:332
 #: includes/class-ur-frontend-scripts.php:598
+<<<<<<< HEAD
 #: chunks/welcome.js:44668
+=======
+#: chunks/welcome.js:280
+>>>>>>> master
 msgid "Change"
 msgstr ""
 
@@ -2998,7 +3069,11 @@ msgstr ""
 
 #. translators: %s: cancellation date
 #: includes/admin/settings/class-ur-members-list-table.php:868
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:955
+=======
+#: modules/membership/includes/Admin.php:950
+>>>>>>> master
 #: modules/membership/includes/Admin/Members/MembersListTable.php:241
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:146
 #: modules/membership/includes/Admin/Views/subscription-edit.php:252
@@ -3179,8 +3254,13 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-registration-login.php:175
 #: includes/admin/settings/class-ur-users-menu.php:197
 #: includes/class-ur-frontend-scripts.php:568
+<<<<<<< HEAD
 #: modules/membership/includes/Frontend/Frontend.php:239
 #: chunks/dashboard.js:100057
+=======
+#: modules/membership/includes/Frontend/Frontend.php:231
+#: chunks/dashboard.js:280
+>>>>>>> master
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:49
 #: chunks/dashboard.js:87616
 msgid "Please enter a valid email address."
@@ -3618,7 +3698,11 @@ msgstr ""
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:296
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:272
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:487
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:697
+=======
+#: modules/membership/includes/Admin.php:692
+>>>>>>> master
 #: modules/membership/includes/Admin/Forms/class-ur-form-field-membership.php:49
 #: modules/membership/includes/Admin/Members/Members.php:347
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:64
@@ -3709,7 +3793,11 @@ msgstr ""
 #: includes/admin/settings/class-ur-members-menu.php:2030
 #: includes/admin/settings/class-ur-settings-email.php:362
 #: includes/class-ur-email-confirmation.php:97
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:921
+=======
+#: modules/membership/includes/Admin.php:916
+>>>>>>> master
 #: modules/membership/includes/Admin/Membership/ListTable.php:66
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:62
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:66
@@ -3769,7 +3857,11 @@ msgid "Transaction ID"
 msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:2028
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:920
+=======
+#: modules/membership/includes/Admin.php:915
+>>>>>>> master
 #: modules/membership/includes/Admin/Views/member-create.php:263
 #: modules/membership/includes/Admin/Views/subscription-edit.php:426
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:82
@@ -3797,7 +3889,11 @@ msgid "Payment Date"
 msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:2032
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:924
+=======
+#: modules/membership/includes/Admin.php:919
+>>>>>>> master
 #: templates/myaccount/edit-team.php:123
 #: templates/myaccount/membership.php:42
 #: templates/myaccount/payments.php:63
@@ -3812,8 +3908,13 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:2051
 #: includes/class-ur-smart-tags.php:775
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:941
 #: modules/membership/includes/Admin.php:964
+=======
+#: modules/membership/includes/Admin.php:936
+#: modules/membership/includes/Admin.php:959
+>>>>>>> master
 #: modules/membership/includes/Admin/Views/subscription-edit.php:282
 #: modules/membership/includes/Admin/Views/subscription-edit.php:454
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:64
@@ -3836,7 +3937,11 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-list-table.php:416
 #: includes/admin/views/html-admin-page-status-logs.php:73
 #: includes/admin/views/html-admin-page-status-logs.php:138
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:966
+=======
+#: modules/membership/includes/Admin.php:961
+>>>>>>> master
 #: modules/membership/includes/Admin/Members/MembersListTable.php:157
 msgid "View"
 msgstr ""
@@ -4600,7 +4705,11 @@ msgstr ""
 #: includes/Functions/CoreFunctions.php:721
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:1156
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:1567
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:803
+=======
+#: modules/membership/includes/Admin.php:798
+>>>>>>> master
 #: modules/membership/includes/Admin/Forms/FormFields.php:106
 #: modules/membership/includes/Admin/Forms/Views/admin-membership.php:89
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:77
@@ -4732,7 +4841,11 @@ msgstr ""
 #: includes/Functions/CoreFunctions.php:722
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:1157
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:1583
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:804
+=======
+#: modules/membership/includes/Admin.php:799
+>>>>>>> master
 #: modules/membership/includes/Admin/Forms/FormFields.php:107
 #: modules/membership/includes/Admin/Forms/Views/admin-membership.php:90
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:360
@@ -4910,7 +5023,11 @@ msgid "Enter the text message that appears after successful membership registrat
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-registration-login.php:141
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:589
+=======
+#: modules/membership/includes/Admin.php:584
+>>>>>>> master
 #: modules/membership/includes/AJAX.php:719
 msgid "New member has been successfully created."
 msgstr ""
@@ -6371,6 +6488,19 @@ msgstr ""
 msgid "Metadata file for %s block does not exist."
 msgstr ""
 
+<<<<<<< HEAD
+=======
+#. translators: 1: Link and username of user 2: Logout url
+#. translators: %1$1s - Link to logout.
+#: includes/blocks/block-types/class-ur-block-login-logout-menu.php:35
+#: includes/class-ur-shortcodes.php:317
+#: includes/class-ur-shortcodes.php:442
+#: includes/functions-ur-account.php:140
+#: includes/functions-ur-core.php:5680
+msgid "Logout"
+msgstr ""
+
+>>>>>>> master
 #: includes/blocks/block-types/class-ur-block-membership-buy-now.php:283
 msgid "Buy Now"
 msgstr ""
@@ -6449,10 +6579,17 @@ msgstr ""
 #: includes/class-ur-ajax.php:247
 #: modules/membership/includes/AJAX.php:879
 #: modules/membership/includes/AJAX.php:890
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:1012
 #: modules/membership/includes/AJAX.php:1133
 #: modules/membership/includes/AJAX.php:1144
 #: modules/membership/includes/AJAX.php:1365
+=======
+#: modules/membership/includes/AJAX.php:1009
+#: modules/membership/includes/AJAX.php:1130
+#: modules/membership/includes/AJAX.php:1141
+#: modules/membership/includes/AJAX.php:1362
+>>>>>>> master
 msgid "You are not allowed to edit this user."
 msgstr ""
 
@@ -6735,13 +6872,21 @@ msgid "Nonce could not be updated"
 msgstr ""
 
 #: includes/class-ur-ajax.php:2395
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:2791
+=======
+#: modules/membership/includes/AJAX.php:2788
+>>>>>>> master
 #, php-format
 msgid "%1$s is not currently supported by %2$s."
 msgstr ""
 
 #: includes/class-ur-ajax.php:2405
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:2801
+=======
+#: modules/membership/includes/AJAX.php:2798
+>>>>>>> master
 msgid "Currency is valid."
 msgstr ""
 
@@ -7618,6 +7763,26 @@ msgstr ""
 msgid "Please Login to edit profile. <a href=\"%s\">Login Here?</a>"
 msgstr ""
 
+<<<<<<< HEAD
+=======
+#. translators: 1: Link and username of user 2: Logout url
+#. translators: %1$1s - Link to logout.
+#: includes/class-ur-shortcodes.php:317
+#: includes/class-ur-shortcodes.php:442
+#: includes/functions-ur-core.php:5680
+#, php-format
+msgid "You are currently logged in as %1$1s. %2$2s"
+msgstr ""
+
+#. translators: 1: Link and username of user 2: Logout url
+#. translators: %1$1s - Link to logout.
+#: includes/class-ur-shortcodes.php:317
+#: includes/class-ur-shortcodes.php:442
+#: includes/functions-ur-core.php:5680
+msgid "Log out of this account."
+msgstr ""
+
+>>>>>>> master
 #: includes/class-ur-shortcodes.php:416
 msgid "Cannot fetch membership details. Please contact your site administrator."
 msgstr ""
@@ -9813,8 +9978,12 @@ msgstr ""
 
 #: includes/functions-ur-core.php:1338
 #: includes/functions-ur-core.php:9200
+<<<<<<< HEAD
 #: chunks/blocks.js:42066
 #: chunks/blocks.js:42093
+=======
+#: chunks/blocks.js:280
+>>>>>>> master
 #: src/blocks/blocks/membership-listing/Edit.js:811
 #: src/blocks/blocks/membership-listing/Edit.js:837
 #: chunks/blocks.js:35843
@@ -10532,7 +10701,11 @@ msgstr ""
 
 #: includes/functions-ur-core.php:8499
 #: includes/functions-ur-core.php:8524
+<<<<<<< HEAD
 #: chunks/blocks.js:42362
+=======
+#: chunks/blocks.js:280
+>>>>>>> master
 #: src/blocks/blocks/myaccount/Edit.js:52
 #: chunks/blocks.js:36070
 msgid "Logout URL"
@@ -10787,7 +10960,11 @@ msgstr ""
 
 #: includes/functions-ur-core.php:9368
 #: includes/functions-ur-core.php:9418
+<<<<<<< HEAD
 #: chunks/blocks.js:42921
+=======
+#: chunks/blocks.js:280
+>>>>>>> master
 #: src/blocks/blocks/thank-you/Edit.js:157
 #: chunks/blocks.js:36500
 msgid "Redirect Page"
@@ -10806,7 +10983,11 @@ msgid "Decide where users go after completing logout."
 msgstr ""
 
 #: includes/functions-ur-core.php:9548
+<<<<<<< HEAD
 #: chunks/dashboard.js:100372
+=======
+#: chunks/dashboard.js:280
+>>>>>>> master
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:211
 #: chunks/dashboard.js:88009
 msgid "here"
@@ -11653,15 +11834,24 @@ msgstr ""
 
 #: includes/Functions/CoreFunctions.php:723
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:1158
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:805
+=======
+#: modules/membership/includes/Admin.php:800
+>>>>>>> master
 #: modules/membership/includes/Admin/Forms/FormFields.php:108
 #: modules/membership/includes/Admin/Forms/Views/admin-membership.php:91
 #: modules/payment-history/Orders.php:412
 msgid "Bank"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/Functions/CoreFunctions.php:958
 #: includes/Functions/CoreFunctions.php:1051
+=======
+#: includes/Functions/CoreFunctions.php:945
+#: includes/Functions/CoreFunctions.php:1038
+>>>>>>> master
 #, php-format
 msgid "%s Rule"
 msgstr ""
@@ -12939,6 +13129,7 @@ msgstr ""
 msgid "The memberships selected here will have access to restricted content."
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:370
 #: modules/membership/includes/Admin.php:410
 msgid "Invalid membership selection."
@@ -12946,10 +13137,20 @@ msgstr ""
 
 #: modules/membership/includes/Admin.php:444
 #: modules/membership/includes/Admin.php:461
+=======
+#: modules/membership/includes/Admin.php:365
+#: modules/membership/includes/Admin.php:405
+msgid "Invalid membership selection."
+msgstr ""
+
+#: modules/membership/includes/Admin.php:439
+#: modules/membership/includes/Admin.php:456
+>>>>>>> master
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:500
 msgid "Invalid payment method for this membership."
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:561
 #: modules/membership/includes/Admin.php:601
 msgid "Sorry! There was an unexpected error while registering the user."
@@ -12962,9 +13163,105 @@ msgstr ""
 
 #: modules/membership/includes/Admin.php:668
 msgid "View User Registration & Membership Settings"
+=======
+#: modules/membership/includes/Admin.php:556
+#: modules/membership/includes/Admin.php:596
+msgid "Sorry! There was an unexpected error while registering the user."
+msgstr ""
+
+#: modules/membership/includes/Admin.php:568
+#: modules/membership/includes/AJAX.php:1165
+msgid "Invalid User"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:663
+msgid "View User Registration & Membership Settings"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:694
+msgctxt "Admin menu name"
+msgid "Memberships"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:696
+#: modules/membership/includes/Admin.php:746
+msgid "Add new"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:698
+msgid "Edit membership"
 msgstr ""
 
 #: modules/membership/includes/Admin.php:699
+msgid "New membership"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:700
+msgid "View membership"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:701
+msgid "View memberships"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:702
+msgid "Search memberships"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:703
+msgid "No memberships found"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:704
+msgid "No memberships found in trash"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:705
+msgid "Parent membership"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:706
+msgid "Membership image"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:707
+msgid "Set membership image"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:708
+msgid "Remove membership image"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:709
+msgid "Use as membership image"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:710
+msgid "Insert into membership"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:711
+msgid "Uploaded to this membership"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:712
+msgid "Filter membership"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:713
+msgid "Membership navigation"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:714
+msgid "Membership list"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:743
+msgid "All Membership Groups"
+>>>>>>> master
+msgstr ""
+
+#: modules/membership/includes/Admin.php:744
 msgctxt "Admin menu name"
 msgid "Memberships"
 msgstr ""
@@ -12974,6 +13271,7 @@ msgstr ""
 msgid "Add new"
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin.php:703
 msgid "Edit membership"
 msgstr ""
@@ -13136,6 +13434,93 @@ msgid "Starts On"
 msgstr ""
 
 #: modules/membership/includes/Admin.php:923
+=======
+#: modules/membership/includes/Admin.php:748
+msgid "Edit membership group"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:749
+msgid "New membership group"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:750
+msgid "View membership group"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:751
+msgid "View memberships group"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:752
+msgid "Search membership groups"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:753
+msgid "No membership groups found"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:754
+msgid "No membership groups found in trash"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:755
+msgid "Parent membership group"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:756
+msgid "Membership group image"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:757
+msgid "Set membership group image"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:758
+msgid "Remove membership group image"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:759
+msgid "Use as membership group image"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:760
+msgid "Insert into membership group"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:761
+msgid "Uploaded to this membership group"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:762
+msgid "Filter membership group"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:763
+msgid "Membership group navigation"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:764
+msgid "Membership group list"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:903
+msgid "Membership Details"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:905
+msgid "Membership Detail"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:914
+msgid "Plan Type"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:917
+msgid "Starts On"
+msgstr ""
+
+#: modules/membership/includes/Admin.php:918
+>>>>>>> master
 #: modules/membership/includes/Admin/Views/member-create.php:269
 msgid "Expires On"
 msgstr ""
@@ -13606,7 +13991,11 @@ msgid "Failed to reactivate subscription with payment gateway."
 msgstr ""
 
 #: modules/membership/includes/Admin/Repositories/SubscriptionRepository.php:158
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:2626
+=======
+#: modules/membership/includes/AJAX.php:2623
+>>>>>>> master
 msgid "Failed to update subscription."
 msgstr ""
 
@@ -13729,13 +14118,22 @@ msgid "To proceed, update all memberships to Expired or Cancelled, or assign use
 msgstr ""
 
 #. translators: 1: membership name, 2: date string
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/MembershipService.php:874
+=======
+#: modules/membership/includes/Admin/Services/MembershipService.php:873
+>>>>>>> master
 #, php-format
 msgid "You already have a scheduled upgrade to the <b>%1$s</b> plan at the end of your current subscription cycle (<i><b>%2$s</b></i>). <br> If you'd like to cancel this upcoming change, please proceed from my account page."
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/MembershipService.php:904
 #: modules/membership/includes/Admin/Services/MembershipService.php:970
+=======
+#: modules/membership/includes/Admin/Services/MembershipService.php:903
+#: modules/membership/includes/Admin/Services/MembershipService.php:969
+>>>>>>> master
 #, php-format
 msgid "You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again."
 msgstr ""
@@ -13861,7 +14259,11 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2330
 #: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1315
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2612
+=======
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2611
+>>>>>>> master
 msgid "Subscription ID not found"
 msgstr ""
 
@@ -13872,13 +14274,21 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2365
 #: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1511
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2731
+=======
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2730
+>>>>>>> master
 msgid "Subscription is already active"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2370
 #: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1525
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2744
+=======
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2743
+>>>>>>> master
 #, php-format
 msgid "Subscription status is %s and cannot be retried"
 msgstr ""
@@ -14071,7 +14481,11 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1007
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1148
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:1945
+=======
+#: modules/membership/includes/AJAX.php:1942
+>>>>>>> master
 msgid "Membership upgraded successfully."
 msgstr ""
 
@@ -14101,6 +14515,7 @@ msgstr ""
 msgid "Error reactivating the stripe subscription."
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2089
 msgid "Generated with stripe webhook"
 msgstr ""
@@ -14114,6 +14529,21 @@ msgid "Subscription payment retried successfully"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2713
+=======
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2088
+msgid "Generated with stripe webhook"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2644
+msgid "Subscription not found in Stripe"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2681
+msgid "Subscription payment retried successfully"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:2712
+>>>>>>> master
 msgid "Subscription retry did not resolve the issue"
 msgstr ""
 
@@ -14122,7 +14552,11 @@ msgid "Renew Now"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:471
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:784
+=======
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:783
+>>>>>>> master
 msgid "You do not have permission to upgrade this subscription."
 msgstr ""
 
@@ -14131,6 +14565,7 @@ msgstr ""
 msgid "Membership upgrade process already initiated."
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:753
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:775
 msgid "Sorry, you cannot upgrade to the selected plan."
@@ -14145,39 +14580,83 @@ msgid "Sorry, multiple memberships are not allowed with your selected plan."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:873
+=======
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:752
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:774
+msgid "Sorry, you cannot upgrade to the selected plan."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:793
+msgid "Sorry, You’re not eligible for another trial. Please choose a regular membership plan."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:862
+msgid "Sorry, multiple memberships are not allowed with your selected plan."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:872
+>>>>>>> master
 #, php-format
 msgid "Scheduled Subscriptions job started for the date: (%s)"
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:880
 msgid "No delayed orders found."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:926
+=======
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:879
+msgid "No delayed orders found."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:925
+>>>>>>> master
 #, php-format
 msgid "Subscription updated for %s"
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:1013
 msgid "Membership renew process already initiated."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:1180
+=======
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:1012
+msgid "Membership renew process already initiated."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:1179
+>>>>>>> master
 #, php-format
 msgid "No memberships found to expire for date: %s"
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:1242
+=======
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:1241
+>>>>>>> master
 #, php-format
 msgid "Failed to expire membership for user %1$s (ID: %2$d) - Subscription ID: %3$d"
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:1414
+=======
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:1413
+>>>>>>> master
 #, php-format
 msgid "Error fetching missed events for Stripe: %s"
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:1432
+=======
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:1431
+>>>>>>> master
 #, php-format
 msgid "Error fetching missed events for PayPal: %s"
 msgstr ""
@@ -14211,7 +14690,11 @@ msgid "Subscription created successfully."
 msgstr ""
 
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:155
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:2645
+=======
+#: modules/membership/includes/AJAX.php:2642
+>>>>>>> master
 msgid "Subscription updated successfully."
 msgstr ""
 
@@ -14545,7 +15028,11 @@ msgstr ""
 #: modules/membership/includes/Admin/Views/Partials/membership-create-basics-tab.php:170
 #: modules/membership/includes/Admin/Views/subscription-edit.php:437
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:78
+<<<<<<< HEAD
 #: chunks/welcome.js:43210
+=======
+#: chunks/welcome.js:280
+>>>>>>> master
 msgid "Billing Cycle"
 msgstr ""
 
@@ -14584,7 +15071,11 @@ msgid "Payment Gateway"
 msgstr ""
 
 #: modules/membership/includes/Admin/Views/subscription-edit.php:12
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:2529
+=======
+#: modules/membership/includes/AJAX.php:2526
+>>>>>>> master
 msgid "Subscription not found."
 msgstr ""
 
@@ -14878,6 +15369,7 @@ msgid "Field form_response is required"
 msgstr ""
 
 #: modules/membership/includes/AJAX.php:871
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:1125
 msgid "Invalid Request."
 msgstr ""
@@ -14934,21 +15426,88 @@ msgid "Expiry date is required for recurring subscription plans."
 msgstr ""
 
 #: modules/membership/includes/AJAX.php:1268
+=======
+#: modules/membership/includes/AJAX.php:1122
+msgid "Invalid Request."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:925
+#: modules/membership/includes/AJAX.php:972
+#: modules/membership/includes/AJAX.php:1180
+msgid "Something went wrong when updating users payment status"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:940
+msgid "Membership upgraded successfully"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:946
+msgid "Membership purchased successfully"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:952
+msgid "Membership has been successfully renewed."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:990
+#: modules/membership/includes/AJAX.php:1350
+#: modules/membership/includes/AJAX.php:1451
+#: modules/membership/includes/AJAX.php:1595
+#: modules/membership/includes/AJAX.php:1598
+#: modules/membership/includes/AJAX.php:1632
+msgid "Wrong request."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1000
+msgid "User's subscription not found."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1092
+msgid "Something went wrong while cancelling your subscription. Please contact support"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1190
+msgid "Sorry, you do not have permission to create subscription"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1202
+msgid "Please fill in all required fields."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1216
+msgid "Invalid membership plan selected."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1226
+msgid "Expiry date is required for recurring subscription plans."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1265
+>>>>>>> master
 msgid "Failed to create subscription."
 msgstr ""
 
 #. translators: %s: Current user display name
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:1282
+=======
+#: modules/membership/includes/AJAX.php:1279
+>>>>>>> master
 #, php-format
 msgid "Recurring subscription created by %s"
 msgstr ""
 
 #. translators: %s: Current user display name
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:1287
+=======
+#: modules/membership/includes/AJAX.php:1284
+>>>>>>> master
 #, php-format
 msgid "One-time membership created by %s"
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:1316
 msgid "Recurring subscription and order created successfully."
 msgstr ""
@@ -15130,6 +15689,189 @@ msgid "Sorry, you do not have permission to do this."
 msgstr ""
 
 #: modules/membership/includes/AJAX.php:2771
+=======
+#: modules/membership/includes/AJAX.php:1313
+msgid "Recurring subscription and order created successfully."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1314
+msgid "Recurring subscription created successfully, but order creation failed."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1316
+msgid "One-time membership and order created successfully."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1317
+msgid "One-time membership created successfully, but order creation failed."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1394
+#: modules/membership/includes/AJAX.php:1416
+msgid "Membership reactivated successfully."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1420
+msgid "Failed to reactivate membership."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1430
+msgid "Membership details not found. Please contact site administrator."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1437
+msgid "Cannot reactivate this membership. Please contact site administrator."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1454
+msgid "Field list type is required."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1470
+msgid "No membership is available for the selected group."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1494
+msgid "No memberships selected."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1505
+msgid "No valid memberships selected."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1526
+msgid "No memberships found for the current selection."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1548
+#: modules/membership/includes/AJAX.php:1589
+#: modules/membership/includes/AJAX.php:1626
+msgid "Sorry, You do not have permission to create membership groups."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1555
+msgid "Field membership_groups_data is required"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1574
+msgid "Membership Groups saved successfully."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1607
+msgid "Invalid post type"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1656
+#: modules/membership/includes/AJAX.php:1710
+msgid "Membership does not exist"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1685
+msgid "No upgradable Memberships."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1727
+msgid "Selected membership details not found."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1749
+msgid "Field current_subscription_id is required"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1756
+#: modules/membership/includes/AJAX.php:2007
+msgid "Field selected_membership_id is required"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1823
+msgid "User details added while upgrading."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:1987
+msgid "Something went wrong while upgrading membership."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2078
+msgid "User details added while purchasing membership."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2252
+msgid "Membership purchase process already initiated."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2273
+msgid "Membership purchased successfully."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2293
+msgid "Something went wrong while purchasing membership."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2319
+msgid "Scheduled membership has been cancelled successfully."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2325
+#: modules/membership/includes/AJAX.php:2493
+msgid "Something went wrong while cancelling membership."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2419
+msgid "User details added while renewing."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2459
+msgid "Membership renewed successfully."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2502
+msgid "Sorry, you do not have permission to update subscription"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2515
+msgid "Subscription ID is required."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2553
+msgid "Trial start date cannot be after trial end date."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2566
+msgid "Trial end date cannot exceed expiry date."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2579
+msgid "Expiry date cannot be less than trial start date."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2654
+#: modules/membership/includes/AJAX.php:2658
+msgid "You do not have permission to change membership details."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2670
+msgid "API list not found"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2698
+msgid "Sorry, You do not have permission to set upgrade path."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2706
+#: modules/membership/includes/AJAX.php:2716
+msgid "Please select memberships."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2742
+msgid "Something went wrong. Please refresh the page and try again."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2756
+msgid "Sorry, you do not have permission to do this."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:2768
+>>>>>>> master
 msgid "Currency is invalid."
 msgstr ""
 
@@ -15462,7 +16204,11 @@ msgstr ""
 msgid "Purchase Membership"
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Frontend/Frontend.php:258
+=======
+#: modules/membership/includes/Frontend/Frontend.php:250
+>>>>>>> master
 #: templates/myaccount/membership.php:254
 msgid "Renew Membership"
 msgstr ""
@@ -17115,9 +17861,342 @@ msgstr ""
 msgid "An error occurred"
 msgstr ""
 
+<<<<<<< HEAD
 #: chunks/content-access-rules.js:26677
 #: chunks/dashboard.js:88674
 #: chunks/dashboard.js:99367
+=======
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/DeleteRuleModal.js:51
+msgid "Deleting..."
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/DeleteRuleModal.js:60
+msgid "Delete Content Rule"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/DeleteRuleModal.js:67
+msgid "Are you sure you want to delete this rule permanently?"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/DuplicateRuleModal.js:23
+msgid "Rule duplicated successfully"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/DuplicateRuleModal.js:29
+msgid "Failed to duplicate rule"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/DuplicateRuleModal.js:51
+msgid "Duplicating..."
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/DuplicateRuleModal.js:60
+msgid "Duplicate Content Rule"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/DuplicateRuleModal.js:67
+msgid "Are you sure you want to duplicate this rule? A copy will be created with the same settings."
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/utils/rule-save-helper.js:190
+msgid "Rule saved successfully"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/utils/rule-save-helper.js:221
+#: src/content-restriction/utils/rule-save-helper.js:225
+msgid "Failed to save rule"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/utils/rule-save-helper.js:231
+msgid "An error occurred while saving"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/AdvancedLogicWarningModal.js:21
+msgid "Remove Advanced Logic First"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/AdvancedLogicWarningModal.js:27
+msgid "You're currently using OR, NOT, or subgroups for this rule. Please remove these first, then you can disable Advanced Logic. When disabled, only AND will be used for multiple conditions"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/settings/MediaButton.js:12
+msgid "Add Media"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/settings/SmartTagsButton.js:166
+msgid "No tags found"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/settings/MessageAction.js:363
+msgid "Use global restriction message"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/settings/MessageAction.js:381
+#, js-format
+msgid "Show visitors the default restricted message. Customize it in %s."
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/settings/MessageAction.js:405
+msgid "Custom message"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/settings/SettingsPanel.js:375
+#: src/content-restriction/components/settings/SettingsPanel.js:580
+msgid "Show UR Form (Legacy)"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/settings/SettingsPanel.js:383
+#: src/content-restriction/components/settings/SettingsPanel.js:588
+msgid "Render Shortcode (Legacy)"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/settings/SettingsPanel.js:637
+msgid "Action to perform for restricting the specified contents"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/settings/SettingsPanel.js:734
+msgid "Advanced Logic"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/settings/SettingsPanel.js:739
+msgid "Enable advanced logic gates (OR, NOT) and nested groups for complex condition rules"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleContentDisplay.js:324
+#: src/content-restriction/components/settings/SettingsPanel.js:771
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:292
+msgid "Saving..."
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/dropdowns/ContentTypeDropdown.js:24
+msgid "Courses"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/dropdowns/ContentTypeDropdown.js:59
+msgid "File Downloads"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/inputs/TaxonomyTermsSelect.js:118
+msgid "No terms available"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/inputs/TaxonomyInput.js:128
+msgid "Select Taxonomy"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/inputs/ConditionValueInput.js:251
+#: src/content-restriction/components/inputs/MultiselectInput.js:208
+msgid "No options available"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/inputs/DateRangeInput.js:275
+msgid "Select date range"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/inputs/DateRangeInput.js:277
+msgid "Select date (before)"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/inputs/DateRangeInput.js:278
+msgid "Select date (after)"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/inputs/ConditionValueInput.js:301
+#: src/content-restriction/components/inputs/ConditionValueInput.js:315
+#: src/content-restriction/components/rules/URFormFieldCondition.js:207
+msgid "Enter value"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/URFormFieldCondition.js:135
+msgid "is not"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/URFormFieldCondition.js:136
+msgid "empty"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/URFormFieldCondition.js:137
+msgid "not empty"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/URFormFieldCondition.js:176
+msgid "Select field"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/URFormFieldCondition.js:219
+msgid "Add field"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/URFormFieldCondition.js:230
+msgid "Remove field"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/AdvancedLogicGates.js:22
+msgid "Add Logic:"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleGroup.js:409
+msgid "Remove group"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleGroup.js:472
+msgid " For partial content restriction with the above condition, use the "
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleGroup.js:479
+msgid " shortcode. It may be deprecated"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleGroup.js:484
+msgid "—use the Content Restriction block instead"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleGroup.js:518
+msgid "Condition"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleGroup.js:549
+msgid "Group"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleContentDisplay.js:113
+msgid "No group data to save"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleCard.js:123
+msgid "Rule status updated"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleCard.js:128
+msgid "Failed to update rule status"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleCard.js:277
+msgid "Rule"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleCard.js:303
+msgid "More options"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/AddNewRuleModal.js:21
+msgid "Rule created successfully"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/modals/AddNewRuleModal.js:28
+msgid "Failed to create rule"
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: chunks/dashboard.js:280
+>>>>>>> master
 #: src/content-restriction/components/modals/AddNewRuleModal.js:50
 #: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:138
 #: chunks/content-access-rules.js:24004
@@ -18388,7 +19467,146 @@ msgstr ""
 msgid "Masteriyo plugin must be activated to enable this module"
 msgstr ""
 
+<<<<<<< HEAD
 #: chunks/dashboard.js:98573
+=======
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Help/Help.js:425
+msgid "Join our exclusive group and connect with fellow members. Ask questions, contribute to discussions, and share feedback!"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Help/Help.js:445
+msgid "Join Group"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Help/Help.js:471
+msgid "X ( Twitter )"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Help/Help.js:474
+msgid "Follow us on X to get the latest news and updates about User Registration & Membership."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Help/Help.js:494
+msgid "Follow"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Help/Help.js:520
+msgid "YouTube"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Help/Help.js:523
+msgid "Subscribe to our YouTube channel, where we guide you on using User Registration & Membership features and add-ons."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Help/Help.js:543
+msgid "Subscribe"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/Constants/Products.js:21
+msgid "Revolutionize e-learning effortlessly with Masteriyo, a WordPress LMS plugin. Sell courses with quizzes, assignments, etc., for a dynamic learning experience."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/Constants/Products.js:28
+msgid "WordPress LMS plugin with Quiz Builder"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/Constants/Products.js:38
+msgid "Fuel your digital creativity with BlockArt Blocks, a dynamic collection of custom Gutenberg blocks for designing captivating WordPress sites."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/Constants/Products.js:45
+msgid "Custom Gutenberg Blocks Plugin"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/Constants/Products.js:55
+msgid "Manage online communication with Everest Forms, a lightning-fast and secure contact form plugin offering beautiful templates for professional forms."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/Constants/Products.js:62
+msgid "User-friendly Contact Form Plugin for WordPress"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/Constants/Products.js:72
+msgid "Experience advanced Gutenberg blocks with Magazine Blocks, designed for crafting stunning magazine and news websites."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/Constants/Products.js:79
+msgid "Gutenberg Blocks for Magazine-style Websites"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/Constants/Products.js:92
+msgid "Unlock boundless website possibilities with Zakra, a versatile multipurpose theme offering over 40 free starter sites for a tailored web experience."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/Constants/Products.js:104
+msgid "Elevate your website's style with Colormag, the go-to choice for news, blogs, and magazines. Embark on a digital spectacle of website-building excellence! "
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/components/common/UsePluginInstallActivate.js:115
+#, js-format
+msgid "%s plugin installed and activated successfully"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/components/common/UsePluginInstallActivate.js:65
+#, js-format
+msgid "%s plugin activated successfully"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/components/common/UsePluginInstallActivate.js:181
+#: src/dashboard/screens/Products/components/ProductCard.js:145
+msgid "Install"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Products/components/ProductCard.js:107
+msgid "Live Demo"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Products/components/ProductCard.js:163
+msgid "Activate Plugin"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Products/components/ProductCard.js:164
+msgid "Install Plugin"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Products/components/ProductCard.js:169
+#, js-format
+msgid "Are you sure? You want to activate %s plugin."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/Products/components/ProductCard.js:176
+#, js-format
+msgid "Are you sure? You want to install and activate %s plugin."
+msgstr ""
+
+#: chunks/dashboard.js:280
+>>>>>>> master
 #: src/dashboard/screens/Products/Products.js:39
 #: chunks/dashboard.js:85902
 msgid "Themes"
@@ -18444,6 +19662,7 @@ msgstr ""
 msgid "User Registration & Membership Community"
 msgstr ""
 
+<<<<<<< HEAD
 #: chunks/dashboard.js:99071
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:396
 #: chunks/dashboard.js:86539
@@ -18454,6 +19673,18 @@ msgstr ""
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:407
 #: chunks/dashboard.js:86550
 msgid "Join our Facebook Group"
+=======
+#: chunks/form_templates.js:1
+#: src/form-templates/components/PluginStatus.js:168
+#, js-format
+msgid "Failed to activate plugin: %s."
+msgstr ""
+
+#: chunks/form_templates.js:1
+#: src/form-templates/components/PluginStatus.js:186
+#, js-format
+msgid "Unable to activate %s."
+>>>>>>> master
 msgstr ""
 
 #: chunks/dashboard.js:99293
@@ -18501,6 +19732,7 @@ msgstr ""
 msgid "Failed to add membership field. Please try again."
 msgstr ""
 
+<<<<<<< HEAD
 #: chunks/dashboard.js:99481
 #: chunks/dashboard.js:99660
 #: chunks/dashboard.js:100261
@@ -18518,6 +19750,18 @@ msgstr ""
 #: src/dashboard/screens/SiteAssistant/components/MembershipField.js:105
 #: chunks/dashboard.js:86967
 msgid "Membership field setup skipped."
+=======
+#: chunks/form_templates.js:1
+#: src/form-templates/components/TemplateList.js:629
+#, js-format
+msgid "%s Requires License Upgrade"
+msgstr ""
+
+#: chunks/form_templates.js:1
+#: src/form-templates/components/TemplateList.js:636
+#, js-format
+msgid "%s is a Premium Template"
+>>>>>>> master
 msgstr ""
 
 #: chunks/dashboard.js:99496
@@ -18918,6 +20162,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+<<<<<<< HEAD
 #: chunks/welcome.js:42614
 msgid "Congratulations! 🎉"
 msgstr ""
@@ -19050,6 +20295,11 @@ msgstr ""
 
 #: chunks/welcome.js:44657
 msgid "Email:"
+=======
+#: src/dashboard/components/Header/Header.js:148
+#, js-format
+msgid "You are currently using User Registration & Membership %s"
+>>>>>>> master
 msgstr ""
 
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:43
