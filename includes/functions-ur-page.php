@@ -123,6 +123,42 @@ function ur_get_wpml_page_language( $page_id ) {
 	return $cache[ $cache_key ];
 }
 
+if ( ! function_exists( 'ur_get_translated_page_id' ) ) {
+	/**
+	 * Map a stored (default language) page ID to its translation for the active language.
+	 *
+	 * Plugin options store the page ID of the default language page. When Polylang or WPML
+	 * is active, redirect and account links must point to the translated page for the current
+	 * language instead. Returns the original ID when no translation exists or no multilingual
+	 * plugin is active.
+	 *
+	 * @since 5.2.6
+	 *
+	 * @param int $page_id Page ID stored in plugin options (default language).
+	 *
+	 * @return int Translated page ID, or the original when no translation applies.
+	 */
+	function ur_get_translated_page_id( $page_id ) {
+		$page_id = absint( $page_id );
+
+		if ( $page_id <= 0 ) {
+			return $page_id;
+		}
+
+		if ( function_exists( 'pll_current_language' ) ) {
+			$current_language = pll_current_language();
+			if ( ! empty( $current_language ) ) {
+				$translations = pll_get_post_translations( $page_id );
+				$page_id      = isset( $translations[ $current_language ] ) ? $translations[ $current_language ] : $page_id;
+			}
+		} elseif ( class_exists( 'SitePress', false ) ) {
+			$page_id = ur_get_wpml_page_language( $page_id );
+		}
+
+		return absint( $page_id );
+	}
+}
+
 /**
  * Retrieve page permalink.
  *
