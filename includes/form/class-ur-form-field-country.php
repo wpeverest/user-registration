@@ -315,7 +315,7 @@ class UR_Form_Field_Country extends UR_Form_Field {
 
 		// Get selected_countries data of the field.
 		foreach ( $fields as $field ) {
-			if ( 'country' === $field->field_key && $field_name === $field->general_setting->field_name ) {
+			if ( isset( $field->field_key ) && 'country' === $field->field_key && $field_name === $field->general_setting->field_name ) {
 				$advance_setting = $field->advance_setting;
 				if ( isset( $advance_setting->selected_countries ) ) {
 					$selected_countries = $advance_setting->selected_countries;
