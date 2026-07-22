@@ -37,11 +37,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-<<<<<<< HEAD
-		public $version = '5.2.5';
-=======
 		public $version = '5.2.6';
->>>>>>> master
 
 		/**
 		 * Session instance.
