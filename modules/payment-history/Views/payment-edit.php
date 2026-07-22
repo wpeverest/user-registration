@@ -140,14 +140,23 @@ $user_avatar_url = get_avatar_url( $user_id );
 $first_name      = get_user_meta( $user_id, 'first_name', true );
 $last_name       = get_user_meta( $user_id, 'last_name', true );
 
-$user_display_name = $user->user_login;
-if ( $first_name || $last_name ) {
-	$user_display_name = trim( $first_name . ' ' . $last_name );
-} elseif ( ! empty( $user->display_name ) ) {
-	$user_display_name = $user->display_name;
-} elseif ( ! empty( $user->nickname ) ) {
-	$user_display_name = $user->nickname;
+$user_display_name = __( 'Unknown User', 'user-registration' );
+$user_email        = '';
+
+if ( $user ) {
+	$user_display_name = $user->user_login;
+	$user_email        = $user->user_email;
+
+	if ( $first_name || $last_name ) {
+		$user_display_name = trim( $first_name . ' ' . $last_name );
+	} elseif ( ! empty( $user->display_name ) ) {
+		$user_display_name = $user->display_name;
+	} elseif ( ! empty( $user->nickname ) ) {
+		$user_display_name = $user->nickname;
+	}
 }
+
+$order_status = ! empty( $order['status'] ) ? $order['status'] : 'pending';
 ?>
 <div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
 	<div class="ur-page-title__wrapper">
@@ -206,8 +215,8 @@ if ( $first_name || $last_name ) {
 								</h3>
 								<div class="ur-payments__badges">
 									<span
-										class="ur-payments__badge ur-payments__badge--status <?php echo esc_attr( 'ur-payments__badge--status-' . strtolower( $order['status'] ) ); ?>">
-										<?php echo esc_html( ucfirst( $order['status'] ) ); ?>
+										class="ur-payments__badge ur-payments__badge--status <?php echo esc_attr( 'ur-payments__badge--status-' . strtolower( $order_status ) ); ?>">
+										<?php echo esc_html( ucfirst( $order_status ) ); ?>
 									</span>
 									<?php if ( 'on' === $trial_status ) : ?>
 									<span class="ur-payments__badge ur-payments__badge--trial">
@@ -492,7 +501,7 @@ if ( $first_name || $last_name ) {
 								<div class="ur-payments__user-name">
 									<?php echo esc_html( $user_display_name ); ?>
 								</div>
-								<div class="ur-payments__user-email"><?php echo esc_html( $user->user_email ); ?></div>
+								<div class="ur-payments__user-email"><?php echo esc_html( $user_email ); ?></div>
 							</div>
 						</div>
 						<div class="ur-payments__payment-actions">

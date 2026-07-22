@@ -56,4 +56,8 @@ interface BaseInterface {
 	 * @return void
 	 */
 	public function delete_multiple( $ids );
+
+	public function acquire_lock( $name, $timeout = 5 );
+
+	public function release_lock( $name );
 }

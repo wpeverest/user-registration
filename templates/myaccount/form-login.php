@@ -324,7 +324,7 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 				<input type="hidden" name="previous_page" value="<?php echo esc_attr( wp_get_raw_referer() ); ?>"/>
 				<?php
 
-				$url_options = get_option( 'user_registration_general_setting_registration_url_options', get_permalink( get_option( 'user_registration_registration_page_id' ) ) );
+				$url_options = get_option( 'user_registration_general_setting_registration_url_options', get_permalink( ur_get_translated_page_id( get_option( 'user_registration_registration_page_id' ) ) ) );
 
 				if ( ! empty( $url_options ) || $is_login_settings ) {
 					$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}(\\.[a-zA-Z0-9()]{1,6})?\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";

@@ -680,7 +680,7 @@ class OrdersListTable extends \UR_List_Table {
 			function ( $item ) {
 				$content = json_decode( wp_unslash( $item['post_content'] ), true );
 
-				return $content['status'];
+				return ! empty( $content['status'] );
 			}
 		);
 
@@ -699,7 +699,7 @@ class OrdersListTable extends \UR_List_Table {
 			function ( $item ) {
 				$content = json_decode( wp_unslash( $item['post_content'] ), true );
 
-				return $content['status'];
+				return ! empty( $content['status'] );
 			}
 		);
 

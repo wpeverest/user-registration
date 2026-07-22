@@ -132,7 +132,7 @@ class UR_Shortcode_My_Account {
 			$user_id = get_current_user_id();
 			$form_id = get_user_meta( $user_id, 'ur_form_id', true );
 
-			if ( ! empty( $form_id ) ) {
+			if ( ! empty( $form_id ) || current_user_can( 'manage_options' ) ) {
 
 				/**
 				* Action to handles for enqueuing scripts for User Registration my Account page.
@@ -659,14 +659,14 @@ class UR_Shortcode_My_Account {
 		$lost_password_page_id = get_option( 'user_registration_lost_password_page_id', false );
 
 		if ( $lost_password_page_id && get_post( $lost_password_page_id ) ) {
-			$path = wp_parse_url( get_permalink( $lost_password_page_id ), PHP_URL_PATH );
+			$path = wp_parse_url( get_permalink( ur_get_translated_page_id( $lost_password_page_id ) ), PHP_URL_PATH );
 			if ( ! empty( $path ) ) {
 				$rp_path = trailingslashit( $path );
 			}
 		} else {
 			$reset_password_page_id = get_option( 'user_registration_reset_password_page_id', false );
 			if ( $reset_password_page_id && get_post( $reset_password_page_id ) ) {
-				$path = wp_parse_url( get_permalink( $reset_password_page_id ), PHP_URL_PATH );
+				$path = wp_parse_url( get_permalink( ur_get_translated_page_id( $reset_password_page_id ) ), PHP_URL_PATH );
 				if ( ! empty( $path ) ) {
 					$rp_path = trailingslashit( $path );
 				}

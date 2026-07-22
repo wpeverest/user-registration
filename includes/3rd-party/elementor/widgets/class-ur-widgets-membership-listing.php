@@ -260,6 +260,10 @@ class UR_Elementor_Widget_Membership_Listing extends Widget_Base {
 		do_action( 'user_registration_elementor_membership_listing_style', $this );
 	}
 
+	public function get_style_depends() {
+		return array( 'user-registration-general' );
+	}
+
 	/**
 	 * Render widget output.
 	 */

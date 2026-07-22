@@ -107,7 +107,6 @@ class UR_Elementor {
 	 */
 	public function register_widget_styles() {
 		wp_register_style( 'user-registration-general', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
-		wp_enqueue_style( 'user-registration-general' );
 	}
 
 	/**

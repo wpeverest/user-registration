@@ -153,7 +153,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 						$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', get_option( 'user_registration_thank_you_page_id', '' ) );
 
 						if ( ! empty( $selected_page ) && 'no-redirection' !== $selected_page ) {
-							$page_url     = get_permalink( $selected_page );
+							$page_url     = get_permalink( ur_get_translated_page_id( $selected_page ) );
 							$redirect_url = $page_url;
 						} else {
 							$redirect_url = '';
