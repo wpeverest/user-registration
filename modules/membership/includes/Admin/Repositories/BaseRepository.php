@@ -96,4 +96,15 @@ class BaseRepository implements \WPEverest\URMembership\Admin\Interfaces\BaseInt
 	public function delete( $id ) {
 		return $this->wpdb()->delete( $this->table, array( 'ID' => $id ) );
 	}
+
+	// Returns true if acquired, false on contention/timeout, null if the DB has no GET_LOCK support.
+	public function acquire_lock( $name, $timeout = 5 ) {
+		$result = $this->wpdb()->get_var( $this->wpdb()->prepare( 'SELECT GET_LOCK(%s, %d)', $name, $timeout ) );
+
+		return null === $result ? null : ( '1' === (string) $result );
+	}
+
+	public function release_lock( $name ) {
+		return $this->wpdb()->get_var( $this->wpdb()->prepare( 'SELECT RELEASE_LOCK(%s)', $name ) );
+	}
 }

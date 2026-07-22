@@ -352,7 +352,55 @@
 		).on("change", function () {
 			urm_validate_login_page_settings($(this));
 		});
+
+		highlight_deep_linked_setting();
 	});
+
+	/**
+	 * Deep-link support: when arriving with ?highlight=<field_id> (e.g. from the
+	 * login block editor), open the relevant tab/section and flash the setting.
+	 */
+	function highlight_deep_linked_setting() {
+		var params = new URLSearchParams(window.location.search);
+		var field_id = params.get("highlight");
+
+		if (!field_id) {
+			return;
+		}
+
+		// admin.js builds the .form-settings-tab section nav on ready; wait for it.
+		setTimeout(function () {
+			switch_to_tab_and_section(
+				params.get("tab") || "ur-tab-login-form-settings",
+				params.get("tab-item")
+			);
+
+			setTimeout(function () {
+				var $container = $("#" + field_id).closest(
+					".user-registration-login-form-global-settings"
+				);
+
+				if (!$container.length) {
+					return;
+				}
+
+				$("html, body").animate(
+					{ scrollTop: $container.offset().top - 120 },
+					500
+				);
+
+				$container.css({
+					outline: "2px solid #475bb2",
+					"outline-offset": "4px",
+					"border-radius": "6px",
+					transition: "outline-color .3s ease"
+				});
+				setTimeout(function () {
+					$container.css({ outline: "", "outline-offset": "" });
+				}, 3000);
+			}, 300);
+		}, 500);
+	}
 
 	function urm_validate_login_page_settings($this) {
 		var field_container = $this.closest(
@@ -425,7 +473,9 @@
 		// If in Form Settings tab and section_id is provided, switch to that section
 		if (tab_id === "ur-tab-login-form-settings" && section_id) {
 			var $section_nav_item = $(
-				"a[href='#" +
+				".form-settings-tab[id='" +
+					section_id +
+					"'], a[href='#" +
 					section_id +
 					"'], li#" +
 					section_id +

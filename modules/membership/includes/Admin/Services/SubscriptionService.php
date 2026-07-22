@@ -17,6 +17,7 @@ use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 use WPEverest\URMembership\Admin\Services\CouponService;
 use WPEverest\URMembership\Admin\Services\Paypal\NewPaypalService;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 
 class SubscriptionService {
 
@@ -102,7 +103,19 @@ class SubscriptionService {
 			$status      = 'pending';
 		}
 
-		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
+		// UR-4386: a ONE-TIME (paid) plan fully covered by a 100% coupon is a free order (no gateway),
+		// so activate it immediately like a free plan. Subscriptions are excluded here — they are
+		// activated by their gateway flow (e.g. the Stripe delayed-start schedule).
+		$is_full_discount_paid = false;
+		if ( 'paid' === $membership_meta['type'] && ! empty( $data['coupon_data'] ) ) {
+			$plan_amount    = floatval( $membership_meta['amount'] ?? 0 );
+			$discount_type  = $data['coupon_data']['coupon_discount_type'] ?? 'fixed';
+			$discount_value = floatval( $data['coupon_data']['coupon_discount'] ?? 0 );
+			$discount       = ( 'percent' === $discount_type ) ? ( $plan_amount * $discount_value / 100 ) : $discount_value;
+			$is_full_discount_paid = ( $plan_amount > 0 ) && ( 0.0 === round( max( 0, $plan_amount - $discount ), 2 ) );
+		}
+
+		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] || $is_full_discount_paid ) {
 			$status = 'active';
 		}
 
@@ -192,12 +205,12 @@ class SubscriptionService {
 	 *
 	 * @return array|bool[]|void
 	 */
-	public function cancel_subscription( $order, $subscription ) {
+	public function cancel_subscription( $order, $subscription, $force_cancel = false ) {
 		switch ( $order['payment_method'] ) {
 			case 'paypal':
 				$paypal_service = new NewPaypalService();
 
-				return $paypal_service->cancel_subscription( $order, $subscription );
+				return $paypal_service->cancel_subscription( $order, $subscription, $force_cancel );
 
 			case 'stripe':
 				$stripe_service = new StripeService();
@@ -343,6 +356,23 @@ class SubscriptionService {
 		$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
 		$symbol   = ur_get_currency_symbol( $currency );
 
+		// Convert the plan's base price into $currency so it matches $symbol/$total above.
+		$plan_amount = isset( $membership_metas['amount'] ) ? (float) $membership_metas['amount'] : 0;
+
+		if (
+			$currency !== get_option( 'user_registration_payment_currency', 'USD' ) &&
+			! empty( $membership_metas['local_currency'] ) &&
+			ur_string_to_bool( $membership_metas['local_currency']['is_enable'] ) &&
+			class_exists( CoreFunctions::class )
+		) {
+			$plan_zone_id = CoreFunctions::ur_get_zone_id_by_currency( $membership_metas['local_currency'], $currency );
+
+			if ( ! empty( $plan_zone_id ) ) {
+				$plan_pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $plan_zone_id );
+				$plan_amount       = CoreFunctions::ur_get_amount_after_conversion( $plan_amount, $currency, $plan_pricing_data, $membership_metas['local_currency'], $plan_zone_id );
+			}
+		}
+
 		if ( ! empty( $data['context'] ) && 'thank_you_page' == $data['context'] ) {
 			$data['payment_method'] = ! empty( $member_order['payment_method'] ) ? $member_order['payment_method'] : '';
 			$data['transaction_id'] = ! empty( $member_order['transaction_id'] ) ? $member_order['transaction_id'] : '';
@@ -409,7 +439,7 @@ class SubscriptionService {
 			'membership_plan_status'            => isset( $subscription['status'] ) ? esc_html( ucwords( $subscription['status'] ) ) : '',
 			'membership_plan_payment_date'      => ! empty( $order['created_at'] ) ? esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ) : '',
 			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
-			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $membership_metas['amount'] ?? 0, 2 ) : number_format( $membership_metas['amount'] ?? 0, 2 ) . $symbol,
+			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $plan_amount, 2 ) : number_format( $plan_amount, 2 ) . $symbol,
 			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ?? '' ) ),
 			'membership_plan_trial_amount'      => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) : number_format( ( 'on' === ( $order['trial_status'] ?? '' ) ) ? ( $order['total_amount'] ?? 0 ) : 0, 2 ) . $symbol,
 			'membership_plan_coupon_discount'   => (
@@ -504,25 +534,38 @@ class SubscriptionService {
 		}
 
 		$selected_membership_details['payment_method'] = $payment_method;
-		$membership_process                            = urm_get_membership_process( $user->ID );
 
-		$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $data['current_membership_id'] ] );
+		$lock_name = 'urm_upgrade_lock_' . (int) $user->ID;
+		$lock      = $this->subscription_repository->acquire_lock( $lock_name );
 
-		if ( $is_upgrading ) {
+		$membership_process = urm_get_membership_process( $user->ID );
+		$in_progress        = $membership_process['upgrade'][ $data['current_membership_id'] ] ?? array();
+		// A stale guard means a previous attempt died or was abandoned before completing; let it be retried.
+		$is_upgrading = ! empty( $in_progress ) && ( time() - (int) ( $in_progress['started_at'] ?? 0 ) ) < 15 * MINUTE_IN_SECONDS;
+
+		if ( false === $lock || $is_upgrading ) {
+			if ( true === $lock ) {
+				$this->subscription_repository->release_lock( $lock_name );
+			}
 			$response['response']['status']  = false;
 			$response['response']['message'] = __( 'Membership upgrade process already initiated.', 'user-registration' );
 
 			return $response;
 		}
 
-		$membership_process = urm_get_membership_process( $subscription['user_id'] );
-		$is_upgrading       = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $data['current_membership_id'] ] );
+		if ( 'free' !== $payment_method ) {
+			$membership_process['upgrade'][ $data['current_membership_id'] ] = array(
+				'from'            => $data['current_membership_id'],
+				'to'              => $data['selected_membership_id'],
+				'subscription_id' => $data['current_subscription_id'],
+				'started_at'      => time(),
+			);
 
-		if ( $is_upgrading ) {
-			$response['response']['status']  = false;
-			$response['response']['message'] = __( 'Membership upgrade process already initiated.', 'user-registration' );
+			update_user_meta( $user->ID, 'urm_membership_process', $membership_process );
+		}
 
-			return $response;
+		if ( true === $lock ) {
+			$this->subscription_repository->release_lock( $lock_name );
 		}
 
 		$current_membership_details['ID']  = $data['current_membership_id'];
@@ -530,6 +573,8 @@ class SubscriptionService {
 		$upgrade_details                   = $this->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
 
 		if ( isset( $upgrade_details['status'] ) && ! $upgrade_details['status'] ) {
+			$this->release_upgrade_guard( $user->ID, $data['current_membership_id'] );
+
 			return array(
 				'response' => $upgrade_details,
 			);
@@ -538,6 +583,14 @@ class SubscriptionService {
 		$members_data = array(
 			'membership_data' => $selected_membership_details,
 		);
+
+		// Forward the local-currency zone so the new order is charged in it (see OrderService::prepare_orders_data()).
+		if ( ! empty( $data['switched_currency'] ) && ! empty( $data['urm_zone_id'] ) ) {
+			$members_data['local_currency_details'] = array(
+				'switched_currency' => $data['switched_currency'],
+				'urm_zone_id'       => $data['urm_zone_id'],
+			);
+		}
 
 		if ( ! empty( $data['tax_rate'] ) ) {
 			$members_data['tax_data'] = array(
@@ -584,6 +637,8 @@ class SubscriptionService {
 			if ( ! $cancel_subscription['status'] ) {
 				$response['status'] = false;
 
+				$this->release_upgrade_guard( $user->ID, $data['current_membership_id'] );
+
 				return $response;
 			} else {
 				$this->subscription_repository->cancel_subscription_by_id( $current_subscription_id, false );
@@ -601,19 +656,6 @@ class SubscriptionService {
 		$ur_authorize_net_data = isset( $data['ur_authorize_net'] ) ? $data['ur_authorize_net'] : array();
 		$coupon                = isset( $data['coupon'] ) ? $data['coupon'] : '';
 
-		if ( 'free' !== $payment_method ) {
-			$membership_process = urm_get_membership_process( $user->ID );
-			if ( ! isset( $membership_process['upgrade'][ $data['current_membership_id'] ] ) ) {
-				$membership_process['upgrade'][ $data['current_membership_id'] ] = array(
-					'from'            => $data['current_membership_id'],
-					'to'              => $data['selected_membership_id'],
-					'subscription_id' => $data['current_subscription_id'],
-				);
-
-				update_user_meta( $user->ID, 'urm_membership_process', $membership_process );
-			}
-		}
-
 		$data = array(
 			'membership'             => $data['selected_membership_id'],
 			'subscription_id'        => $subscription['ID'],
@@ -628,6 +670,8 @@ class SubscriptionService {
 			'order_id'               => $order['ID'],
 			'tax_rate'               => ! empty( $data['tax_rate'] ) ? $data['tax_rate'] : '',
 			'tax_calculation_method' => ! empty( $data['tax_calculation_method'] ) ? $data['tax_calculation_method'] : '',
+			'switched_currency'      => ! empty( $data['switched_currency'] ) ? $data['switched_currency'] : '',
+			'urm_zone_id'            => ! empty( $data['urm_zone_id'] ) ? $data['urm_zone_id'] : '',
 		);
 
 		if ( ! empty( $coupon ) ) {
@@ -642,12 +686,7 @@ class SubscriptionService {
 			$response['status'] = true;
 
 		} else {
-			$membership_process = urm_get_membership_process( $user->ID );
-			if ( ! empty( $membership_process['upgrade'][ $data['current_membership_id'] ] ) ) {
-				unset( $membership_process['upgrade'][ $data['current_membership_id'] ] );
-				update_user_meta( $user->ID, 'urm_membership_process', $membership_process );
-			}
-
+			$this->release_upgrade_guard( $user->ID, $data['current_membership_id'] );
 			$this->orders_repository->delete( $order['ID'] );
 		}
 
@@ -661,6 +700,14 @@ class SubscriptionService {
 			),
 			'response' => $response,
 		);
+	}
+
+	private function release_upgrade_guard( $member_id, $current_membership_id ) {
+		$membership_process = urm_get_membership_process( $member_id );
+		if ( ! empty( $membership_process['upgrade'][ $current_membership_id ] ) ) {
+			unset( $membership_process['upgrade'][ $current_membership_id ] );
+			update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+		}
 	}
 
 	/**
@@ -1002,6 +1049,30 @@ class SubscriptionService {
 			'membership_data' => $membership_details,
 		);
 
+		// Re-derive the member's local-currency zone from their most recent order for this renewal.
+		$switched_currency = '';
+		$switched_zone_id  = null;
+
+		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( CoreFunctions::class ) ) {
+			$previous_order = $this->orders_repository->get_order_by_subscription( $member_subscription['ID'] );
+
+			if ( ! empty( $previous_order['ID'] ) ) {
+				$previous_local_currency = $this->orders_repository->get_order_meta_by_order_id_and_meta_key( $previous_order['ID'], 'local_currency' );
+				$switched_currency        = ! empty( $previous_local_currency['meta_value'] ) ? $previous_local_currency['meta_value'] : '';
+
+				if ( ! empty( $switched_currency ) && ! empty( $membership_details['local_currency'] ) && ur_string_to_bool( $membership_details['local_currency']['is_enable'] ) ) {
+					$switched_zone_id = CoreFunctions::ur_get_zone_id_by_currency( $membership_details['local_currency'], $switched_currency );
+				}
+			}
+		}
+
+		if ( ! empty( $switched_currency ) && ! empty( $switched_zone_id ) ) {
+			$members_data['local_currency_details'] = array(
+				'switched_currency' => $switched_currency,
+				'urm_zone_id'       => $switched_zone_id,
+			);
+		}
+
 		$membership_process = urm_get_membership_process( $member_id );
 		if ( $membership_process && ! in_array( $membership_id, $membership_process['renew'] ) ) {
 			$membership_process['renew'][] = $membership_id;
@@ -1027,6 +1098,11 @@ class SubscriptionService {
 			'subscription_data' => $member_subscription,
 			'order_id'          => $order['ID'],
 		);
+
+		if ( ! empty( $switched_currency ) && ! empty( $switched_zone_id ) ) {
+			$data['switched_currency'] = $switched_currency;
+			$data['urm_zone_id']       = $switched_zone_id;
+		}
 
 		$renew_response           = $payment_service->build_response( $data );
 		$renew_response['status'] = false;
@@ -1125,7 +1201,13 @@ class SubscriptionService {
 		$email_service = new EmailService();
 		foreach ( $subscriptions as $subscription ) {
 
-			$user_id      = $subscription['member_id'];
+			$user_id = $subscription['member_id'];
+
+			// Skip memberships already scheduled to cancel; no "expiring soon / renew" reminder for them.
+			if ( get_user_meta( $user_id, 'urm_pending_cancel_' . ( $subscription['subscription_id'] ?? '' ), true ) ) {
+				continue;
+			}
+
 			$checked_date = get_user_meta( $user_id, 'urm_expiring_reminder_sent_for_date', true );
 
 			if ( $checked_date === $subscription['next_billing_date'] ) {
@@ -1142,8 +1224,10 @@ class SubscriptionService {
 	 * @return void
 	 */
 	public function daily_membership_ended_check() {
-		$date          = new \DateTime( 'today' );
-		$check_date    = $date->modify( '-1 day' )->format( 'Y-m-d H:i:s' );
+		// Look back a window (not a single day) and dedupe per subscription, so a late status flip,
+		// cron-order drift, or a missed cron day can't permanently skip the ended email.
+		$lookback_days = (int) apply_filters( 'urm_ended_email_lookback_days', 7 );
+		$check_date    = ( new \DateTime( "-{$lookback_days} days" ) )->format( 'Y-m-d H:i:s' );
 		$subscriptions = $this->members_subscription_repository->get_expired_subscriptions( $check_date );
 
 		if ( empty( $subscriptions ) ) {
@@ -1151,13 +1235,12 @@ class SubscriptionService {
 		}
 		$email_service = new EmailService();
 		foreach ( $subscriptions as $subscription ) {
-			$user_id      = $subscription['member_id'];
-			$checked_date = get_user_meta( $user_id, 'urm_expired_reminder_sent_for_date', true );
-			if ( $checked_date === $subscription['expiry_date'] ) {
+			$sent_key = 'urm_ended_email_sent_' . ( $subscription['subscription_id'] ?? '' );
+			if ( get_user_meta( $subscription['member_id'], $sent_key, true ) ) {
 				continue;
 			}
 			$email_service->send_email( $subscription, 'membership_ended' );
-			update_user_meta( $subscription['member_id'], 'urm_expired_reminder_sent_for_date', $subscription['expiry_date'] );
+			update_user_meta( $subscription['member_id'], $sent_key, $subscription['expiry_date'] );
 		}
 	}
 
@@ -1202,7 +1285,9 @@ class SubscriptionService {
 				( new NewPaypalService() )->cancel_suspended_subscription( $subscription['gateway_subscription_id'] );
 			}
 			delete_user_meta( $user_id, 'urm_pending_cancel_' . $subscription_id );
-			$update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => 'expired' ) );
+			// A pending-cancel subscription reaching its date is a cancellation, not a natural expiry.
+			$new_status    = $pending_cancel_meta ? 'canceled' : 'expired';
+			$update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => $new_status ) );
 
 			if ( $update_result ) {
 				++$expired_count;
@@ -1224,13 +1309,14 @@ class SubscriptionService {
 					array( 'source' => 'urm-membership-expiration' )
 				);
 
-				// Prepare data to trigger subscription expired event.
+				// Cancellation email already went out at cancel time; the membership_ended cron only targets 'expired', so a canceled sub gets no expiry email either.
 				$payload = array(
 					'subscription_id' => $subscription_id,
 					'member_id'       => $user_id,
-					'event_type'      => 'expired',
+					'event_type'      => $pending_cancel_meta ? 'canceled' : 'expired',
 					'meta'            => array(
 						'membership_id' => $membership_id,
+						'mode'          => 'expiry',
 					),
 				);
 

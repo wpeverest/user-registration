@@ -86,6 +86,10 @@ class UR_Elementor_Widget_View_Details extends Widget_Base {
 		return $shortcode;
 	}
 
+	public function get_style_depends() {
+		return array( 'user-registration-general' );
+	}
+
 	/**
 	 * Render widget output.
 	 */

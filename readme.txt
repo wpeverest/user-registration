@@ -28,7 +28,7 @@ User Registration & Membership (URM) helps you monetize your site by creating me
 
 [👉 Get Started Today](https://wpuserregistration.com/?utm_source=wporg&utm_medium=readme&utm_campaign=urm-free)
 
-[👉 Try Our Demo](https://userregistration.demoswp.net/?utm_source=wporg&utm_medium=readme&utm_campaign=try-demo)
+[👉 Try Our Demo](https://app.instawp.io/launch?d=v2&s=user-registration-and-membership-pro)
 
 ==Complete Membership Solution==
 

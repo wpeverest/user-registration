@@ -176,6 +176,29 @@
 	color: #222;
 }
 
+.user-registration-membership-notice__container.urm-notice-error {
+	background-color: #fdf3f2;
+	border-left-color: #e2401c;
+}
+
+.urm-spinner.is-active {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-left: 6px;
+	border: 2px solid rgba(0, 0, 0, 0.2);
+	border-top-color: currentColor;
+	border-radius: 50%;
+	vertical-align: middle;
+	animation: urm-spin 0.6s linear infinite;
+}
+
+@keyframes urm-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
 .user-registration-membership-notice__red {
 	padding: 10px;
 }

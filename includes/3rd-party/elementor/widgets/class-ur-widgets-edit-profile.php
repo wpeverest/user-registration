@@ -90,6 +90,10 @@ class UR_Elementor_Widget_Edit_Profile extends Widget_Base {
 		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_edit_profile', $shortcode, $settings ) );
 		return $shortcode;
 	}
+	public function get_style_depends() {
+		return array( 'user-registration-general' );
+	}
+
 	/**
 	 * Render widget output.
 	 *
