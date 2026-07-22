@@ -1132,12 +1132,19 @@
 			.closest(".user-registration-global-settings--field")
 			.find(".error.inline")
 			.remove();
+		$this
+			.closest(".user-registration-global-settings")
+			.append('<div class="ur-spinner is-active"></div>');
 
 		$.ajax({
 			url: user_registration_settings_params.ajax_url,
 			data: data,
 			type: "POST",
 			complete: function (response) {
+				$this
+					.closest(".user-registration-global-settings")
+					.find(".ur-spinner")
+					.remove();
 				if (response.responseJSON.success === false) {
 					if (
 						$this
