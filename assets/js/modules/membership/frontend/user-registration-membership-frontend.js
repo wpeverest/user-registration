@@ -901,6 +901,38 @@
 			);
 		},
 		/**
+		 * Clear an applied coupon and recalculate totals.
+		 * Used by the cancel (X) control and when the coupon input is emptied.
+		 *
+		 * @param {Object} options Optional settings.
+		 * @param {boolean} options.skipEmptyInput Skip clearing the input when already empty.
+		 */
+		clear_applied_coupon: function (options) {
+			options = options || {};
+
+			if (!options.skipEmptyInput) {
+				$("#ur-membership-coupon").val("");
+			}
+
+			$("#coupon-validation-error")
+				.text("")
+				.removeClass("notice_blue notice_red");
+			$(".urm_apply_coupon").show();
+			$("#total-input-notice").text("");
+
+			var selected_membership = $(
+				'input[name="urm_membership"]:checked'
+			);
+
+			selected_membership
+				.removeData("ur-discount-amount")
+				.removeAttr("data-ur-discount-amount");
+
+			if (selected_membership.length) {
+				ur_membership_ajax_utils.calculate_total(selected_membership);
+			}
+		},
+		/**
 		 * Send data to the backend API.
 		 *
 		 * @param {JSON} data Data to send.
@@ -3360,17 +3392,35 @@
 			});
 			//coupon clear input
 			$(document).on("click", ".ur_clear_coupon", function () {
-				$("#ur-membership-coupon").val("");
-				$("#coupon-validation-error").text("");
-				$(".urm_apply_coupon").show();
-				$("#total-input-notice").text("");
+				ur_membership_ajax_utils.clear_applied_coupon();
+			});
+			// Clear applied coupon when the field is emptied (e.g. backspace), same as cancel (X).
+			$(document).on("input", "#ur-membership-coupon", function () {
+				if ($(this).val().trim() !== "") {
+					return;
+				}
+
 				var selected_membership = $(
 					'input[name="urm_membership"]:checked'
 				);
-				selected_membership
-					.removeData("ur-discount-amount")
-					.removeAttr("data-ur-discount-amount");
-				ur_membership_ajax_utils.calculate_total(selected_membership);
+				var hasAppliedDiscount =
+					typeof selected_membership.attr(
+						"data-ur-discount-amount"
+					) !== "undefined" ||
+					typeof selected_membership.data("ur-discount-amount") !==
+						"undefined";
+
+				if (!hasAppliedDiscount) {
+					$("#coupon-validation-error")
+						.text("")
+						.removeClass("notice_blue notice_red");
+					$(".urm_apply_coupon").show();
+					return;
+				}
+
+				ur_membership_ajax_utils.clear_applied_coupon({
+					skipEmptyInput: true
+				});
 			});
 			//redirect to membership member registration form
 			$(document).on(
