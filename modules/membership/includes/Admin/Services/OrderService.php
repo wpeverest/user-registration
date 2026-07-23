@@ -69,8 +69,7 @@ class OrderService {
 			$total      = number_format( $membership_meta['amount'], 2, '.', '' );
 		}
 
-		// Pre-coupon / pre-proration base amount, needed as the reference for manual
-		// local-currency pricing so the discount ratio can be applied to the flat local price.
+		// Pre-discount base, used as the ratio reference for manual local pricing below.
 		$base_amount = (float) $total;
 
 		$coupon_discount_amount = 0;
@@ -104,9 +103,8 @@ class OrderService {
 
 				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
 					$currency                        = $local_currency;
-					// Pass $base_amount as $full_amount so manual local pricing scales the flat
-					// price by the discount/proration ratio instead of returning the full price
-					// (e.g. a 100% coupon must convert 0 to 0, not back to the full local amount).
+					// Pass $base_amount so manual pricing scales the flat price by the discount
+					// ratio (a 100% coupon converts 0 to 0, not back to the full local price).
 					$total                           = CoreFunctions::ur_get_amount_after_conversion( $total, $currency, $pricing_data, $local_currency_data, $ur_zone_id, $base_amount );
 					$local_currency_converted_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_meta['amount'], $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 				}
