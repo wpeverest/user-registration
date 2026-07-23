@@ -116,9 +116,37 @@ class EmailService {
 		$login_option = ur_get_user_login_option( $user_id );
 		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
 
-		if ( ( ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) && ur_string_to_bool( get_option( 'user_registration_enable_successfully_registered_email', true ) ) ) ) {
+		// 'payment' (Payment before login): the welcome is whitelisted below so it can be sent, but it must
+		// only go out once payment is confirmed — never before. urm_member_registered can fire before payment
+		// settles (bank transfer fires it at submission while the order is still pending), so hold the welcome
+		// here until the member's latest order is 'completed'. Async gateways and bank approval fire it only
+		// after completion, so the whitelist + this guard deliver it exactly once, after confirmation. UR-4681.
+		if ( 'payment' === $login_option && ! $this->is_member_payment_completed( $user_id ) ) {
+			return;
+		}
+
+		if ( ( ( 'default' === $login_option || 'auto_login' === $login_option || 'payment' === $login_option || ur_string_to_bool( $email_status ) ) && ur_string_to_bool( get_option( 'user_registration_enable_successfully_registered_email', true ) ) ) ) {
 			return \UR_Emailer::user_registration_process_and_send_email( sanitize_email( $data['email'] ), $subject, $message, $headers, array(), $template_id );
 		}
+	}
+
+	/**
+	 * Whether the member's latest membership order has been paid.
+	 *
+	 * Used to hold the "payment before login" welcome email until payment is confirmed. A member with no
+	 * order row (e.g. a free plan) is treated as paid so the welcome is not withheld. UR-4681.
+	 *
+	 * @param int $user_id Member user ID.
+	 * @return bool
+	 */
+	private function is_member_payment_completed( $user_id ) {
+		$order = ( new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository() )->get_member_orders( $user_id );
+
+		if ( empty( $order ) || empty( $order['status'] ) ) {
+			return true;
+		}
+
+		return 'completed' === $order['status'];
 	}
 
 	/**

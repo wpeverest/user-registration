@@ -116,10 +116,10 @@
 				) {
 					$local_currency_details = CoreFunctions::ur_get_local_currency_details_for_membership( $membership['ID'] );
 
-					if ( ! empty( $local_currency_details['zones'] ) && is_object( $local_currency_details['zones'] ) ) {
+					if ( ! empty( $local_currency_details['zones'] ) && is_array( $local_currency_details['zones'] ) ) {
 						foreach ( $local_currency_details['zones'] as $zone_id => $zone ) {
 
-							if ( isset( $zone->enable ) && (int) $zone->enable === 1 ) {
+							if ( isset( $zone['enable'] ) && (int) $zone['enable'] === 1 ) {
 								$ur_local_currency                   = get_post_meta( $zone_id, 'ur_local_currency', true );
 								$ur_local_currencies_conversion_type = ! empty( $pricing_zone[ $zone_id ]['meta']['ur_local_currencies_conversion_type'] ) ? $pricing_zone[ $zone_id ]['meta']['ur_local_currencies_conversion_type'] : 'manual';
 
@@ -136,7 +136,7 @@
 
 								$rate = '';
 
-								if ( 'exchange' == $zone->pricing_method ) {
+								if ( 'exchange' == $zone['pricing_method'] ) {
 									$rate = ( ! empty( $pricing_zone[ $zone_id ]['meta']['ur_local_currencies_exchange_rate'] )
 										? $pricing_zone[ $zone_id ]['meta']['ur_local_currencies_exchange_rate']
 										: ''
@@ -149,9 +149,9 @@
 
 								if ( isset( $ur_local_currency[0] ) ) {
 									$enabled_zones[ $ur_local_currency[0] ] = array(
-										'pricing_method' => ! empty( $zone->pricing_method ) ? $zone->pricing_method : '',
-										'rate'           => isset( $zone->manual_price ) && '' !== $zone->manual_price
-											? number_format( (float) $zone->manual_price, 2, '.', '' )
+										'pricing_method' => ! empty( $zone['pricing_method'] ) ? $zone['pricing_method'] : '',
+										'rate'           => isset( $zone['manual_price'] ) && '' !== $zone['manual_price']
+											? number_format( (float) $zone['manual_price'], 2, '.', '' )
 											: $rate,
 										'ID'             => absint( $zone_id ),
 									);
@@ -173,13 +173,20 @@
 
 					$converted_amount = number_format( $converted_amount, 2 );
 
-					$period_text = html_entity_decode( $membership['period'] );
-					$parts       = explode( '/', $period_text );
-					$duration    = isset( $parts[1] ) ? '/ ' . trim( $parts[1] ) : '';
+					$period_text  = html_entity_decode( $membership['period'] );
+					$every_needle = ' ' . __( 'every', 'user-registration' ) . ' ';
+					$every_pos    = strpos( $period_text, $every_needle );
+					if ( false !== $every_pos ) {
+						$duration = substr( $period_text, $every_pos );
+					} else {
+						// Legacy slash format: "$200.00 / 2 Weeks".
+						$parts    = explode( '/', $period_text, 2 );
+						$duration = isset( $parts[1] ) ? ' / ' . trim( $parts[1] ) : '';
+					}
 
 					$currency_symbol = ur_get_currency_symbol( $local_currency_by_country );
 
-					$final_period = $currency_symbol . $converted_amount . ' ' . $duration;
+					$final_period = $currency_symbol . $converted_amount . $duration;
 				}
 
 				$trial_label       = '';

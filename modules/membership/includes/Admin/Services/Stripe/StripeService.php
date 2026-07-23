@@ -505,12 +505,14 @@ class StripeService {
 		$ur_zone_id     = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
 
 		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( CoreFunctions::class ) ) {
-			$currency            = $local_currency;
 			$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
 			$local_currency_data = ! empty( $payment_data['local_currency'] ) ? $payment_data['local_currency'] : array();
 
+			// Switch currency only when the membership has local currency enabled; otherwise the
+			// unconverted global amount ships in the local currency (20 USD as 20 NPR ≈ $0.13). Mirrors PayPal.
 			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
-				$amount = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+				$currency = $local_currency;
+				$amount   = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 			}
 		}
 
@@ -1376,6 +1378,37 @@ class StripeService {
 
 				if ( $is_zeroed ) {
 					$start_ts      = ( new \DateTime( "+ {$subscription_value} {$subscription_duration}" ) )->getTimestamp();
+
+					// UR-4386: the price above came from the discounted order total (0) => a $0 recurring
+					// price for local-currency / missing-price subs. Re-resolve against the FULL amount.
+					$schedule_full_amount = $plan_amount;
+					if ( $is_local_currency_subscription ) {
+						$lc_full = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency_converted_amount' );
+						if ( ! empty( $lc_full['meta_value'] ) ) {
+							$schedule_full_amount = (float) $lc_full['meta_value'];
+						}
+					}
+
+					// Pre-tax minor units; tax is added on top via the phase's default_tax_rates.
+					if ( in_array( $currency, array( 'JPY', 'KRW', 'VND', 'CLP', 'IDR' ), true ) ) {
+						$schedule_price_minor = (int) round( $schedule_full_amount );
+					} else {
+						$schedule_price_minor = (int) round( $schedule_full_amount * 100 );
+					}
+
+					// Force a fresh price for local currency (stored price_id is in the global currency).
+					$effective_price_id = $this->ensure_price_in_stripe(
+						'subscription',
+						$stripe_product_details['product_id'] ?? '',
+						$is_local_currency_subscription ? '' : $stored_price_id,
+						$schedule_price_minor,
+						$currency,
+						array(
+							'subscription_duration' => $subscription_duration,
+							'subscription_value'    => $subscription_value,
+						)
+					);
+
 					// Single open-ended phase starting one billing period in the future: nothing is
 					// charged until start_date, then the plan bills at full price indefinitely.
 					$phase         = array(

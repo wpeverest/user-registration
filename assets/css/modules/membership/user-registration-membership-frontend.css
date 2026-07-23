@@ -2907,3 +2907,11 @@ body .upgrade-plan-container #upgradable-plans .upgrade-membership-label,
   margin-top: 3px;
   line-height: 16px;
 }
+
+.ur-submit-button.urm-submit-currency-blocked, .ur-submit-button:disabled,
+.urm-update-membership-button.urm-submit-currency-blocked,
+.urm-update-membership-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

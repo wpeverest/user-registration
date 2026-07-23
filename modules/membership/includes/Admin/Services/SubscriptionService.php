@@ -115,7 +115,12 @@ class SubscriptionService {
 			$is_full_discount_paid = ( $plan_amount > 0 ) && ( 0.0 === round( max( 0, $plan_amount - $discount ), 2 ) );
 		}
 
-		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] || $is_full_discount_paid ) {
+		// Only auto-activate for admin Members UI (or free / 100% coupon). A logged-in
+		// administrator submitting a frontend/preview form must still start as pending.
+		$is_frontend = isset( $data['context'] ) && 'frontend' === $data['context'];
+		$is_admin_created = ! $is_frontend && 0 !== (int) $current_user->ID;
+
+		if ( $is_admin_created || 'free' == $membership_meta['type'] || $is_full_discount_paid ) {
 			$status = 'active';
 		}
 
@@ -581,6 +586,7 @@ class SubscriptionService {
 		}
 
 		$members_data = array(
+			'context'         => 'frontend',
 			'membership_data' => $selected_membership_details,
 		);
 
@@ -1046,6 +1052,7 @@ class SubscriptionService {
 		$membership_details['membership']     = $membership_id;
 		$order_service                        = new OrderService();
 		$members_data                         = array(
+			'context'         => 'frontend',
 			'membership_data' => $membership_details,
 		);
 

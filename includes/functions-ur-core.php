@@ -3238,8 +3238,11 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '</div>';
 		$output .= '</div>';
 
-		$wrapper_style          = '' === $checked ? ' style="display:none;"' : '';
-		$output                .= '<div class="form-row ur_conditional_logic_wrapper"' . $wrapper_style . ' data-source="' . esc_attr( $integration ) . '">';
+		// Keep the rules hidden initially when conditional logic is disabled,
+		// so the "Conditional Rules" section only shows once the toggle is on.
+		$wrapper_style = $checked ? '' : ' style="display:none;"';
+		$output       .= '<div class="form-row ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '"' . $wrapper_style . '>';
+
 		$output                .= '<label class="ur-label checkbox">' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</label>';
 		$output                .= '<div class="ur-logic"><p>' . esc_html__( 'Send data only if the following matches.', 'user-registration' ) . '</p></div>';
 		$output                .= '<div class="ur-conditional-wrapper">';
@@ -5524,7 +5527,6 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			);
 		}
 
-
 		$logger->info(
 			sprintf( '[Form #%d] Processing form submission.', $form_id ),
 			array(
@@ -5655,6 +5657,22 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		 * Default value is the get_option('users_can_register')
 		 */
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
+
+		if ( ! is_user_logged_in() && ! $users_can_register ) {
+			$logger->warning(
+				sprintf( '[Form #%d] Registration is disabled by the site administrator.', $form_id ) . "\n",
+				array(
+					'source'  => 'form-submission',
+					'form_id' => $form_id,
+				)
+			);
+
+			wp_send_json_error(
+				array(
+					'message' => __( 'Registration is currently disabled.', 'user-registration' ),
+				)
+			);
+		}
 
 		if ( is_user_logged_in() ) {
 			/**
