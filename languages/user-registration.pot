@@ -9,7 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2026-07-22T10:38:17+00:00\n"
+=======
+"POT-Creation-Date: 2026-07-22T07:33:38+00:00\n"
+>>>>>>> master
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -80,7 +84,10 @@ msgstr ""
 #: includes/class-ur-shortcodes.php:317
 #: includes/class-ur-shortcodes.php:442
 #: includes/functions-ur-core.php:5691
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "You are currently logged in as %1$1s. %2$2s"
 msgstr ""
 
@@ -1809,7 +1816,10 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:652
 #: includes/admin/functions-ur-admin.php:977
 #: includes/admin/functions-ur-admin.php:988
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Registration %s"
 msgstr ""
 
@@ -2646,7 +2656,10 @@ msgid "Free vs Pro"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:1079
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "You are currently using User Registration & Membership %1$s v%2$s"
 msgstr ""
 
@@ -2887,7 +2900,10 @@ msgstr ""
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:146
 #: modules/membership/includes/Admin/Views/subscription-edit.php:252
 #: templates/myaccount/membership.php:176
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Cancels %s"
 msgstr ""
 
@@ -3284,7 +3300,10 @@ msgstr ""
 
 #. translators: %s: Username
 #: includes/admin/settings/class-ur-members-menu.php:465
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Sorry, you are not allowed to delete the user %s."
 msgstr ""
 
@@ -3305,7 +3324,10 @@ msgstr ""
 
 #. translators: %s: Username
 #: includes/admin/settings/class-ur-members-menu.php:561
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Sorry, you are not allowed to change role for user %s."
 msgstr ""
 
@@ -3352,42 +3374,60 @@ msgstr ""
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:834
 #: includes/admin/settings/class-ur-users-menu.php:1752
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Reset password email sent %s successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:840
 #: includes/admin/settings/class-ur-users-menu.php:1758
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Roles updated for %s users successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:847
 #: includes/admin/settings/class-ur-users-menu.php:1765
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "%s approved successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:854
 #: includes/admin/settings/class-ur-users-menu.php:1772
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Verification email sent to %s successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:861
 #: includes/admin/settings/class-ur-users-menu.php:1779
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "%s denied successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:868
 #: includes/admin/settings/class-ur-users-menu.php:1786
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "%s deleted successfully."
 msgstr ""
 
@@ -3401,13 +3441,19 @@ msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:883
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "%s enabled successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:886
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "%s disabled successfully."
 msgstr ""
 
@@ -3808,7 +3854,10 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-registration-login.php:302
 #: includes/admin/settings/class-ur-settings-registration-login.php:324
 #: includes/admin/settings/class-ur-settings-registration-login.php:373
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Get site key from google %1$s reCAPTCHA %2$s."
 msgstr ""
 
@@ -3824,7 +3873,10 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-registration-login.php:313
 #: includes/admin/settings/class-ur-settings-registration-login.php:336
 #: includes/admin/settings/class-ur-settings-registration-login.php:385
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Get secret key from google %1$s reCAPTCHA %2$s."
 msgstr ""
 
@@ -3877,7 +3929,10 @@ msgstr ""
 #. translators: %1$s - hCaptcha docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:357
 #: includes/admin/settings/class-ur-settings-registration-login.php:425
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Get site key from %1$s hCaptcha %2$s."
 msgstr ""
 
@@ -3889,7 +3944,10 @@ msgstr ""
 #. translators: %1$s - hCaptcha docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:369
 #: includes/admin/settings/class-ur-settings-registration-login.php:437
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Get secret key from %1$s hCaptcha %2$s."
 msgstr ""
 
@@ -3901,7 +3959,10 @@ msgstr ""
 #. translators: %1$s - Cloudflare Turnstile docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:396
 #: includes/admin/settings/class-ur-settings-registration-login.php:464
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Get site key from %1$s Cloudflare Turnstile %2$s."
 msgstr ""
 
@@ -3913,7 +3974,10 @@ msgstr ""
 #. translators: %1$s - Cloudflare Turnstile docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:409
 #: includes/admin/settings/class-ur-settings-registration-login.php:477
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Get secret key from %1$s Cloudflare Turnstile %2$s."
 msgstr ""
 
@@ -3928,7 +3992,10 @@ msgstr ""
 #. translators: %1$s - Cloudflare Turnstile docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:421
 #: includes/admin/settings/class-ur-settings-registration-login.php:489
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Please select theme mode for your Cloudflare Turnstile. <a href=\"%1$s\" rel=\"noreferrer noopener\" target=\"_blank\">Learn More</a>"
 msgstr ""
 
@@ -4846,13 +4913,19 @@ msgstr ""
 
 #. translators: %s: Author's display name.
 #: includes/admin/settings/class-ur-users-list-table.php:415
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "View details for %s"
 msgstr ""
 
 #. translators: 1: User's first name, 2: Last name.
 #: includes/admin/settings/class-ur-users-list-table.php:523
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgctxt "Display name based on first name and last name"
 msgid "%1$s %2$s"
 msgstr ""
@@ -5529,7 +5602,10 @@ msgstr ""
 
 #. translators: %s: required reset password link.
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:66
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Reset Password email not saved: the reset link <code>%s</code> is required and cannot be removed or modified."
 msgstr ""
 
@@ -6433,7 +6509,10 @@ msgstr ""
 
 #. translators: %s - Integration tab url
 #: includes/class-ur-ajax.php:1613
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Seems like you haven't added the reCAPTCHA Keys. <a href=\"%s\" >Add Now.</a>"
 msgstr ""
 
@@ -6490,7 +6569,10 @@ msgid "Insufficient Data"
 msgstr ""
 
 #: includes/class-ur-ajax.php:2088
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Payment Setting for %s has been saved successfully."
 msgstr ""
 
@@ -6503,7 +6585,10 @@ msgid "Captcha settings saved successfully."
 msgstr ""
 
 #: includes/class-ur-ajax.php:2126
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Captcha Setting for %s has been saved successfully."
 msgstr ""
 
@@ -6523,7 +6608,10 @@ msgid "Invalid payment method."
 msgstr ""
 
 #: includes/class-ur-ajax.php:2223
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Payment method settings for %s have been reset successfully."
 msgstr ""
 
@@ -6532,7 +6620,10 @@ msgid "Invalid captcha type."
 msgstr ""
 
 #: includes/class-ur-ajax.php:2311
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Captcha keys for %s have been reset successfully."
 msgstr ""
 
@@ -6555,7 +6646,10 @@ msgstr ""
 
 #: includes/class-ur-ajax.php:2399
 #: modules/membership/includes/AJAX.php:2855
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "%1$s is not currently supported by %2$s."
 msgstr ""
 
@@ -6770,7 +6864,10 @@ msgstr ""
 #: includes/class-ur-email-confirmation.php:453
 #: includes/class-ur-user-approval.php:259
 #: includes/class-ur-user-approval.php:303
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s"
 msgstr ""
 
@@ -7615,7 +7712,11 @@ msgid "Reactivate Membership"
 msgstr ""
 
 #: includes/class-ur-smart-tags.php:771
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:411
+=======
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:406
+>>>>>>> master
 #: modules/membership/includes/Admin/Views/Partials/membership-create-basics-tab.php:99
 #: chunks/welcome.js:280
 msgid "One-Time Payment"
@@ -7795,7 +7896,10 @@ msgstr ""
 
 #. translators: %s - Redirect URL.
 #: includes/class-ur-user-approval.php:361
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Your account is still pending payment. Process the payment by clicking on this: <a id=\"payment-link\" href=\"%s\">link</a>"
 msgstr ""
 
@@ -9908,7 +10012,10 @@ msgstr ""
 
 #. translators: 1: Link tag open 2:: Link content 3:: Link tag close
 #: includes/functions-ur-core.php:1714
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Enable %1$s %2$s Captcha %3$s Support"
 msgstr ""
 
@@ -9966,7 +10073,10 @@ msgstr ""
 
 #. translators: %s: Class
 #: includes/functions-ur-core.php:2046
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "The class <code>%s</code> provided by user_registration_logging_class filter must implement <code>UR_Logger_Interface</code>."
 msgstr ""
 
@@ -9998,7 +10108,10 @@ msgstr ""
 #: includes/functions-ur-core.php:3456
 #: includes/functions-ur-core.php:3461
 #: includes/functions-ur-core.php:3474
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "<strong>Activation error:</strong> %1$s"
 msgstr ""
 
@@ -10146,21 +10259,30 @@ msgstr ""
 #. translators: %s: License Plan Name.
 #: includes/functions-ur-core.php:4893
 #: includes/functions-ur-core.php:5039
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "You have been subscribed to %s plan. Please upgrade to higher plans to use this feature."
 msgstr ""
 
 #. translators: %s: Addon Name.
 #: includes/functions-ur-core.php:4917
 #: includes/functions-ur-core.php:5058
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Please %1$s %2$s addon to use this feature."
 msgstr ""
 
 #. translators: %s: Addon Name.
 #: includes/functions-ur-core.php:4926
 #: includes/functions-ur-core.php:5068
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "%s Addon"
 msgstr ""
 
@@ -10186,7 +10308,10 @@ msgid "Please activate the SMS Integration feature to use this functionality."
 msgstr ""
 
 #: includes/functions-ur-core.php:5042
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "To unlock this setting, consider upgrading to %s"
 msgstr ""
 
@@ -10207,7 +10332,10 @@ msgstr ""
 
 #: includes/functions-ur-core.php:5134
 #: includes/functions-ur-core.php:9160
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "The password you entered for the %label% %email% is incorrect."
 msgstr ""
 
@@ -10305,7 +10433,10 @@ msgid "plugin has not been properly configured. For more"
 msgstr ""
 
 #: includes/functions-ur-core.php:8140
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Please check the `ur_mail_logs` log under <a target=\"_blank\" href=\"%s\">Status Log</a> section."
 msgstr ""
 
@@ -10544,7 +10675,10 @@ msgid "Enable Captcha"
 msgstr ""
 
 #: includes/functions-ur-core.php:9290
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Enable %1$s %2$s Captcha %3$s support"
 msgstr ""
 
@@ -10636,7 +10770,10 @@ msgstr ""
 
 #. translators: %s: link to Login Page setting
 #: includes/functions-ur-core.php:9568
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "It is recommended to use the same page as the global login page that is set %s. This ensures no conflicts. The above page selector may be merged and removed in further updates."
 msgstr ""
 
@@ -11485,7 +11622,10 @@ msgstr ""
 
 #: includes/Functions/CoreFunctions.php:958
 #: includes/Functions/CoreFunctions.php:1051
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "%s Rule"
 msgstr ""
 
@@ -12680,7 +12820,11 @@ msgstr ""
 
 #: modules/membership/includes/Admin.php:442
 #: modules/membership/includes/Admin.php:460
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:535
+=======
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:530
+>>>>>>> master
 msgid "Invalid payment method for this membership."
 msgstr ""
 
@@ -13316,7 +13460,10 @@ msgid "Payment Approved!"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:340
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Hi <b><i>%1$s</i></b>, Your payment of amount %2$s for the membership: <b>%3$s</b> has been approved by admin."
 msgstr ""
 
@@ -13359,17 +13506,26 @@ msgid "Congratulations! Registration completed"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:654
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Hi, %s"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:655
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Account created successfully under membership <b><i>%s</i></b>."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:656
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "<b>Username: </b><i>%1$s</i> <b>Password: </b><i>%2$s</i> "
 msgstr ""
 
@@ -13423,13 +13579,19 @@ msgstr ""
 
 #. translators: 1: membership name, 2: date string
 #: modules/membership/includes/Admin/Services/MembershipService.php:878
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "You already have a scheduled upgrade to the <b>%1$s</b> plan at the end of your current subscription cycle (<i><b>%2$s</b></i>). <br> If you'd like to cancel this upcoming change, please proceed from my account page."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/MembershipService.php:908
 #: modules/membership/includes/Admin/Services/MembershipService.php:974
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again."
 msgstr ""
 
@@ -13493,6 +13655,7 @@ msgstr ""
 msgid "Invalid membership type (Free)."
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/MembersService.php:183
 msgid "Membership is required for team pricing."
 msgstr ""
@@ -13507,6 +13670,21 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Services/MembersService.php:210
 #, php-format
+=======
+#: modules/membership/includes/Admin/Services/MembersService.php:182
+msgid "Membership is required for team pricing."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/MembersService.php:189
+msgid "Invalid team pricing selection."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/MembersService.php:196
+msgid "Invalid tier selection."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/MembersService.php:209
+>>>>>>> master
 msgid "Number of seats must be between %1$d and %2$d for the selected tier."
 msgstr ""
 
@@ -13572,7 +13750,10 @@ msgstr ""
 #: modules/membership/includes/Admin/Services/Paypal/NewPaypalService.php:2601
 #: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1549
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:3004
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Subscription status is %s and cannot be retried"
 msgstr ""
 
@@ -13812,6 +13993,7 @@ msgstr ""
 #: modules/membership/includes/Admin/Services/Stripe/StripeService.php:3224
 #: modules/membership/includes/AJAX.php:248
 msgid "Stripe does not support yearly subscription periods greater than 3 years."
+<<<<<<< HEAD
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:469
@@ -13875,6 +14057,65 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:1524
 #, php-format
+=======
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:464
+msgid "Renew Now"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:501
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:830
+msgid "You do not have permission to upgrade this subscription."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:551
+msgid "Membership upgrade process already initiated."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:799
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:821
+msgid "Sorry, you cannot upgrade to the selected plan."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:840
+msgid "Sorry, You’re not eligible for another trial. Please choose a regular membership plan."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:909
+msgid "Sorry, multiple memberships are not allowed with your selected plan."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:919
+msgid "Scheduled Subscriptions job started for the date: (%s)"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:926
+msgid "No delayed orders found."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:972
+msgid "Subscription updated for %s"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:1083
+msgid "Membership renew process already initiated."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:1262
+msgid "No memberships found to expire for date: %s"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:1327
+msgid "Failed to expire membership for user %1$s (ID: %2$d) - Subscription ID: %3$d"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:1499
+msgid "Error fetching missed events for Stripe: %s"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/SubscriptionService.php:1517
+>>>>>>> master
 msgid "Error fetching missed events for PayPal: %s"
 msgstr ""
 
@@ -14277,7 +14518,10 @@ msgstr ""
 
 #. translators: %d Subscription id
 #: modules/membership/includes/Admin/Views/subscription-edit.php:160
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Edit Subscription #%d"
 msgstr ""
 
@@ -14293,19 +14537,28 @@ msgstr ""
 
 #. translators: %1$d: number of days, %2$s: formatted date
 #: modules/membership/includes/Admin/Views/subscription-edit.php:210
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "%1$d days remaining. Converts to paid on %2$s"
 msgstr ""
 
 #. translators: %s: formatted date
 #: modules/membership/includes/Admin/Views/subscription-edit.php:217
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Trial ended. Converts to paid on %s"
 msgstr ""
 
 #. translators: %d Subscription id
 #: modules/membership/includes/Admin/Views/subscription-edit.php:235
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Subscription #%d"
 msgstr ""
 
@@ -14346,7 +14599,10 @@ msgstr ""
 
 #. translators: %1$s: tier range
 #: modules/membership/includes/Admin/Views/subscription-edit.php:369
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Per seat (tier %1$s)"
 msgstr ""
 
@@ -14622,13 +14878,19 @@ msgstr ""
 
 #. translators: %s: Current user display name
 #: modules/membership/includes/AJAX.php:1314
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Recurring subscription created by %s"
 msgstr ""
 
 #. translators: %s: Current user display name
 #: modules/membership/includes/AJAX.php:1319
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "One-time membership created by %s"
 msgstr ""
 
@@ -15204,7 +15466,10 @@ msgid "Please choose another payment method or currency."
 msgstr ""
 
 #: modules/membership/includes/Frontend/Frontend.php:268
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "No payment gateway is currently available for %s. Please choose a different currency to continue."
 msgstr ""
 
@@ -15250,7 +15515,10 @@ msgid "Coupon Discount"
 msgstr ""
 
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:126
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Per seat (tier %s)"
 msgstr ""
 
@@ -15595,7 +15863,10 @@ msgstr ""
 
 #. translators: %s: support email
 #: modules/payment-history/Orders.php:675
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Questions? Contact us at %s"
 msgstr ""
 
@@ -15647,13 +15918,19 @@ msgstr ""
 
 #. translators: %d Order id
 #: modules/payment-history/Views/payment-edit.php:178
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Edit Payment #%d"
 msgstr ""
 
 #. translators: %d Order id
 #: modules/payment-history/Views/payment-edit.php:211
+<<<<<<< HEAD
 #, php-format
+=======
+>>>>>>> master
 msgid "Payment #%d"
 msgstr ""
 
@@ -16693,24 +16970,37 @@ msgstr ""
 
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
+<<<<<<< HEAD
 #: src/content-restriction/components/inputs/FormFieldValueInput.js:34
 msgid "Select value"
-msgstr ""
-
-#: chunks/content-access-rules.js:1
-#: chunks/dashboard.js:1
+=======
 #: src/content-restriction/components/rules/URFormFieldCondition.js:136
 msgid "is not"
+>>>>>>> master
 msgstr ""
 
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
+<<<<<<< HEAD
+#: src/content-restriction/components/rules/URFormFieldCondition.js:136
+msgid "is not"
+=======
+#: src/content-restriction/components/rules/URFormFieldCondition.js:137
+msgid "empty"
+>>>>>>> master
+msgstr ""
+
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+<<<<<<< HEAD
 #: src/content-restriction/components/rules/URFormFieldCondition.js:137
 msgid "empty"
 msgstr ""
 
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
+=======
+>>>>>>> master
 #: src/content-restriction/components/rules/URFormFieldCondition.js:138
 msgid "not empty"
 msgstr ""
@@ -18113,6 +18403,10 @@ msgstr ""
 
 #: chunks/welcome.js:280
 msgid "Next"
+msgstr ""
+
+#: src/content-restriction/components/inputs/FormFieldValueInput.js:34
+msgid "Select value"
 msgstr ""
 
 #: src/dashboard/components/Header/Header.js:148
