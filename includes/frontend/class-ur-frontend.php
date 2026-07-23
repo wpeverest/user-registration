@@ -734,6 +734,26 @@ class UR_Frontend {
 						$data['period'] = $amount;
 					}
 
+					// Override the plan's base price with what the member actually paid (may differ under Local Currency), mirroring the admin member view.
+					if ( 'free' !== ( $membership['post_content']['type'] ?? '' ) ) {
+						$period_order = $orders_repository->get_order_by_subscription( $membership['subscription_id'] );
+
+						if ( ! empty( $period_order['ID'] ) ) {
+							$local_currency_meta  = $orders_repository->get_order_meta_by_order_id_and_meta_key( $period_order['ID'], 'local_currency' );
+							$order_currency       = ! empty( $local_currency_meta['meta_value'] ) ? $local_currency_meta['meta_value'] : $currency;
+							$order_symbol         = ur_get_currency_symbol( $order_currency );
+							$order_amount_display = $order_symbol . number_format( (float) $period_order['total_amount'], 2 );
+
+							$duration_suffix = '';
+							$every_pos       = strpos( $data['period'], ' every ' );
+							if ( false !== $every_pos ) {
+								$duration_suffix = substr( $data['period'], $every_pos );
+							}
+
+							$data['period'] = $order_amount_display . $duration_suffix;
+						}
+					}
+
 					$subscription_last_order = $orders_repository->get_order_by_subscription( $membership['subscription_id'] );
 					if ( ! empty( $subscription_last_order ) && $subscription_last_order['status'] === 'completed' ) {
 						$data = apply_filters( 'user_registration_membership_add_team_data_if_exists', $data, $subscription_last_order );
