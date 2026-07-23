@@ -665,12 +665,19 @@ if ( ! class_exists( 'Admin' ) ) :
 				// Free and bank settle synchronously at registration — no gateway redirect/webhook fires
 				// urm_member_registered later — so fire it now (drives send_registration_emails and the
 				// deferred after_register replay). Async gateways fire it on payment completion. UR-4681.
-				if ( in_array( $data['payment_method'], array( 'free', 'bank' ), true ) ) {
+				//
+				// Exception: bank + 'payment' (payment before login). The bank order is still pending until an
+				// admin confirms it, so the welcome must wait for that confirmation — defer it like an async
+				// gateway. approve_payment() replays urm_member_registered once the order is marked 'completed',
+				// so the welcome is delivered exactly once, after payment, instead of prematurely at submission.
+				$defer_bank_payment = ( 'bank' === $data['payment_method'] && 'payment' === ur_get_user_login_option( $member_id ) );
+
+				if ( in_array( $data['payment_method'], array( 'free', 'bank' ), true ) && ! $defer_bank_payment ) {
 					do_action( 'urm_member_registered', $data, $member_id );
 				} else {
-					// Paid async path skips user_registration_after_register_user_action (payment_process=true),
-					// so the core login-gate setters never run before payment. Seed the gate now; the emails
-					// follow on completion via maybe_fire_deferred_after_register(). UR-4681.
+					// Paid async path (and deferred bank+payment) skips user_registration_after_register_user_action
+					// (payment_process=true), so the core login-gate setters never run before payment. Seed the gate
+					// now; the emails follow on completion via maybe_fire_deferred_after_register(). UR-4681.
 					$this->set_login_gate_for_pending_member( $member_id );
 					update_user_meta( $member_id, 'ur_membership_registration_data', $data );
 				}
