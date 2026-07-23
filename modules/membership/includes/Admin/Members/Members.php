@@ -317,8 +317,7 @@ if ( ! class_exists( 'Members' ) ) {
 
 				$membership_price_details = apply_filters( 'build_membership_list_frontend', array( (array) $member_membership_details ) )[0];
 
-				// UR-4386: Local Currency period shows the full recurring price via the stored converted
-				// amount, not total_amount (a coupon discounts the first order, e.g. 100% => 0).
+				// Override the plan's base price with what the member actually paid (may differ under Local Currency).
 				if ( ! empty( $member_subscription['ID'] ) && 'free' !== ( $member_membership_details['meta_value']['type'] ?? '' ) ) {
 					$orders_repository = new OrdersRepository();
 					$member_order      = $orders_repository->get_order_by_subscription( $member_subscription['ID'] );
