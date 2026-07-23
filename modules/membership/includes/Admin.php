@@ -187,7 +187,83 @@ if ( ! class_exists( 'Admin' ) ) :
 
 			add_action( 'user_registration_single_user_details_content', array( $this, 'render_user_membership_details' ), 10, 2 );
 
+			add_action( 'urm_member_registered', array( $this, 'maybe_fire_deferred_after_register' ), 5, 2 );
 			add_action( 'urm_member_registered', array( $this, 'send_registration_emails' ), 10, 2 );
+			add_action( 'user_registration_check_token_complete', array( $this, 'send_membership_welcome_on_email_confirmation' ), 10, 2 );
+		}
+
+		/**
+		 * Send the membership welcome email after the user confirms their email address.
+		 *
+		 * For membership forms the welcome email comes from EmailService (the core UR_Emailer welcome is
+		 * `! is_membership_form`-gated). With the `email_confirmation` login option that EmailService
+		 * welcome runs via urm_member_registered at registration, while `ur_confirm_email` is still 0, so
+		 * its "email confirmed" gate skips it — and nothing re-sends it once the user verifies. Send it here,
+		 * now that the email is confirmed. `admin_approval_after_email_confirmation` is excluded: those
+		 * members still await admin approval, so their welcome belongs to the approval step. UR-4681.
+		 *
+		 * @param int  $user_id             Confirmed user ID.
+		 * @param bool $user_reg_successful Whether the token check succeeded.
+		 */
+		public function send_membership_welcome_on_email_confirmation( $user_id, $user_reg_successful ) {
+			if ( empty( $user_reg_successful ) || 'email_confirmation' !== ur_get_user_login_option( $user_id ) ) {
+				return;
+			}
+
+			// Only membership forms need this — non-membership welcome is sent by core UR_Emailer on confirmation.
+			if ( ! check_membership_field_in_form( ur_get_form_id_by_userid( $user_id ) ) ) {
+				return;
+			}
+
+			// Send once.
+			if ( ur_string_to_bool( get_user_meta( $user_id, 'ur_membership_confirm_welcome_sent', true ) ) ) {
+				return;
+			}
+			update_user_meta( $user_id, 'ur_membership_confirm_welcome_sent', true );
+
+			$user = get_userdata( $user_id );
+			if ( ! $user ) {
+				return;
+			}
+
+			( new EmailService() )->send_email(
+				array(
+					'member_id' => $user_id,
+					'email'     => $user->user_email,
+				),
+				'user_register_user'
+			);
+		}
+
+		/**
+		 * Replay the deferred `user_registration_after_register_user_action` hook once paid payment
+		 * is confirmed, so paid memberships get the approval / email-confirmation emails (and the
+		 * confirmation token) that free memberships fire at submission — the hook is suppressed for
+		 * paid (see set_payment_process_for_membership()). set_login_gate_for_pending_member() only
+		 * seeds the login gate; this sends the emails. Welcome / admin emails are `! is_membership_form`-
+		 * gated in UR_Emailer, so this does not duplicate them. UR-4681.
+		 *
+		 * @param array $data      Member data prepared during registration.
+		 * @param int   $member_id Newly created WP user ID.
+		 */
+		public function maybe_fire_deferred_after_register( $data, $member_id ) {
+			$deferred = get_user_meta( $member_id, 'ur_deferred_after_register_args', true );
+
+			if ( empty( $deferred ) || ! is_array( $deferred ) || ! isset( $deferred['form_data'] ) ) {
+				return;
+			}
+
+			// Fire once — gateways may signal completion more than once (e.g. webhook + return URL).
+			if ( ur_string_to_bool( get_user_meta( $member_id, 'ur_deferred_after_register_fired', true ) ) ) {
+				return;
+			}
+			update_user_meta( $member_id, 'ur_deferred_after_register_fired', true );
+
+			$form_id = isset( $deferred['form_id'] ) ? absint( $deferred['form_id'] ) : ur_get_form_id_by_userid( $member_id );
+
+			do_action( 'user_registration_after_register_user_action', $deferred['form_data'], $form_id, $member_id );
+
+			delete_user_meta( $member_id, 'ur_deferred_after_register_args' );
 		}
 
 		/**
@@ -281,6 +357,18 @@ if ( ! class_exists( 'Admin' ) ) :
 			}
 
 			$success_params['payment_process'] = true;
+
+			// payment_process suppresses the core after_register hook for paid memberships; stash its
+			// args so maybe_fire_deferred_after_register() can replay it once payment completes. UR-4681.
+			update_user_meta(
+				$user_id,
+				'ur_deferred_after_register_args',
+				array(
+					'form_data' => $valid_form_data,
+					'form_id'   => $form_id,
+				)
+			);
+
 			return $success_params;
 		}
 
@@ -579,11 +667,22 @@ if ( ! class_exists( 'Admin' ) ) :
 					}
 				}
 
-				if ( 'free' === $data['payment_method'] ) {
+				// Free and bank settle synchronously at registration — no gateway redirect/webhook fires
+				// urm_member_registered later — so fire it now (drives send_registration_emails and the
+				// deferred after_register replay). Async gateways fire it on payment completion. UR-4681.
+				//
+				// Exception: bank + 'payment' (payment before login). The bank order is still pending until an
+				// admin confirms it, so the welcome must wait for that confirmation — defer it like an async
+				// gateway. approve_payment() replays urm_member_registered once the order is marked 'completed',
+				// so the welcome is delivered exactly once, after payment, instead of prematurely at submission.
+				$defer_bank_payment = ( 'bank' === $data['payment_method'] && 'payment' === ur_get_user_login_option( $member_id ) );
+
+				if ( in_array( $data['payment_method'], array( 'free', 'bank' ), true ) && ! $defer_bank_payment ) {
 					do_action( 'urm_member_registered', $data, $member_id );
 				} else {
-					// Paid path skips user_registration_after_register_user_action (payment_process=true),
-					// so the core login-gate setters never run. Seed the gate here. UR-4681.
+					// Paid async path (and deferred bank+payment) skips user_registration_after_register_user_action
+					// (payment_process=true), so the core login-gate setters never run before payment. Seed the gate
+					// now; the emails follow on completion via maybe_fire_deferred_after_register(). UR-4681.
 					$this->set_login_gate_for_pending_member( $member_id );
 					update_user_meta( $member_id, 'ur_membership_registration_data', $data );
 				}

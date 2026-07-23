@@ -221,7 +221,7 @@ class UR_Frontend {
 		} elseif ( 'internal-page' === $redirect_option ) {
 			$page_id = get_option( 'user_registration_login_options_after_login_redirect_page', 0 );
 			if ( 0 !== absint( $page_id ) ) {
-				$redirect = get_permalink( $page_id );
+				$redirect = get_permalink( ur_get_translated_page_id( $page_id ) );
 			} else {
 				ur_get_logger()->info( sprintf( 'Invalid page ID %s set for after login redirection.', $page_id ), array( 'source' => 'user-registration' ) );
 			}
@@ -252,7 +252,7 @@ class UR_Frontend {
 		} elseif ( 'internal-page' === $redirect_option ) {
 			$page_id = get_option( 'user_registration_login_options_after_logout_redirect_page', 0 );
 			if ( 0 !== absint( $page_id ) ) {
-				$redirect = get_permalink( $page_id );
+				$redirect = get_permalink( ur_get_translated_page_id( $page_id ) );
 			} else {
 				ur_get_logger()->info( sprintf( 'Invalid page ID %s set for after logout redirection.', $page_id ), array( 'source' => 'user-registration' ) );
 			}
@@ -369,7 +369,11 @@ class UR_Frontend {
 
 		$ur_payment_subscription = get_user_meta( $user_id, 'ur_payment_subscription', true );
 
-		if ( 'membership' === $user_source || $payment_method ) {
+		$user = wp_get_current_user();
+
+		$is_admin = in_array( 'administrator', (array) $user->roles, true );
+
+		if ( 'membership' === $user_source || $payment_method || $is_admin ) {
 			add_action( 'wp_loaded', array( $this, 'ur_add_payments_tab_endpoint' ) );
 			add_filter( 'user_registration_account_menu_items', array( $this, 'urm_payment_history_tab' ), 10, 1 );
 			add_action(
@@ -440,6 +444,16 @@ class UR_Frontend {
 	 * Membership tab content.
 	 */
 	public function user_registration_urm_payments_tab_endpoint_content() {
+
+		$user = wp_get_current_user();
+
+		$is_admin = in_array( 'administrator', (array) $user->roles, true );
+
+		if ( $is_admin ) {
+			echo esc_html_e( 'You do not have any payment records', 'user-registration' );
+			return;
+		}
+
 		do_action( 'user_registration_before_payments_tab_contents' );
 
 		$layout = get_option( 'user_registration_my_account_layout', 'vertical' );
@@ -718,6 +732,26 @@ class UR_Frontend {
 						$data['period'] = 'subscription' === $membership['post_content']['type'] ? $amount . ' every ' . $duration_val . ' ' . ucfirst( $membership['billing_cycle'] ) : $amount;
 					} else {
 						$data['period'] = $amount;
+					}
+
+					// Override the plan's base price with what the member actually paid (may differ under Local Currency), mirroring the admin member view.
+					if ( 'free' !== ( $membership['post_content']['type'] ?? '' ) ) {
+						$period_order = $orders_repository->get_order_by_subscription( $membership['subscription_id'] );
+
+						if ( ! empty( $period_order['ID'] ) ) {
+							$local_currency_meta  = $orders_repository->get_order_meta_by_order_id_and_meta_key( $period_order['ID'], 'local_currency' );
+							$order_currency       = ! empty( $local_currency_meta['meta_value'] ) ? $local_currency_meta['meta_value'] : $currency;
+							$order_symbol         = ur_get_currency_symbol( $order_currency );
+							$order_amount_display = $order_symbol . number_format( (float) $period_order['total_amount'], 2 );
+
+							$duration_suffix = '';
+							$every_pos       = strpos( $data['period'], ' every ' );
+							if ( false !== $every_pos ) {
+								$duration_suffix = substr( $data['period'], $every_pos );
+							}
+
+							$data['period'] = $order_amount_display . $duration_suffix;
+						}
 					}
 
 					$subscription_last_order = $orders_repository->get_order_by_subscription( $membership['subscription_id'] );

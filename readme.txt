@@ -4,7 +4,7 @@ Tags: membership, subscription, content restriction, user profile, user registra
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 5.2.5
+Stable tag: 5.2.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -251,6 +251,41 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 9. Subscription Management
 
 == Changelog ==
+
+= 5.2.6    - 22/07/2026 =
+* Enhance  - Compatibility with divi 5.
+* Enhance  - Allow 100% discount coupons on memberships.
+* Enhance  - Redirect hint links to Enable Custom Redirect setting.
+* Fix      - Local currency bugs.
+* Fix      - Double Charge on Upgrade.
+* Fix      - Updated authorize net card design.
+* Fix      - Remove the payment tabs from admin side.
+* Fix      - Cancel previous subscription on upgrade.
+* Fix      - Added spinner on Membership Reactivation.
+* Fix      - Validation for lost password n Pages Setting.
+* Fix      - Delete User button not working on member view page.
+* Fix      - User Registration css loading when elementor active.
+* Fix      - Prevent privilege escalation in login settings save.
+* Fix      - Reset password smart tag validation in email content.
+* Fix      - Checkbox values not appearing when exporting members.
+* Fix      - Payment Before Login not enforced for pending payments.
+* Fix      - Can not create new subscription in safari from admin menu.
+* Fix      - Membership cancellation failures now show a clear message.
+* Fix      - Field options not displayed when configuring content rules.
+* Fix      - Content restriction being applied for inactive memberships.
+* Fix      - Membership field blank in form builder with selected group.
+* Fix      - Store actual PayPal transaction id instead of subscription id.
+* Fix      - Stripe registration now displays the configured success message.
+* Fix      - Conditional Logic on Payments not working for normal registration.
+* Fix      - Fatal error when saving Stripe plan with yearly billing over 3 years.
+* Fix      - Upgrade prompt for Plus-gated membership group toggles on lower plans.
+* Fix      - {{user_ip_address}} smart tag returned empty for IPv6 visitor addresses.
+* Fix      - Block shortcode injection via smart tags in Content Restriction messages.
+* Fix      - Stripe membership "Payment Confirmed" email sent before payment completes.
+* Fix      - Membership emails not using saved custom content for preview and delivery.
+* Fix      - Local Currency pricing zones not saving when added from the payment settings.
+* Fix      - Misleading "missing membership field" notice on registration page with no memberships field.
+* Fix      - Redirects and lost-password/2FA links now use the correct translated page on multilingual sites.
 
 = 5.2.5    - 08/07/2026 =
 * Enhance  - Defer expiry to period end.

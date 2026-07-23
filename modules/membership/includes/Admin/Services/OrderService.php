@@ -21,7 +21,9 @@ class OrderService {
 	public function prepare_orders_data( $data, $member_id, $subscription, $upgrade_details = null, $is_renewal = false ) {
 
 		$current_user = wp_get_current_user();
-		$is_admin     = ( ! empty( $current_user->roles ) && in_array( 'administrator', (array) $current_user->roles, true ) );
+		// Only treat as admin-created when the order is built from the admin Members UI.
+		$is_frontend = isset( $data['context'] ) && 'frontend' === $data['context'];
+		$is_admin    = ! $is_frontend && ( ! empty( $current_user->roles ) && in_array( 'administrator', (array) $current_user->roles, true ) );
 
 		$membership = get_post( $data['membership_data']['membership'], ARRAY_A );
 
@@ -67,6 +69,9 @@ class OrderService {
 			$total      = number_format( $membership_meta['amount'], 2, '.', '' );
 		}
 
+		// Pre-discount base, used as the ratio reference for manual local pricing below.
+		$base_amount = (float) $total;
+
 		$coupon_discount_amount = 0;
 
 		if ( isset( $membership_meta['trial_status'] ) && 'on' == $membership_meta['trial_status'] ) {
@@ -98,7 +103,9 @@ class OrderService {
 
 				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
 					$currency                        = $local_currency;
-					$total                           = CoreFunctions::ur_get_amount_after_conversion( $total, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+					// Pass $base_amount so manual pricing scales the flat price by the discount
+					// ratio (a 100% coupon converts 0 to 0, not back to the full local price).
+					$total                           = CoreFunctions::ur_get_amount_after_conversion( $total, $currency, $pricing_data, $local_currency_data, $ur_zone_id, $base_amount );
 					$local_currency_converted_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_meta['amount'], $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 				}
 			}

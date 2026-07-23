@@ -2088,3 +2088,13 @@ body,
 	margin-top: 3px;
 	line-height: 16px;
 }
+
+.ur-submit-button,
+.urm-update-membership-button {
+	&.urm-submit-currency-blocked,
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+		pointer-events: none;
+	}
+}

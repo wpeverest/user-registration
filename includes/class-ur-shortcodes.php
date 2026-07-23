@@ -276,6 +276,10 @@ class UR_Shortcodes {
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 		$check_user_state   = isset( $atts['userState'] ) && 'logged_in' === $atts['userState'];
 
+		if ( ! is_user_logged_in() && ! $check_user_state && ! $users_can_register ) {
+			return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . __( 'Registration is currently disabled.', 'user-registration' ) . '</p>' );
+		}
+
 		if ( is_user_logged_in() || $check_user_state ) {
 
 			$is_membership_module_active = ur_check_module_activation( 'membership' );
