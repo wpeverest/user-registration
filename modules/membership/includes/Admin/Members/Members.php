@@ -317,24 +317,37 @@ if ( ! class_exists( 'Members' ) ) {
 
 				$membership_price_details = apply_filters( 'build_membership_list_frontend', array( (array) $member_membership_details ) )[0];
 
-				// Override the plan's base price with what the member actually paid (may differ under Local Currency).
+				// UR-4386: Local Currency period shows the full recurring price via the stored converted
+				// amount, not total_amount (a coupon discounts the first order, e.g. 100% => 0).
 				if ( ! empty( $member_subscription['ID'] ) && 'free' !== ( $member_membership_details['meta_value']['type'] ?? '' ) ) {
 					$orders_repository = new OrdersRepository();
 					$member_order      = $orders_repository->get_order_by_subscription( $member_subscription['ID'] );
 
 					if ( ! empty( $member_order['ID'] ) ) {
 						$local_currency_meta = $orders_repository->get_order_meta_by_order_id_and_meta_key( $member_order['ID'], 'local_currency' );
-						$order_currency       = ! empty( $local_currency_meta['meta_value'] ) ? $local_currency_meta['meta_value'] : get_option( 'user_registration_payment_currency', 'USD' );
-						$order_symbol         = ur_get_currency_symbol( $order_currency );
-						$order_amount_display = $order_symbol . number_format( (float) $member_order['total_amount'], 2 );
+						$lc_full_meta        = $orders_repository->get_order_meta_by_order_id_and_meta_key( $member_order['ID'], 'local_currency_converted_amount' );
 
-						$duration_suffix = '';
-						$every_pos        = strpos( $membership_price_details['period'], ' ' . __( 'every', 'user-registration' ) . ' ' );
-						if ( false !== $every_pos ) {
-							$duration_suffix = substr( $membership_price_details['period'], $every_pos );
+						if ( ! empty( $local_currency_meta['meta_value'] ) && ! empty( $lc_full_meta['meta_value'] ) ) {
+							$recurring_amount = (float) $lc_full_meta['meta_value'];
+
+							// Re-apply exclusive tax (converted amount is pre-tax).
+							$tax_order_meta = $orders_repository->get_order_meta_by_order_id_and_meta_key( $member_order['ID'], 'tax_data' );
+							$tax_data       = ! empty( $tax_order_meta['meta_value'] ) ? json_decode( $tax_order_meta['meta_value'], true ) : array();
+							if ( ! empty( $tax_data['tax_rate'] ) && ! empty( $tax_data['tax_calculation_method'] ) ) {
+								$recurring_amount += round( $recurring_amount * (float) $tax_data['tax_rate'] / 100, 2 );
+							}
+
+							$order_symbol         = ur_get_currency_symbol( $local_currency_meta['meta_value'] );
+							$order_amount_display = $order_symbol . number_format( $recurring_amount, 2 );
+
+							$duration_suffix = '';
+							$every_pos        = strpos( $membership_price_details['period'], ' ' . __( 'every', 'user-registration' ) . ' ' );
+							if ( false !== $every_pos ) {
+								$duration_suffix = substr( $membership_price_details['period'], $every_pos );
+							}
+
+							$membership_price_details['period'] = $order_amount_display . $duration_suffix;
 						}
-
-						$membership_price_details['period'] = $order_amount_display . $duration_suffix;
 					}
 				}
 			}
