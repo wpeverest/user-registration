@@ -945,6 +945,9 @@ class AJAX {
 
 		if ( $update_stripe_order['status'] ) {
 
+			// UR-4710: payment confirmed — apply any deferred membership role for this in-session member.
+			( new MembersService() )->maybe_grant_pending_role( $member_id );
+
 			if ( $is_upgrading ) {
 				$next_subscription     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
 				$previous_subscription = get_user_meta( $member_id, 'urm_previous_subscription_data', true );
@@ -1902,7 +1905,7 @@ class AJAX {
 		}
 
 		if ( ! empty( $_POST['tax_rate'] ) ) {
-			$data['tax_rate']               = sanitize_text_field( $_POST['tax_rate'] );
+			$data['tax_rate']               = max( 0, floatval( $_POST['tax_rate'] ) );
 			$data['tax_calculation_method'] = ! empty( $_POST['tax_calculation_method'] ) ? sanitize_text_field( $_POST['tax_calculation_method'] ) : '1';
 		}
 
@@ -2179,7 +2182,7 @@ class AJAX {
 		}
 
 		if ( ! empty( $_POST['tax_rate'] ) ) {
-			$data['tax_rate']               = sanitize_text_field( $_POST['tax_rate'] );
+			$data['tax_rate']               = max( 0, floatval( $_POST['tax_rate'] ) );
 			$data['tax_calculation_method'] = ! empty( $_POST['tax_calculation_method'] ) ? sanitize_text_field( $_POST['tax_calculation_method'] ) : '1';
 		}
 

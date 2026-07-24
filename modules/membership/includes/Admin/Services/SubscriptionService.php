@@ -633,6 +633,7 @@ class SubscriptionService {
 		$members_data['is_upgrade']    = true;
 		$members_data['previous_role'] = ! empty( $current_membership_details['role'] ) ? sanitize_text_field( $current_membership_details['role'] ) : '';
 
+		$members_data['defer_role'] = 'free' !== $payment_method;
 		$member_service = new MembersService();
 		$member_service->update_user_meta( $members_data, $user->ID );
 

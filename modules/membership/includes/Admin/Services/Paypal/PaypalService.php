@@ -850,8 +850,8 @@ class PaypalService {
 			// skip the checks that run below for later payments.
 			if ( empty( $receiver_email ) || ! is_email( $receiver_email )
 				|| strtolower( $data['business'] ?? '' ) !== strtolower( trim( $receiver_email ) )
-				|| empty( $amount )
-				|| number_format( (float) ( $data['mc_gross'] ?? 0 ), 2 ) !== number_format( (float) $amount, 2 ) ) {
+				|| empty( $latest_order['total_amount'] )
+				|| number_format( (float) ( $data['mc_gross'] ?? 0 ), 2 ) !== number_format( (float) $latest_order['total_amount'], 2 ) ) {
 				PaymentGatewayLogging::log_transaction_failure(
 					'paypal',
 					esc_html__( 'Payment failed: receiver email or amount mismatch', 'user-registration' ),
@@ -889,8 +889,8 @@ class PaypalService {
 		// Verify receiver's email address.
 		if ( empty( $receiver_email ) || ! is_email( $receiver_email ) || strtolower( $data['business'] ) !== strtolower( trim( $receiver_email ) ) ) {
 			$error = esc_html__( 'Payment failed: recipient emails do not match', 'user-registration' );
-		} elseif ( empty( $amount ) || number_format( (float) $data['mc_gross'] ) !== number_format( (float) $amount ) ) {
-			// Verify amount.
+		} elseif ( empty( $latest_order['total_amount'] ) || number_format( (float) ( $data['mc_gross'] ?? 0 ), 2 ) !== number_format( (float) $latest_order['total_amount'], 2 ) ) {
+			// Verify amount against the server-stored order total, not the client-influenced base amount.
 			$error = esc_html__( 'Payment failed: payment amounts do not match ', 'user-registration' );
 		}
 
