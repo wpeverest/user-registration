@@ -51,13 +51,55 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		 * Filter to provide sections submenu for scaffold settings.
 		 */
 		public function get_sections_callback( $sections ) {
-			$sections['general']        = __( 'General', 'user-registration' );
-			$sections['to-admin']       = __( 'To Admin', 'user-registration' );
-			$sections['to-user']        = __( 'To User', 'user-registration' );
-			$sections['templates']      = __( 'Templates', 'user-registration' );
-			$sections['custom-email']   = __( 'Custom Email', 'user-registration' );
-			$sections['health-checkup'] = __( 'Health Checkup', 'user-registration' );
+			$sections['general']  = __( 'General', 'user-registration' );
+			$sections['to-admin'] = __( 'To Admin', 'user-registration' );
+			$sections['to-user']  = __( 'To User', 'user-registration' );
+
+			// Health Checkup works with no license at all, so don't bury it
+			// below Templates/Custom Email when those are locked behind an
+			// inactive or free license — put it ahead of them instead.
+			if ( self::has_active_email_premium_plan() ) {
+				$sections['templates']      = __( 'Templates', 'user-registration' );
+				$sections['custom-email']   = __( 'Custom Email', 'user-registration' );
+				$sections['health-checkup'] = __( 'Health Checkup', 'user-registration' );
+			} else {
+				$sections['health-checkup'] = __( 'Health Checkup', 'user-registration' );
+				$sections['templates']      = __( 'Templates', 'user-registration' );
+				$sections['custom-email']   = __( 'Custom Email', 'user-registration' );
+			}
+
 			return $sections;
+		}
+
+		/**
+		 * Whether the current license unlocks the premium email sections
+		 * (Templates, Custom Email) — mirrors the same check
+		 * UR_Settings_Page::output_sections() uses to decide whether to
+		 * show the premium lock icon next to those sections.
+		 *
+		 * @return bool
+		 */
+		private static function has_active_email_premium_plan() {
+			$premium_tabs = ur_premium_settings_tab();
+			$premium_tab  = isset( $premium_tabs['email']['templates'] ) ? $premium_tabs['email']['templates'] : array();
+
+			if ( empty( $premium_tab['plan'] ) ) {
+				return true;
+			}
+
+			$license_data = ur_get_license_plan();
+			$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
+			$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+
+			if ( in_array( $license_plan, $premium_tab['plan'], true ) ) {
+				return true;
+			}
+
+			if ( ! empty( $premium_tab['plugin'] ) && file_exists( WP_PLUGIN_DIR . '/' . $premium_tab['plugin'] ) && is_plugin_active( $premium_tab['plugin'] . '/' . $premium_tab['plugin'] . '.php' ) ) {
+				return true;
+			}
+
+			return false;
 		}
 
 		/**
