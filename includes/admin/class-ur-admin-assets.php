@@ -540,6 +540,45 @@ class UR_Admin_Assets {
 			);
 		}
 
+		// Email health checkup.
+		$current_section = ! empty( $_REQUEST['section'] ) ? sanitize_title( wp_unslash( $_REQUEST['section'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification
+		if ( 'user-registration-membership_page_user-registration-settings' === $screen_id && 'email' === $current_tab && 'health-checkup' === $current_section ) {
+			$asset_file = UR()->plugin_path() . '/chunks/health-checkup.asset.php';
+			$asset      = file_exists( $asset_file ) ? require $asset_file : array(
+				'dependencies' => array( 'wp-element', 'wp-i18n' ),
+				'version'      => UR_VERSION,
+			);
+
+			wp_enqueue_script(
+				'ur-email-health-checkup',
+				UR()->plugin_url() . '/chunks/health-checkup.js',
+				$asset['dependencies'],
+				$asset['version'],
+				true
+			);
+
+			if ( file_exists( UR()->plugin_path() . '/chunks/health-checkup.css' ) ) {
+				wp_enqueue_style( 'ur-email-health-checkup', UR()->plugin_url() . '/chunks/health-checkup.css', array(), $asset['version'] );
+			}
+
+			wp_localize_script(
+				'ur-email-health-checkup',
+				'_UR_EMAIL_HEALTH_',
+				array(
+					'ajaxURL'       => admin_url( 'admin-ajax.php' ),
+					'scanNonce'     => wp_create_nonce( 'email_health_scan_nonce' ),
+					'confirmNonce'  => wp_create_nonce( 'email_health_confirm_nonce' ),
+					'testEmailNonce' => wp_create_nonce( 'test_email_nonce' ),
+					'adminEmail'    => get_option( 'admin_email' ),
+					'siteUrl'       => home_url(),
+					'wpVersion'     => get_bloginfo( 'version' ),
+					'phpVersion'    => PHP_VERSION,
+					'pluginVersion' => defined( 'UR_VERSION' ) ? UR_VERSION : '',
+					'smartSmtpUrl'  => admin_url( 'admin.php?page=smart-smtp#/primary-connection' ),
+				)
+			);
+		}
+
 		wp_register_script( 'ur-live-user-notice', UR()->plugin_url() . '/assets/js/admin/live-user-notice' . $suffix . '.js', array( 'jquery', 'heartbeat' ), UR_VERSION, false );
 		wp_enqueue_script( 'ur-live-user-notice' );
 

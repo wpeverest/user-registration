@@ -60,6 +60,9 @@ class UR_AJAX {
 			'profile_pic_upload'                   => true,
 			'ajax_login_submit'                    => true,
 			'send_test_email'                      => false,
+			'email_health_scan'                    => false,
+			'email_health_confirm_delivery'         => false,
+			'email_health_install_smartsmtp'        => false,
 			'create_form'                          => false,
 			'rated'                                => false,
 			'dashboard_widget'                     => false,
@@ -582,6 +585,129 @@ class UR_AJAX {
 			$error_message = apply_filters( 'user_registration_email_send_failed_message', '' );
 			wp_send_json_error( array( 'message' => sprintf( __( 'Test email was unsuccessful!. %s', 'user-registration' ), $error_message ) ) );
 		}
+	}
+
+	/**
+	 * Run the email health checkup scan and return the results.
+	 *
+	 * @since 6.x
+	 */
+	public static function email_health_scan() {
+		check_ajax_referer( 'email_health_scan_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to run this check.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
+
+		if ( ! class_exists( 'UR_Email_Health_Checker' ) ) {
+			require_once UR_ABSPATH . 'includes/class-ur-email-health-checker.php';
+		}
+
+		wp_send_json_success( UR_Email_Health_Checker::run_checks() );
+	}
+
+	/**
+	 * Record the admin's self-reported test-email delivery outcome.
+	 *
+	 * @since 6.x
+	 */
+	public static function email_health_confirm_delivery() {
+		check_ajax_referer( 'email_health_confirm_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to record this result.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
+
+		$result = isset( $_POST['result'] ) ? sanitize_key( wp_unslash( $_POST['result'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+
+		if ( ! in_array( $result, array( 'arrived', 'spam', 'none' ), true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid delivery result.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
+
+		update_option(
+			'user_registration_email_health_last_result',
+			array(
+				'result' => $result,
+				'time'   => time(),
+			),
+			false
+		);
+
+		wp_send_json_success();
+	}
+
+	/**
+	 * Install (if needed) and activate SmartSMTP, then hand back the URL
+	 * to its Primary Connection screen so the admin can pick Gmail there.
+	 *
+	 * @since 6.x
+	 */
+	public static function email_health_install_smartsmtp() {
+		check_ajax_referer( 'email_health_scan_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to install plugins.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
+
+		$plugin_file = 'smart-smtp/smart-smtp.php';
+
+		if ( ! file_exists( WP_PLUGIN_DIR . '/' . $plugin_file ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-ajax-upgrader-skin.php';
+
+			$api = plugins_api(
+				'plugin_information',
+				array(
+					'slug'   => 'smart-smtp',
+					'fields' => array( 'sections' => false ),
+				)
+			);
+
+			if ( is_wp_error( $api ) ) {
+				wp_send_json_error( array( 'message' => $api->get_error_message() ) );
+				wp_die( -1 );
+			}
+
+			$skin     = new WP_Ajax_Upgrader_Skin();
+			$upgrader = new Plugin_Upgrader( $skin );
+			$result   = $upgrader->install( $api->download_link );
+
+			if ( is_wp_error( $result ) || ! $result ) {
+				$error_messages = $skin->get_error_messages();
+				wp_send_json_error(
+					array(
+						'message' => $error_messages ? $error_messages : __( 'Could not install SmartSMTP. Please install it manually from Plugins → Add New.', 'user-registration' ),
+					)
+				);
+				wp_die( -1 );
+			}
+
+			$installed_file = $upgrader->plugin_info();
+			if ( $installed_file ) {
+				$plugin_file = $installed_file;
+			}
+		}
+
+		if ( ! is_plugin_active( $plugin_file ) ) {
+			$activated = activate_plugin( $plugin_file );
+
+			if ( is_wp_error( $activated ) ) {
+				wp_send_json_error( array( 'message' => $activated->get_error_message() ) );
+				wp_die( -1 );
+			}
+		}
+
+		wp_send_json_success(
+			array(
+				'redirect' => admin_url( 'admin.php?page=smart-smtp#/primary-connection' ),
+			)
+		);
 	}
 
 	/**

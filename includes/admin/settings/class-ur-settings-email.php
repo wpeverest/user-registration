@@ -51,11 +51,12 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		 * Filter to provide sections submenu for scaffold settings.
 		 */
 		public function get_sections_callback( $sections ) {
-			$sections['general']      = __( 'General', 'user-registration' );
-			$sections['to-admin']     = __( 'To Admin', 'user-registration' );
-			$sections['to-user']      = __( 'To User', 'user-registration' );
-			$sections['templates']    = __( 'Templates', 'user-registration' );
-			$sections['custom-email'] = __( 'Custom Email', 'user-registration' );
+			$sections['general']        = __( 'General', 'user-registration' );
+			$sections['to-admin']       = __( 'To Admin', 'user-registration' );
+			$sections['to-user']        = __( 'To User', 'user-registration' );
+			$sections['templates']      = __( 'Templates', 'user-registration' );
+			$sections['custom-email']   = __( 'Custom Email', 'user-registration' );
+			$sections['health-checkup'] = __( 'Health Checkup', 'user-registration' );
 			return $sections;
 		}
 
@@ -228,12 +229,17 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 									'id'      => 'user_registration_email_test',
 									'type'    => 'link',
 									'align'   => 'end',
-									'css'     => 'min-width:90px;',
+									'css'     => 'min-width:90px;color:#475bb2;border-color:#475bb2;',
 									'buttons' => array(
 										array(
 											'title' => __( 'Send Email', 'user-registration' ),
 											'href'  => '#',
 											'class' => 'button user_registration_send_email_test',
+										),
+										array(
+											'title' => __( 'Health Checkup', 'user-registration' ),
+											'href'  => esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=health-checkup' ) ),
+											'class' => 'button',
 										),
 									),
 								),
@@ -448,6 +454,9 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			}
 
 			switch ( $current_section ) {
+				case 'health-checkup':
+					echo '<div id="ur-email-health-checkup-root"></div>';
+					return;
 				case 'to-admin':
 					$settings = $this->get_to_admin_email_list_section();
 					break;
