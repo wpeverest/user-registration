@@ -1,13 +1,13 @@
 import { Box, Button, Flex } from "@chakra-ui/react";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import { useEffect, useRef, useState } from "react";
 import { FiAlertTriangle, FiCheck, FiTool } from "react-icons/fi";
-import { HealthCheck, runScan, SmartSmtpStatus } from "../../api/healthCheckupApi";
+import { HealthCheck, runScan, SmartSmtpStatus, SmtpPluginInfo } from "../../api/healthCheckupApi";
 import RichText from "../RichText";
 import Text from "../Text";
 
 interface ScanStepProps {
-	onNext: (checks: HealthCheck[], smartSmtpStatus: SmartSmtpStatus) => void;
+	onNext: (checks: HealthCheck[], smartSmtpStatus: SmartSmtpStatus, smtpPlugin: SmtpPluginInfo | null) => void;
 	onOpenReport: (checks: HealthCheck[]) => void;
 }
 
@@ -74,6 +74,7 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 	const [barWidth, setBarWidth] = useState("3%");
 	const [checks, setChecks] = useState<HealthCheck[]>([]);
 	const [smartSmtpStatus, setSmartSmtpStatus] = useState<SmartSmtpStatus>("not_installed");
+	const [smtpPlugin, setSmtpPlugin] = useState<SmtpPluginInfo | null>(null);
 	const [error, setError] = useState("");
 	const hasStarted = useRef(false);
 
@@ -89,6 +90,7 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 			.then((result) => {
 				setChecks(result.checks);
 				setSmartSmtpStatus(result.smartsmtp_status);
+				setSmtpPlugin(result.smtp_plugin);
 				setIsLoading(false);
 			})
 			.catch((err: Error) => {
@@ -111,15 +113,21 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 			>
 				{__("Step 1 · Auto-scan", "user-registration")}
 			</Text>
-			<Text as="h2" fontSize="25px" fontWeight="700" mb="10px" letterSpacing="-0.015em">
+			<Text as="h2" fontSize="21px" fontWeight="600" mb="10px" letterSpacing="-0.01em" color="gray.800">
 				{isLoading
 					? __("Checking your settings…", "user-registration")
 					: __("Here's what we found", "user-registration")}
 			</Text>
-			<Text fontSize="14.5px" lineHeight="1.62" color="gray.600" mb="22px" maxW="60ch">
+			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px" maxW="60ch">
 				{isLoading
 					? __("Reading your current configuration. This only takes a moment.", "user-registration")
-					: __("Ten checks run against your current email settings.", "user-registration")}
+					: checks.length > 0
+						? sprintf(
+							/* translators: %d: number of checks run */
+							__("%d checks run against your current email settings.", "user-registration"),
+							checks.length
+						)
+						: ""}
 			</Text>
 
 			{isLoading && (
@@ -185,7 +193,7 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 					</Flex>
 
 					<Flex gap="10px" mt="20px" wrap="wrap">
-						<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={() => onNext(checks, smartSmtpStatus)}>
+						<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={() => onNext(checks, smartSmtpStatus, smtpPlugin)}>
 							{__("Next: test delivery", "user-registration")}
 						</Button>
 						<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={() => onOpenReport(checks)}>

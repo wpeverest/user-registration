@@ -35,10 +35,12 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepPro
 
 		requestAnimationFrame(() => requestAnimationFrame(() => setBarWidth("100%")));
 
-		sendTestEmail(adminEmail).finally(() => {
-			setIsSending(false);
-			onSent();
-		});
+		sendTestEmail(adminEmail)
+			.catch(() => undefined)
+			.finally(() => {
+				setIsSending(false);
+				onSent();
+			});
 	}, [adminEmail, alreadySent, onSent]);
 
 	const choices: Choice[] = [
@@ -88,12 +90,12 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepPro
 			>
 				{__("Step 2 · The real test", "user-registration")}
 			</Text>
-			<Text as="h2" fontSize="25px" fontWeight="700" mb="10px" letterSpacing="-0.015em">
+			<Text as="h2" fontSize="21px" fontWeight="600" mb="10px" letterSpacing="-0.01em" color="gray.800">
 				{isSending
 					? __("Sending your test email…", "user-registration")
 					: __("Did the test email actually arrive?", "user-registration")}
 			</Text>
-			<Text fontSize="14.5px" lineHeight="1.62" color="gray.600" mb="22px" maxW="60ch">
+			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px" maxW="60ch">
 				{isSending ? (
 					__("Hang tight — this only takes a second.", "user-registration")
 				) : (

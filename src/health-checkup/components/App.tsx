@@ -1,10 +1,11 @@
 import { Box, ChakraProvider, extendTheme } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	confirmDelivery,
 	DeliveryOutcome,
 	HealthCheck,
 	SmartSmtpStatus,
+	SmtpPluginInfo,
 } from "../api/healthCheckupApi";
 import { buildReport } from "../utils/buildReport";
 import ReportModal from "./ReportModal";
@@ -14,14 +15,10 @@ import ResultStep, { ResultVariant } from "./steps/ResultStep";
 import ScanStep from "./steps/ScanStep";
 import TestDeliveryStep from "./steps/TestDeliveryStep";
 
-// Match wp-admin's own font stack (wp-admin/css/common.css `body`) rather
-// than loading a separate webfont — this page should look like the rest of
-// Settings, not like a visually distinct import.
+// Match wp-admin's own font stack instead of loading a separate webfont.
 const SANS_STACK = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif";
 const MONO_STACK = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
 
-// Semantic colors matched to the approved design artifact's muted tones —
-// Chakra's stock green/red/yellow are far more saturated than the artifact.
 const theme = extendTheme({
 	fonts: {
 		heading: SANS_STACK,
@@ -29,17 +26,18 @@ const theme = extendTheme({
 		mono: MONO_STACK,
 	},
 	colors: {
+		// Matches the setup wizard's brand palette (src/welcome/components/App.tsx).
 		primary: {
-			50: "#eef0fd",
-			100: "#d6d8f7",
-			200: "#b3b6ef",
-			300: "#9089ff",
-			400: "#6a5fe0",
-			500: "#4338ca",
-			600: "#3730a3",
-			700: "#2c2682",
-			800: "#211d61",
-			900: "#161340",
+			50: "#eef1ff",
+			100: "#d4daff",
+			200: "#b8c1ff",
+			300: "#9ba8ff",
+			400: "#7e8fff",
+			500: "#475BB2",
+			600: "#3A4B9C",
+			700: "#2f3da6",
+			800: "#252f89",
+			900: "#1c246d",
 		},
 		green: {
 			50: "#e7f7ef",
@@ -58,6 +56,13 @@ const theme = extendTheme({
 			700: "#8a5a11",
 		},
 	},
+	components: {
+		Button: {
+			baseStyle: {
+				borderRadius: "4px",
+			},
+		},
+	},
 });
 
 const RESULT_VARIANTS: Record<DeliveryOutcome, ResultVariant> = {
@@ -72,11 +77,25 @@ const App = () => {
 	const [deliveryOutcome, setDeliveryOutcome] = useState<DeliveryOutcome | null>(null);
 	const [isReportOpen, setIsReportOpen] = useState(false);
 	const [reportText, setReportText] = useState("");
-	// Tracks whether the test email for the *current* checkup run has
-	// already gone out, so navigating "Back" from a result screen re-shows
-	// the same choices instead of firing off another test email.
 	const [testEmailSent, setTestEmailSent] = useState(false);
 	const [smartSmtpStatus, setSmartSmtpStatus] = useState<SmartSmtpStatus>("not_installed");
+	const [smtpPlugin, setSmtpPlugin] = useState<SmtpPluginInfo | null>(null);
+	const rootRef = useRef<HTMLDivElement>(null);
+
+	// Prevents Chrome's scroll-anchoring from re-adjusting scroll after a step change.
+	useEffect(() => {
+		document.documentElement.style.overflowAnchor = "none";
+	}, []);
+
+	// Scroll each step to its own top, except on first mount where it's already correct.
+	const isFirstRender = useRef(true);
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+		rootRef.current?.scrollIntoView({ block: "start" });
+	}, [step]);
 
 	const startNewRun = () => {
 		setTestEmailSent(false);
@@ -103,9 +122,10 @@ const App = () => {
 			case "scan":
 				return (
 					<ScanStep
-						onNext={(scannedChecks, scannedSmartSmtpStatus) => {
+						onNext={(scannedChecks, scannedSmartSmtpStatus, scannedSmtpPlugin) => {
 							setChecks(scannedChecks);
 							setSmartSmtpStatus(scannedSmartSmtpStatus);
+							setSmtpPlugin(scannedSmtpPlugin);
 							setStep("test");
 						}}
 						onOpenReport={(scannedChecks) => {
@@ -131,11 +151,13 @@ const App = () => {
 				return (
 					<ResultStep
 						variant={variant}
+						checks={checks}
 						onRunAgain={startNewRun}
 						onDone={() => setStep("intro")}
 						onBack={() => setStep("test")}
 						onOpenReport={openReport}
 						smartSmtpStatus={smartSmtpStatus}
+						smtpPlugin={smtpPlugin}
 					/>
 				);
 			}
@@ -146,14 +168,21 @@ const App = () => {
 
 	return (
 		<ChakraProvider theme={theme}>
-			<Box maxW="780px" mx="auto">
-				<Box fontSize="17px" fontWeight="700" letterSpacing="-0.01em" px="2px" mb="14px">
+			<Box ref={rootRef} maxW="780px" mx="auto" sx={{ overflowAnchor: "none" }}>
+				<Box fontSize="21px" fontWeight="600" letterSpacing="-0.01em" color="gray.800" px="2px" mb="26px">
 					Email Delivery Checkup
 				</Box>
 
 				<Stepper step={step} />
 
-				<Box bg="white" border="1px solid" borderColor="gray.200" borderRadius="14px" boxShadow="sm" p="30px 32px 32px">
+				<Box
+					bg="white"
+					border="1px solid"
+					borderColor="#F4F4F4"
+					borderRadius="8px"
+					boxShadow="0 10px 15px -3px rgba(0, 0, 0, 0.06)"
+					p="24px 32px 32px"
+				>
 					{renderStep()}
 				</Box>
 			</Box>

@@ -14,12 +14,12 @@ const IntroStep = ({ onStart }: { onStart: () => void }) => (
 		>
 			{__("Takes about 2 minutes", "user-registration")}
 		</Text>
-		<Text as="h2" fontSize="25px" fontWeight="700" mb="10px" letterSpacing="-0.015em">
+		<Text as="h2" fontSize="21px" fontWeight="600" mb="10px" letterSpacing="-0.01em" color="gray.800">
 			{__("Quick email delivery checkup", "user-registration")}
 		</Text>
-		<Text fontSize="14.5px" lineHeight="1.62" color="gray.600" mb="22px" maxW="60ch">
+		<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px" maxW="60ch">
 			{__(
-				"We'll scan your current settings for common issues, then ask you to confirm one thing we can't check on our own — whether the test email actually arrives.",
+				"It'll scan email settings for common issues, send a real test email, and ask you to confirm whether it actually arrives — that's the one thing no automated check can verify on its own.",
 				"user-registration"
 			)}
 		</Text>
@@ -31,7 +31,7 @@ const IntroStep = ({ onStart }: { onStart: () => void }) => (
 			fontWeight="600"
 			onClick={onStart}
 		>
-			{__("Scan my settings", "user-registration")}
+			{__("Scan Email Settings", "user-registration")}
 		</Button>
 	</Box>
 );

@@ -69,13 +69,12 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				'checks'           => $checks,
 				'issue_count'      => $issue_count,
 				'smartsmtp_status' => self::smartsmtp_status(),
+				'smtp_plugin'      => self::detected_smtp_plugin(),
 			);
 		}
 
 		/**
-		 * Whether SmartSMTP (this vendor's own bundled SMTP plugin) is
-		 * installed and/or active, so the UI can offer to install/activate
-		 * it directly as the preferred fix when no SMTP is configured.
+		 * Whether SmartSMTP is installed and/or active.
 		 *
 		 * @return string One of 'active', 'inactive', 'not_installed'.
 		 */
@@ -91,6 +90,67 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			}
 
 			return 'not_installed';
+		}
+
+		/**
+		 * Common third-party SMTP plugins, used to name the active one in messaging.
+		 *
+		 * @var array
+		 */
+		private static $known_smtp_plugins = array(
+			'smart-smtp/smart-smtp.php'     => 'SmartSMTP',
+			'wp-mail-smtp/wp_mail_smtp.php' => 'WP Mail SMTP',
+			'fluent-smtp/fluent-smtp.php'   => 'FluentSMTP',
+			'post-smtp/postman-smtp.php'    => 'Post SMTP',
+			'easy-wp-smtp/easy-wp-smtp.php' => 'Easy WP SMTP',
+			'wp-smtp/wp-smtp.php'           => 'WP SMTP',
+		);
+
+		/**
+		 * Which known SMTP plugin (if any) is currently active.
+		 *
+		 * @return array|null { slug, name, is_smartsmtp } or null if none of
+		 *                     the known plugins are active.
+		 */
+		public static function detected_smtp_plugin() {
+			if ( ! function_exists( 'is_plugin_active' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
+			foreach ( self::$known_smtp_plugins as $plugin_file => $name ) {
+				if ( is_plugin_active( $plugin_file ) ) {
+					return array(
+						'slug'         => $plugin_file,
+						'name'         => $name,
+						'is_smartsmtp' => 'smart-smtp/smart-smtp.php' === $plugin_file,
+					);
+				}
+			}
+
+			return null;
+		}
+
+		/**
+		 * A known SMTP plugin that's installed but not currently active.
+		 *
+		 * @return array|null { slug, name, is_smartsmtp } or null.
+		 */
+		private static function installed_inactive_smtp_plugin() {
+			if ( ! function_exists( 'is_plugin_active' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
+			foreach ( self::$known_smtp_plugins as $plugin_file => $name ) {
+				if ( ! is_plugin_active( $plugin_file ) && file_exists( WP_PLUGIN_DIR . '/' . $plugin_file ) ) {
+					return array(
+						'slug'         => $plugin_file,
+						'name'         => $name,
+						'is_smartsmtp' => 'smart-smtp/smart-smtp.php' === $plugin_file,
+					);
+				}
+			}
+
+			return null;
 		}
 
 		/**
@@ -217,14 +277,10 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		}
 
 		private static function check_smtp_configured() {
-			// Most SMTP plugins (WP Mail SMTP, FluentSMTP, Post SMTP, ...)
-			// configure the mailer by hooking `phpmailer_init`. Merely
-			// checking whether *anything* is hooked is unreliable — e.g.
-			// WooCommerce hooks it on every site to set multipart bodies,
-			// with no relation to SMTP at all — so build a real (but never
-			// sent) PHPMailer instance, fire the hook, and check whether
-			// something actually switched the transport away from PHP's
-			// mail().
+			// Fire a real (unsent) PHPMailer instance through `phpmailer_init` and
+			// check if the transport switched away from PHP's mail() — checking
+			// whether anything merely hooked the filter is unreliable (e.g.
+			// WooCommerce hooks it too, unrelated to SMTP).
 			$is_smtp = false;
 
 			if ( ! class_exists( 'PHPMailer\PHPMailer\PHPMailer' ) ) {
@@ -242,17 +298,11 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				$is_smtp = true;
 			}
 
-			// Some SMTP plugins instead replace the pluggable `wp_mail()`
-			// function outright, never touching `phpmailer_init` at all —
-			// detect that by checking whether `wp_mail()` is still
-			// WordPress core's own definition. Note this only catches an
-			// override that actually took effect: a regular (non-mu,
-			// non-network) plugin using the classic
-			// `if ( ! function_exists( 'wp_mail' ) )` guard loads *after*
-			// core's own pluggable.php has already claimed the function
-			// name, so such an override silently never activates — which
-			// is itself a real "mail isn't actually going through SMTP"
-			// condition worth surfacing as an issue.
+			// Some plugins replace wp_mail() directly instead of hooking
+			// phpmailer_init — check if it's still core's own definition. A
+			// plugin's `if ( ! function_exists( 'wp_mail' ) )` guard loading
+			// after core's pluggable.php can silently lose that race, which
+			// itself means SMTP isn't really active.
 			if ( ! $is_smtp && function_exists( 'wp_mail' ) && class_exists( 'ReflectionFunction' ) ) {
 				try {
 					$reflection = new ReflectionFunction( 'wp_mail' );
@@ -263,16 +313,48 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				}
 			}
 
+			if ( $is_smtp ) {
+				return array(
+					'key'     => 'smtp_configured',
+					'title'   => __( 'SMTP is configured', 'user-registration' ),
+					'status'  => 'pass',
+					'message' => __( 'An SMTP connection is configured for outgoing mail.', 'user-registration' ),
+					'fix'     => '',
+				);
+			}
+
+			// "No SMTP plugin found" should only fire if that's actually true —
+			// an installed-but-inactive plugin is a much smaller fix.
+			$inactive_plugin = self::installed_inactive_smtp_plugin();
+
+			if ( $inactive_plugin ) {
+				return array(
+					'key'     => 'smtp_configured',
+					'title'   => sprintf(
+						/* translators: %s: SMTP plugin name */
+						__( '%s is installed but not active', 'user-registration' ),
+						$inactive_plugin['name']
+					),
+					'status'  => 'issue',
+					'message' => sprintf(
+						/* translators: %s: SMTP plugin name */
+						__( '`%s` is installed but not activated yet, so your site is still sending through PHP mail.', 'user-registration' ),
+						$inactive_plugin['name']
+					),
+					'fix'     => sprintf(
+						/* translators: %s: SMTP plugin name */
+						__( 'Activate %s to start sending through it.', 'user-registration' ),
+						$inactive_plugin['name']
+					),
+				);
+			}
+
 			return array(
 				'key'     => 'smtp_configured',
-				'title'   => $is_smtp
-					? __( 'SMTP is configured', 'user-registration' )
-					: __( 'No SMTP plugin found', 'user-registration' ),
-				'status'  => $is_smtp ? 'pass' : 'issue',
-				'message' => $is_smtp
-					? __( 'An SMTP connection is configured for outgoing mail.', 'user-registration' )
-					: __( "Your site is using PHP mail, which many hosts don't deliver reliably.", 'user-registration' ),
-				'fix'     => $is_smtp ? '' : __( 'Install an SMTP plugin and connect a sending service for reliable delivery.', 'user-registration' ),
+				'title'   => __( 'No SMTP plugin found', 'user-registration' ),
+				'status'  => 'issue',
+				'message' => __( "Your site is using PHP mail, which many hosts don't deliver reliably.", 'user-registration' ),
+				'fix'     => __( 'Install an SMTP plugin and connect a sending service for reliable delivery.', 'user-registration' ),
 			);
 		}
 

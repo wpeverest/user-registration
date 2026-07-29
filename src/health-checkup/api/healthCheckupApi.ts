@@ -8,10 +8,17 @@ export interface HealthCheck {
 
 export type SmartSmtpStatus = "active" | "inactive" | "not_installed";
 
+export interface SmtpPluginInfo {
+	slug: string;
+	name: string;
+	is_smartsmtp: boolean;
+}
+
 export interface ScanResult {
 	checks: HealthCheck[];
 	issue_count: number;
 	smartsmtp_status: SmartSmtpStatus;
+	smtp_plugin: SmtpPluginInfo | null;
 }
 
 export type DeliveryOutcome = "arrived" | "spam" | "none";
