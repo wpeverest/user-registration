@@ -122,7 +122,7 @@ const SmartSmtpAction = ({ status }: { status: SmartSmtpStatus }) => {
 	const copy = {
 		not_installed: {
 			title: __("Recommended: install SmartSMTP", "user-registration"),
-			desc: __("Our own SMTP plugin — free, and quick to set up.", "user-registration"),
+			desc: __("Our own SMTP plugin — free, reliable, and built specifically for WordPress email delivery.", "user-registration"),
 			button: __("Install & activate SmartSMTP", "user-registration"),
 			loading: __("Installing…", "user-registration"),
 			icon: <FiDownload size={16} />,
@@ -283,7 +283,19 @@ const ResultStep = ({ variant, checks, onRunAgain, onDone, onBack, onOpenReport,
 				)}
 
 				{diagnosis.showSmartSmtpAction && <SmartSmtpAction status={smartSmtpStatus} />}
-				{diagnosis.showOtherPluginNotice && smtpPlugin && <OtherSmtpPluginNotice name={smtpPlugin.name} />}
+				{diagnosis.showOtherPluginNotice && smtpPlugin && (
+					<>
+						<OtherSmtpPluginNotice name={smtpPlugin.name} />
+						<Flex align="center" gap="10px" my="14px">
+							<Box flex="1" h="1px" bg="gray.200" />
+							<Text fontSize="11px" fontWeight="700" letterSpacing="0.04em" color="gray.400" textTransform="uppercase">
+								{__("Or", "user-registration")}
+							</Text>
+							<Box flex="1" h="1px" bg="gray.200" />
+						</Flex>
+						<SmartSmtpAction status={smartSmtpStatus} />
+					</>
+				)}
 
 				<Box border="1px solid" borderColor="gray.200" bg="gray.50" borderRadius="8px" p="13px 15px" fontSize="13px" color="gray.600" lineHeight="1.55" mt="12px">
 					<Text as="b" color="inherit">
@@ -322,15 +334,20 @@ const ResultStep = ({ variant, checks, onRunAgain, onDone, onBack, onOpenReport,
 				</Box>
 			</Flex>
 			<Text fontSize="13.5px" lineHeight="1.65" color="gray.600" maxW="60ch">
-				{__("Open the email and mark it", "user-registration")}{" "}
 				<Text as="b" color="inherit">
-					{__('"Not spam"', "user-registration")}
-				</Text>
-				. {__("That trains the inbox for future emails.", "user-registration")}
+					{__("Right now:", "user-registration")}
+				</Text>{" "}
+				{__(
+					'open the email and mark it "Not spam" — that\'s the single strongest signal you can give your inbox provider to trust this sender going forward.',
+					"user-registration"
+				)}
 			</Text>
 			<Text fontSize="13.5px" lineHeight="1.65" color="gray.600" maxW="60ch" mt="10px">
+				<Text as="b" color="inherit">
+					{__("If it keeps happening:", "user-registration")}
+				</Text>{" "}
 				{__(
-					"If many users report spam issues, improving sender authentication (SPF, DKIM, DMARC) will help long-term. Our team can assist with that.",
+					"one test email landing in spam isn't proof of a real problem — but if actual users report the same thing, it usually comes down to sender authentication (SPF, DKIM, DMARC — DNS records added at your domain's DNS provider, not something we can set on your behalf). Generate a report below and our support team can assist with that.",
 					"user-registration"
 				)}
 			</Text>
@@ -339,7 +356,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onDone, onBack, onOpenReport,
 					{__("Done", "user-registration")}
 				</Button>
 				<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={onOpenReport}>
-					{__("Get help with spam placement", "user-registration")}
+					{__("Send report to support", "user-registration")}
 				</Button>
 			</Flex>
 		</Box>
