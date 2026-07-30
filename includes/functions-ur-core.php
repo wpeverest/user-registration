@@ -10662,6 +10662,54 @@ if ( ! function_exists( 'user_registration_profile_details_form_field_datas' ) )
 	}
 }
 
+if ( ! function_exists( 'ur_has_membership_plans' ) ) {
+	/**
+	 * Check whether at least one published membership plan exists.
+	 *
+	 * @return bool
+	 */
+	function ur_has_membership_plans() {
+		if ( ! post_type_exists( 'ur_membership' ) ) {
+			return false;
+		}
+
+		return (bool) get_posts(
+			array(
+				'post_type'      => 'ur_membership',
+				'post_status'    => 'publish',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+			)
+		);
+	}
+}
+
+if ( ! function_exists( 'ur_is_membership_registration_type' ) ) {
+	/**
+	 * Check whether the setup wizard's registration type is a membership type
+	 * (as opposed to "Advanced Registration", stored as 'normal').
+	 *
+	 * @return bool
+	 */
+	function ur_is_membership_registration_type() {
+		$membership_type = get_option( 'urm_onboarding_membership_type', 'normal' );
+
+		return in_array( $membership_type, array( 'free_membership', 'paid_membership' ), true );
+	}
+}
+
+if ( ! function_exists( 'ur_should_show_membership_requirements' ) ) {
+	/**
+	 * Membership-registration-type users always need these; Advanced Registration
+	 * users only need them once a membership plan is created.
+	 *
+	 * @return bool
+	 */
+	function ur_should_show_membership_requirements() {
+		return ur_is_membership_registration_type() || ur_has_membership_plans();
+	}
+}
+
 if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 	/**
 	 * Get site assistant data with all options status.
@@ -10679,8 +10727,10 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 			'user_registration_membership_pricing_page_id' => 'Membership Pricing Page',
 		);
 
-		// Check if membership module is activated.
-		$is_membership_activated = ur_check_module_activation( 'membership' );
+		$has_membership_plans = ur_has_membership_plans();
+
+		// Advanced Registration users only need membership pages once a plan exists.
+		$show_membership_requirements = ur_is_membership_registration_type() || $has_membership_plans;
 
 		$missing_pages_data = array();
 
@@ -10697,7 +10747,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 			}
 
 			if ( $is_page_missing ) {
-				// Only include membership pages if membership module is activated.
+				// Only include membership pages if membership requirements should be shown.
 				$is_membership_page = in_array(
 					$option_name,
 					array(
@@ -10708,7 +10758,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 					true
 				);
 
-				if ( ! $is_membership_page || $is_membership_activated ) {
+				if ( ! $is_membership_page || $show_membership_requirements ) {
 					$missing_pages_data[] = array(
 						'name'   => $page_name,
 						'option' => $option_name,
@@ -10738,19 +10788,6 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$membership_field_skipped = (bool) get_option( 'user_registration_membership_field_skipped', false );
 
 		$membership_field_handled = ( ! $membership_enabled ) || $default_form_has_membership || $membership_field_skipped;
-
-		$has_membership_plans = false;
-
-		if ( post_type_exists( 'ur_membership' ) ) {
-			$has_membership_plans = (bool) get_posts(
-				array(
-					'post_type'      => 'ur_membership',
-					'post_status'    => 'publish',
-					'posts_per_page' => 1,
-					'fields'         => 'ids',
-				)
-			);
-		}
 
 		$site_assistant_data = array(
 			'has_default_form'                  => ! empty( $default_form_post ),
@@ -10833,7 +10870,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 		$connections = array();
 
 		// Check Stripe connection (available in free version).
-		if ( ur_check_module_activation( 'stripe' ) || ur_check_module_activation( 'membership' ) ) {
+		if ( ur_check_module_activation( 'stripe' ) || ur_should_show_membership_requirements() ) {
 			$connections['stripe'] = array(
 				'name'         => 'Stripe',
 				'is_connected' => ur_string_to_bool( get_option( 'urm_stripe_connection_status', false ) ),
@@ -10842,7 +10879,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 		}
 
 		// Check PayPal connection (available in free version).
-		if ( ur_check_module_activation( 'payments' ) || ur_check_module_activation( 'membership' ) ) {
+		if ( ur_check_module_activation( 'payments' ) || ur_should_show_membership_requirements() ) {
 			$connections['paypal'] = array(
 				'name'         => 'PayPal',
 				'is_connected' => ur_string_to_bool( get_option( 'urm_paypal_connection_status', false ) ),
@@ -10851,7 +10888,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 		}
 
 		// Check Bank connection (membership only).
-		if ( ur_check_module_activation( 'membership' ) ) {
+		if ( ur_should_show_membership_requirements() ) {
 			$connections['bank'] = array(
 				'name'         => 'Bank Payment',
 				'is_connected' => ur_string_to_bool( get_option( 'urm_bank_connection_status', false ) ),
