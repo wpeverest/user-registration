@@ -76,43 +76,80 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 				 *
 				 * @param array Options to be enlisted.
 				 */
-				$settings = apply_filters(
-					'user_registration_membership_settings',
-					array(
-						'title'    => '',
-						'sections' => array(
-							'membership_settings' => array(
-								'title'    => __( 'General', 'user-registration' ),
-								'type'     => 'card',
-								'desc'     => sprintf(
-									/* translators: %s - Admin URL for membership page settings */
-									__( '<strong>Membership page setting has moved.</strong> Configure your membership page <a href="%s">here</a>.', 'user-registration' ),
-									admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages' )
-								),
-								'settings' => array(
-									array(
-										'title'    => __( 'Renewal Behaviour', 'user-registration' ),
-										'desc'     => __( 'Choose how membership subscriptions are renewed, automatically through the payment provider or manually by the user', 'user-registration' ),
-										'id'       => 'user_registration_renewal_behaviour',
-										'type'     => 'select',
-										'default'  => 'automatic',
-										'class'    => 'ur-enhanced-select',
-										'css'      => '',
-										'options'  => array(
-											'automatic' => __( 'Renew Automatically', 'user-registration' ),
-											'manual'    => __( 'Renew Manually', 'user-registration' ),
-										),
-										'desc_tip' => true,
-									),
-								),
-							),
-						),
-					)
-				);
+				$settings = apply_filters( 'user_registration_membership_settings', $this->get_general_membership_settings() );
 			} elseif ( 'content-rules' === $current_section ) {
 				$settings = $this->urcr_settings();
 			}
 			return $settings;
+		}
+
+		/**
+		 * General membership settings (Renewal Behaviour), or an empty-state
+		 * notice in place of it when no membership plans exist yet.
+		 *
+		 * @return array
+		 */
+		private function get_general_membership_settings() {
+			$card = array(
+				'title' => __( 'General', 'user-registration' ),
+				'type'  => 'card',
+			);
+
+			if ( ! $this->has_membership_plans() ) {
+				$card['desc']     = sprintf(
+					/* translators: %s - Admin URL to create a new membership plan */
+					__( '<strong>No membership plans yet.</strong> Set up a plan to configure the Renewal Behaviour. <a href="%s">Create a membership &rarr;</a>', 'user-registration' ),
+					admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' )
+				);
+				$card['settings'] = array();
+			} else {
+				$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
+				if ( ! $is_new_installation ) {
+					$card['desc'] = sprintf(
+						/* translators: %s - Admin URL for membership page settings */
+						__( '<strong>Membership page setting has moved.</strong> Configure your membership page <a href="%s">here</a>.', 'user-registration' ),
+						admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages' )
+					);
+				}
+				$card['settings'] = array(
+					array(
+						'title'    => __( 'Renewal Behaviour', 'user-registration' ),
+						'desc'     => __( 'Choose how membership subscriptions are renewed, automatically through the payment provider or manually by the user', 'user-registration' ),
+						'id'       => 'user_registration_renewal_behaviour',
+						'type'     => 'select',
+						'default'  => 'automatic',
+						'class'    => 'ur-enhanced-select',
+						'css'      => '',
+						'options'  => array(
+							'automatic' => __( 'Renew Automatically', 'user-registration' ),
+							'manual'    => __( 'Renew Manually', 'user-registration' ),
+						),
+						'desc_tip' => true,
+					),
+				);
+			}
+
+			return array(
+				'title'    => '',
+				'sections' => array(
+					'membership_settings' => $card,
+				),
+			);
+		}
+
+		/**
+		 * Whether at least one published membership plan exists.
+		 *
+		 * @return bool
+		 */
+		private function has_membership_plans() {
+			if ( ! class_exists( 'WPEverest\URMembership\Admin\Repositories\MembershipRepository' ) ) {
+				return true;
+			}
+
+			$membership_repository = new WPEverest\URMembership\Admin\Repositories\MembershipRepository();
+
+			return ! empty( $membership_repository->get_all_membership() );
 		}
 
 		/**
