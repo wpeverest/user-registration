@@ -1041,6 +1041,7 @@
 				html +=
 					'<div class="urmg-plan-card ' +
 					selected_class +
+					(plans.length === 1 ? " ur-membership-single-plan" : "") +
 					'" data-plan-id="' +
 					plan_id +
 					'" data-plan-amount="' +
