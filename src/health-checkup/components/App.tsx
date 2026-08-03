@@ -102,8 +102,10 @@ const App = () => {
 		setStep("scan");
 	};
 
-	const openReport = () => {
-		setReportText(buildReport(checks, deliveryOutcome));
+	// Args, not state: a caller that just called setChecks() would still read the
+	// pre-update value here and report zero issues on the first open.
+	const openReport = (reportChecks: HealthCheck[], outcome: DeliveryOutcome | null) => {
+		setReportText(buildReport(reportChecks, outcome));
 		setIsReportOpen(true);
 	};
 
@@ -130,7 +132,8 @@ const App = () => {
 						}}
 						onOpenReport={(scannedChecks) => {
 							setChecks(scannedChecks);
-							openReport();
+							// Untested at this point, so never carry over a previous run's outcome.
+							openReport(scannedChecks, null);
 						}}
 					/>
 				);
@@ -155,7 +158,7 @@ const App = () => {
 						onRunAgain={startNewRun}
 						onDone={() => setStep("intro")}
 						onBack={() => setStep("test")}
-						onOpenReport={openReport}
+						onOpenReport={() => openReport(checks, deliveryOutcome)}
 						smartSmtpStatus={smartSmtpStatus}
 						smtpPlugin={smtpPlugin}
 					/>
