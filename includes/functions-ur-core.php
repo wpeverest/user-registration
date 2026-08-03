@@ -5652,13 +5652,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			}
 		}
 
-		/**
-		 * Filter to override the register settings.
-		 * Default value is the get_option('users_can_register')
-		 */
-		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
-
-		if ( ! is_user_logged_in() && ! $users_can_register ) {
+		if ( ! is_user_logged_in() && ! ur_users_can_register() ) {
 			$logger->warning(
 				sprintf( '[Form #%d] Registration is disabled by the site administrator.', $form_id ) . "\n",
 				array(
@@ -8402,6 +8396,23 @@ if ( ! function_exists( 'ur_rsssl_anyone_can_register_conflict_resolver' ) ) {
 }
 add_filter( 'ur_register_setting_override', 'ur_rsssl_anyone_can_register_conflict_resolver', 10, 1 );
 
+if ( ! function_exists( 'ur_users_can_register' ) ) {
+	/**
+	 * Whether registration is allowed, honoring the WordPress "Anyone can register" option.
+	 *
+	 * @since 5.2.7
+	 *
+	 * @return bool
+	 */
+	function ur_users_can_register() {
+		/**
+		 * Filter to override the register settings.
+		 * Default value is the get_option('users_can_register')
+		 */
+		return (bool) apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
+	}
+}
+
 add_filter( 'user_registration_settings_prevent_default_login', 'ur_prevent_default_login' );
 if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 	/**
@@ -10753,6 +10764,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		}
 
 		$site_assistant_data = array(
+			'users_can_register'                => ur_users_can_register(),
 			'has_default_form'                  => ! empty( $default_form_post ),
 			'missing_pages'                     => $missing_pages_data,
 			'test_email_sent'                   => get_option( 'user_registration_successful_test_mail', false ),
@@ -10991,7 +11003,8 @@ if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 		$site_assistant_data = ur_get_site_assistant_data();
 
 		return (
-			! $site_assistant_data['has_default_form']
+			! $site_assistant_data['users_can_register']
+			|| ! $site_assistant_data['has_default_form']
 			|| ! empty( $site_assistant_data['missing_pages'] )
 			|| ! $site_assistant_data['test_email_sent']
 			|| ! $site_assistant_data['spam_protection_handled']
@@ -11012,6 +11025,7 @@ if ( ! function_exists( 'ur_site_assistant_config_count' ) ) {
 		$site_assistant_data = ur_get_site_assistant_data();
 
 		$checks = array(
+			! $site_assistant_data['users_can_register'],
 			! $site_assistant_data['has_default_form'],
 			! empty( $site_assistant_data['missing_pages'] ),
 			! $site_assistant_data['test_email_sent'],

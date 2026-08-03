@@ -1,3 +1,4 @@
+export { default as RegistrationDisabled } from './RegistrationDisabled';
 export { default as DefaultFormMissing } from './DefaultFormMissing';
 export { default as RequiredPagesMissing } from './RequiredPagesMissing';
 export { default as PaymentSetup } from './PaymentSetup';

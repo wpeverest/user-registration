@@ -265,18 +265,9 @@ class UR_Shortcodes {
 	 * @param mixed $atts Extra attributes.
 	 */
 	public static function form( $atts ) {
-		/**
-		 * Applies a filter to override the 'users_can_register' setting.
-		 *
-		 * The 'ur_register_setting_override' filter allows developers to customize
-		 * the 'users_can_register' setting by providing an alternative value.
-		 *
-		 * @param bool $default_value Default value retrieved from the 'users_can_register' setting.
-		 */
-		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
-		$check_user_state   = isset( $atts['userState'] ) && 'logged_in' === $atts['userState'];
+		$check_user_state = isset( $atts['userState'] ) && 'logged_in' === $atts['userState'];
 
-		if ( ! is_user_logged_in() && ! $check_user_state && ! $users_can_register ) {
+		if ( ! is_user_logged_in() && ! $check_user_state && ! ur_users_can_register() ) {
 			return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . __( 'Registration is currently disabled.', 'user-registration' ) . '</p>' );
 		}
 
