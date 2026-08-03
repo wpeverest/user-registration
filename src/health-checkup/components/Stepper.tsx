@@ -9,21 +9,24 @@ export type WizardStep =
 	| "result-none"
 	| "result-spam";
 
+// One node per stage the user actually passes through — no phantom slots.
 const STEP_INDEX: Record<WizardStep, number> = {
 	intro: 0,
 	scan: 1,
-	test: 3,
+	test: 2,
 	"result-none": 3,
 	"result-spam": 3,
-	"result-good": 4,
+	"result-good": 3,
 };
 
-const NODE_COUNT = 5;
+const NODE_COUNT = 4;
 const ACTIVE_COLOR = "#475BB2";
 
 const Stepper = ({ step }: { step: WizardStep }) => {
 	const current = STEP_INDEX[step];
-	const success = step === "result-good";
+	// Every result is a terminal step: the run is over whatever the outcome was,
+	// so the last node reads as complete instead of still-in-progress.
+	const finished = step.startsWith("result-");
 
 	return (
 		<Flex align="center" px="2px" pb="24px">
@@ -36,13 +39,13 @@ const Stepper = ({ step }: { step: WizardStep }) => {
 						<Circle
 							size="28px"
 							flexShrink={0}
-							bg={isCompleted || (isCurrent && success) ? ACTIVE_COLOR : "white"}
+							bg={isCompleted || (isCurrent && finished) ? ACTIVE_COLOR : "white"}
 							borderWidth="2px"
 							borderColor={isCompleted || isCurrent ? ACTIVE_COLOR : "gray.300"}
-							color={isCompleted || (isCurrent && success) ? "white" : isCurrent ? ACTIVE_COLOR : "gray.400"}
+							color={isCompleted || (isCurrent && finished) ? "white" : isCurrent ? ACTIVE_COLOR : "gray.400"}
 							transition="background 300ms ease, border-color 300ms ease"
 						>
-							{isCompleted || (isCurrent && success) ? (
+							{isCompleted || (isCurrent && finished) ? (
 								<FiCheck size={13} />
 							) : isCurrent ? (
 								<FiMail size={13} />

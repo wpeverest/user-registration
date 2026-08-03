@@ -271,17 +271,17 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 									'id'      => 'user_registration_email_test',
 									'type'    => 'link',
 									'align'   => 'end',
-									'css'     => 'min-width:90px;color:#475bb2;border-color:#475bb2;',
+									'css'     => 'min-width:90px;',
 									'buttons' => array(
 										array(
 											'title' => __( 'Send Email', 'user-registration' ),
 											'href'  => '#',
-											'class' => 'button user_registration_send_email_test',
+											'class' => 'urm-btn-comp-v7 user_registration_send_email_test',
 										),
 										array(
 											'title' => __( 'Health Checkup', 'user-registration' ),
 											'href'  => esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=health-checkup' ) ),
-											'class' => 'button',
+											'class' => 'urm-btn-comp-v7 user_registration_email_health_checkup',
 										),
 									),
 								),

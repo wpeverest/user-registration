@@ -219,7 +219,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onDone, onBack, onOpenReport,
 						</Text>
 					</Box>
 				</Flex>
-				<Text fontSize="13.5px" lineHeight="1.65" color="gray.600" maxW="60ch">
+				<Text fontSize="13.5px" lineHeight="1.65" color="gray.600">
 					{__(
 						"Your email delivery is working. If anything changes in the future, you can run this checkup again any time from the Emails settings page.",
 						"user-registration"
@@ -333,7 +333,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onDone, onBack, onOpenReport,
 					</Text>
 				</Box>
 			</Flex>
-			<Text fontSize="13.5px" lineHeight="1.65" color="gray.600" maxW="60ch">
+			<Text fontSize="13.5px" lineHeight="1.65" color="gray.600">
 				<Text as="b" color="inherit">
 					{__("Right now:", "user-registration")}
 				</Text>{" "}
@@ -342,7 +342,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onDone, onBack, onOpenReport,
 					"user-registration"
 				)}
 			</Text>
-			<Text fontSize="13.5px" lineHeight="1.65" color="gray.600" maxW="60ch" mt="10px">
+			<Text fontSize="13.5px" lineHeight="1.65" color="gray.600" mt="10px">
 				<Text as="b" color="inherit">
 					{__("If it keeps happening:", "user-registration")}
 				</Text>{" "}

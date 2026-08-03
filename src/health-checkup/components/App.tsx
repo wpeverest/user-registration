@@ -168,7 +168,9 @@ const App = () => {
 
 	return (
 		<ChakraProvider theme={theme}>
-			<Box ref={rootRef} maxW="780px" mx="auto" sx={{ overflowAnchor: "none" }}>
+			{/* Left-aligned, not centred: the wizard has to sit on the same axis as
+			    the section heading and every other Emails settings card. */}
+			<Box ref={rootRef} maxW="780px" sx={{ overflowAnchor: "none" }}>
 				<Box fontSize="21px" fontWeight="600" letterSpacing="-0.01em" color="gray.800" px="2px" mb="26px">
 					Email Delivery Checkup
 				</Box>
