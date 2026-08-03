@@ -1,8 +1,16 @@
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex, useToast } from "@chakra-ui/react";
 import { __, sprintf } from "@wordpress/i18n";
-import { useEffect, useRef, useState } from "react";
-import { FiAlertTriangle, FiCheck, FiTool } from "react-icons/fi";
-import { HealthCheck, runScan, SmartSmtpStatus, SmtpPluginInfo } from "../../api/healthCheckupApi";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { FiAlertTriangle, FiCheck, FiExternalLink, FiTool } from "react-icons/fi";
+import {
+	activateSmtpPlugin,
+	CheckAction,
+	HealthCheck,
+	installSmartSmtp,
+	runScan,
+	SmartSmtpStatus,
+	SmtpPluginInfo,
+} from "../../api/healthCheckupApi";
 import RichText from "../RichText";
 import Text from "../Text";
 
@@ -11,7 +19,85 @@ interface ScanStepProps {
 	onOpenReport: (checks: HealthCheck[]) => void;
 }
 
-const CheckRow = ({ check, index }: { check: HealthCheck; index: number }) => {
+// Resolves a failing check in place — a single inline link, deliberately not a
+// card, so the fix sits with the finding it belongs to. On success the scan is
+// re-run so the row itself flips to Pass.
+const CheckActionLink = ({ action, onResolved }: { action: CheckAction; onResolved: () => void }) => {
+	const [isWorking, setIsWorking] = useState(false);
+	const toast = useToast();
+
+	if (action.type === "link") {
+		return (
+			<Button
+				as="a"
+				href={action.url}
+				target="_blank"
+				rel="noreferrer noopener"
+				variant="link"
+				colorScheme="primary"
+				fontSize="12.5px"
+				fontWeight="700"
+				mt="6px"
+				rightIcon={<FiExternalLink size={12} />}
+			>
+				{action.label}
+			</Button>
+		);
+	}
+
+	const handleClick = async () => {
+		setIsWorking(true);
+		try {
+			if (action.type === "activate") {
+				await activateSmtpPlugin(action.plugin ?? "");
+			} else {
+				await installSmartSmtp();
+			}
+			onResolved();
+		} catch (error) {
+			toast({
+				title:
+					action.type === "activate"
+						? __("Couldn't activate the plugin", "user-registration")
+						: __("Couldn't set up SmartSMTP", "user-registration"),
+				description: error instanceof Error ? error.message : undefined,
+				status: "error",
+				duration: 6000,
+				isClosable: true,
+			});
+			setIsWorking(false);
+		}
+	};
+
+	return (
+		<Button
+			variant="link"
+			colorScheme="primary"
+			fontSize="12.5px"
+			fontWeight="700"
+			mt="6px"
+			onClick={handleClick}
+			isLoading={isWorking}
+			loadingText={
+				action.type === "activate"
+					? __("Activating…", "user-registration")
+					: __("Installing…", "user-registration")
+			}
+		>
+			{action.label}
+		</Button>
+	);
+};
+
+const CheckRow = ({
+	check,
+	index,
+	onResolved,
+}: {
+	check: HealthCheck;
+	index: number;
+	onResolved: () => void;
+}) => {
 	const isIssue = check.status === "issue";
 
 	return (
@@ -64,6 +150,11 @@ const CheckRow = ({ check, index }: { check: HealthCheck; index: number }) => {
 						<RichText text={check.fix} />
 					</Text>
 				)}
+				{isIssue && check.action && (
+					<Box>
+						<CheckActionLink action={check.action} onResolved={onResolved} />
+					</Box>
+				)}
 			</Box>
 		</Flex>
 	);
@@ -77,6 +168,19 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 	const [smtpPlugin, setSmtpPlugin] = useState<SmtpPluginInfo | null>(null);
 	const [error, setError] = useState("");
 	const hasStarted = useRef(false);
+
+	// Re-read the checks after an inline fix so the row reflects the new state.
+	const rescan = useCallback(() => {
+		setError("");
+
+		return runScan()
+			.then((result) => {
+				setChecks(result.checks);
+				setSmartSmtpStatus(result.smartsmtp_status);
+				setSmtpPlugin(result.smtp_plugin);
+			})
+			.catch((err: Error) => setError(err.message));
+	}, []);
 
 	useEffect(() => {
 		if (hasStarted.current) {
@@ -154,7 +258,7 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 				<>
 					<Flex direction="column" gap="8px" mb="4px">
 						{checks.map((check, index) => (
-							<CheckRow key={check.key} check={check} index={index} />
+							<CheckRow key={check.key} check={check} index={index} onResolved={rescan} />
 						))}
 					</Flex>
 

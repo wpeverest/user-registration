@@ -1,9 +1,20 @@
+// A one-click resolution the scan row can offer for a failing check.
+export interface CheckAction {
+	type: "activate" | "install_smartsmtp" | "link";
+	label: string;
+	/** Plugin file to activate, for type "activate". */
+	plugin?: string;
+	/** Destination, for type "link". */
+	url?: string;
+}
+
 export interface HealthCheck {
 	key: string;
 	title: string;
 	status: "pass" | "issue";
 	message: string;
 	fix: string;
+	action?: CheckAction;
 }
 
 export type SmartSmtpStatus = "active" | "inactive" | "not_installed";
@@ -74,6 +85,16 @@ export function installSmartSmtp(): Promise<{ redirect: string }> {
 	return postForm<{ redirect: string }>(
 		new URLSearchParams({
 			action: "user_registration_email_health_install_smartsmtp",
+			nonce: config().scanNonce,
+		})
+	);
+}
+
+export function activateSmtpPlugin(plugin: string): Promise<{ name: string }> {
+	return postForm<{ name: string }>(
+		new URLSearchParams({
+			action: "user_registration_email_health_activate_smtp_plugin",
+			plugin,
 			nonce: config().scanNonce,
 		})
 	);

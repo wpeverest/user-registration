@@ -131,6 +131,28 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		}
 
 		/**
+		 * Whether a plugin file is one of the SMTP plugins this feature knows
+		 * about. The activate endpoint gates on this so a request can never
+		 * make it activate an arbitrary plugin.
+		 *
+		 * @param string $plugin_file Plugin file, e.g. 'wp-mail-smtp/wp_mail_smtp.php'.
+		 * @return bool
+		 */
+		public static function is_known_smtp_plugin( $plugin_file ) {
+			return isset( self::$known_smtp_plugins[ $plugin_file ] );
+		}
+
+		/**
+		 * Display name for a known SMTP plugin file.
+		 *
+		 * @param string $plugin_file Plugin file.
+		 * @return string Empty string if the plugin isn't a known one.
+		 */
+		public static function known_smtp_plugin_name( $plugin_file ) {
+			return self::is_known_smtp_plugin( $plugin_file ) ? self::$known_smtp_plugins[ $plugin_file ] : '';
+		}
+
+		/**
 		 * A known SMTP plugin that's installed but not currently active.
 		 *
 		 * @return array|null { slug, name, is_smartsmtp } or null.
@@ -323,6 +345,37 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				);
 			}
 
+			// An SMTP plugin that's running but hasn't switched the transport is
+			// only missing its connection — don't report it as "not found".
+			$active_plugin = self::detected_smtp_plugin();
+
+			if ( $active_plugin ) {
+				return array(
+					'key'     => 'smtp_configured',
+					'title'   => sprintf(
+						/* translators: %s: SMTP plugin name */
+						__( '%s is active but not connected', 'user-registration' ),
+						$active_plugin['name']
+					),
+					'status'  => 'issue',
+					// The title already names the plugin and its state, and the
+					// action link states the fix — this only adds the consequence.
+					'message' => __( 'Your site is still sending through PHP mail until its connection is set up.', 'user-registration' ),
+					'fix'     => '',
+					'action'  => $active_plugin['is_smartsmtp']
+						? array(
+							'type'  => 'link',
+							'label' => __( 'Configure SmartSMTP', 'user-registration' ),
+							'url'   => admin_url( 'admin.php?page=smart-smtp#/primary-connection' ),
+						)
+						: array(
+							'type'  => 'link',
+							'label' => __( 'Go to Installed Plugins', 'user-registration' ),
+							'url'   => admin_url( 'plugins.php' ),
+						),
+				);
+			}
+
 			// "No SMTP plugin found" should only fire if that's actually true —
 			// an installed-but-inactive plugin is a much smaller fix.
 			$inactive_plugin = self::installed_inactive_smtp_plugin();
@@ -336,15 +389,16 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						$inactive_plugin['name']
 					),
 					'status'  => 'issue',
-					'message' => sprintf(
-						/* translators: %s: SMTP plugin name */
-						__( '`%s` is installed but not activated yet, so your site is still sending through PHP mail.', 'user-registration' ),
-						$inactive_plugin['name']
-					),
-					'fix'     => sprintf(
-						/* translators: %s: SMTP plugin name */
-						__( 'Activate %s to start sending through it.', 'user-registration' ),
-						$inactive_plugin['name']
+					'message' => __( 'Your site is still sending through PHP mail.', 'user-registration' ),
+					'fix'     => '',
+					'action'  => array(
+						'type'   => 'activate',
+						'plugin' => $inactive_plugin['slug'],
+						'label'  => sprintf(
+							/* translators: %s: SMTP plugin name */
+							__( 'Activate %s', 'user-registration' ),
+							$inactive_plugin['name']
+						),
 					),
 				);
 			}
@@ -354,7 +408,11 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				'title'   => __( 'No SMTP plugin found', 'user-registration' ),
 				'status'  => 'issue',
 				'message' => __( "Your site is using PHP mail, which many hosts don't deliver reliably.", 'user-registration' ),
-				'fix'     => __( 'Install an SMTP plugin and connect a sending service for reliable delivery.', 'user-registration' ),
+				'fix'     => '',
+				'action'  => array(
+					'type'  => 'install_smartsmtp',
+					'label' => __( 'Install & activate SmartSMTP', 'user-registration' ),
+				),
 			);
 		}
 

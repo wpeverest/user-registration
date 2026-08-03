@@ -63,6 +63,7 @@ class UR_AJAX {
 			'email_health_scan'                    => false,
 			'email_health_confirm_delivery'         => false,
 			'email_health_install_smartsmtp'        => false,
+			'email_health_activate_smtp_plugin'    => false,
 			'create_form'                          => false,
 			'rated'                                => false,
 			'dashboard_widget'                     => false,
@@ -706,6 +707,58 @@ class UR_AJAX {
 		wp_send_json_success(
 			array(
 				'redirect' => admin_url( 'admin.php?page=smart-smtp#/primary-connection' ),
+			)
+		);
+	}
+
+	/**
+	 * Activate an already-installed SMTP plugin so the admin can resolve the
+	 * scan's SMTP finding without leaving the Health Checkup screen.
+	 *
+	 * @since 6.x
+	 */
+	public static function email_health_activate_smtp_plugin() {
+		check_ajax_referer( 'email_health_scan_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to activate plugins.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
+
+		$plugin = isset( $_POST['plugin'] ) ? sanitize_text_field( wp_unslash( $_POST['plugin'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+
+		if ( ! class_exists( 'UR_Email_Health_Checker' ) ) {
+			require_once UR_ABSPATH . 'includes/class-ur-email-health-checker.php';
+		}
+
+		// Only ever activate one of the SMTP plugins this feature knows about,
+		// never an arbitrary plugin file handed over in the request.
+		if ( ! UR_Email_Health_Checker::is_known_smtp_plugin( $plugin ) ) {
+			wp_send_json_error( array( 'message' => __( 'That plugin cannot be activated from here.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
+
+		if ( ! file_exists( WP_PLUGIN_DIR . '/' . $plugin ) ) {
+			wp_send_json_error( array( 'message' => __( 'That plugin is no longer installed. Please install it from Plugins → Add New.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
+
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		if ( ! is_plugin_active( $plugin ) ) {
+			$activated = activate_plugin( $plugin );
+
+			if ( is_wp_error( $activated ) ) {
+				wp_send_json_error( array( 'message' => $activated->get_error_message() ) );
+				wp_die( -1 );
+			}
+		}
+
+		wp_send_json_success(
+			array(
+				'name' => UR_Email_Health_Checker::known_smtp_plugin_name( $plugin ),
 			)
 		);
 	}
