@@ -319,6 +319,10 @@ if ( ! class_exists( 'Admin' ) ) :
 		}
 
 		public function add_memberships_in_urcr_settings( $settings ) {
+			if ( empty( $settings['sections']['user_registration_content_restriction_settings']['settings'] ) ) {
+				return $settings;
+			}
+
 			$options             = get_active_membership_id_name();
 			$additional_settings = array(
 				array(
