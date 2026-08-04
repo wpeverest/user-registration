@@ -11383,6 +11383,314 @@ if ( ! function_exists( 'ur_pro_get_excluded_fields' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_membership_table_exists' ) ) {
+	/**
+	 * Check whether a membership module table exists.
+	 *
+	 * Mirrors the guard the membership repositories apply before querying, e.g.
+	 * OrdersRepository::get_all() and SubscriptionRepository::query().
+	 *
+	 * @param string $table Fully qualified table name.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_membership_table_exists( $table ) {
+		global $wpdb;
+
+		static $checked = array();
+
+		if ( empty( $table ) ) {
+			return false;
+		}
+
+		if ( ! isset( $checked[ $table ] ) ) {
+			$checked[ $table ] = $table === $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+		}
+
+		return $checked[ $table ];
+	}
+}
+
+if ( ! function_exists( 'ur_has_membership_plans' ) ) {
+	/**
+	 * Check whether at least one published membership plan exists.
+	 *
+	 * The `ur_membership` post type is only registered when the membership module
+	 * is loaded, so fall back to a direct query when it is not.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_has_membership_plans() {
+		static $has_plans = null;
+
+		if ( null !== $has_plans ) {
+			return $has_plans;
+		}
+
+		if ( post_type_exists( 'ur_membership' ) ) {
+			$has_plans = (bool) get_posts(
+				array(
+					'post_type'      => 'ur_membership',
+					'post_status'    => 'publish',
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				)
+			);
+
+			return $has_plans;
+		}
+
+		global $wpdb;
+
+		$has_plans = (bool) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s LIMIT 1",
+				'ur_membership',
+				'publish'
+			)
+		);
+
+		return $has_plans;
+	}
+}
+
+if ( ! function_exists( 'ur_has_payment_entries' ) ) {
+	/**
+	 * Check whether the Payments page has at least one record to display.
+	 *
+	 * Mirrors the two sources merged by OrdersListTable::prepare_items():
+	 * membership orders (only when the membership module is active, and only rows
+	 * whose plan post and user still exist, matching the INNER JOINs in
+	 * OrdersRepository::get_all()) and normal registration payments, which are
+	 * stored as the `ur_payment_status` user meta.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_has_payment_entries() {
+		global $wpdb;
+
+		static $has_entries = null;
+
+		if ( null !== $has_entries ) {
+			return $has_entries;
+		}
+
+		$has_entries = false;
+
+		// Membership orders, gated exactly as OrdersListTable gates its repository.
+		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
+			$orders_table = class_exists( 'WPEverest\URMembership\TableList' )
+				? \WPEverest\URMembership\TableList::orders_table()
+				: $wpdb->prefix . 'ur_membership_orders';
+
+			if ( ur_membership_table_exists( $orders_table ) ) {
+				$orders_query = "SELECT o.ID
+					FROM {$orders_table} o
+					INNER JOIN {$wpdb->posts} p ON o.item_id = p.ID
+					INNER JOIN {$wpdb->users} u ON o.user_id = u.ID
+					LIMIT 1";
+
+				$has_entries = (bool) $wpdb->get_var( $orders_query ); // phpcs:ignore
+			}
+		}
+
+		// Payments made through a registration form.
+		if ( ! $has_entries ) {
+			$has_entries = (bool) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s LIMIT 1",
+					'ur_payment_status'
+				)
+			);
+		}
+
+		return $has_entries;
+	}
+}
+
+if ( ! function_exists( 'ur_has_subscription_entries' ) ) {
+	/**
+	 * Check whether at least one subscription record exists.
+	 *
+	 * Mirrors SubscriptionRepository::query(), which counts the subscriptions
+	 * table directly without joining anything.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_has_subscription_entries() {
+		global $wpdb;
+
+		static $has_entries = null;
+
+		if ( null !== $has_entries ) {
+			return $has_entries;
+		}
+
+		$subscriptions_table = class_exists( 'WPEverest\URMembership\TableList' )
+			? \WPEverest\URMembership\TableList::subscriptions_table()
+			: $wpdb->prefix . 'ur_membership_subscriptions';
+
+		$has_entries = ur_membership_table_exists( $subscriptions_table )
+			&& (bool) $wpdb->get_var( "SELECT ID FROM {$subscriptions_table} LIMIT 1" ); // phpcs:ignore
+
+		return $has_entries;
+	}
+}
+
+if ( ! function_exists( 'ur_has_payment_enabled_form' ) ) {
+	/**
+	 * Check whether any published registration form collects a payment.
+	 *
+	 * There is no per-form "payments enabled" flag; payment fields live inside the
+	 * form's post_content JSON, so this matches on the `"field_key":"..."` markers
+	 * the same way MembershipRepository::get_membership_forms() does.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_has_payment_enabled_form() {
+		global $wpdb;
+
+		static $has_form = null;
+
+		if ( null !== $has_form ) {
+			return $has_form;
+		}
+
+		/**
+		 * Field keys that on their own make a registration form charge the user.
+		 *
+		 * Deliberately narrower than user_registration_payment_fields(): `total_field`
+		 * and `quantity_field` are payment fields but never trigger a gateway by
+		 * themselves. This list matches the gateway check in
+		 * UR_Pro_Payments_Frontend::payment_process_after_registration().
+		 *
+		 * @param array $field_keys Charging field keys.
+		 *
+		 * @since x.x.x
+		 */
+		$field_keys = apply_filters(
+			'user_registration_payments_menu_field_keys',
+			array( 'single_item', 'multiple_choice', 'subscription_plan' )
+		);
+
+		$conditions = array();
+
+		foreach ( (array) $field_keys as $field_key ) {
+			$pattern      = '%' . $wpdb->esc_like( '"field_key":"' . $field_key . '"' ) . '%';
+			$conditions[] = 'post_content LIKE ' . $wpdb->prepare( '%s', $pattern );
+		}
+
+		if ( ! empty( $conditions ) ) {
+			$where_clause = implode( ' OR ', $conditions );
+
+			$fields_query = "SELECT ID FROM {$wpdb->posts}
+				WHERE post_type = 'user_registration'
+				AND post_status = 'publish'
+				AND ({$where_clause})
+				LIMIT 1";
+
+			$has_form = (bool) $wpdb->get_var( $fields_query ); // phpcs:ignore
+
+			if ( $has_form ) {
+				return $has_form;
+			}
+		}
+
+		$has_form = false;
+
+		// A `range` field only charges when its payment slider is enabled. The stored
+		// value is boolean-ish, so candidate forms have to be confirmed in PHP.
+		if ( ! function_exists( 'ur_get_form_fields' ) ) {
+			return $has_form;
+		}
+
+		$candidates = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->posts}
+				WHERE post_type = 'user_registration'
+				AND post_status = 'publish'
+				AND post_content LIKE %s",
+				'%' . $wpdb->esc_like( 'enable_payment_slider' ) . '%'
+			)
+		);
+
+		foreach ( $candidates as $form_id ) {
+			foreach ( (array) ur_get_form_fields( $form_id ) as $field ) {
+				if ( isset( $field->field_key, $field->advance_setting->enable_payment_slider )
+					&& 'range' === $field->field_key
+					&& ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) {
+					$has_form = true;
+
+					return $has_form;
+				}
+			}
+		}
+
+		return $has_form;
+	}
+}
+
+if ( ! function_exists( 'ur_should_show_payments_menu' ) ) {
+	/**
+	 * Whether the Payments submenu should be registered.
+	 *
+	 * Shown when payments are actually in use: the Payments feature is enabled, the
+	 * page already has records, a membership plan exists, or a registration form
+	 * collects a payment. Onboarding's "Advanced Registration" path matches none of
+	 * these, which is what keeps the menu hidden there.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_should_show_payments_menu() {
+		$show = ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'payments' ) )
+			|| ur_has_payment_entries()
+			|| ur_has_membership_plans()
+			|| ur_has_payment_enabled_form();
+
+		/**
+		 * Filter whether the Payments submenu is registered.
+		 *
+		 * @param bool $show Whether to show the menu.
+		 *
+		 * @since x.x.x
+		 */
+		return (bool) apply_filters( 'user_registration_show_payments_menu', $show );
+	}
+}
+
+if ( ! function_exists( 'ur_should_show_subscriptions_menu' ) ) {
+	/**
+	 * Whether the Subscriptions submenu should be registered.
+	 *
+	 * The membership module alone is not enough: onboarding enables it before the
+	 * user picks a registration type, so also require something to manage — a
+	 * membership plan or an existing subscription record.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_should_show_subscriptions_menu() {
+		$show = function_exists( 'ur_check_module_activation' )
+			&& ur_check_module_activation( 'membership' )
+			&& ( ur_has_membership_plans() || ur_has_subscription_entries() );
+
+		/**
+		 * Filter whether the Subscriptions submenu is registered.
+		 *
+		 * @param bool $show Whether to show the menu.
+		 *
+		 * @since x.x.x
+		 */
+		return (bool) apply_filters( 'user_registration_show_subscriptions_menu', $show );
+	}
+}
+
 /**
  * Get the count of membership rules.
  * This function checks for content access rules with rule_type = 'membership'.
