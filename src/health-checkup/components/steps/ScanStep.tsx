@@ -222,7 +222,7 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 					? __("Checking your settings…", "user-registration")
 					: __("Here's what we found", "user-registration")}
 			</Text>
-			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px" maxW="60ch">
+			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px">
 				{isLoading
 					? __("Reading your current configuration. This only takes a moment.", "user-registration")
 					: checks.length > 0

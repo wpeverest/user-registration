@@ -95,7 +95,7 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepPro
 					? __("Sending your test email…", "user-registration")
 					: __("Did the test email actually arrive?", "user-registration")}
 			</Text>
-			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px" maxW="60ch">
+			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px">
 				{isSending ? (
 					__("Hang tight — this only takes a second.", "user-registration")
 				) : (
@@ -125,7 +125,7 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepPro
 
 			{!isSending && (
 				<>
-					<Text fontSize="13.5px" lineHeight="1.6" color="gray.500" mt="-10px" mb="22px" maxW="58ch">
+					<Text fontSize="13.5px" lineHeight="1.6" color="gray.500" mt="-10px" mb="22px">
 						{__(
 							'The "sent successfully" message only means the site tried. What matters is whether it actually',
 							"user-registration"

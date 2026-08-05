@@ -17,7 +17,7 @@ const IntroStep = ({ onStart }: { onStart: () => void }) => (
 		<Text as="h2" fontSize="21px" fontWeight="600" mb="10px" letterSpacing="-0.01em" color="gray.800">
 			{__("Quick email delivery checkup", "user-registration")}
 		</Text>
-		<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px" maxW="60ch">
+		<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px">
 			{__(
 				"It'll scan email settings for common issues, send a real test email, and ask you to confirm whether it actually arrives — that's the one thing no automated check can verify on its own.",
 				"user-registration"
