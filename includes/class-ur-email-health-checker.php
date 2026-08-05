@@ -58,12 +58,11 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		public static function run_checks() {
 			$checks = array(
 				self::check_sending_enabled(),
-				self::check_from_domain_personal(),
+				self::check_from_address(),
 				self::check_admin_email_set(),
 				self::check_user_registration_email_enabled(),
 				self::check_admin_notification_enabled(),
 				self::check_smtp_configured(),
-				self::check_from_domain_mx(),
 				self::check_admin_email_pending_change(),
 			);
 
@@ -223,28 +222,65 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			);
 		}
 
-		private static function check_from_domain_personal() {
-			// An admin is free to use a personal provider (Gmail, etc.) as the
-			// "From" address — that's a legitimate choice, not a misconfiguration.
-			// All that actually matters here is that the address itself is valid;
-			// whether its domain can route mail is already covered by check_from_domain_mx().
-			$address  = self::from_address();
-			$is_valid = ! empty( $address ) && is_email( $address );
+		/**
+		 * Validates the "From" address as a single check: is it well-formed,
+		 * and — if so — can its domain actually receive mail (bounces,
+		 * replies)? Kept as one check (rather than two side-by-side ones)
+		 * so the result never reads as self-contradictory, e.g. "valid"
+		 * right next to "can't receive replies" for the same address.
+		 *
+		 * An admin is free to use a personal provider (Gmail, etc.) as the
+		 * "From" address — that's a legitimate choice, not a misconfiguration,
+		 * so the domain identity itself is never penalized here.
+		 */
+		private static function check_from_address() {
+			$address = self::from_address();
+
+			if ( empty( $address ) || ! is_email( $address ) ) {
+				return array(
+					'key'     => 'from_address',
+					'title'   => __( '"From" address is invalid', 'user-registration' ),
+					'status'  => 'issue',
+					'message' => __( 'The configured "From" address is missing or not a valid email format.', 'user-registration' ),
+					'fix'     => __( 'Set a valid "From" address under **Emails → General**.', 'user-registration' ),
+				);
+			}
+
+			$domain = self::from_domain();
+			$has_mx = checkdnsrr( $domain, 'MX' );
+
+			if ( ! $has_mx && self::is_local_domain( $domain ) ) {
+				return array(
+					'key'     => 'from_address',
+					'title'   => __( '"From" domain is a local address', 'user-registration' ),
+					'status'  => 'issue',
+					'message' => sprintf(
+						/* translators: %s: domain */
+						__( '`%s` is a local/development domain, not a real one — it was never expected to have mail servers.', 'user-registration' ),
+						$domain
+					),
+					'fix'     => __( 'This is fine for local development. Switch to a real domain before sending live email.', 'user-registration' ),
+				);
+			}
 
 			return array(
-				'key'     => 'from_domain_personal',
-				'title'   => $is_valid
-					? __( '"From" address is valid', 'user-registration' )
-					: __( '"From" address is invalid', 'user-registration' ),
-				'status'  => $is_valid ? 'pass' : 'issue',
-				'message' => $is_valid
+				'key'     => 'from_address',
+				'title'   => $has_mx
+					? __( '"From" address is set, valid, and can receive replies', 'user-registration' )
+					: __( '"From" address is valid, but its domain can\'t receive replies', 'user-registration' ),
+				'status'  => $has_mx ? 'pass' : 'issue',
+				'message' => $has_mx
 					? sprintf(
-						/* translators: %s: from address */
-						__( 'Notifications send from `%s`.', 'user-registration' ),
-						$address
+						/* translators: %s: domain */
+						__( '`%s` has valid mail servers, so bounces and replies sent back to it won\'t be lost.', 'user-registration' ),
+						$domain
 					)
-					: __( 'The configured "From" address is missing or not a valid email format.', 'user-registration' ),
-				'fix'     => $is_valid ? '' : __( 'Set a valid "From" address under **Emails → General**.', 'user-registration' ),
+					: sprintf(
+						/* translators: %s: domain */
+						__( 'No mail servers (MX records) were found for `%s` — any bounces or replies sent back to this "From" address would be lost, and it can also hurt deliverability. Check for a typo in the "From" address.', 'user-registration' ),
+						$domain
+					),
+				'fix'     => $has_mx ? '' : __( 'Double-check the domain in your "From" address is spelled correctly and can receive mail.', 'user-registration' ),
 			);
 		}
 
@@ -419,45 +455,6 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			);
 		}
 
-		private static function check_from_domain_mx() {
-			$domain = self::from_domain();
-			$has_mx = ! empty( $domain ) && checkdnsrr( $domain, 'MX' );
-
-			if ( ! $has_mx && self::is_local_domain( $domain ) ) {
-				return array(
-					'key'     => 'from_domain_mx',
-					'title'   => __( '"From" domain is a local address', 'user-registration' ),
-					'status'  => 'issue',
-					'message' => sprintf(
-						/* translators: %s: domain */
-						__( '`%s` is a local/development domain, not a real one — it was never expected to have mail servers.', 'user-registration' ),
-						$domain
-					),
-					'fix'     => __( 'This is fine for local development. Switch to a real domain before sending live email.', 'user-registration' ),
-				);
-			}
-
-			return array(
-				'key'     => 'from_domain_mx',
-				'title'   => $has_mx
-					? __( '"From" domain can receive mail', 'user-registration' )
-					: __( '"From" domain can\'t receive mail', 'user-registration' ),
-				'status'  => $has_mx ? 'pass' : 'issue',
-				'message' => $has_mx
-					? sprintf(
-						/* translators: %s: domain */
-						__( '`%s` has valid mail servers configured.', 'user-registration' ),
-						$domain
-					)
-					: sprintf(
-						/* translators: %s: domain */
-						__( 'No mail servers (MX records) were found for `%s` — check for a typo in the "From" address.', 'user-registration' ),
-						$domain
-					),
-				'fix'     => $has_mx ? '' : __( 'Double-check the domain in your "From" address is spelled correctly and can receive mail.', 'user-registration' ),
-			);
-		}
-
 		private static function check_admin_email_pending_change() {
 			$pending     = get_option( 'new_admin_email' );
 			$has_pending = ! empty( $pending ) && is_array( $pending ) && ! empty( $pending['newemail'] );
@@ -474,7 +471,11 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						__( 'An email change to `%s` is waiting on confirmation. Notifications still go to the old address until it\'s confirmed.', 'user-registration' ),
 						$pending['newemail']
 					)
-					: __( 'No admin email change is pending.', 'user-registration' ),
+					: sprintf(
+						/* translators: %s: admin email */
+						__( 'Notifications keep going to `%s`.', 'user-registration' ),
+						get_option( 'admin_email' )
+					),
 				'fix'     => $has_pending ? __( 'Check the old inbox for the confirmation link, or cancel the change under **Settings → General**.', 'user-registration' ) : '',
 			);
 		}
