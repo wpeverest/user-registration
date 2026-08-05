@@ -588,6 +588,11 @@ class EmailService {
 	}
 
 	public function send_membership_renewal_email( $data ) {
+		// Renewal reminder only applies to automatic renewal; manual sites get the expiring soon email instead.
+		if ( 'automatic' !== get_option( 'user_registration_renewal_behaviour', 'automatic' ) ) {
+			return false;
+		}
+
 		$subject = get_option( 'user_registration_membership_renewal_reminder_user_email_subject', esc_html__( 'Your Membership Renews Soon', 'user-registration' ) );
 		$user    = get_userdata( $data['member_id'] );
 
@@ -609,6 +614,11 @@ class EmailService {
 	}
 
 	public function send_membership_expiring_soon_email( $data ) {
+		// Expiring soon only applies to manual renewal; automatic sites get the renewal reminder email instead.
+		if ( 'manual' !== get_option( 'user_registration_renewal_behaviour', 'automatic' ) ) {
+			return false;
+		}
+
 		$subject = get_option( 'user_registration_membership_expiring_soon_user_email_subject', esc_html__( 'Your Membership Expires on {{membership_end_date}}', 'user-registration' ) );
 
 		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );

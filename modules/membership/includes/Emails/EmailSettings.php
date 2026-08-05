@@ -34,8 +34,12 @@ class EmailSettings {
 		);
 
 		if ( UR_PRO_ACTIVE ) {
-			$new_emails['UR_Settings_Membership_Renewal_Reminder_User_Email'] = new UR_Settings_Membership_Renewal_Reminder_User_Email();
-			$new_emails['UR_Settings_Membership_Expiring_Soon_User_Email'] = new UR_Settings_Membership_Expiring_Soon_User_Email();
+			// Only the reminder matching the site's renewal behaviour is listed; the other stays registered nowhere so its saved content is untouched.
+			if ( 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' ) ) {
+				$new_emails['UR_Settings_Membership_Renewal_Reminder_User_Email'] = new UR_Settings_Membership_Renewal_Reminder_User_Email();
+			} else {
+				$new_emails['UR_Settings_Membership_Expiring_Soon_User_Email'] = new UR_Settings_Membership_Expiring_Soon_User_Email();
+			}
 			$new_emails['UR_Settings_Membership_Ended_User_Email'] = new UR_Settings_Membership_Ended_User_Email();
 		}
 
