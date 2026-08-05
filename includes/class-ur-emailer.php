@@ -97,13 +97,14 @@ class UR_Emailer {
 	 * @return void
 	 */
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
+		if ( ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
+			return;
+		}
+
 		$valid_form_data = ur_array_clone( $valid_form_data );
 
 		$login_option = ur_get_user_login_option( $user_id );
 
-		if ( ( 'email_confirmation' !== $login_option || 'admin_approval_after_email_confirmation' !== $login_option ) && ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
-			return;
-		}
 		/**
 		 * Hook to modify user email attachment.
 		 *
@@ -294,6 +295,11 @@ class UR_Emailer {
 	public static function user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id ) {
 
 		$logger = ur_get_logger();
+
+		if ( ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
+			$logger->notice( 'Email not sent: emails are disabled from email settings.', array( 'source' => 'ur_mail_logs' ) );
+			return true;
+		}
 		$logger->notice( '=============== Email Sending Start ================', array( 'source' => 'ur_mail_logs' ) );
 		$logger->debug(
 			'Email details:' . "\n" . wp_json_encode(
@@ -564,9 +570,6 @@ class UR_Emailer {
 	 */
 	public static function ur_profile_details_changed_mail( $user_id, $form_id ) {
 
-		if ( ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
-			return;
-		}
 		$profile      = user_registration_form_data( $user_id, $form_id );
 		$name_value   = array();
 		$data_html    = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';

@@ -381,7 +381,7 @@ class EmailService {
 		$message = apply_filters( 'ur_membership_payment_successful_email_custom_template', $message, $subject );
 		$headers = \UR_Emailer::ur_get_header();
 
-		return wp_mail( $data['user_email'], $subject, $message, $headers );
+		return \UR_Emailer::user_registration_process_and_send_email( $data['user_email'], $subject, $message, $headers, array(), 0 );
 	}
 	// **
 	// * Send payment successful email
@@ -695,6 +695,6 @@ class EmailService {
 		$message = apply_filters( 'ur_membership_registration_email_custom_template', $message, $subject );
 		$headers = \UR_Emailer::ur_get_header();
 
-		return wp_mail( $data['email'], $subject, $message, $headers );
+		return \UR_Emailer::user_registration_process_and_send_email( $data['email'], $subject, $message, $headers, array(), 0 );
 	}
 }
