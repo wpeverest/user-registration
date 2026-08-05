@@ -1,4 +1,4 @@
-import { Box, Flex, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Link, Spinner } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import { useEffect, useRef, useState } from "react";
 import { FiAlertTriangle, FiCheck, FiChevronRight, FiX } from "react-icons/fi";
@@ -95,7 +95,7 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepPro
 					? __("Sending your test email…", "user-registration")
 					: __("Did the test email actually arrive?", "user-registration")}
 			</Text>
-			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px">
+			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb={isSending ? "22px" : "6px"}>
 				{isSending ? (
 					__("Hang tight — this only takes a second.", "user-registration")
 				) : (
@@ -108,6 +108,21 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepPro
 					</>
 				)}
 			</Text>
+
+			{!isSending && (
+				<Link
+					href="admin.php?page=user-registration-status"
+					target="_blank"
+					rel="noreferrer noopener"
+					display="inline-block"
+					fontSize="12.5px"
+					fontWeight="600"
+					color="primary.600"
+					mb="22px"
+				>
+					{__("Check the mail log →", "user-registration")}
+				</Link>
+			)}
 
 			{isSending && (
 				<Box pb="26px">
