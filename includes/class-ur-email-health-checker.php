@@ -23,21 +23,32 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 	class UR_Email_Health_Checker {
 
 		/**
-		 * Common free-mail provider domains that block "From" spoofing by other senders.
+		 * TLDs reserved for local/development use (RFC 2606 plus the ".local"
+		 * convention used by most local dev tools) — these never have public
+		 * MX records, so a missing MX record here isn't a misconfiguration.
 		 *
 		 * @var array
 		 */
-		private static $personal_domains = array(
-			'gmail.com',
-			'yahoo.com',
-			'outlook.com',
-			'hotmail.com',
-			'live.com',
-			'icloud.com',
-			'aol.com',
-			'protonmail.com',
-			'zoho.com',
-		);
+		private static $local_tlds = array( 'local', 'test', 'example', 'invalid', 'localhost' );
+
+		/**
+		 * Whether a domain is a local/development one rather than a real
+		 * public domain (e.g. `site.local`, `dev-email@wpengine.local`,
+		 * bare `localhost`).
+		 *
+		 * @param string $domain Domain to check.
+		 * @return bool
+		 */
+		private static function is_local_domain( $domain ) {
+			if ( empty( $domain ) ) {
+				return false;
+			}
+
+			$labels = explode( '.', $domain );
+			$tld    = end( $labels );
+
+			return in_array( $tld, self::$local_tlds, true );
+		}
 
 		/**
 		 * Run every check and return the results plus an issue count.
@@ -213,35 +224,27 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		}
 
 		private static function check_from_domain_personal() {
-			$domain      = self::from_domain();
-			$is_personal = in_array( $domain, self::$personal_domains, true );
-			$site_domain = strtolower( (string) wp_parse_url( home_url(), PHP_URL_HOST ) );
+			// An admin is free to use a personal provider (Gmail, etc.) as the
+			// "From" address — that's a legitimate choice, not a misconfiguration.
+			// All that actually matters here is that the address itself is valid;
+			// whether its domain can route mail is already covered by check_from_domain_mx().
+			$address  = self::from_address();
+			$is_valid = ! empty( $address ) && is_email( $address );
 
 			return array(
 				'key'     => 'from_domain_personal',
-				'title'   => $is_personal
-					? __( '"From" address uses a personal provider', 'user-registration' )
-					: __( '"From" address uses your own domain', 'user-registration' ),
-				'status'  => $is_personal ? 'issue' : 'pass',
-				'message' => $is_personal
+				'title'   => $is_valid
+					? __( '"From" address is valid', 'user-registration' )
+					: __( '"From" address is invalid', 'user-registration' ),
+				'status'  => $is_valid ? 'pass' : 'issue',
+				'message' => $is_valid
 					? sprintf(
-						/* translators: %s: from address */
-						__( 'Currently set to `%s`. Providers like Gmail block emails sent "from" their domains by other servers.', 'user-registration' ),
-						self::from_address()
-					)
-					: sprintf(
 						/* translators: %s: from address */
 						__( 'Notifications send from `%s`.', 'user-registration' ),
-						self::from_address()
-					),
-				'fix'     => $is_personal
-					? sprintf(
-						/* translators: 1: site domain, 2: suggested address */
-						__( 'Change it to an address on **%1$s**, e.g. `noreply@%2$s`.', 'user-registration' ),
-						$site_domain,
-						$site_domain
+						$address
 					)
-					: '',
+					: __( 'The configured "From" address is missing or not a valid email format.', 'user-registration' ),
+				'fix'     => $is_valid ? '' : __( 'Set a valid "From" address under **Emails → General**.', 'user-registration' ),
 			);
 		}
 
@@ -419,6 +422,20 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		private static function check_from_domain_mx() {
 			$domain = self::from_domain();
 			$has_mx = ! empty( $domain ) && checkdnsrr( $domain, 'MX' );
+
+			if ( ! $has_mx && self::is_local_domain( $domain ) ) {
+				return array(
+					'key'     => 'from_domain_mx',
+					'title'   => __( '"From" domain is a local address', 'user-registration' ),
+					'status'  => 'issue',
+					'message' => sprintf(
+						/* translators: %s: domain */
+						__( '`%s` is a local/development domain, not a real one — it was never expected to have mail servers.', 'user-registration' ),
+						$domain
+					),
+					'fix'     => __( 'This is fine for local development. Switch to a real domain before sending live email.', 'user-registration' ),
+				);
+			}
 
 			return array(
 				'key'     => 'from_domain_mx',
