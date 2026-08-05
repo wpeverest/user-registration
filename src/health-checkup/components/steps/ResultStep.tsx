@@ -204,6 +204,9 @@ const OtherSmtpPluginNotice = ({ name }: { name: string }) => (
 
 const ResultStep = ({ variant, checks, onRunAgain, onDone, onBack, onOpenReport, smartSmtpStatus, smtpPlugin }: ResultStepProps) => {
 	if (variant === "good") {
+		const unresolvedIssues = checks.filter((check) => check.status === "issue");
+		const hasUnresolvedIssues = unresolvedIssues.length > 0;
+
 		return (
 			<Box>
 				<Flex bg="green.50" border="1px solid" borderColor="green.200" borderRadius="9px" p="16px 17px" mb="18px" gap="13px">
@@ -212,13 +215,38 @@ const ResultStep = ({ variant, checks, onRunAgain, onDone, onBack, onOpenReport,
 					</Flex>
 					<Box>
 						<Text fontSize="15.5px" fontWeight="700">
-							{__("You're all set", "user-registration")}
+							{hasUnresolvedIssues
+								? __("Good news — your email arrived", "user-registration")
+								: __("You're all set", "user-registration")}
 						</Text>
 						<Text fontSize="12.5px" color="gray.600" mt="3px" lineHeight="1.55">
-							{__("Settings check passed and delivery is confirmed.", "user-registration")}
+							{hasUnresolvedIssues
+								? __(
+										"But we noticed something worth fixing first, so future emails keep landing reliably:",
+										"user-registration"
+								  )
+								: __("Settings check passed and delivery is confirmed.", "user-registration")}
 						</Text>
 					</Box>
 				</Flex>
+
+				{hasUnresolvedIssues && (
+					<Box border="1px solid" borderColor="yellow.300" bg="yellow.50" borderRadius="8px" p="13px 15px" mb="18px">
+						<Flex direction="column" gap="8px">
+							{unresolvedIssues.map((issue) => (
+								<Box key={issue.key}>
+									<Text fontSize="12.5px" fontWeight="600" color="yellow.800">
+										{issue.title}
+									</Text>
+									<Text fontSize="12px" color="yellow.800" mt="1px">
+										<RichText text={issue.fix || issue.message} />
+									</Text>
+								</Box>
+							))}
+						</Flex>
+					</Box>
+				)}
+
 				<Text fontSize="13.5px" lineHeight="1.65" color="gray.600">
 					{__(
 						"Your email delivery is working. If anything changes in the future, you can run this checkup again any time from the Emails settings page.",
