@@ -273,7 +273,16 @@ class UR_AJAX {
 			}
 		}
 
-		$profile                        = user_registration_form_data( $user_id, $form_id );
+		$profile = user_registration_form_data( $user_id, $form_id );
+
+		if ( empty( $profile ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Unable to update profile. No editable profile fields were found for this account.', 'user-registration' ),
+				)
+			);
+		}
+
 		$is_admin_user                  = $_POST['is_admin_user'] ?? false;
 		list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, $is_admin_user );
 		$user                           = get_userdata( $user_id );
