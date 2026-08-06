@@ -301,7 +301,7 @@ class UR_AJAX {
 				'email'          => ! empty( $single_field['user_registration_user_email'] ) ? $single_field['user_registration_user_email'] : '',
 			);
 
-			if ( $email_updated && ! is_admin() ) {
+			if ( $email_updated && ! $is_admin_user ) {
 				UR_Form_Handler::send_confirmation_email( $user, $pending_email, $form_id );
 				$response['oldUserEmail'] = $user->user_email;
 				/* translators: %s : user email */
@@ -329,7 +329,7 @@ class UR_AJAX {
 				);
 			}
 
-			if ( is_admin() && ! empty( $pending_email ) ) {
+			if ( $is_admin_user && ! empty( $pending_email ) ) {
 				wp_update_user(
 					array(
 						'ID'         => $user_id,
