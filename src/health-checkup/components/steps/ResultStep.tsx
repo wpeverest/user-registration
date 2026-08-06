@@ -1,8 +1,9 @@
 import { Box, Button, Flex, useToast } from "@chakra-ui/react";
 import { __, sprintf } from "@wordpress/i18n";
-import { useState } from "react";
-import { FiCheck, FiDownload, FiExternalLink, FiSettings, FiTool } from "react-icons/fi";
+import { ReactNode, useState } from "react";
+import { FiAlertTriangle, FiCheck, FiDownload, FiExternalLink, FiSettings, FiX } from "react-icons/fi";
 import { HealthCheck, installSmartSmtp, SmartSmtpStatus, SmtpPluginInfo } from "../../api/healthCheckupApi";
+import IssueList from "../IssueList";
 import RichText from "../RichText";
 import Text from "../Text";
 
@@ -12,8 +13,6 @@ interface ResultStepProps {
 	variant: ResultVariant;
 	checks: HealthCheck[];
 	onRunAgain: () => void;
-	onDone: () => void;
-	onBack: () => void;
 	onOpenReport: () => void;
 	smartSmtpStatus: SmartSmtpStatus;
 	smtpPlugin: SmtpPluginInfo | null;
@@ -23,16 +22,12 @@ interface ResultStepProps {
 const diagnoseNonDelivery = (checks: HealthCheck[], smtpPlugin: SmtpPluginInfo | null) => {
 	const sendingCheck = checks.find((check) => check.key === "sending_enabled");
 	const smtpCheck = checks.find((check) => check.key === "smtp_configured");
-	const otherIssues = checks.filter(
-		(check) => check.status === "issue" && check.key !== "sending_enabled" && check.key !== "smtp_configured"
-	);
 
 	if (sendingCheck?.status === "issue") {
 		return {
-			message: __("Email sending itself is switched off in your settings — nothing goes out until that's re-enabled.", "user-registration"),
+			message: __("Email sending is switched off in your settings — nothing goes out until that's back on.", "user-registration"),
 			showSmartSmtpAction: false,
 			showOtherPluginNotice: false,
-			otherIssues,
 		};
 	}
 
@@ -41,16 +36,14 @@ const diagnoseNonDelivery = (checks: HealthCheck[], smtpPlugin: SmtpPluginInfo |
 			message: smtpCheck.message,
 			showSmartSmtpAction: true,
 			showOtherPluginNotice: false,
-			otherIssues,
 		};
 	}
 
 	if (smtpPlugin?.is_smartsmtp) {
 		return {
-			message: __("SmartSMTP is active and configured, but the test still didn't arrive — its primary connection may need to be checked or reconnected.", "user-registration"),
+			message: __("SmartSMTP is active and configured, but the test still didn't arrive — its primary connection may need reconnecting.", "user-registration"),
 			showSmartSmtpAction: true,
 			showOtherPluginNotice: false,
-			otherIssues,
 		};
 	}
 
@@ -58,20 +51,18 @@ const diagnoseNonDelivery = (checks: HealthCheck[], smtpPlugin: SmtpPluginInfo |
 		return {
 			message: sprintf(
 				/* translators: %s: SMTP plugin name, e.g. "FluentSMTP" */
-				__("Your site sends through `%s`, but the test still didn't arrive — the issue is most likely that plugin's connection settings (host, port, or API key) or the receiving mail server rejecting the message.", "user-registration"),
+				__("Your site sends through `%s`, but the test didn't arrive — most likely that plugin's connection settings (host, port, or API key), or the receiving server rejecting the message.", "user-registration"),
 				smtpPlugin.name
 			),
 			showSmartSmtpAction: false,
 			showOtherPluginNotice: true,
-			otherIssues,
 		};
 	}
 
 	return {
-		message: __("Your site has an SMTP connection configured, but the test still didn't arrive — check whichever service handles your outgoing mail for delivery errors.", "user-registration"),
+		message: __("An SMTP connection is configured, but the test didn't arrive — check whichever service handles your outgoing mail for delivery errors.", "user-registration"),
 		showSmartSmtpAction: false,
 		showOtherPluginNotice: false,
-		otherIssues,
 	};
 };
 
@@ -122,7 +113,7 @@ const SmartSmtpAction = ({ status }: { status: SmartSmtpStatus }) => {
 	const copy = {
 		not_installed: {
 			title: __("Recommended: install SmartSMTP", "user-registration"),
-			desc: __("Our own SMTP plugin — free, reliable, and built specifically for WordPress email delivery.", "user-registration"),
+			desc: __("Our own SMTP plugin — free, reliable, and built for WordPress email delivery.", "user-registration"),
 			button: __("Install & activate SmartSMTP", "user-registration"),
 			loading: __("Installing…", "user-registration"),
 			icon: <FiDownload size={16} />,
@@ -192,7 +183,7 @@ const OtherSmtpPluginNotice = ({ name }: { name: string }) => (
 					)}
 				</Text>
 				<Text fontSize="12px" color="gray.600" mt="1px">
-					{__("Its send log will usually show the exact rejection reason.", "user-registration")}
+					{__("Its send log usually shows the exact rejection reason.", "user-registration")}
 				</Text>
 			</Box>
 		</Flex>
@@ -202,192 +193,177 @@ const OtherSmtpPluginNotice = ({ name }: { name: string }) => (
 	</Box>
 );
 
-const ResultStep = ({ variant, checks, onRunAgain, onDone, onBack, onOpenReport, smartSmtpStatus, smtpPlugin }: ResultStepProps) => {
-	if (variant === "good") {
-		const unresolvedIssues = checks.filter((check) => check.status === "issue");
-		const hasUnresolvedIssues = unresolvedIssues.length > 0;
+type Tone = "green" | "orange" | "red";
 
-		return (
+const TONE_ICON: Record<Tone, ReactNode> = {
+	green: <FiCheck size={16} />,
+	orange: <FiAlertTriangle size={16} />,
+	red: <FiX size={16} />,
+};
+
+const TONE_ICON_COLOR: Record<Tone, string> = {
+	green: "green.600",
+	orange: "orange.700",
+	red: "red.600",
+};
+
+// Every outcome renders through this same frame — banner, body, then the one
+// pair of actions — so the three results read as the same screen with a
+// different verdict rather than three unrelated endings.
+const ResultFrame = ({
+	tone,
+	title,
+	subtitle,
+	children,
+	onRunAgain,
+	onOpenReport,
+}: {
+	tone: Tone;
+	title: string;
+	subtitle: ReactNode;
+	children?: ReactNode;
+	onRunAgain: () => void;
+	onOpenReport: () => void;
+}) => (
+	<Box>
+		<Text
+			fontSize="11.5px"
+			fontWeight="700"
+			letterSpacing="0.06em"
+			textTransform="uppercase"
+			color="primary.500"
+			mb="9px"
+		>
+			{__("Step 3 · Result", "user-registration")}
+		</Text>
+
+		<Flex
+			bg={`${tone}.50`}
+			border="1px solid"
+			borderColor={`${tone}.200`}
+			borderRadius="9px"
+			p="16px 17px"
+			gap="13px"
+		>
+			<Flex
+				flexShrink={0}
+				w="32px"
+				h="32px"
+				borderRadius="8px"
+				bg="white"
+				align="center"
+				justify="center"
+				color={TONE_ICON_COLOR[tone]}
+			>
+				{TONE_ICON[tone]}
+			</Flex>
 			<Box>
-				<Flex bg="green.50" border="1px solid" borderColor="green.200" borderRadius="9px" p="16px 17px" mb="18px" gap="13px">
-					<Flex flexShrink={0} w="32px" h="32px" borderRadius="8px" bg="white" align="center" justify="center" color="green.600">
-						<FiCheck size={16} />
-					</Flex>
-					<Box>
-						<Text fontSize="15.5px" fontWeight="700">
-							{hasUnresolvedIssues
-								? __("Good news — your email arrived", "user-registration")
-								: __("You're all set", "user-registration")}
-						</Text>
-						<Text fontSize="12.5px" color="gray.600" mt="3px" lineHeight="1.55">
-							{hasUnresolvedIssues
-								? __(
-										"But we noticed something worth fixing first, so future emails keep landing reliably:",
-										"user-registration"
-								  )
-								: __("Settings check passed and delivery is confirmed.", "user-registration")}
-						</Text>
-					</Box>
-				</Flex>
+				<Text as="h2" fontSize="16px" fontWeight="700" letterSpacing="-0.01em" color="gray.800">
+					{title}
+				</Text>
+				<Text fontSize="12.5px" color="gray.600" mt="3px" lineHeight="1.55">
+					{subtitle}
+				</Text>
+			</Box>
+		</Flex>
 
-				{hasUnresolvedIssues && (
-					<Box border="1px solid" borderColor="yellow.300" bg="yellow.50" borderRadius="8px" p="13px 15px" mb="18px">
-						<Flex direction="column" gap="8px">
-							{unresolvedIssues.map((issue) => (
-								<Box key={issue.key}>
-									<Text fontSize="12.5px" fontWeight="600" color="yellow.800">
-										{issue.title}
-									</Text>
-									<Text fontSize="12px" color="yellow.800" mt="1px">
-										<RichText text={issue.fix || issue.message} />
-									</Text>
-								</Box>
-							))}
-						</Flex>
-					</Box>
-				)}
+		{children}
 
-				<Text fontSize="13.5px" lineHeight="1.65" color="gray.600">
+		<Flex gap="10px" mt="20px" wrap="wrap" justify="flex-end">
+			<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={onOpenReport}>
+				{__("Send report to support", "user-registration")}
+			</Button>
+			<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={onRunAgain}>
+				{__("Run the checkup again", "user-registration")}
+			</Button>
+		</Flex>
+	</Box>
+);
+
+const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus, smtpPlugin }: ResultStepProps) => {
+	const openIssues = checks.filter((check) => check.status === "issue");
+
+	if (variant === "good") {
+		return (
+			<ResultFrame
+				tone="green"
+				title={__("Your test email arrived", "user-registration")}
+				subtitle={
+					openIssues.length > 0
+						? __("Delivery works from this site. A few settings are still worth a look.", "user-registration")
+						: __("Delivery works and every check passed — nothing to fix.", "user-registration")
+				}
+				onRunAgain={onRunAgain}
+				onOpenReport={onOpenReport}
+			>
+				<IssueList issues={openIssues} />
+			</ResultFrame>
+		);
+	}
+
+	if (variant === "spam") {
+		return (
+			<ResultFrame
+				tone="orange"
+				title={__("Delivered — but filed as spam", "user-registration")}
+				subtitle={__("Sending works. It's the receiving provider that flagged the message.", "user-registration")}
+				onRunAgain={onRunAgain}
+				onOpenReport={onOpenReport}
+			>
+				<Text fontSize="13.5px" lineHeight="1.65" color="gray.600" mt="18px">
+					<Text as="b" color="inherit">
+						{__("Right now:", "user-registration")}
+					</Text>{" "}
 					{__(
-						"Your email delivery is working. If anything changes in the future, you can run this checkup again any time from the Emails settings page.",
+						'open the email and mark it "Not spam" — the strongest single signal you can give your provider to trust this sender.',
 						"user-registration"
 					)}
 				</Text>
-				<Flex gap="10px" mt="20px" wrap="wrap">
-					<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={onRunAgain}>
-						{__("Run the checkup again", "user-registration")}
-					</Button>
-					<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={onDone}>
-						{__("Done", "user-registration")}
-					</Button>
-				</Flex>
-				<Text fontSize="13px" color="gray.500" mt="16px">
-					{__("Want our team to review?", "user-registration")}{" "}
-					<Button variant="link" color="primary.600" fontWeight="600" fontSize="inherit" onClick={onOpenReport}>
-						{__("Send a report", "user-registration")}
-					</Button>
-				</Text>
-			</Box>
-		);
-	}
-
-	if (variant === "none") {
-		const diagnosis = diagnoseNonDelivery(checks, smtpPlugin);
-
-		return (
-			<Box>
-				<Flex bg="yellow.50" border="1px solid" borderColor="yellow.300" borderRadius="9px" p="16px 17px" mb="18px" gap="13px">
-					<Flex flexShrink={0} w="32px" h="32px" borderRadius="8px" bg="white" align="center" justify="center" color="yellow.700">
-						<FiTool size={16} />
-					</Flex>
-					<Box>
-						<Text fontSize="15.5px" fontWeight="700">
-							{__("The email didn't arrive", "user-registration")}
-						</Text>
-						<Text fontSize="12.5px" color="gray.600" mt="3px" lineHeight="1.55">
-							<RichText text={diagnosis.message} />
-						</Text>
-					</Box>
-				</Flex>
-
-				{diagnosis.otherIssues.length > 0 && (
-					<Box border="1px solid" borderColor="gray.200" borderRadius="8px" p="13px 15px" mb="18px">
-						<Text fontSize="12.5px" fontWeight="700" color="gray.700" mb="8px">
-							{__("Also worth fixing:", "user-registration")}
-						</Text>
-						<Flex direction="column" gap="8px">
-							{diagnosis.otherIssues.map((issue) => (
-								<Box key={issue.key}>
-									<Text fontSize="12.5px" fontWeight="600">
-										{issue.title}
-									</Text>
-									<Text fontSize="12px" color="gray.600" mt="1px">
-										<RichText text={issue.fix || issue.message} />
-									</Text>
-								</Box>
-							))}
-						</Flex>
-					</Box>
-				)}
-
-				{diagnosis.showSmartSmtpAction && <SmartSmtpAction status={smartSmtpStatus} />}
-				{diagnosis.showOtherPluginNotice && smtpPlugin && (
-					<>
-						<OtherSmtpPluginNotice name={smtpPlugin.name} />
-						<Flex align="center" gap="10px" my="14px">
-							<Box flex="1" h="1px" bg="gray.200" />
-							<Text fontSize="11px" fontWeight="700" letterSpacing="0.04em" color="gray.400" textTransform="uppercase">
-								{__("Or", "user-registration")}
-							</Text>
-							<Box flex="1" h="1px" bg="gray.200" />
-						</Flex>
-						<SmartSmtpAction status={smartSmtpStatus} />
-					</>
-				)}
-
-				<Box border="1px solid" borderColor="gray.200" bg="gray.50" borderRadius="8px" p="13px 15px" fontSize="13px" color="gray.600" lineHeight="1.55" mt="12px">
+				<Text fontSize="13.5px" lineHeight="1.65" color="gray.600" mt="10px">
 					<Text as="b" color="inherit">
-						{__("Not technical?", "user-registration")}
+						{__("If it keeps happening:", "user-registration")}
 					</Text>{" "}
-					{__("Generate a report and our team will walk you through it.", "user-registration")}
-				</Box>
-				<Flex gap="10px" mt="20px" wrap="wrap">
-					<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={onRunAgain}>
-						{__("Run the checkup again", "user-registration")}
-					</Button>
-					<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={onOpenReport}>
-						{__("Create a report for support", "user-registration")}
-					</Button>
-					<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={onBack}>
-						{__("Back", "user-registration")}
-					</Button>
-				</Flex>
-			</Box>
+					{__(
+						"one test in spam isn't proof of a problem, but if real users report the same it usually comes down to sender authentication (SPF, DKIM, DMARC) — DNS records you add at your domain's provider, not something we can set for you. Send a report and support can help.",
+						"user-registration"
+					)}
+				</Text>
+				<IssueList issues={openIssues} />
+			</ResultFrame>
 		);
 	}
+
+	const diagnosis = diagnoseNonDelivery(checks, smtpPlugin);
+	// The diagnosis already speaks to whichever check caused it, so listing that
+	// one again below would just repeat itself.
+	const otherIssues = openIssues.filter(
+		(check) => check.key !== "sending_enabled" && check.key !== "smtp_configured"
+	);
 
 	return (
-		<Box>
-			<Flex bg="green.50" border="1px solid" borderColor="green.200" borderRadius="9px" p="16px 17px" mb="18px" gap="13px">
-				<Flex flexShrink={0} w="32px" h="32px" borderRadius="8px" bg="white" align="center" justify="center" color="green.600">
-					<FiCheck size={16} />
-				</Flex>
-				<Box>
-					<Text fontSize="15.5px" fontWeight="700">
-						{__("Found it — emails are sending", "user-registration")}
-					</Text>
-					<Text fontSize="12.5px" color="gray.600" mt="3px" lineHeight="1.55">
-						{__("The email arrived but the provider filed it as spam.", "user-registration")}
-					</Text>
-				</Box>
-			</Flex>
-			<Text fontSize="13.5px" lineHeight="1.65" color="gray.600">
-				<Text as="b" color="inherit">
-					{__("Right now:", "user-registration")}
-				</Text>{" "}
-				{__(
-					'open the email and mark it "Not spam" — that\'s the single strongest signal you can give your inbox provider to trust this sender going forward.',
-					"user-registration"
-				)}
-			</Text>
-			<Text fontSize="13.5px" lineHeight="1.65" color="gray.600" mt="10px">
-				<Text as="b" color="inherit">
-					{__("If it keeps happening:", "user-registration")}
-				</Text>{" "}
-				{__(
-					"one test email landing in spam isn't proof of a real problem — but if actual users report the same thing, it usually comes down to sender authentication (SPF, DKIM, DMARC — DNS records added at your domain's DNS provider, not something we can set on your behalf). Generate a report below and our support team can assist with that.",
-					"user-registration"
-				)}
-			</Text>
-			<Flex gap="10px" mt="20px" wrap="wrap">
-				<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={onDone}>
-					{__("Done", "user-registration")}
-				</Button>
-				<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={onOpenReport}>
-					{__("Send report to support", "user-registration")}
-				</Button>
-			</Flex>
-		</Box>
+		<ResultFrame
+			tone="red"
+			title={__("The test email didn't arrive", "user-registration")}
+			subtitle={<RichText text={diagnosis.message} />}
+			onRunAgain={onRunAgain}
+			onOpenReport={onOpenReport}
+		>
+			{diagnosis.showSmartSmtpAction && <SmartSmtpAction status={smartSmtpStatus} />}
+			{diagnosis.showOtherPluginNotice && smtpPlugin && (
+				<>
+					<OtherSmtpPluginNotice name={smtpPlugin.name} />
+					<Flex align="center" gap="10px" my="14px">
+						<Box flex="1" h="1px" bg="gray.200" />
+						<Text fontSize="11px" fontWeight="700" letterSpacing="0.04em" color="gray.500" textTransform="uppercase">
+							{__("Or", "user-registration")}
+						</Text>
+						<Box flex="1" h="1px" bg="gray.200" />
+					</Flex>
+					<SmartSmtpAction status={smartSmtpStatus} />
+				</>
+			)}
+			<IssueList issues={otherIssues} />
+		</ResultFrame>
 	);
 };
 

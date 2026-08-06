@@ -20,7 +20,7 @@ const STEP_INDEX: Record<WizardStep, number> = {
 };
 
 const NODE_COUNT = 4;
-const ACTIVE_COLOR = "#475BB2";
+const ACTIVE_COLOR = "primary.500";
 
 const Stepper = ({ step }: { step: WizardStep }) => {
 	const current = STEP_INDEX[step];

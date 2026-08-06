@@ -1,4 +1,4 @@
-import { Box, Flex, Link, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import { useEffect, useRef, useState } from "react";
 import { FiAlertTriangle, FiCheck, FiChevronRight, FiX } from "react-icons/fi";
@@ -46,27 +46,27 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepPro
 	const choices: Choice[] = [
 		{
 			outcome: "arrived",
-			title: __("Yes — it arrived in my inbox", "user-registration"),
-			desc: __("Even if it was in spam, choose this", "user-registration"),
+			title: __("Yes — it's in my inbox", "user-registration"),
+			desc: __("It landed where it should", "user-registration"),
 			icon: <FiCheck size={15} />,
 			iconBg: "green.50",
 			iconColor: "green.600",
 		},
 		{
+			outcome: "spam",
+			title: __("It's in the spam folder", "user-registration"),
+			desc: __("It arrived, just filed in the wrong place", "user-registration"),
+			icon: <FiAlertTriangle size={15} />,
+			iconBg: "orange.50",
+			iconColor: "orange.700",
+		},
+		{
 			outcome: "none",
 			title: __("No — nothing at all", "user-registration"),
-			desc: __("Not in inbox, not in spam", "user-registration"),
+			desc: __("Not in the inbox, not in spam", "user-registration"),
 			icon: <FiX size={15} />,
 			iconBg: "red.50",
 			iconColor: "red.600",
-		},
-		{
-			outcome: "spam",
-			title: __("Found it in spam", "user-registration"),
-			desc: __("It arrived, but in the wrong folder", "user-registration"),
-			icon: <FiAlertTriangle size={15} />,
-			iconBg: "primary.50",
-			iconColor: "primary.600",
 		},
 	];
 
@@ -95,7 +95,7 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepPro
 					? __("Sending your test email…", "user-registration")
 					: __("Did the test email actually arrive?", "user-registration")}
 			</Text>
-			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb={isSending ? "22px" : "6px"}>
+			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb={isSending ? "22px" : "10px"}>
 				{isSending ? (
 					__("Hang tight — this only takes a second.", "user-registration")
 				) : (
@@ -104,25 +104,10 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepPro
 						<Text as="b" color="inherit">
 							{adminEmail}
 						</Text>
-						. {__("Check your inbox now — and check spam too.", "user-registration")}
+						. {__("Check that inbox now — and check spam too.", "user-registration")}
 					</>
 				)}
 			</Text>
-
-			{!isSending && (
-				<Link
-					href="admin.php?page=user-registration-status"
-					target="_blank"
-					rel="noreferrer noopener"
-					display="inline-block"
-					fontSize="12.5px"
-					fontWeight="600"
-					color="primary.600"
-					mb="22px"
-				>
-					{__("Check the mail log →", "user-registration")}
-				</Link>
-			)}
 
 			{isSending && (
 				<Box pb="26px">
@@ -140,9 +125,9 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepPro
 
 			{!isSending && (
 				<>
-					<Text fontSize="13.5px" lineHeight="1.6" color="gray.500" mt="-10px" mb="22px">
+					<Text fontSize="13.5px" lineHeight="1.6" color="gray.500" mb="22px">
 						{__(
-							'The "sent successfully" message only means the site tried. What matters is whether it actually',
+							'A "sent successfully" message only means the site tried. What matters is whether it actually',
 							"user-registration"
 						)}{" "}
 						<Text as="b" color="gray.600">

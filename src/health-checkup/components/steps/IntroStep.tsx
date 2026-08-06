@@ -1,4 +1,4 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import Text from "../Text";
 
@@ -19,20 +19,15 @@ const IntroStep = ({ onStart }: { onStart: () => void }) => (
 		</Text>
 		<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px">
 			{__(
-				"It'll scan email settings for common issues, send a real test email, and ask you to confirm whether it actually arrives — that's the one thing no automated check can verify on its own.",
+				"We'll check your settings, send a real test email, then ask whether it actually arrived — the one thing no automated check can confirm on its own.",
 				"user-registration"
 			)}
 		</Text>
-		<Button
-			width="100%"
-			size="lg"
-			colorScheme="primary"
-			fontSize="14.5px"
-			fontWeight="600"
-			onClick={onStart}
-		>
-			{__("Scan Email Settings", "user-registration")}
-		</Button>
+		<Flex justify="flex-end">
+			<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={onStart}>
+				{__("Scan Email Settings", "user-registration")}
+			</Button>
+		</Flex>
 	</Box>
 );
 

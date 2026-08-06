@@ -278,11 +278,11 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 			</Text>
 			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px">
 				{isLoading
-					? __("Reading your current configuration. This only takes a moment.", "user-registration")
+					? __("Reading your current configuration — this only takes a moment.", "user-registration")
 					: checks.length > 0
 						? sprintf(
 							/* translators: %d: number of checks run */
-							__("%d checks run against your current email settings.", "user-registration"),
+							__("%d checks run against your email settings.", "user-registration"),
 							checks.length
 						)
 						: ""}
@@ -320,8 +320,8 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 						align="center"
 						gap="13px"
 						border="1px solid"
-						borderColor={issueCount === 0 ? "green.200" : "yellow.300"}
-						bg={issueCount === 0 ? "green.50" : "yellow.50"}
+						borderColor={issueCount === 0 ? "green.200" : "orange.200"}
+						bg={issueCount === 0 ? "green.50" : "orange.50"}
 						borderRadius="8px"
 						p="13px 15px"
 						mt="14px"
@@ -334,7 +334,7 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 							bg="white"
 							align="center"
 							justify="center"
-							color={issueCount === 0 ? "green.600" : "yellow.700"}
+							color={issueCount === 0 ? "green.600" : "orange.700"}
 						>
 							{issueCount === 0 ? <FiCheck size={16} /> : <FiTool size={16} />}
 						</Flex>
@@ -345,17 +345,17 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 									: `${issueCount} ${issueCount === 1 ? __("issue", "user-registration") : __("issues", "user-registration")} ${__("found", "user-registration")}`}
 							</Text>
 							{issueCount === 0
-								? __("No misconfigurations found — continue to the live delivery test.", "user-registration")
-								: __("Fix these first, then we'll test actual delivery.", "user-registration")}
+								? __("Nothing to fix here — continue to the live delivery test.", "user-registration")
+								: __("Worth fixing first, then we'll test real delivery.", "user-registration")}
 						</Box>
 					</Flex>
 
-					<Flex gap="10px" mt="20px" wrap="wrap">
-						<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={() => onNext(checks, smartSmtpStatus, smtpPlugin)}>
-							{__("Next: test delivery", "user-registration")}
-						</Button>
+					<Flex gap="10px" mt="20px" wrap="wrap" justify="flex-end">
 						<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={() => onOpenReport(checks)}>
 							{__("Send report to support", "user-registration")}
+						</Button>
+						<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={() => onNext(checks, smartSmtpStatus, smtpPlugin)}>
+							{__("Next: test delivery", "user-registration")}
 						</Button>
 					</Flex>
 				</>
