@@ -311,7 +311,7 @@ class Frontend {
 
 		add_rewrite_endpoint( 'urm-courses', $mask );
 		add_rewrite_endpoint( 'urm-course-portal', $mask );
-		flush_rewrite_rules();
+		ur_maybe_flush_rewrite_rules( array( 'urm-courses', 'urm-course-portal' ) );
 	}
 
 	public function get_current_user_course() {
