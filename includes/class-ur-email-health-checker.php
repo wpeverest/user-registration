@@ -56,12 +56,16 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		 * @return array
 		 */
 		public static function run_checks() {
+			// "Disable Emails" overrides every per-email setting, so the checks for
+			// those settings need it — otherwise they report mail as going out.
+			$sending_disabled = self::is_sending_disabled();
+
 			$checks = array(
 				self::check_sending_enabled(),
 				self::check_from_address(),
 				self::check_admin_email_set(),
-				self::check_user_registration_email_enabled(),
-				self::check_admin_notification_enabled(),
+				self::check_user_registration_email_enabled( $sending_disabled ),
+				self::check_admin_notification_enabled( $sending_disabled ),
 				self::check_smtp_configured(),
 				self::check_admin_email_pending_change(),
 			);
@@ -206,8 +210,17 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			return false === $at_pos ? '' : strtolower( substr( $address, $at_pos + 1 ) );
 		}
 
+		/**
+		 * Whether "Disable Emails" is on, stopping all outgoing mail.
+		 *
+		 * @return bool
+		 */
+		private static function is_sending_disabled() {
+			return (bool) ur_option_checked( 'user_registration_email_setting_disable_email' );
+		}
+
 		private static function check_sending_enabled() {
-			$disabled = ur_option_checked( 'user_registration_email_setting_disable_email' );
+			$disabled = self::is_sending_disabled();
 
 			return array(
 				'key'     => 'sending_enabled',
@@ -305,8 +318,35 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			);
 		}
 
-		private static function check_user_registration_email_enabled() {
+		/**
+		 * Result for a per-email setting that is on but can't send because
+		 * "Disable Emails" is. Neither a pass (nothing goes out) nor an issue
+		 * (the setting itself is correct) — the one real fix lives on the
+		 * "sending_enabled" check.
+		 *
+		 * @param string $key   Check key.
+		 * @param string $title Title describing what won't be sent.
+		 * @return array
+		 */
+		private static function blocked_by_disable_emails( $key, $title ) {
+			return array(
+				'key'     => $key,
+				'title'   => $title,
+				'status'  => 'blocked',
+				'message' => __( 'The setting is on, but "Disable Emails" is switched on and stops all outgoing email.', 'user-registration' ),
+				'fix'     => '',
+			);
+		}
+
+		private static function check_user_registration_email_enabled( $sending_disabled = false ) {
 			$enabled = ur_option_checked( 'user_registration_enable_successfully_registered_email', true );
+
+			if ( $enabled && $sending_disabled ) {
+				return self::blocked_by_disable_emails(
+					'user_registration_email_enabled',
+					__( 'User registration email will not be sent', 'user-registration' )
+				);
+			}
 
 			return array(
 				'key'     => 'user_registration_email_enabled',
@@ -321,8 +361,15 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			);
 		}
 
-		private static function check_admin_notification_enabled() {
+		private static function check_admin_notification_enabled( $sending_disabled = false ) {
 			$enabled = ur_option_checked( 'user_registration_enable_admin_email', true );
+
+			if ( $enabled && $sending_disabled ) {
+				return self::blocked_by_disable_emails(
+					'admin_notification_enabled',
+					__( 'Admin notification email will not be sent', 'user-registration' )
+				);
+			}
 
 			return array(
 				'key'     => 'admin_notification_enabled',

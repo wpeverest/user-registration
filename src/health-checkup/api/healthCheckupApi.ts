@@ -8,10 +8,13 @@ export interface CheckAction {
 	url?: string;
 }
 
+/** "blocked": the setting is on but "Disable Emails" stops it — nothing is sent, yet nothing here to fix. */
+export type CheckStatus = "pass" | "issue" | "blocked";
+
 export interface HealthCheck {
 	key: string;
 	title: string;
-	status: "pass" | "issue";
+	status: CheckStatus;
 	message: string;
 	fix: string;
 	action?: CheckAction;

@@ -1,10 +1,11 @@
 import { Box, Button, Flex, useToast } from "@chakra-ui/react";
 import { __, sprintf } from "@wordpress/i18n";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { FiAlertTriangle, FiCheck, FiExternalLink, FiTool } from "react-icons/fi";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { FiAlertTriangle, FiCheck, FiExternalLink, FiSlash, FiTool } from "react-icons/fi";
 import {
 	activateSmtpPlugin,
 	CheckAction,
+	CheckStatus,
 	HealthCheck,
 	installSmartSmtp,
 	runScan,
@@ -89,6 +90,58 @@ const CheckActionLink = ({ action, onResolved }: { action: CheckAction; onResolv
 	);
 };
 
+// "blocked" is deliberately neutral, not red — the setting is fine, so it must
+// not read as one more thing to go and fix.
+const rowStyles: Record<CheckStatus, {
+	icon: ReactNode;
+	badgeLabel: string;
+	borderColor: string;
+	bg: string;
+	iconColor: string;
+	titleColor: string;
+	messageColor: string;
+	badgeColor: string;
+	badgeBg: string;
+	badgeBorderColor: string;
+}> = {
+	pass: {
+		icon: <FiCheck size={18} />,
+		badgeLabel: __("Pass", "user-registration"),
+		borderColor: "gray.200",
+		bg: "white",
+		iconColor: "green.600",
+		titleColor: "inherit",
+		messageColor: "gray.600",
+		badgeColor: "green.700",
+		badgeBg: "green.50",
+		badgeBorderColor: "green.200",
+	},
+	issue: {
+		icon: <FiAlertTriangle size={18} />,
+		badgeLabel: __("Issue", "user-registration"),
+		borderColor: "red.200",
+		bg: "red.50",
+		iconColor: "red.600",
+		titleColor: "red.600",
+		messageColor: "red.600",
+		badgeColor: "red.600",
+		badgeBg: "white",
+		badgeBorderColor: "red.200",
+	},
+	blocked: {
+		icon: <FiSlash size={18} />,
+		badgeLabel: __("Won't send", "user-registration"),
+		borderColor: "gray.200",
+		bg: "gray.50",
+		iconColor: "gray.500",
+		titleColor: "gray.700",
+		messageColor: "gray.600",
+		badgeColor: "gray.600",
+		badgeBg: "white",
+		badgeBorderColor: "gray.300",
+	},
+};
+
 const CheckRow = ({
 	check,
 	index,
@@ -99,12 +152,13 @@ const CheckRow = ({
 	onResolved: () => void;
 }) => {
 	const isIssue = check.status === "issue";
+	const style = rowStyles[check.status] ?? rowStyles.pass;
 
 	return (
 		<Flex
 			border="1px solid"
-			borderColor={isIssue ? "red.200" : "gray.200"}
-			bg={isIssue ? "red.50" : "white"}
+			borderColor={style.borderColor}
+			bg={style.bg}
 			borderRadius="8px"
 			p="13px 14px"
 			gap="11px"
@@ -117,12 +171,12 @@ const CheckRow = ({
 				},
 			}}
 		>
-			<Box flexShrink={0} color={isIssue ? "red.600" : "green.600"} mt="1px">
-				{isIssue ? <FiAlertTriangle size={18} /> : <FiCheck size={18} />}
+			<Box flexShrink={0} color={style.iconColor} mt="1px">
+				{style.icon}
 			</Box>
 			<Box flex="1" minW="0">
 				<Flex align="center" justify="space-between" gap="10px">
-					<Text fontSize="13.5px" fontWeight="600" color={isIssue ? "red.600" : "inherit"}>
+					<Text fontSize="13.5px" fontWeight="600" color={style.titleColor}>
 						{check.title}
 					</Text>
 					<Text
@@ -134,15 +188,15 @@ const CheckRow = ({
 						py="2px"
 						borderRadius="100px"
 						flexShrink={0}
-						color={isIssue ? "red.600" : "green.700"}
-						bg={isIssue ? "white" : "green.50"}
+						color={style.badgeColor}
+						bg={style.badgeBg}
 						border="1px solid"
-						borderColor={isIssue ? "red.200" : "green.200"}
+						borderColor={style.badgeBorderColor}
 					>
-						{isIssue ? __("Issue", "user-registration") : __("Pass", "user-registration")}
+						{style.badgeLabel}
 					</Text>
 				</Flex>
-				<Text fontSize="12.5px" color={isIssue ? "red.600" : "gray.600"} mt="3px" lineHeight="1.55">
+				<Text fontSize="12.5px" color={style.messageColor} mt="3px" lineHeight="1.55">
 					<RichText text={check.message} />
 				</Text>
 				{isIssue && check.fix && (

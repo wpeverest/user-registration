@@ -1,4 +1,10 @@
-import { DeliveryOutcome, HealthCheck } from "../api/healthCheckupApi";
+import { CheckStatus, DeliveryOutcome, HealthCheck } from "../api/healthCheckupApi";
+
+const statusLabels: Record<CheckStatus, string> = {
+	pass: "PASS",
+	issue: "ISSUE",
+	blocked: "BLOCKED",
+};
 
 export function buildReport(
 	checks: HealthCheck[],
@@ -16,9 +22,7 @@ export function buildReport(
 		"Generated from Settings → Emails → Health Checkup",
 		"",
 		`SCAN RESULTS (${issues.length} issue${issues.length === 1 ? "" : "s"} found)`,
-		...checks.map(
-			(check) => `[${check.status === "pass" ? "PASS" : "ISSUE"}] ${check.title}`
-		),
+		...checks.map((check) => `[${statusLabels[check.status] ?? "ISSUE"}] ${check.title}`),
 		"",
 		"DELIVERY TEST",
 		`Test email sent to: ${window._UR_EMAIL_HEALTH_.adminEmail}`,
