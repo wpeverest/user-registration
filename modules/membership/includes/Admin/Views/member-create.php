@@ -103,7 +103,7 @@ $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label">
 								<label
-									for="ur-input-type-membership-email"><?php echo esc_html_e( 'Email', 'user-registration' ); ?>
+									for="ur-input-type-membership-email"><?php esc_html_e( 'Email', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
