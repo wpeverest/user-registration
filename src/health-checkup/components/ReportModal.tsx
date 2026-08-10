@@ -1,5 +1,7 @@
 import {
+	Box,
 	Button,
+	Flex,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
@@ -12,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import { useRef } from "react";
+import { FiCopy, FiDownload, FiLock } from "react-icons/fi";
 import Text from "./Text";
 
 interface ReportModalProps {
@@ -73,9 +76,12 @@ const ReportModal = ({ isOpen, onClose, report }: ReportModalProps) => {
 			<ModalOverlay />
 			<ModalContent>
 				<ModalHeader pb="2px">
-					{__("Diagnostic report", "user-registration")}
+					{__("Send this to support", "user-registration")}
 					<Text fontSize="12.5px" fontWeight="400" color="gray.500" mt="4px">
-						{__("Copy this and paste it into an email or support ticket.", "user-registration")}
+						{__(
+							"Everything below was gathered from this scan. Paste it into your ticket and support can skip the back-and-forth.",
+							"user-registration"
+						)}
 					</Text>
 				</ModalHeader>
 				<ModalCloseButton />
@@ -87,17 +93,29 @@ const ReportModal = ({ isOpen, onClose, report }: ReportModalProps) => {
 						fontFamily="mono"
 						fontSize="11.8px"
 						lineHeight="1.7"
-						height="260px"
+						height="300px"
 						bg="gray.50"
 						color="gray.600"
+						borderColor="gray.200"
 					/>
+					<Flex align="center" gap="8px" mt="10px" color="gray.500">
+						<Box flexShrink={0} mt="1px">
+							<FiLock size={13} />
+						</Box>
+						<Text fontSize="11.5px" lineHeight="1.5">
+							{__(
+								"No passwords or API keys are included — the scan never reads them.",
+								"user-registration"
+							)}
+						</Text>
+					</Flex>
 				</ModalBody>
 				<ModalFooter gap="10px">
-					<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={handleCopy}>
-						{__("Copy to clipboard", "user-registration")}
-					</Button>
-					<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={handleDownload}>
+					<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={handleDownload} leftIcon={<FiDownload size={14} />}>
 						{__("Download .txt", "user-registration")}
+					</Button>
+					<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={handleCopy} leftIcon={<FiCopy size={14} />}>
+						{__("Copy to clipboard", "user-registration")}
 					</Button>
 				</ModalFooter>
 			</ModalContent>

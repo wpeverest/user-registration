@@ -1,12 +1,13 @@
 import { Box, ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import {
+	CheckSection,
 	confirmDelivery,
 	DeliveryOutcome,
 	HealthCheck,
 	SmartSmtpStatus,
 	SmtpPluginInfo,
-	Verdict,
+	ScanSummary,
 } from "../api/healthCheckupApi";
 import { buildReport } from "../utils/buildReport";
 import { loadState, saveState } from "../utils/persistedState";
@@ -113,14 +114,15 @@ const App = () => {
 		restored?.smartSmtpStatus ?? "not_installed"
 	);
 	const [smtpPlugin, setSmtpPlugin] = useState<SmtpPluginInfo | null>(restored?.smtpPlugin ?? null);
-	const [verdict, setVerdict] = useState<Verdict | null>(restored?.verdict ?? null);
+	const [summary, setSummary] = useState<ScanSummary | null>(restored?.summary ?? null);
+	const [sections, setSections] = useState<CheckSection[]>(restored?.sections ?? []);
 	const rootRef = useRef<HTMLDivElement>(null);
 
 	// Survive a page refresh: without this the admin lands back on the intro and
 	// loses a completed run.
 	useEffect(() => {
-		saveState({ step, checks, deliveryOutcome, smartSmtpStatus, smtpPlugin, testEmailSent, verdict });
-	}, [step, checks, deliveryOutcome, smartSmtpStatus, smtpPlugin, testEmailSent, verdict]);
+		saveState({ step, checks, deliveryOutcome, smartSmtpStatus, smtpPlugin, testEmailSent, summary, sections });
+	}, [step, checks, deliveryOutcome, smartSmtpStatus, smtpPlugin, testEmailSent, summary, sections]);
 
 	// Prevents Chrome's scroll-anchoring from re-adjusting scroll after a step change.
 	useEffect(() => {
@@ -143,7 +145,8 @@ const App = () => {
 		setTestEmailSent(false);
 		setChecks([]);
 		setDeliveryOutcome(null);
-		setVerdict(null);
+		setSummary(null);
+		setSections([]);
 		setStep("scan");
 	};
 
@@ -152,9 +155,10 @@ const App = () => {
 	const openReport = (
 		reportChecks: HealthCheck[],
 		outcome: DeliveryOutcome | null,
-		reportVerdict: Verdict | null
+		reportSummary: ScanSummary | null,
+		reportSections: CheckSection[]
 	) => {
-		setReportText(buildReport(reportChecks, outcome, reportVerdict));
+		setReportText(buildReport(reportChecks, outcome, reportSummary, reportSections));
 		setIsReportOpen(true);
 	};
 
@@ -173,18 +177,20 @@ const App = () => {
 			case "scan":
 				return (
 					<ScanStep
-						onNext={(scannedChecks, scannedSmartSmtpStatus, scannedSmtpPlugin, scannedVerdict) => {
+						onNext={(scannedChecks, scannedSmartSmtpStatus, scannedSmtpPlugin, scannedSummary, scannedSections) => {
 							setChecks(scannedChecks);
 							setSmartSmtpStatus(scannedSmartSmtpStatus);
 							setSmtpPlugin(scannedSmtpPlugin);
-							setVerdict(scannedVerdict);
+							setSummary(scannedSummary);
+							setSections(scannedSections);
 							setStep("test");
 						}}
-						onOpenReport={(scannedChecks, scannedVerdict) => {
+						onOpenReport={(scannedChecks, scannedSummary, scannedSections) => {
 							setChecks(scannedChecks);
-							setVerdict(scannedVerdict);
+							setSummary(scannedSummary);
+							setSections(scannedSections);
 							// Untested at this point, so never carry over a previous run's outcome.
-							openReport(scannedChecks, null, scannedVerdict);
+							openReport(scannedChecks, null, scannedSummary, scannedSections);
 						}}
 					/>
 				);
@@ -209,7 +215,7 @@ const App = () => {
 						variant={variant}
 						checks={checks}
 						onRunAgain={startNewRun}
-						onOpenReport={() => openReport(checks, deliveryOutcome, verdict)}
+						onOpenReport={() => openReport(checks, deliveryOutcome, summary, sections)}
 						smartSmtpStatus={smartSmtpStatus}
 						smtpPlugin={smtpPlugin}
 					/>

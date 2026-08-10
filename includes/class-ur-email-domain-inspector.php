@@ -116,6 +116,60 @@ if ( ! class_exists( 'UR_Email_Domain_Inspector' ) ) :
 		}
 
 		/**
+		 * The SMTP hosts each mailbox provider serves its own users from, where
+		 * that host isn't simply a subdomain of the address (which the generic
+		 * check below already covers). Microsoft and Apple both send several
+		 * brands through one host, so they can't be inferred.
+		 *
+		 * @var array
+		 */
+		private static $provider_smtp_hosts = array(
+			'outlook.com'    => array( 'smtp.office365.com', 'smtp-mail.outlook.com' ),
+			'hotmail.com'    => array( 'smtp.office365.com', 'smtp-mail.outlook.com' ),
+			'hotmail.co.uk'  => array( 'smtp.office365.com', 'smtp-mail.outlook.com' ),
+			'live.com'       => array( 'smtp.office365.com', 'smtp-mail.outlook.com' ),
+			'msn.com'        => array( 'smtp.office365.com', 'smtp-mail.outlook.com' ),
+			'icloud.com'     => array( 'smtp.mail.me.com' ),
+			'me.com'         => array( 'smtp.mail.me.com' ),
+			'mac.com'        => array( 'smtp.mail.me.com' ),
+			'gmail.com'      => array( 'smtp.gmail.com', 'smtp-relay.gmail.com', 'smtp.googlemail.com' ),
+			'googlemail.com' => array( 'smtp.gmail.com', 'smtp.googlemail.com' ),
+			'proton.me'      => array( 'smtp.protonmail.ch' ),
+			'protonmail.com' => array( 'smtp.protonmail.ch' ),
+			'pm.me'          => array( 'smtp.protonmail.ch' ),
+		);
+
+		/**
+		 * Whether an SMTP host is the mailbox provider's own — i.e. the one
+		 * party that *can* authenticate mail for that address.
+		 *
+		 * Sending as `you@gmail.com` through `smtp.gmail.com` is a fully
+		 * authenticated, aligned send: Gmail signs it. Without this, the single
+		 * most common working setup on the planet reads as a hard failure.
+		 *
+		 * @param string $domain Mailbox-provider domain, e.g. 'gmail.com'.
+		 * @param string $host   SMTP host currently configured.
+		 * @return bool
+		 */
+		public static function is_provider_smtp_host( $domain, $host ) {
+			$domain = strtolower( trim( (string) $domain ) );
+			$host   = strtolower( trim( (string) $host ) );
+
+			if ( '' === $domain || '' === $host ) {
+				return false;
+			}
+
+			if ( isset( self::$provider_smtp_hosts[ $domain ] )
+				&& in_array( $host, self::$provider_smtp_hosts[ $domain ], true ) ) {
+				return true;
+			}
+
+			// Covers the providers that do serve from their own domain, e.g.
+			// smtp.mail.yahoo.com for yahoo.com.
+			return self::domains_align( $host, $domain );
+		}
+
+		/**
 		 * Everything published about a domain, in one pass.
 		 *
 		 * Returns:

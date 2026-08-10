@@ -19,7 +19,7 @@ import {
 	runScan,
 	SmartSmtpStatus,
 	SmtpPluginInfo,
-	Verdict,
+	ScanSummary,
 } from "../../api/healthCheckupApi";
 import RichText from "../RichText";
 import Text from "../Text";
@@ -29,9 +29,10 @@ interface ScanStepProps {
 		checks: HealthCheck[],
 		smartSmtpStatus: SmartSmtpStatus,
 		smtpPlugin: SmtpPluginInfo | null,
-		verdict: Verdict | null
+		summary: ScanSummary | null,
+		sections: CheckSection[]
 	) => void;
-	onOpenReport: (checks: HealthCheck[], verdict: Verdict | null) => void;
+	onOpenReport: (checks: HealthCheck[], summary: ScanSummary | null, sections: CheckSection[]) => void;
 }
 
 // Resolves a failing check in place — a single inline link, deliberately not a
@@ -240,7 +241,7 @@ const CheckRow = ({
 					<RichText text={check.message} />
 				</Text>
 				{isActionable && check.fix && (
-					<Text fontSize="12.5px" color={style.titleColor} mt="6px" lineHeight="1.55" fontWeight="600">
+					<Text fontSize="12.5px" color={style.titleColor} mt="6px" lineHeight="1.55">
 						<RichText text={check.fix} />
 					</Text>
 				)}
@@ -254,7 +255,7 @@ const CheckRow = ({
 	);
 };
 
-const VERDICT_TONE: Record<Verdict["level"], { tone: string; icon: ReactNode; iconColor: string }> = {
+const SUMMARY_TONE: Record<ScanSummary["level"], { tone: string; icon: ReactNode; iconColor: string }> = {
 	pass: { tone: "green", icon: <FiCheck size={17} />, iconColor: "green.600" },
 	warning: { tone: "orange", icon: <FiAlertCircle size={17} />, iconColor: "orange.700" },
 	error: { tone: "red", icon: <FiAlertTriangle size={17} />, iconColor: "red.600" },
@@ -262,8 +263,8 @@ const VERDICT_TONE: Record<Verdict["level"], { tone: string; icon: ReactNode; ic
 
 // The headline. Every row below exists to justify this one sentence, so it goes
 // above them rather than being summarised at the bottom.
-const VerdictBanner = ({ verdict }: { verdict: Verdict }) => {
-	const { tone, icon, iconColor } = VERDICT_TONE[verdict.level] ?? VERDICT_TONE.warning;
+const SummaryBanner = ({ summary }: { summary: ScanSummary }) => {
+	const { tone, icon, iconColor } = SUMMARY_TONE[summary.level] ?? SUMMARY_TONE.warning;
 
 	return (
 		<Flex
@@ -289,10 +290,10 @@ const VerdictBanner = ({ verdict }: { verdict: Verdict }) => {
 			</Flex>
 			<Box>
 				<Text as="h3" fontSize="15px" fontWeight="700" letterSpacing="-0.01em" color="gray.800">
-					{verdict.title}
+					{summary.title}
 				</Text>
 				<Text fontSize="12.5px" color="gray.600" mt="3px" lineHeight="1.6">
-					<RichText text={verdict.message} />
+					<RichText text={summary.message} />
 				</Text>
 			</Box>
 		</Flex>
@@ -327,7 +328,7 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [barWidth, setBarWidth] = useState("3%");
 	const [sections, setSections] = useState<CheckSection[]>([]);
-	const [verdict, setVerdict] = useState<Verdict | null>(null);
+	const [summary, setSummary] = useState<ScanSummary | null>(null);
 	const [checks, setChecks] = useState<HealthCheck[]>([]);
 	const [smartSmtpStatus, setSmartSmtpStatus] = useState<SmartSmtpStatus>("not_installed");
 	const [smtpPlugin, setSmtpPlugin] = useState<SmtpPluginInfo | null>(null);
@@ -336,7 +337,7 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 
 	const applyResult = useCallback((result: Awaited<ReturnType<typeof runScan>>) => {
 		setSections(result.sections);
-		setVerdict(result.verdict);
+		setSummary(result.summary);
 		setChecks(result.checks);
 		setSmartSmtpStatus(result.smartsmtp_status);
 		setSmtpPlugin(result.smtp_plugin);
@@ -421,7 +422,7 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 
 			{!isLoading && !error && (
 				<>
-					{verdict && <VerdictBanner verdict={verdict} />}
+					{summary && <SummaryBanner summary={summary} />}
 
 					{sections.map((section, sectionIndex) => (
 						<SectionBlock
@@ -433,14 +434,14 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 					))}
 
 					<Flex gap="10px" mt="4px" wrap="wrap" justify="flex-end">
-						<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={() => onOpenReport(checks, verdict)}>
+						<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={() => onOpenReport(checks, summary, sections)}>
 							{__("Send report to support", "user-registration")}
 						</Button>
 						<Button
 							colorScheme="primary"
 							fontSize="13.5px"
 							fontWeight="600"
-							onClick={() => onNext(checks, smartSmtpStatus, smtpPlugin, verdict)}
+							onClick={() => onNext(checks, smartSmtpStatus, smtpPlugin, summary, sections)}
 						>
 							{__("Next: test delivery", "user-registration")}
 						</Button>

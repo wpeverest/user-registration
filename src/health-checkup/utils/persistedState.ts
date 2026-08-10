@@ -1,9 +1,10 @@
 import {
+	CheckSection,
 	DeliveryOutcome,
 	HealthCheck,
 	SmartSmtpStatus,
 	SmtpPluginInfo,
-	Verdict,
+	ScanSummary,
 } from "../api/healthCheckupApi";
 import { WizardStep } from "../components/Stepper";
 
@@ -14,12 +15,13 @@ export interface PersistedState {
 	smartSmtpStatus: SmartSmtpStatus;
 	smtpPlugin: SmtpPluginInfo | null;
 	testEmailSent: boolean;
-	verdict: Verdict | null;
+	summary: ScanSummary | null;
+	sections: CheckSection[];
 }
 
 // Bumping the suffix retires state saved by an older shape rather than letting
 // it deserialise into something the current code doesn't expect.
-const STORAGE_KEY = "urEmailHealthCheckup:v1";
+const STORAGE_KEY = "urEmailHealthCheckup:v2";
 
 const VALID_STEPS: WizardStep[] = ["intro", "scan", "test", "result-good", "result-none", "result-spam"];
 

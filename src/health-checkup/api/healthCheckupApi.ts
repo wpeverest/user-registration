@@ -33,7 +33,7 @@ export interface CheckSection {
 }
 
 /** The one answer the admin actually wants: will these emails arrive? */
-export interface Verdict {
+export interface ScanSummary {
 	level: "pass" | "warning" | "error";
 	title: string;
 	message: string;
@@ -49,11 +49,9 @@ export interface SmtpPluginInfo {
 
 export interface ScanResult {
 	sections: CheckSection[];
-	verdict: Verdict;
+	summary: ScanSummary;
 	/** Every check flattened, for the support report and the result screen. */
 	checks: HealthCheck[];
-	issue_count: number;
-	error_count: number;
 	smartsmtp_status: SmartSmtpStatus;
 	smtp_plugin: SmtpPluginInfo | null;
 }

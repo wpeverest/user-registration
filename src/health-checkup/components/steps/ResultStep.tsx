@@ -28,9 +28,11 @@ const CAUSE_PRIORITY = [
 	"smtp_setup",
 	"smtp_connection",
 	"from_address_valid",
+	"from_effective",
 	"from_alignment",
 	"from_domain",
-	"envelope_sender",
+	"spf_record",
+	"dmarc_policy",
 ];
 
 // Causes whose fix is "connect a proper mail service".
@@ -228,7 +230,7 @@ const TONE_ICON_COLOR: Record<Tone, string> = {
 
 // Every outcome renders through this same frame — banner, body, then the one
 // pair of actions — so the three results read as the same screen with a
-// different verdict rather than three unrelated endings.
+// different summary rather than three unrelated endings.
 const ResultFrame = ({
 	tone,
 	title,

@@ -215,20 +215,6 @@ if ( ! class_exists( 'UR_Email_Transport_Inspector' ) ) :
 		}
 
 		/**
-		 * The envelope sender (Return-Path) the transport would use, or '' when
-		 * it leaves that to the host. SPF is validated against this address
-		 * rather than the visible "From" header, which is why the two differing
-		 * matters.
-		 *
-		 * @return string
-		 */
-		public static function envelope_sender() {
-			$phpmailer = self::probe_phpmailer();
-
-			return $phpmailer && ! empty( $phpmailer->Sender ) ? $phpmailer->Sender : ''; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		}
-
-		/**
 		 * Build a PHPMailer and let every `phpmailer_init` listener configure it,
 		 * exactly as wp_mail() would. Checking whether anything merely *hooked*
 		 * the action is useless — WooCommerce alone hooks it a dozen times just

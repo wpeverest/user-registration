@@ -32,7 +32,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 	class UR_Email_Health_Checker {
 
 		/**
-		 * Run every check and return them grouped, with an overall verdict.
+		 * Run every check and return them grouped, with an overall summary.
 		 *
 		 * @return array
 		 */
@@ -77,7 +77,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					array(
 						'key'         => 'delivery',
 						'title'       => __( 'Mail Delivery', 'user-registration' ),
-						'description' => __( 'Whether this site can actually get an email into an inbox. Anything failing here is a real reason mail goes missing.', 'user-registration' ),
+						'description' => __( 'Whether this site can send email that actually arrives. Anything failing here is a real reason mail goes missing.', 'user-registration' ),
 						'checks'      => $delivery,
 					),
 					array(
@@ -87,30 +87,10 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						'checks'      => $settings,
 					),
 				),
-				'verdict'          => self::build_verdict( $transport, $sender, $domain, $dns, $sending_disabled ),
+				'summary'          => self::build_summary( $transport, $sender, $domain, $dns, $sending_disabled ),
 				'checks'           => $all,
-				'issue_count'      => self::count_status( $all, array( 'error', 'warning' ) ),
-				'error_count'      => self::count_status( $all, array( 'error' ) ),
 				'smartsmtp_status' => self::smartsmtp_status(),
 				'smtp_plugin'      => self::detected_smtp_plugin(),
-			);
-		}
-
-		/**
-		 * How many checks carry one of the given statuses.
-		 *
-		 * @param array $checks   Checks.
-		 * @param array $statuses Statuses to count.
-		 * @return int
-		 */
-		private static function count_status( $checks, $statuses ) {
-			return count(
-				array_filter(
-					$checks,
-					function ( $check ) use ( $statuses ) {
-						return in_array( $check['status'], $statuses, true );
-					}
-				)
 			);
 		}
 
@@ -227,18 +207,27 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				$php_mail = $transport['php_mail'];
 
 				if ( empty( $php_mail['usable'] ) ) {
+					// The exact path/function is what a host or support agent
+					// needs, but it explains nothing to a site owner — so it
+					// goes on its own line, after the plain-language cause.
+					if ( 'no_sendmail' === $php_mail['reason'] ) {
+						$message = __( 'No mail service is connected, so WordPress hands each message to the server\'s own mail program — which isn\'t installed here. Every email fails silently, with no warning.', 'user-registration' )
+							. "\n" . sprintf(
+								/* translators: %s: path to the mail program PHP is configured to use */
+								__( 'PHP is set to use `%s`, which doesn\'t exist on this server.', 'user-registration' ),
+								isset( $php_mail['binary'] ) ? $php_mail['binary'] : 'sendmail'
+							);
+					} else {
+						$message = __( 'No mail service is connected, so WordPress tries to send through the server itself — and your host has switched that ability off. Every email fails the instant it\'s sent, with no bounce and no warning.', 'user-registration' )
+							. "\n" . __( 'PHP\'s `mail()` function is disabled on this server.', 'user-registration' );
+					}
+
 					return array(
 						'key'     => 'sending_route',
-						'title'   => __( 'This server cannot send mail at all', 'user-registration' ),
+						'title'   => __( 'This site cannot send email at all', 'user-registration' ),
 						'status'  => 'error',
-						'message' => 'no_sendmail' === $php_mail['reason']
-							? sprintf(
-								/* translators: %s: sendmail binary path */
-								__( 'Your site falls back to PHP mail, but the program it needs (`%s`) is not installed on this server. Every email fails silently — nothing is queued and nothing bounces.', 'user-registration' ),
-								isset( $php_mail['binary'] ) ? $php_mail['binary'] : 'sendmail'
-							)
-							: __( 'Your site falls back to PHP mail, but the `mail()` function is switched off on this server. Every email fails silently.', 'user-registration' ),
-						'fix'     => __( 'Connect an SMTP service — that bypasses the server\'s own mail program entirely.', 'user-registration' ),
+						'message' => $message,
+						'fix'     => __( 'Connect an SMTP service — it sends over the network, so nothing needs installing on the server.', 'user-registration' ),
 					);
 				}
 
@@ -254,7 +243,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			if ( 'replaced' === $transport['route'] ) {
 				// Whether its connection actually works isn't knowable without
 				// sending something, so this states the arrangement and leaves
-				// the verdict to the delivery test rather than guessing at it.
+				// the answer to the delivery test rather than guessing at it.
 				return array(
 					'key'     => 'sending_route',
 					'title'   => sprintf(
@@ -435,7 +424,6 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		private static function identity_checks( $transport, $sender, $domain, $dns ) {
 			$checks = array(
 				self::check_from_address_valid( $sender ),
-				self::check_from_name_safe( $sender ),
 				self::check_from_effective( $transport, $sender ),
 			);
 
@@ -446,10 +434,9 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			}
 
 			$checks[] = self::check_from_domain( $domain, $dns );
-			$checks[] = self::check_from_alignment( $domain );
-			$checks[] = self::check_spf( $domain, $dns );
-			$checks[] = self::check_dmarc( $domain, $dns );
-			$checks[] = self::check_envelope_sender( $transport, $domain );
+			$checks[] = self::check_from_alignment( $domain, $transport );
+			$checks[] = self::check_spf( $domain, $dns, $transport );
+			$checks[] = self::check_dmarc( $domain, $dns, $transport );
 
 			return array_filter( $checks );
 		}
@@ -531,42 +518,15 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				);
 			}
 
-			return array(
-				'key'     => 'from_address_valid',
-				'title'   => sprintf(
-					/* translators: %s: where the address comes from */
-					__( '"From" address is well formed (%s)', 'user-registration' ),
-					$source
-				),
-				'status'  => 'pass',
-				'message' => sprintf(
-					// Claiming "mail is sent as" would contradict the note below
-					// whenever the transport addresses messages out of sight.
-					$sender['resolved']
-						/* translators: %s: the address mail is actually sent as */
-						? __( 'Mail is sent as `%s`.', 'user-registration' )
-						/* translators: %s: the best-known sender address */
-						: __( '`%s` is the address we can see. Whatever handles your sending may replace it — see the note below.', 'user-registration' ),
-					$from
-				),
-				'fix'     => '',
-			);
-		}
-
-		/**
-		 * The From header is assembled as `'From:' . $name . ' <' . $email . '>'`
-		 * with the display name unquoted, so a name containing a comma or colon
-		 * produces a header servers can refuse — and a newline would let someone
-		 * inject headers of their own.
-		 *
-		 * @return array
-		 */
-		private static function check_from_name_safe( $sender ) {
+			// The name shares this check because it shares the header: both are
+			// written into the same `From:` line, so a fault in either breaks
+			// that one line. Split apart, the two rows described the same
+			// string twice.
 			$name = (string) $sender['name'];
 
 			if ( preg_match( '/[\r\n]/', $name ) ) {
 				return array(
-					'key'     => 'from_name_safe',
+					'key'     => 'from_address_valid',
 					'title'   => __( '"From" name contains a line break', 'user-registration' ),
 					'status'  => 'error',
 					'message' => __( 'Line breaks split the message header in two. Mail servers reject this, and it is how header-injection attacks work.', 'user-registration' ),
@@ -576,7 +536,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 
 			if ( preg_match( '/[,;:<>@"]/', $name ) ) {
 				return array(
-					'key'     => 'from_name_safe',
+					'key'     => 'from_address_valid',
 					'title'   => __( '"From" name needs quoting', 'user-registration' ),
 					'status'  => 'warning',
 					'message' => sprintf(
@@ -588,20 +548,26 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				);
 			}
 
+			$display = '' === trim( $name ) ? $from : $name . ' <' . $from . '>';
+
 			return array(
-				'key'     => 'from_name_safe',
-				'title'   => __( '"From" name is safe to send', 'user-registration' ),
+				'key'     => 'from_address_valid',
+				'title'   => sprintf(
+					/* translators: %s: where the sender details come from */
+					__( '"From" address and name are well formed (%s)', 'user-registration' ),
+					$source
+				),
 				'status'  => 'pass',
-				'message' => '' === trim( $name )
-					? __( 'No sender name is set, so only the address is shown.', 'user-registration' )
-					: sprintf(
-						$sender['resolved']
-							/* translators: %s: the name mail is actually shown as */
-							? __( 'Mail is shown as coming from `%s`.', 'user-registration' )
-							/* translators: %s: the configured name */
-							: __( 'Configured to show as `%s`.', 'user-registration' ),
-						$name
-					),
+				'message' => sprintf(
+					// Claiming "mail is sent as" would contradict the note below
+					// whenever the transport addresses messages out of sight.
+					$sender['resolved']
+						/* translators: %s: the sender mail actually goes out as */
+						? __( 'Mail is sent as `%s`.', 'user-registration' )
+						/* translators: %s: the best-known sender */
+						: __( '`%s` is the sender we can see. Whatever handles your sending may replace it — see the note below.', 'user-registration' ),
+					$display
+				),
 				'fix'     => '',
 			);
 		}
@@ -785,23 +751,39 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		 * @param string $domain From domain.
 		 * @return array
 		 */
-		private static function check_from_alignment( $domain ) {
+		private static function check_from_alignment( $domain, $transport ) {
 			$site_domain = wp_parse_url( home_url(), PHP_URL_HOST );
 
 			if ( UR_Email_Domain_Inspector::is_mailbox_provider( $domain ) ) {
+				// Sending as the provider's address *through that provider* is the
+				// one arrangement that works: they sign it themselves. Flagging it
+				// would condemn one of the most common working setups there is.
+				if ( self::is_authenticated_for( $transport, $domain ) ) {
+					return array(
+						'key'     => 'from_alignment',
+						'title'   => __( 'Sending through the provider that owns this address', 'user-registration' ),
+						'status'  => 'pass',
+						'message' => sprintf(
+							/* translators: %s: from domain */
+							__( 'Mail is sent as `%1$s` through `%1$s`\'s own mail servers, so they vouch for it. That is exactly how a personal address should be used.', 'user-registration' ),
+							$domain
+						),
+						'fix'     => '',
+					);
+				}
+
 				return array(
 					'key'     => 'from_alignment',
 					'title'   => __( '"From" address belongs to a mailbox provider', 'user-registration' ),
 					'status'  => 'error',
 					'message' => sprintf(
-						/* translators: 1: from domain, 2: site domain */
-						__( 'Your site is `%2$s`, but mail is sent as `%1$s` — a personal mail provider. Only they can authorise servers to send as their domain, and they never authorise yours. Providers increasingly reject this outright rather than filtering it.', 'user-registration' ),
-						$domain,
-						$site_domain
+						/* translators: %s: from domain */
+						__( 'Mail is sent as `%s` but not through their servers. Only they can approve senders for their domain, and they won\'t approve yours — so receivers treat it as forged.', 'user-registration' ),
+						$domain
 					),
 					'fix'     => sprintf(
 						/* translators: %s: the domain to send from instead */
-						__( 'Send from an address on %s and put your personal address in the reply-to instead.', 'user-registration' ),
+						__( 'Send from an address on %s, and put the personal one in Reply-To.', 'user-registration' ),
 						self::own_domain_phrase( $site_domain )
 					),
 				);
@@ -855,14 +837,49 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		}
 
 		/**
+		 * Whether mail can prove it is genuinely from this "From" domain.
+		 *
+		 * PHP's mail() hands the message to the host's shared mail server, which
+		 * has no relationship to the domain and so can't authenticate as it.
+		 * Beyond that the question is per-domain, not per-route: an address at a
+		 * mailbox provider can only ever be authenticated by that provider —
+		 * nobody else can publish DNS for `gmail.com` — so any other service,
+		 * however well configured, still can't vouch for it.
+		 *
+		 * The SPF, DMARC and alignment checks and the overall summary all read
+		 * this, so no row can disagree with the banner above it.
+		 *
+		 * @param array  $transport Transport inspection.
+		 * @param string $domain    From domain.
+		 * @return bool
+		 */
+		private static function is_authenticated_for( $transport, $domain ) {
+			if ( 'php_mail' === $transport['route'] ) {
+				return false;
+			}
+
+			if ( UR_Email_Domain_Inspector::is_mailbox_provider( $domain ) ) {
+				return 'smtp' === $transport['route']
+					&& UR_Email_Domain_Inspector::is_provider_smtp_host( $domain, $transport['smtp']['host'] );
+			}
+
+			return true;
+		}
+
+		/**
 		 * SPF lists which servers may send for a domain. Its final rule decides
 		 * what happens to everything else — `-all` means reject.
 		 *
-		 * @param string $domain From domain.
-		 * @param array  $dns    DNS inspection.
+		 * A strict record is only good news while mail actually leaves through a
+		 * listed server; judged on its own it would report a green row on a site
+		 * whose every message that record is rejecting.
+		 *
+		 * @param string $domain    From domain.
+		 * @param array  $dns       DNS inspection.
+		 * @param array  $transport Transport inspection.
 		 * @return array|null
 		 */
-		private static function check_spf( $domain, $dns ) {
+		private static function check_spf( $domain, $dns, $transport ) {
 			if ( UR_Email_Domain_Inspector::is_local_domain( $domain ) || empty( $dns['resolvable'] ) ) {
 				return null;
 			}
@@ -870,27 +887,74 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			if ( empty( $dns['spf']['found'] ) ) {
 				return array(
 					'key'     => 'spf_record',
-					'title'   => __( 'Your domain doesn\'t say which servers may send its mail (SPF)', 'user-registration' ),
+					'title'   => __( 'No SPF record — receivers can\'t verify your mail', 'user-registration' ),
 					'status'  => 'warning',
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` doesn\'t say which servers are allowed to send for it. Receivers have nothing to check against, so your mail is judged on reputation alone and is filtered more aggressively.', 'user-registration' ),
+						__( 'SPF is a DNS record listing which servers may send email as `%s`. Yours doesn\'t publish one, so receivers have nothing to check against and judge your mail on reputation alone — which usually means the spam folder.', 'user-registration' ),
 						$domain
 					),
-					'fix'     => __( 'Add an SPF record at your domain\'s DNS provider. An SMTP service will tell you exactly what to publish.', 'user-registration' ),
+					'fix'     => __( 'Add an SPF record at your domain\'s DNS provider. Whichever mail service you use will give you the exact line to publish.', 'user-registration' ),
+				);
+			}
+
+			$strict = '-all' === $dns['spf']['qualifier'];
+
+			if ( $strict && ! self::is_authenticated_for( $transport, $domain ) ) {
+				return array(
+					'key'     => 'spf_record',
+					'title'   => __( 'Your SPF record is rejecting this site\'s mail', 'user-registration' ),
+					'status'  => 'error',
+					'message' => sprintf(
+						/* translators: %s: domain */
+						__( '`%s` ends its SPF record with `-all`, telling receivers to reject mail from any server it hasn\'t listed. This site sends through your host\'s mail server, which isn\'t on that list — so receivers are being instructed to throw your registration emails away.', 'user-registration' ),
+						$domain
+					),
+					'fix'     => __( 'Send through a mail service that\'s listed in your SPF record, or add this server to it.', 'user-registration' ),
+				);
+			}
+
+			if ( $strict ) {
+				return array(
+					'key'     => 'spf_record',
+					'title'   => __( 'Your domain lists its approved mail servers, strictly (SPF)', 'user-registration' ),
+					'status'  => 'pass',
+					'message' => sprintf(
+						/* translators: %s: domain */
+						__( '`%s` lists the servers allowed to send as it and ends with `-all`, so receivers reject anything from elsewhere. That\'s the strongest setting, and your mail goes out through a listed service.', 'user-registration' ),
+						$domain
+					),
+					'fix'     => '',
 				);
 			}
 
 			$qualifier = $dns['spf']['qualifier'];
 
-			if ( '-all' === $qualifier ) {
+			if ( '+all' === $qualifier ) {
 				return array(
 					'key'     => 'spf_record',
-					'title'   => __( 'Your domain says which servers may send its mail (SPF)', 'user-registration' ),
+					'title'   => __( 'Your SPF record authorises the entire internet', 'user-registration' ),
+					'status'  => 'warning',
+					'message' => sprintf(
+						/* translators: %s: domain */
+						__( '`%s` ends its SPF record with `+all`, which tells receivers that any server anywhere may send as your domain. That defeats the point of publishing SPF, and many providers treat it as a spam signal in itself.', 'user-registration' ),
+						$domain
+					),
+					'fix'     => __( 'Replace `+all` with `~all` or `-all` at your DNS provider, once the record lists every service you send through.', 'user-registration' ),
+				);
+			}
+
+			// An empty qualifier means the record has no `all` mechanism of its
+			// own — typically it hands off with `redirect=`. Naming a qualifier
+			// here would be inventing one.
+			if ( '' === $qualifier ) {
+				return array(
+					'key'     => 'spf_record',
+					'title'   => __( 'Your domain lists its approved mail servers (SPF)', 'user-registration' ),
 					'status'  => 'pass',
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` lists its permitted senders and tells receivers to **reject** anything else. Mail only arrives if it is sent through one of the listed services.', 'user-registration' ),
+						__( '`%s` publishes an SPF record, but it sets no final rule of its own — it defers to another record. Receivers can still check your mail; how strictly depends on the record it points at.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => '',
@@ -899,12 +963,13 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 
 			return array(
 				'key'     => 'spf_record',
-				'title'   => __( 'Your domain says which servers may send its mail (SPF)', 'user-registration' ),
+				'title'   => __( 'Your domain lists its approved mail servers, loosely (SPF)', 'user-registration' ),
 				'status'  => 'pass',
 				'message' => sprintf(
-					/* translators: %s: domain */
-					__( '`%s` lists which servers may send for it.', 'user-registration' ),
-					$domain
+					/* translators: 1: domain, 2: the record's final qualifier, e.g. "~all" */
+					__( '`%1$s` lists its permitted senders but ends with `%2$s`, so receivers are asked to accept mail from elsewhere and merely treat it as suspicious. It helps, though it won\'t stop someone forging your address.', 'user-registration' ),
+					$domain,
+					$qualifier
 				),
 				'fix'     => '',
 			);
@@ -915,11 +980,16 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		 * authentication. `p=reject` means it is discarded at the gateway — no
 		 * spam folder, no useful bounce.
 		 *
-		 * @param string $domain From domain.
-		 * @param array  $dns    DNS inspection.
+		 * Like SPF, the record is only half the story: `p=reject` protects a
+		 * domain that sends authenticated and destroys the mail of one that
+		 * doesn't, so the route has to be part of the reading.
+		 *
+		 * @param string $domain    From domain.
+		 * @param array  $dns       DNS inspection.
+		 * @param array  $transport Transport inspection.
 		 * @return array|null
 		 */
-		private static function check_dmarc( $domain, $dns ) {
+		private static function check_dmarc( $domain, $dns, $transport ) {
 			if ( UR_Email_Domain_Inspector::is_local_domain( $domain ) || empty( $dns['resolvable'] ) ) {
 				return null;
 			}
@@ -927,27 +997,42 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			if ( empty( $dns['dmarc']['found'] ) ) {
 				return array(
 					'key'     => 'dmarc_policy',
-					'title'   => __( 'Your domain has no rule for mail that fails its checks (DMARC)', 'user-registration' ),
+					'title'   => __( 'No DMARC record — each receiver decides for itself', 'user-registration' ),
 					'status'  => 'pass',
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` doesn\'t tell receivers how to handle mail that fails its checks, so they decide for themselves — usually the spam folder rather than a rejection.', 'user-registration' ),
+						__( 'DMARC tells receivers what to do when a message fails the SPF and DKIM checks for `%s`. Without one, every provider applies its own judgement, usually the spam folder. Publishing `p=none` costs nothing and starts reporting who is sending as you.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => '',
 				);
 			}
 
-			$policy = $dns['dmarc']['policy'];
+			$policy        = $dns['dmarc']['policy'];
+			$authenticated = self::is_authenticated_for( $transport, $domain );
 
 			if ( 'reject' === $policy ) {
+				if ( ! $authenticated ) {
+					return array(
+						'key'     => 'dmarc_policy',
+						'title'   => __( 'DMARC is discarding this site\'s mail', 'user-registration' ),
+						'status'  => 'error',
+						'message' => sprintf(
+							/* translators: %s: domain */
+							__( '`%s` tells receivers to throw away any mail it can\'t verify. This site can\'t be verified, so your emails are deleted on arrival — no spam folder, no bounce.', 'user-registration' ),
+							$domain
+						),
+						'fix'     => __( 'Send from your own domain, or through a service authorised for this one.', 'user-registration' ),
+					);
+				}
+
 				return array(
 					'key'     => 'dmarc_policy',
-					'title'   => __( 'Mail that fails your domain\'s checks is thrown away (DMARC)', 'user-registration' ),
+					'title'   => __( 'DMARC is set to reject — the strictest protection', 'user-registration' ),
 					'status'  => 'pass',
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` instructs receivers to **discard** any message that doesn\'t prove it came from an authorised server. Correctly sent mail is unaffected; anything else disappears without a bounce.', 'user-registration' ),
+						__( '`%s` tells receivers to discard anything that can\'t prove it came from an authorised server. Your domain is well protected against forgery, and your own mail is unaffected because it goes out authenticated.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => '',
@@ -955,13 +1040,27 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			}
 
 			if ( 'quarantine' === $policy ) {
+				if ( ! $authenticated ) {
+					return array(
+						'key'     => 'dmarc_policy',
+						'title'   => __( 'DMARC is sending this site\'s mail to spam', 'user-registration' ),
+						'status'  => 'warning',
+						'message' => sprintf(
+							/* translators: %s: domain */
+							__( '`%s` publishes `p=quarantine`, so receivers file unauthenticated mail straight into spam. This site sends unauthenticated, so that\'s where your registration emails are landing.', 'user-registration' ),
+							$domain
+						),
+						'fix'     => __( 'Send through a mail service authorised for this domain so your mail passes its checks.', 'user-registration' ),
+					);
+				}
+
 				return array(
 					'key'     => 'dmarc_policy',
-					'title'   => __( 'Mail that fails your domain\'s checks goes to spam (DMARC)', 'user-registration' ),
+					'title'   => __( 'DMARC is set to quarantine', 'user-registration' ),
 					'status'  => 'pass',
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` instructs receivers to put any unauthenticated message straight into the spam folder.', 'user-registration' ),
+						__( '`%s` asks receivers to file unauthenticated mail as spam. Your own mail is unaffected because it goes out authenticated.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => '',
@@ -970,66 +1069,15 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 
 			return array(
 				'key'     => 'dmarc_policy',
-				'title'   => __( 'Your domain watches for forged mail but doesn\'t block it (DMARC)', 'user-registration' ),
+				'title'   => __( 'DMARC is monitoring only', 'user-registration' ),
 				'status'  => 'pass',
 				'message' => sprintf(
 					/* translators: %s: domain */
-					__( '`%s` monitors authentication failures without asking receivers to act on them.', 'user-registration' ),
+					__( '`%s` publishes DMARC but asks receivers to take no action on failures — it collects reports without protecting the domain. A fine first step; tighten to `quarantine` once the reports look clean.', 'user-registration' ),
 					$domain
 				),
 				'fix'     => '',
 			);
-		}
-
-		/**
-		 * SPF is checked against the envelope sender, DMARC against the visible
-		 * "From". When PHP mail() is used the envelope becomes the host's own
-		 * address, so SPF can pass for the host and still fail alignment — the
-		 * reason a "correct" SPF record doesn't always help.
-		 *
-		 * @param array  $transport Transport inspection.
-		 * @param string $domain    From domain.
-		 * @return array|null
-		 */
-		private static function check_envelope_sender( $transport, $domain ) {
-			if ( 'php_mail' !== $transport['route'] ) {
-				return null;
-			}
-
-			$envelope = UR_Email_Transport_Inspector::envelope_sender();
-
-			if ( '' === $envelope ) {
-				return array(
-					'key'     => 'envelope_sender',
-					'title'   => __( 'Return path is set by your host', 'user-registration' ),
-					'status'  => 'warning',
-					'message' => sprintf(
-						/* translators: %s: from domain */
-						__( 'Nothing sets a return path, so this server uses its own — usually something like `www-data@your-server`. Receivers check that address against `%s` and see two different domains, which is what fails an authentication check even when your DNS is correct.', 'user-registration' ),
-						$domain
-					),
-					'fix'     => __( 'Sending over SMTP sets a matching return path for you.', 'user-registration' ),
-				);
-			}
-
-			$envelope_domain = UR_Email_Domain_Inspector::domain_of( $envelope );
-
-			if ( ! UR_Email_Domain_Inspector::domains_align( $envelope_domain, $domain ) ) {
-				return array(
-					'key'     => 'envelope_sender',
-					'title'   => __( 'Return path doesn\'t match the "From" address', 'user-registration' ),
-					'status'  => 'warning',
-					'message' => sprintf(
-						/* translators: 1: envelope domain, 2: from domain */
-						__( 'Mail leaves with a return path on `%1$s` but a visible sender on `%2$s`. Receivers compare the two, and a mismatch fails authentication.', 'user-registration' ),
-						$envelope_domain,
-						$domain
-					),
-					'fix'     => __( 'Send both from the same domain.', 'user-registration' ),
-				);
-			}
-
-			return null;
 		}
 
 		/* --------------------------------------------------------------------
@@ -1074,7 +1122,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		}
 
 		/* --------------------------------------------------------------------
-		 * The verdict — route and identity combined into one answer.
+		 * The overall summary — route and identity combined into one answer.
 		 * ----------------------------------------------------------------- */
 
 		/**
@@ -1088,7 +1136,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		 * @param bool       $sending_disabled Whether "Disable Emails" is on.
 		 * @return array
 		 */
-		private static function build_verdict( $transport, $sender, $domain, $dns, $sending_disabled ) {
+		private static function build_summary( $transport, $sender, $domain, $dns, $sending_disabled ) {
 			$from = $sender['address'];
 			if ( $sending_disabled ) {
 				return array(
@@ -1129,7 +1177,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				);
 			}
 
-			$authenticated = 'php_mail' !== $transport['route'];
+			$authenticated = self::is_authenticated_for( $transport, $domain );
 			$local         = UR_Email_Domain_Inspector::is_local_domain( $domain );
 
 			if ( $local ) {
@@ -1140,13 +1188,15 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				);
 			}
 
-			if ( UR_Email_Domain_Inspector::is_mailbox_provider( $domain ) ) {
+			// Only when the provider isn't the one doing the sending — through
+			// their own servers this is a correct, fully authenticated setup.
+			if ( UR_Email_Domain_Inspector::is_mailbox_provider( $domain ) && ! $authenticated ) {
 				return array(
 					'level'   => 'error',
 					'title'   => __( 'Emails will be rejected or filtered', 'user-registration' ),
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( 'Sending as `%s` can never be authenticated, so providers refuse or filter it. This is the most common reason registration emails vanish.', 'user-registration' ),
+						__( 'Sending as `%s` from anywhere but their own servers can never be authenticated, so providers refuse or filter it. This is the most common reason registration emails vanish.', 'user-registration' ),
 						$domain
 					),
 				);

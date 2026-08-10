@@ -38,7 +38,19 @@ const RichText = ({ text }: { text: string }) => {
 					);
 				}
 
-				return <Fragment key={index}>{part}</Fragment>;
+				// Newlines are the one bit of layout these strings need — a
+				// finding can carry a technical footnote that shouldn't run
+				// into the explanation above it.
+				return (
+					<Fragment key={index}>
+						{part.split("\n").map((line, lineIndex) => (
+							<Fragment key={lineIndex}>
+								{lineIndex > 0 && <br />}
+								{line}
+							</Fragment>
+						))}
+					</Fragment>
+				);
 			})}
 		</>
 	);
