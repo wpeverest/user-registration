@@ -177,11 +177,11 @@ const SmartSmtpAction = ({ status }: { status: SmartSmtpStatus }) => {
 	}[localStatus];
 
 	return (
-		<Box border="1px solid" borderColor="primary.200" bg="primary.50" borderRadius="8px" p="14px 15px" mt="18px">
+		<Box border="1px solid" borderColor="gray.200" bg="white" borderRadius="8px" p="14px 15px" mt="14px">
 			<Flex align="center" gap="11px" mb="11px">
-				<Flex flexShrink={0} w="30px" h="30px" borderRadius="7px" bg="white" align="center" justify="center" color="primary.600">
+				<Box flexShrink={0} color="primary.600" mt="1px">
 					{copy.icon}
-				</Flex>
+				</Box>
 				<Box>
 					<Text fontSize="13.5px" fontWeight="700">
 						{copy.title}
@@ -207,11 +207,11 @@ const SmartSmtpAction = ({ status }: { status: SmartSmtpStatus }) => {
 
 // Points to a different, already-active SMTP plugin instead of pushing SmartSMTP.
 const OtherSmtpPluginNotice = ({ name }: { name: string }) => (
-	<Box border="1px solid" borderColor="gray.200" bg="gray.50" borderRadius="8px" p="14px 15px" mt="18px">
+	<Box border="1px solid" borderColor="gray.200" bg="white" borderRadius="8px" p="14px 15px" mt="14px">
 		<Flex align="center" gap="11px" mb="9px">
-			<Flex flexShrink={0} w="30px" h="30px" borderRadius="7px" bg="white" align="center" justify="center" color="gray.600">
+			<Box flexShrink={0} color="gray.600" mt="1px">
 				<FiSettings size={16} />
-			</Flex>
+			</Box>
 			<Box>
 				<Text fontSize="13.5px" fontWeight="700">
 					{sprintf(
@@ -252,6 +252,7 @@ const ResultFrame = ({
 	tone,
 	title,
 	subtitle,
+	bannerFooter,
 	children,
 	onRunAgain,
 	onOpenReport,
@@ -259,6 +260,7 @@ const ResultFrame = ({
 	tone: Tone;
 	title: string;
 	subtitle: ReactNode;
+	bannerFooter?: ReactNode;
 	children?: ReactNode;
 	onRunAgain: () => void;
 	onOpenReport: () => void;
@@ -302,6 +304,7 @@ const ResultFrame = ({
 				<Text fontSize="12.5px" color="gray.600" mt="3px" lineHeight="1.55">
 					{subtitle}
 				</Text>
+				{bannerFooter}
 			</Box>
 		</Flex>
 
@@ -383,6 +386,24 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 			tone="red"
 			title={__("The test email didn't arrive", "user-registration")}
 			subtitle={<RichText text={diagnosis.message} />}
+			bannerFooter={
+				sendError ? (
+					<Button
+						as="a"
+						href={window._UR_EMAIL_HEALTH_.mailLogUrl}
+						target="_blank"
+						rel="noreferrer noopener"
+						variant="link"
+						colorScheme="primary"
+						fontSize="12px"
+						fontWeight="700"
+						mt="7px"
+						rightIcon={<FiExternalLink size={11} />}
+					>
+						{__("Open the mail log", "user-registration")}
+					</Button>
+				) : undefined
+			}
 			onRunAgain={onRunAgain}
 			onOpenReport={onOpenReport}
 		>

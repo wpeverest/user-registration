@@ -575,6 +575,7 @@ class UR_Admin_Assets {
 					'phpVersion'    => PHP_VERSION,
 					'pluginVersion' => defined( 'UR_VERSION' ) ? UR_VERSION : '',
 					'smartSmtpUrl'  => admin_url( 'admin.php?page=smart-smtp#/primary-connection' ),
+					'mailLogUrl'    => ur_get_mail_log_url(),
 				)
 			);
 		}

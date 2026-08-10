@@ -10,5 +10,6 @@ interface Window {
 		phpVersion: string;
 		pluginVersion: string;
 		smartSmtpUrl: string;
+		mailLogUrl: string;
 	};
 }

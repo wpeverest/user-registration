@@ -16,7 +16,7 @@ const IssueList = ({ issues }: { issues: HealthCheck[] }) => {
 	}
 
 	return (
-		<Box border="1px solid" borderColor="orange.200" bg="orange.50" borderRadius="8px" mt="18px" overflow="hidden">
+		<Box border="1px solid" borderColor="gray.200" bg="white" borderRadius="8px" mt="14px" overflow="hidden">
 			<Flex
 				as="button"
 				type="button"
