@@ -19,6 +19,7 @@ import {
 	DisabledEmails,
 	MembershipField,
 	PaymentSetup,
+	RegistrationDisabled,
 	RequiredPagesMissing,
 	SendTestEmail,
 	SpamProtection
@@ -35,6 +36,7 @@ const ticketUrl =
 
 const SiteAssistant = () => {
 	const [open, setOpen] = useState({
+		registrationDisabled: false,
 		defaultForm: false,
 		requiredPages: false,
 		paymentSetup: false,
@@ -43,6 +45,12 @@ const SiteAssistant = () => {
 		spamProtection: false,
 		membershipField: false
 	});
+
+	// Check if the WordPress "Anyone can register" option allows registration
+	const usersCanRegister =
+		typeof _UR_DASHBOARD_ !== "undefined" &&
+		_UR_DASHBOARD_.site_assistant_data &&
+		_UR_DASHBOARD_.site_assistant_data.users_can_register;
 
 	// Check if default form exists
 	const hasDefaultForm =
@@ -174,6 +182,7 @@ const SiteAssistant = () => {
 		(id) => {
 			if (typeof id === "undefined") {
 				const site_config_array = [
+					usersCanRegister,
 					hasDefaultForm,
 					missingPagesData.length === 0,
 					!shouldShowMembershipField,
@@ -184,6 +193,7 @@ const SiteAssistant = () => {
 				];
 
 				const openKeys = [
+					"registrationDisabled",
 					"defaultForm",
 					"requiredPages",
 					"membershipField",
@@ -211,6 +221,7 @@ const SiteAssistant = () => {
 			});
 		},
 		[
+			usersCanRegister,
 			hasDefaultForm,
 			missingPagesData.length,
 			shouldShowMembershipField,
@@ -225,6 +236,7 @@ const SiteAssistant = () => {
 	useEffect(() => {
 		// Check if all components are handled
 		const allComponentsHandled =
+			usersCanRegister &&
 			hasDefaultForm &&
 			missingPagesData.length === 0 &&
 			!shouldShowMembershipField &&
@@ -245,6 +257,7 @@ const SiteAssistant = () => {
 		}
 
 		const site_config_array = [
+			usersCanRegister,
 			hasDefaultForm,
 			missingPagesData.length === 0,
 			!shouldShowMembershipField,
@@ -286,6 +299,7 @@ const SiteAssistant = () => {
 
 		toggleOpen();
 	}, [
+		usersCanRegister,
 		hasDefaultForm,
 		missingPagesData.length,
 		shouldShowMembershipField,
@@ -338,6 +352,15 @@ const SiteAssistant = () => {
 				)}
 				{!allCompleted && (
 					<Stack gap="5">
+						{/* Registration Disabled - only show if WordPress "Anyone can register" is off */}
+						{!usersCanRegister && (
+							<RegistrationDisabled
+								isOpen={open.registrationDisabled}
+								onToggle={() => toggleOpen("registrationDisabled")}
+								numbering={++config_number}
+							/>
+						)}
+
 						{/* Default Form Missing - only show if no default form exists */}
 						{!hasDefaultForm && (
 							<DefaultFormMissing

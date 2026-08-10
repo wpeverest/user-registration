@@ -450,7 +450,7 @@ class UR_Frontend {
 		$is_admin = in_array( 'administrator', (array) $user->roles, true );
 
 		if ( $is_admin ) {
-			echo esc_html_e( 'You do not have any payment records', 'user-registration' );
+			esc_html_e( 'You do not have any payment records', 'user-registration' );
 			return;
 		}
 
