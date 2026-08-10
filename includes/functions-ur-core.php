@@ -10664,7 +10664,11 @@ if ( ! function_exists( 'user_registration_profile_details_form_field_datas' ) )
 
 if ( ! function_exists( 'ur_has_membership_plans' ) ) {
 	/**
-	 * Check whether at least one published membership plan exists.
+	 * Check whether at least one active membership plan exists.
+	 *
+	 * A deactivated plan stays published and only has its status flag turned off,
+	 * so the post status alone is not enough. This mirrors the active check in
+	 * MembershipService::prepare_membership_data().
 	 *
 	 * @return bool
 	 */
@@ -10673,14 +10677,26 @@ if ( ! function_exists( 'ur_has_membership_plans' ) ) {
 			return false;
 		}
 
-		return (bool) get_posts(
+		$memberships = get_posts(
 			array(
-				'post_type'      => 'ur_membership',
-				'post_status'    => 'publish',
-				'posts_per_page' => 1,
-				'fields'         => 'ids',
+				'post_type'              => 'ur_membership',
+				'post_status'            => 'publish',
+				'posts_per_page'         => -1,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			)
 		);
+
+		foreach ( $memberships as $membership ) {
+			$membership_content = json_decode( wp_unslash( $membership->post_content ), true );
+
+			if ( ! empty( $membership_content['status'] ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
 
