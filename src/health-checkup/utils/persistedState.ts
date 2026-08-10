@@ -17,6 +17,8 @@ export interface PersistedState {
 	testEmailSent: boolean;
 	summary: ScanSummary | null;
 	sections: CheckSection[];
+	/** Optional, so a payload saved before this existed still restores. */
+	sendError?: string | null;
 }
 
 // Bumping the suffix retires state saved by an older shape rather than letting

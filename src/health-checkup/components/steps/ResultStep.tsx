@@ -16,6 +16,8 @@ interface ResultStepProps {
 	onOpenReport: () => void;
 	smartSmtpStatus: SmartSmtpStatus;
 	smtpPlugin: SmtpPluginInfo | null;
+	/** The server's own error, when the test send failed outright. */
+	sendError?: string | null;
 }
 
 // The scan already worked out the cause and worded it; re-deriving it here would
@@ -38,7 +40,22 @@ const CAUSE_PRIORITY = [
 // Causes whose fix is "connect a proper mail service".
 const SMTP_FIXABLE = ["sending_route", "smtp_setup", "smtp_connection"];
 
-const diagnoseNonDelivery = (checks: HealthCheck[], smtpPlugin: SmtpPluginInfo | null) => {
+const diagnoseNonDelivery = (
+	checks: HealthCheck[],
+	smtpPlugin: SmtpPluginInfo | null,
+	sendError?: string | null
+) => {
+	// An error from the mail server itself outranks every inference below it:
+	// the scan predicts what should happen, this is what did.
+	if (sendError) {
+		return {
+			causeKey: "send_failed",
+			message: sendError,
+			showSmartSmtpAction: true,
+			showOtherPluginNotice: false,
+		};
+	}
+
 	const failing = new Map(
 		checks
 			.filter((check) => check.status === "error" || check.status === "warning")
@@ -301,7 +318,7 @@ const ResultFrame = ({
 	</Box>
 );
 
-const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus, smtpPlugin }: ResultStepProps) => {
+const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus, smtpPlugin, sendError }: ResultStepProps) => {
 	const openIssues = checks.filter(
 		(check) => check.status === "error" || check.status === "warning"
 	);
@@ -356,7 +373,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 		);
 	}
 
-	const diagnosis = diagnoseNonDelivery(checks, smtpPlugin);
+	const diagnosis = diagnoseNonDelivery(checks, smtpPlugin, sendError);
 	// The diagnosis already speaks to whichever check caused it, so listing that
 	// one again below would just repeat itself.
 	const otherIssues = openIssues.filter((check) => check.key !== diagnosis.causeKey);

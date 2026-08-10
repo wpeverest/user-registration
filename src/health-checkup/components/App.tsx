@@ -116,13 +116,14 @@ const App = () => {
 	const [smtpPlugin, setSmtpPlugin] = useState<SmtpPluginInfo | null>(restored?.smtpPlugin ?? null);
 	const [summary, setSummary] = useState<ScanSummary | null>(restored?.summary ?? null);
 	const [sections, setSections] = useState<CheckSection[]>(restored?.sections ?? []);
+	const [sendError, setSendError] = useState<string | null>(restored?.sendError ?? null);
 	const rootRef = useRef<HTMLDivElement>(null);
 
 	// Survive a page refresh: without this the admin lands back on the intro and
 	// loses a completed run.
 	useEffect(() => {
-		saveState({ step, checks, deliveryOutcome, smartSmtpStatus, smtpPlugin, testEmailSent, summary, sections });
-	}, [step, checks, deliveryOutcome, smartSmtpStatus, smtpPlugin, testEmailSent, summary, sections]);
+		saveState({ step, checks, deliveryOutcome, smartSmtpStatus, smtpPlugin, testEmailSent, summary, sections, sendError });
+	}, [step, checks, deliveryOutcome, smartSmtpStatus, smtpPlugin, testEmailSent, summary, sections, sendError]);
 
 	// Prevents Chrome's scroll-anchoring from re-adjusting scroll after a step change.
 	useEffect(() => {
@@ -147,6 +148,7 @@ const App = () => {
 		setDeliveryOutcome(null);
 		setSummary(null);
 		setSections([]);
+		setSendError(null);
 		setStep("scan");
 	};
 
@@ -162,7 +164,19 @@ const App = () => {
 		setIsReportOpen(true);
 	};
 
+	// Nothing for the admin to confirm, so record the outcome here and carry the
+	// server's own error through to the result.
+	const handleSendFailure = (error: string) => {
+		// The message is built for an admin notice and can carry markup, which
+		// RichText would render as visible tags — it parses no HTML by design.
+		setSendError(error.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim());
+		setDeliveryOutcome("none");
+		confirmDelivery("none").catch(() => undefined);
+		setStep("result-none");
+	};
+
 	const handleChoice = (outcome: DeliveryOutcome) => {
+		setSendError(null);
 		setDeliveryOutcome(outcome);
 		confirmDelivery(outcome).catch(() => undefined);
 		setStep(
@@ -200,6 +214,7 @@ const App = () => {
 						onChoice={handleChoice}
 						alreadySent={testEmailSent}
 						onSent={() => setTestEmailSent(true)}
+						onSendFailed={handleSendFailure}
 					/>
 				);
 			case "result-good":
@@ -218,6 +233,7 @@ const App = () => {
 						onOpenReport={() => openReport(checks, deliveryOutcome, summary, sections)}
 						smartSmtpStatus={smartSmtpStatus}
 						smtpPlugin={smtpPlugin}
+						sendError={sendError}
 					/>
 				);
 			}

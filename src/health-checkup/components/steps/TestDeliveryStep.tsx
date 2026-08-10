@@ -18,9 +18,10 @@ interface TestDeliveryStepProps {
 	onChoice: (outcome: DeliveryOutcome) => void;
 	alreadySent: boolean;
 	onSent: () => void;
+	onSendFailed: (error: string) => void;
 }
 
-const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepProps) => {
+const TestDeliveryStep = ({ onChoice, alreadySent, onSent, onSendFailed }: TestDeliveryStepProps) => {
 	const [isSending, setIsSending] = useState(!alreadySent);
 	const [barWidth, setBarWidth] = useState("3%");
 	const [pendingChoice, setPendingChoice] = useState<DeliveryOutcome | null>(null);
@@ -35,13 +36,18 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent }: TestDeliveryStepPro
 
 		requestAnimationFrame(() => requestAnimationFrame(() => setBarWidth("100%")));
 
+		// A failed send already answers the question this step asks — don't send
+		// someone hunting for a message that never left.
 		sendTestEmail(adminEmail)
-			.catch(() => undefined)
-			.finally(() => {
+			.then(() => {
 				setIsSending(false);
 				onSent();
+			})
+			.catch((error: Error) => {
+				onSent();
+				onSendFailed(error.message);
 			});
-	}, [adminEmail, alreadySent, onSent]);
+	}, [adminEmail, alreadySent, onSent, onSendFailed]);
 
 	const choices: Choice[] = [
 		{
