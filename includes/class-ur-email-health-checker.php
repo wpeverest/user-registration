@@ -241,9 +241,33 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			}
 
 			if ( 'replaced' === $transport['route'] ) {
-				// Whether its connection actually works isn't knowable without
-				// sending something, so this states the arrangement and leaves
-				// the answer to the delivery test rather than guessing at it.
+				// A recognised SMTP plugin owning wp_mail() is the arrangement
+				// this whole screen recommends, so report it as such. That its
+				// internals can't be read from out here is true but useless to
+				// an admin — flagging it as unknown would cast doubt on exactly
+				// the setup we told them to install.
+				$smtp_plugin = self::detected_smtp_plugin();
+
+				if ( $smtp_plugin ) {
+					return array(
+						'key'     => 'sending_route',
+						'title'   => sprintf(
+							/* translators: %s: SMTP plugin name */
+							__( 'Sending through %s', 'user-registration' ),
+							$smtp_plugin['name']
+						),
+						'status'  => 'pass',
+						'message' => sprintf(
+							/* translators: %s: SMTP plugin name */
+							__( 'Mail is handed to `%s` rather than the server\'s own mail program, which is what you want. The delivery test in the next step confirms its connection is working.', 'user-registration' ),
+							$smtp_plugin['name']
+						),
+						'fix'     => '',
+					);
+				}
+
+				// Anything else taking over is worth flagging: we can't see what
+				// it does, and the admin may not know it's there.
 				return array(
 					'key'     => 'sending_route',
 					'title'   => sprintf(
