@@ -68,6 +68,10 @@ class UR_Form_Validation extends UR_Validation {
 	 * @return array
 	 */
 	public function reorganize_form_data( $valid_form_data, $form_field_data, $form_id ) {
+		if ( ! is_array( $valid_form_data ) ) {
+			$valid_form_data = array();
+		}
+
 		if ( empty( $form_field_data ) ) {
 			return $valid_form_data;
 		}

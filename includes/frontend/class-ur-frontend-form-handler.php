@@ -60,6 +60,10 @@ class UR_Frontend_Form_Handler {
 			)
 		);
 
+		// Reset per-submission static state so a prior request can't leak stale data into this one (e.g. on persistent PHP workers).
+		self::$response_array  = array();
+		self::$valid_form_data = array();
+
 		self::$form_id      = $form_id;
 		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 

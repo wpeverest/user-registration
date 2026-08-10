@@ -94,6 +94,7 @@ class UR_AJAX {
 			'create_default_form'                  => false,
 			'generate_required_pages'              => false,
 			'handle_default_wordpress_login'       => false,
+			'enable_emails'                        => false,
 			'skip_site_assistant_section'          => false,
 			'login_settings_page_validation'       => false,
 			'activate_dependent_module'            => false,
@@ -273,7 +274,16 @@ class UR_AJAX {
 			}
 		}
 
-		$profile                        = user_registration_form_data( $user_id, $form_id );
+		$profile = user_registration_form_data( $user_id, $form_id );
+
+		if ( empty( $profile ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Unable to update profile. No editable profile fields were found for this account.', 'user-registration' ),
+				)
+			);
+		}
+
 		$is_admin_user                  = $_POST['is_admin_user'] ?? false;
 		list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, $is_admin_user );
 		$user                           = get_userdata( $user_id );
@@ -2611,6 +2621,25 @@ class UR_AJAX {
 		} else {
 			wp_send_json_error( array( 'message' => __( 'Invalid action specified.', 'user-registration' ) ) );
 		}
+	}
+
+	/**
+	 * Turn the master "Disable emails" setting back off.
+	 */
+	public static function enable_emails() {
+		check_ajax_referer( 'wp_rest', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to modify email settings.', 'user-registration' ) ) );
+		}
+
+		update_option( 'user_registration_email_setting_disable_email', 'no' );
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Emails have been enabled successfully.', 'user-registration' ),
+			)
+		);
 	}
 
 	/**
