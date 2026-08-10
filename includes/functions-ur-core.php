@@ -11134,6 +11134,51 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_get_non_urm_user_profile_fields' ) ) {
+	/**
+	 * Fallback profile fields for users with no resolvable UR registration form.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return array
+	 */
+	function ur_get_non_urm_user_profile_fields( $user_id ) {
+		if ( ! get_userdata( $user_id ) ) {
+			return array();
+		}
+
+		return apply_filters(
+			'user_registration_non_urm_user_profile_fields',
+			array(
+				'user_registration_user_login' => array(
+					'label'     => __( 'Username', 'user-registration' ),
+					'type'      => 'text',
+					'field_key' => 'user_login',
+					'required'  => true,
+				),
+				'user_registration_first_name' => array(
+					'label'     => __( 'First Name', 'user-registration' ),
+					'type'      => 'text',
+					'field_key' => 'first_name',
+					'required'  => false,
+				),
+				'user_registration_user_email' => array(
+					'label'     => __( 'User Email', 'user-registration' ),
+					'type'      => 'email',
+					'field_key' => 'user_email',
+					'required'  => true,
+				),
+				'user_registration_last_name'  => array(
+					'label'     => __( 'Last Name', 'user-registration' ),
+					'type'      => 'text',
+					'field_key' => 'last_name',
+					'required'  => false,
+				),
+			),
+			$user_id
+		);
+	}
+}
 
 if ( ! function_exists( 'urm_update_user_profile_data' ) ) {
 	/**

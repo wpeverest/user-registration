@@ -275,6 +275,11 @@ class UR_AJAX {
 
 		$profile = user_registration_form_data( $user_id, $form_id );
 
+		// No resolvable UR form (e.g. wp-admin/WooCommerce created user) - fall back to basic fields.
+		if ( empty( $profile ) ) {
+			$profile = ur_get_non_urm_user_profile_fields( $user_id );
+		}
+
 		if ( empty( $profile ) ) {
 			wp_send_json_error(
 				array(
