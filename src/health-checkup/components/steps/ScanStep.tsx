@@ -1,23 +1,37 @@
 import { Box, Button, Flex, useToast } from "@chakra-ui/react";
 import { __, sprintf } from "@wordpress/i18n";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { FiAlertTriangle, FiCheck, FiExternalLink, FiSlash, FiTool } from "react-icons/fi";
+import {
+	FiAlertCircle,
+	FiAlertTriangle,
+	FiCheck,
+	FiExternalLink,
+	FiHelpCircle,
+	FiSlash,
+} from "react-icons/fi";
 import {
 	activateSmtpPlugin,
 	CheckAction,
+	CheckSection,
 	CheckStatus,
 	HealthCheck,
 	installSmartSmtp,
 	runScan,
 	SmartSmtpStatus,
 	SmtpPluginInfo,
+	Verdict,
 } from "../../api/healthCheckupApi";
 import RichText from "../RichText";
 import Text from "../Text";
 
 interface ScanStepProps {
-	onNext: (checks: HealthCheck[], smartSmtpStatus: SmartSmtpStatus, smtpPlugin: SmtpPluginInfo | null) => void;
-	onOpenReport: (checks: HealthCheck[]) => void;
+	onNext: (
+		checks: HealthCheck[],
+		smartSmtpStatus: SmartSmtpStatus,
+		smtpPlugin: SmtpPluginInfo | null,
+		verdict: Verdict | null
+	) => void;
+	onOpenReport: (checks: HealthCheck[], verdict: Verdict | null) => void;
 }
 
 // Resolves a failing check in place — a single inline link, deliberately not a
@@ -90,9 +104,7 @@ const CheckActionLink = ({ action, onResolved }: { action: CheckAction; onResolv
 	);
 };
 
-// "blocked" is deliberately neutral, not red — the setting is fine, so it must
-// not read as one more thing to go and fix.
-const rowStyles: Record<CheckStatus, {
+interface RowStyle {
 	icon: ReactNode;
 	badgeLabel: string;
 	borderColor: string;
@@ -103,7 +115,11 @@ const rowStyles: Record<CheckStatus, {
 	badgeColor: string;
 	badgeBg: string;
 	badgeBorderColor: string;
-}> = {
+}
+
+// Red is reserved for "this will fail". A setting that's merely switched off,
+// or something we simply couldn't verify, must not look like a broken site.
+const rowStyles: Record<CheckStatus, RowStyle> = {
 	pass: {
 		icon: <FiCheck size={18} />,
 		badgeLabel: __("Pass", "user-registration"),
@@ -116,9 +132,9 @@ const rowStyles: Record<CheckStatus, {
 		badgeBg: "green.50",
 		badgeBorderColor: "green.200",
 	},
-	issue: {
+	error: {
 		icon: <FiAlertTriangle size={18} />,
-		badgeLabel: __("Issue", "user-registration"),
+		badgeLabel: __("Will fail", "user-registration"),
 		borderColor: "red.200",
 		bg: "red.50",
 		iconColor: "red.600",
@@ -127,6 +143,30 @@ const rowStyles: Record<CheckStatus, {
 		badgeColor: "red.600",
 		badgeBg: "white",
 		badgeBorderColor: "red.200",
+	},
+	warning: {
+		icon: <FiAlertCircle size={18} />,
+		badgeLabel: __("May fail", "user-registration"),
+		borderColor: "orange.200",
+		bg: "orange.50",
+		iconColor: "orange.700",
+		titleColor: "orange.700",
+		messageColor: "gray.600",
+		badgeColor: "orange.700",
+		badgeBg: "white",
+		badgeBorderColor: "orange.200",
+	},
+	unknown: {
+		icon: <FiHelpCircle size={18} />,
+		badgeLabel: __("Can't tell", "user-registration"),
+		borderColor: "gray.200",
+		bg: "gray.50",
+		iconColor: "gray.500",
+		titleColor: "gray.700",
+		messageColor: "gray.600",
+		badgeColor: "gray.600",
+		badgeBg: "white",
+		badgeBorderColor: "gray.300",
 	},
 	blocked: {
 		icon: <FiSlash size={18} />,
@@ -151,8 +191,8 @@ const CheckRow = ({
 	index: number;
 	onResolved: () => void;
 }) => {
-	const isIssue = check.status === "issue";
 	const style = rowStyles[check.status] ?? rowStyles.pass;
+	const isActionable = check.status === "error" || check.status === "warning";
 
 	return (
 		<Flex
@@ -164,7 +204,7 @@ const CheckRow = ({
 			gap="11px"
 			align="flex-start"
 			opacity={0}
-			animation={`rowIn 360ms ease ${index * 70}ms forwards`}
+			animation={`rowIn 360ms ease ${index * 55}ms forwards`}
 			sx={{
 				"@keyframes rowIn": {
 					to: { opacity: 1, transform: "none" },
@@ -199,12 +239,12 @@ const CheckRow = ({
 				<Text fontSize="12.5px" color={style.messageColor} mt="3px" lineHeight="1.55">
 					<RichText text={check.message} />
 				</Text>
-				{isIssue && check.fix && (
-					<Text fontSize="12.5px" color="red.600" mt="6px" lineHeight="1.55" fontWeight="600">
+				{isActionable && check.fix && (
+					<Text fontSize="12.5px" color={style.titleColor} mt="6px" lineHeight="1.55" fontWeight="600">
 						<RichText text={check.fix} />
 					</Text>
 				)}
-				{isIssue && check.action && (
+				{isActionable && check.action && (
 					<Box>
 						<CheckActionLink action={check.action} onResolved={onResolved} />
 					</Box>
@@ -214,27 +254,102 @@ const CheckRow = ({
 	);
 };
 
+const VERDICT_TONE: Record<Verdict["level"], { tone: string; icon: ReactNode; iconColor: string }> = {
+	pass: { tone: "green", icon: <FiCheck size={17} />, iconColor: "green.600" },
+	warning: { tone: "orange", icon: <FiAlertCircle size={17} />, iconColor: "orange.700" },
+	error: { tone: "red", icon: <FiAlertTriangle size={17} />, iconColor: "red.600" },
+};
+
+// The headline. Every row below exists to justify this one sentence, so it goes
+// above them rather than being summarised at the bottom.
+const VerdictBanner = ({ verdict }: { verdict: Verdict }) => {
+	const { tone, icon, iconColor } = VERDICT_TONE[verdict.level] ?? VERDICT_TONE.warning;
+
+	return (
+		<Flex
+			bg={`${tone}.50`}
+			border="1px solid"
+			borderColor={`${tone}.200`}
+			borderRadius="9px"
+			p="15px 16px"
+			gap="13px"
+			mb="24px"
+		>
+			<Flex
+				flexShrink={0}
+				w="32px"
+				h="32px"
+				borderRadius="8px"
+				bg="white"
+				align="center"
+				justify="center"
+				color={iconColor}
+			>
+				{icon}
+			</Flex>
+			<Box>
+				<Text as="h3" fontSize="15px" fontWeight="700" letterSpacing="-0.01em" color="gray.800">
+					{verdict.title}
+				</Text>
+				<Text fontSize="12.5px" color="gray.600" mt="3px" lineHeight="1.6">
+					<RichText text={verdict.message} />
+				</Text>
+			</Box>
+		</Flex>
+	);
+};
+
+const SectionBlock = ({
+	section,
+	startIndex,
+	onResolved,
+}: {
+	section: CheckSection;
+	startIndex: number;
+	onResolved: () => void;
+}) => (
+	<Box mb="26px">
+		<Text fontSize="13.5px" fontWeight="700" color="gray.800" mb="2px">
+			{section.title}
+		</Text>
+		<Text fontSize="12.5px" color="gray.500" mb="12px" lineHeight="1.55">
+			{section.description}
+		</Text>
+		<Flex direction="column" gap="8px">
+			{section.checks.map((check, index) => (
+				<CheckRow key={check.key} check={check} index={startIndex + index} onResolved={onResolved} />
+			))}
+		</Flex>
+	</Box>
+);
+
 const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [barWidth, setBarWidth] = useState("3%");
+	const [sections, setSections] = useState<CheckSection[]>([]);
+	const [verdict, setVerdict] = useState<Verdict | null>(null);
 	const [checks, setChecks] = useState<HealthCheck[]>([]);
 	const [smartSmtpStatus, setSmartSmtpStatus] = useState<SmartSmtpStatus>("not_installed");
 	const [smtpPlugin, setSmtpPlugin] = useState<SmtpPluginInfo | null>(null);
 	const [error, setError] = useState("");
 	const hasStarted = useRef(false);
 
+	const applyResult = useCallback((result: Awaited<ReturnType<typeof runScan>>) => {
+		setSections(result.sections);
+		setVerdict(result.verdict);
+		setChecks(result.checks);
+		setSmartSmtpStatus(result.smartsmtp_status);
+		setSmtpPlugin(result.smtp_plugin);
+	}, []);
+
 	// Re-read the checks after an inline fix so the row reflects the new state.
 	const rescan = useCallback(() => {
 		setError("");
 
 		return runScan()
-			.then((result) => {
-				setChecks(result.checks);
-				setSmartSmtpStatus(result.smartsmtp_status);
-				setSmtpPlugin(result.smtp_plugin);
-			})
+			.then(applyResult)
 			.catch((err: Error) => setError(err.message));
-	}, []);
+	}, [applyResult]);
 
 	useEffect(() => {
 		if (hasStarted.current) {
@@ -246,18 +361,14 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 
 		runScan()
 			.then((result) => {
-				setChecks(result.checks);
-				setSmartSmtpStatus(result.smartsmtp_status);
-				setSmtpPlugin(result.smtp_plugin);
+				applyResult(result);
 				setIsLoading(false);
 			})
 			.catch((err: Error) => {
 				setError(err.message);
 				setIsLoading(false);
 			});
-	}, []);
-
-	const issueCount = checks.filter((check) => check.status === "issue").length;
+	}, [applyResult]);
 
 	return (
 		<Box>
@@ -273,16 +384,16 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 			</Text>
 			<Text as="h2" fontSize="21px" fontWeight="600" mb="10px" letterSpacing="-0.01em" color="gray.800">
 				{isLoading
-					? __("Checking your settings…", "user-registration")
+					? __("Checking your setup…", "user-registration")
 					: __("Here's what we found", "user-registration")}
 			</Text>
 			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px">
 				{isLoading
-					? __("Reading your current configuration — this only takes a moment.", "user-registration")
+					? __("Reading your mail configuration and checking what your domain publishes.", "user-registration")
 					: checks.length > 0
 						? sprintf(
 							/* translators: %d: number of checks run */
-							__("%d checks run against your email settings.", "user-registration"),
+							__("%d checks run against your mail setup.", "user-registration"),
 							checks.length
 						)
 						: ""}
@@ -310,51 +421,27 @@ const ScanStep = ({ onNext, onOpenReport }: ScanStepProps) => {
 
 			{!isLoading && !error && (
 				<>
-					<Flex direction="column" gap="8px" mb="4px">
-						{checks.map((check, index) => (
-							<CheckRow key={check.key} check={check} index={index} onResolved={rescan} />
-						))}
-					</Flex>
+					{verdict && <VerdictBanner verdict={verdict} />}
 
-					<Flex
-						align="center"
-						gap="13px"
-						border="1px solid"
-						borderColor={issueCount === 0 ? "green.200" : "orange.200"}
-						bg={issueCount === 0 ? "green.50" : "orange.50"}
-						borderRadius="8px"
-						p="13px 15px"
-						mt="14px"
-					>
-						<Flex
-							flexShrink={0}
-							w="30px"
-							h="30px"
-							borderRadius="8px"
-							bg="white"
-							align="center"
-							justify="center"
-							color={issueCount === 0 ? "green.600" : "orange.700"}
-						>
-							{issueCount === 0 ? <FiCheck size={16} /> : <FiTool size={16} />}
-						</Flex>
-						<Box fontSize="12.5px" color="gray.600" lineHeight="1.5">
-							<Text as="span" display="block" fontSize="13.5px" fontWeight="700" color="inherit" mb="1px">
-								{issueCount === 0
-									? __("All clear", "user-registration")
-									: `${issueCount} ${issueCount === 1 ? __("issue", "user-registration") : __("issues", "user-registration")} ${__("found", "user-registration")}`}
-							</Text>
-							{issueCount === 0
-								? __("Nothing to fix here — continue to the live delivery test.", "user-registration")
-								: __("Worth fixing first, then we'll test real delivery.", "user-registration")}
-						</Box>
-					</Flex>
+					{sections.map((section, sectionIndex) => (
+						<SectionBlock
+							key={section.key}
+							section={section}
+							startIndex={sectionIndex === 0 ? 0 : sections[0].checks.length}
+							onResolved={rescan}
+						/>
+					))}
 
-					<Flex gap="10px" mt="20px" wrap="wrap" justify="flex-end">
-						<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={() => onOpenReport(checks)}>
+					<Flex gap="10px" mt="4px" wrap="wrap" justify="flex-end">
+						<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={() => onOpenReport(checks, verdict)}>
 							{__("Send report to support", "user-registration")}
 						</Button>
-						<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={() => onNext(checks, smartSmtpStatus, smtpPlugin)}>
+						<Button
+							colorScheme="primary"
+							fontSize="13.5px"
+							fontWeight="600"
+							onClick={() => onNext(checks, smartSmtpStatus, smtpPlugin, verdict)}
+						>
 							{__("Next: test delivery", "user-registration")}
 						</Button>
 					</Flex>

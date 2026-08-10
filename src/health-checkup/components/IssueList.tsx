@@ -33,8 +33,8 @@ const IssueList = ({ issues }: { issues: HealthCheck[] }) => {
 					{sprintf(
 						/* translators: %d: number of settings still worth fixing */
 						_n(
-							"There is %d setting worth fixing",
-							"There are %d settings worth fixing",
+							"There is %d more thing to fix",
+							"There are %d more things to fix",
 							issues.length,
 							"user-registration"
 						),

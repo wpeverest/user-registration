@@ -18,29 +18,46 @@ interface ResultStepProps {
 	smtpPlugin: SmtpPluginInfo | null;
 }
 
-// Ordered so an earlier, more fundamental issue always wins over a later one.
+// The scan already worked out the cause and worded it; re-deriving it here would
+// only let the two drift apart. So take the most fundamental failing check and
+// reuse its message — this order is "what stops mail earliest".
+const CAUSE_PRIORITY = [
+	"sending_enabled",
+	"sending_route",
+	"recent_failures",
+	"smtp_setup",
+	"smtp_connection",
+	"from_address_valid",
+	"from_alignment",
+	"from_domain",
+	"envelope_sender",
+];
+
+// Causes whose fix is "connect a proper mail service".
+const SMTP_FIXABLE = ["sending_route", "smtp_setup", "smtp_connection"];
+
 const diagnoseNonDelivery = (checks: HealthCheck[], smtpPlugin: SmtpPluginInfo | null) => {
-	const sendingCheck = checks.find((check) => check.key === "sending_enabled");
-	const smtpCheck = checks.find((check) => check.key === "smtp_configured");
+	const failing = new Map(
+		checks
+			.filter((check) => check.status === "error" || check.status === "warning")
+			.map((check) => [check.key, check])
+	);
 
-	if (sendingCheck?.status === "issue") {
-		return {
-			message: __("Email sending is switched off in your settings — nothing goes out until that's back on.", "user-registration"),
-			showSmartSmtpAction: false,
-			showOtherPluginNotice: false,
-		};
-	}
+	const causeKey = CAUSE_PRIORITY.find((key) => failing.has(key));
+	const cause = causeKey ? failing.get(causeKey) : undefined;
 
-	if (smtpCheck?.status === "issue") {
+	if (cause && causeKey) {
 		return {
-			message: smtpCheck.message,
-			showSmartSmtpAction: true,
+			causeKey,
+			message: cause.message,
+			showSmartSmtpAction: SMTP_FIXABLE.includes(causeKey),
 			showOtherPluginNotice: false,
 		};
 	}
 
 	if (smtpPlugin?.is_smartsmtp) {
 		return {
+			causeKey: null,
 			message: __("SmartSMTP is active and configured, but the test still didn't arrive — its primary connection may need reconnecting.", "user-registration"),
 			showSmartSmtpAction: true,
 			showOtherPluginNotice: false,
@@ -49,6 +66,7 @@ const diagnoseNonDelivery = (checks: HealthCheck[], smtpPlugin: SmtpPluginInfo |
 
 	if (smtpPlugin) {
 		return {
+			causeKey: null,
 			message: sprintf(
 				/* translators: %s: SMTP plugin name, e.g. "FluentSMTP" */
 				__("Your site sends through `%s`, but the test didn't arrive — most likely that plugin's connection settings (host, port, or API key), or the receiving server rejecting the message.", "user-registration"),
@@ -60,6 +78,7 @@ const diagnoseNonDelivery = (checks: HealthCheck[], smtpPlugin: SmtpPluginInfo |
 	}
 
 	return {
+		causeKey: null,
 		message: __("An SMTP connection is configured, but the test didn't arrive — check whichever service handles your outgoing mail for delivery errors.", "user-registration"),
 		showSmartSmtpAction: false,
 		showOtherPluginNotice: false,
@@ -281,7 +300,9 @@ const ResultFrame = ({
 );
 
 const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus, smtpPlugin }: ResultStepProps) => {
-	const openIssues = checks.filter((check) => check.status === "issue");
+	const openIssues = checks.filter(
+		(check) => check.status === "error" || check.status === "warning"
+	);
 
 	if (variant === "good") {
 		return (
@@ -336,9 +357,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 	const diagnosis = diagnoseNonDelivery(checks, smtpPlugin);
 	// The diagnosis already speaks to whichever check caused it, so listing that
 	// one again below would just repeat itself.
-	const otherIssues = openIssues.filter(
-		(check) => check.key !== "sending_enabled" && check.key !== "smtp_configured"
-	);
+	const otherIssues = openIssues.filter((check) => check.key !== diagnosis.causeKey);
 
 	return (
 		<ResultFrame

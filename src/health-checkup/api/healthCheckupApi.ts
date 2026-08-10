@@ -8,8 +8,13 @@ export interface CheckAction {
 	url?: string;
 }
 
-/** "blocked": the setting is on but "Disable Emails" stops it — nothing is sent, yet nothing here to fix. */
-export type CheckStatus = "pass" | "issue" | "blocked";
+/**
+ * "error"   — mail will fail or be rejected.
+ * "warning" — mail may be filtered, or a setting is off on purpose.
+ * "blocked" — the setting is on but "Disable Emails" stops it; nothing here to fix.
+ * "unknown" — we couldn't verify it (no DNS, local site), which is not the same as a failure.
+ */
+export type CheckStatus = "pass" | "error" | "warning" | "blocked" | "unknown";
 
 export interface HealthCheck {
 	key: string;
@@ -18,6 +23,20 @@ export interface HealthCheck {
 	message: string;
 	fix: string;
 	action?: CheckAction;
+}
+
+export interface CheckSection {
+	key: "delivery" | "settings";
+	title: string;
+	description: string;
+	checks: HealthCheck[];
+}
+
+/** The one answer the admin actually wants: will these emails arrive? */
+export interface Verdict {
+	level: "pass" | "warning" | "error";
+	title: string;
+	message: string;
 }
 
 export type SmartSmtpStatus = "active" | "inactive" | "not_installed";
@@ -29,8 +48,12 @@ export interface SmtpPluginInfo {
 }
 
 export interface ScanResult {
+	sections: CheckSection[];
+	verdict: Verdict;
+	/** Every check flattened, for the support report and the result screen. */
 	checks: HealthCheck[];
 	issue_count: number;
+	error_count: number;
 	smartsmtp_status: SmartSmtpStatus;
 	smtp_plugin: SmtpPluginInfo | null;
 }

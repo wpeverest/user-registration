@@ -1,4 +1,10 @@
-import { DeliveryOutcome, HealthCheck, SmartSmtpStatus, SmtpPluginInfo } from "../api/healthCheckupApi";
+import {
+	DeliveryOutcome,
+	HealthCheck,
+	SmartSmtpStatus,
+	SmtpPluginInfo,
+	Verdict,
+} from "../api/healthCheckupApi";
 import { WizardStep } from "../components/Stepper";
 
 export interface PersistedState {
@@ -8,6 +14,7 @@ export interface PersistedState {
 	smartSmtpStatus: SmartSmtpStatus;
 	smtpPlugin: SmtpPluginInfo | null;
 	testEmailSent: boolean;
+	verdict: Verdict | null;
 }
 
 // Bumping the suffix retires state saved by an older shape rather than letting
