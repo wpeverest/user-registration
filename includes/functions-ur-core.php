@@ -12315,3 +12315,21 @@ if ( ! function_exists( 'user_registration_create_product_and_price_for_stripe' 
 		}
 	}
 }
+
+if ( ! function_exists( 'ur_maybe_flush_rewrite_rules' ) ) {
+	// Flush only when one of the given account endpoints is missing from the saved rules.
+	function ur_maybe_flush_rewrite_rules( $endpoints ) {
+		if ( ! get_option( 'permalink_structure' ) ) {
+			return;
+		}
+
+		$rules = get_option( 'rewrite_rules', array() );
+
+		foreach ( (array) $endpoints as $endpoint ) {
+			if ( ! isset( $rules[ '(.?.+?)/' . $endpoint . '(/(.*))?/?$' ] ) ) {
+				flush_rewrite_rules();
+				return;
+			}
+		}
+	}
+}
