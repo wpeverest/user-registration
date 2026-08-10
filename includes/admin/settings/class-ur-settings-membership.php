@@ -144,26 +144,38 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 				$has_membership_plans  = ! empty( $membership_repository->get_all_memberships_without_status_filter() );
 			}
 
-			// 'custom' excludes membership-generated and auto-migrated rules, which carry other/no rule_type.
-			$has_custom_content_rules = false;
+			/*
+			 * Rules that prove content restriction is actually in use:
+			 * - 'custom' rules, which can only be created in Pro.
+			 * - the auto-migrated "Legacy: Global Site Rule" (flagged with urcr_is_global), present on
+			 *   older installs that used the old global restriction setting, in both free and Pro.
+			 * Membership-generated rules are deliberately excluded, they are already covered by
+			 * $has_membership_plans.
+			 */
+			$has_content_rules = false;
 			if ( post_type_exists( 'urcr_access_rule' ) ) {
-				$has_custom_content_rules = (bool) get_posts(
+				$has_content_rules = (bool) get_posts(
 					array(
 						'post_type'      => 'urcr_access_rule',
 						'post_status'    => 'any',
 						'posts_per_page' => 1,
 						'fields'         => 'ids',
 						'meta_query'     => array(
+							'relation' => 'OR',
 							array(
 								'key'   => 'urcr_rule_type',
 								'value' => 'custom',
+							),
+							array(
+								'key'     => 'urcr_is_global',
+								'compare' => 'EXISTS',
 							),
 						),
 					)
 				);
 			}
 
-			$has_restriction_in_use = $has_membership_plans || $has_custom_content_rules;
+			$has_restriction_in_use = $has_membership_plans || $has_content_rules;
 
 			$sections['user_registration_content_restriction_settings'] = array(
 				'title'    => __( 'Content Restriction', 'user-registration' ),
