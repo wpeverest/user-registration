@@ -85,7 +85,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 
 		/**
 		 * General membership settings (Renewal Behaviour), or an empty-state
-		 * notice in place of it when no membership plans exist yet.
+		 * notice in place of it when no active membership plan exists yet.
 		 *
 		 * @return array
 		 */
@@ -95,12 +95,23 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 				'type'  => 'card',
 			);
 
-			if ( ! $this->has_membership_plans() ) {
-				$card['desc']     = sprintf(
-					/* translators: %s - Admin URL to create a new membership plan */
-					__( '<strong>No membership plans yet.</strong> Set up a plan to configure the Renewal Behaviour. <a href="%s">Create a membership &rarr;</a>', 'user-registration' ),
-					admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' )
-				);
+			$plan_state = $this->get_membership_plan_state();
+
+			if ( 'active' !== $plan_state ) {
+				if ( 'inactive' === $plan_state ) {
+					$card['desc'] = sprintf(
+						/* translators: %s - Admin URL to the membership plan list */
+						__( '<strong>No active membership plan.</strong> Activate a plan to configure the Renewal Behaviour. <a href="%s">Manage memberships &rarr;</a>', 'user-registration' ),
+						admin_url( 'admin.php?page=user-registration-membership' )
+					);
+				} else {
+					$card['desc'] = sprintf(
+						/* translators: %s - Admin URL to create a new membership plan */
+						__( '<strong>No membership plans yet.</strong> Set up a plan to configure the Renewal Behaviour. <a href="%s">Create a membership &rarr;</a>', 'user-registration' ),
+						admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' )
+					);
+				}
+
 				$card['settings'] = array();
 			} else {
 				$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
@@ -138,18 +149,38 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 		}
 
 		/**
-		 * Whether at least one published membership plan exists.
+		 * State of the published membership plans.
 		 *
-		 * @return bool
+		 * Deactivated plans do not count as usable, since there is nothing to
+		 * renew while every plan is switched off.
+		 *
+		 * @return string One of 'active' (at least one active plan exists),
+		 *                'inactive' (plans exist but all are deactivated) or
+		 *                'none' (no plan has been created yet).
 		 */
-		private function has_membership_plans() {
+		private function get_membership_plan_state() {
 			if ( ! class_exists( 'WPEverest\URMembership\Admin\Repositories\MembershipRepository' ) ) {
-				return true;
+				return 'active';
 			}
 
 			$membership_repository = new WPEverest\URMembership\Admin\Repositories\MembershipRepository();
+			$memberships           = $membership_repository->get_all_memberships_without_status_filter();
+			$has_plan              = false;
 
-			return ! empty( $membership_repository->get_all_membership() );
+			foreach ( $memberships as $membership ) {
+				if ( ! isset( $membership['post_status'] ) || 'publish' !== $membership['post_status'] ) {
+					continue;
+				}
+
+				$has_plan = true;
+				$status   = isset( $membership['post_content']['status'] ) ? $membership['post_content']['status'] : false;
+
+				if ( ur_string_to_bool( $status ) ) {
+					return 'active';
+				}
+			}
+
+			return $has_plan ? 'inactive' : 'none';
 		}
 
 		/**
