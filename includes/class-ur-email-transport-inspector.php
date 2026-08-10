@@ -77,13 +77,11 @@ if ( ! class_exists( 'UR_Email_Transport_Inspector' ) ) :
 				'diverted_by' => null,
 			);
 
-			// A `pre_wp_mail` listener can short-circuit wp_mail() before
-			// PHPMailer is ever built. Crucially it only *might*: such a plugin
-			// typically returns null and lets the normal path continue while its
-			// own connection is unconfigured. Since the only way to find out is
-			// to send a message, this is recorded as a possible diversion rather
-			// than asserted as the route — and the underlying route is still
-			// worked out, because that is what runs if the plugin declines.
+			// A `pre_wp_mail` listener *might* short-circuit wp_mail() before
+			// PHPMailer exists — but one whose own connection is unconfigured
+			// returns null and lets the normal path continue. Only a real send
+			// tells them apart, so record it as a possible diversion and keep
+			// working out the route underneath, which runs if it declines.
 			$inspection['diverted_by'] = self::first_third_party_owner( 'pre_wp_mail' );
 
 			// A plugin can also replace the pluggable wp_mail() outright rather

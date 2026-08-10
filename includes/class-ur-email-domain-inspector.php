@@ -87,9 +87,6 @@ if ( ! class_exists( 'UR_Email_Domain_Inspector' ) ) :
 		);
 
 		/**
-		 * Whether a domain is a local/development one rather than a real
-		 * public domain (e.g. `site.local`, bare `localhost`).
-		 *
 		 * @param string $domain Domain to check.
 		 * @return bool
 		 */
@@ -105,9 +102,6 @@ if ( ! class_exists( 'UR_Email_Domain_Inspector' ) ) :
 		}
 
 		/**
-		 * Whether a domain belongs to a mailbox provider the site owner can't
-		 * publish DNS records for.
-		 *
 		 * @param string $domain Domain to check.
 		 * @return bool
 		 */

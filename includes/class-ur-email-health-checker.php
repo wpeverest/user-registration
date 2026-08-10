@@ -119,16 +119,6 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		}
 
 		/**
-		 * Something can short-circuit wp_mail(), but whether it actually does
-		 * depends on its own connection state — and a plugin that isn't finished
-		 * being set up silently declines and lets mail fall back to the route
-		 * below. Since confirming it means sending a message, this reports the
-		 * possibility and names what the fallback would be.
-		 *
-		 * @param array $transport Transport inspection.
-		 * @return array
-		 */
-		/**
 		 * A name for whatever owns the mail path that reads correctly mid-sentence.
 		 *
 		 * @param array|null $owner Owner descriptor { type, name }.
@@ -171,6 +161,16 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			}
 		}
 
+		/**
+		 * Something can short-circuit wp_mail(), but whether it actually does
+		 * depends on its own connection state — a plugin that isn't finished
+		 * being set up silently declines and lets mail fall back to the route
+		 * below. Confirming it would mean sending a message, so this reports the
+		 * possibility and names the fallback.
+		 *
+		 * @param array $transport Transport inspection.
+		 * @return array
+		 */
 		private static function check_possible_diversion( $transport ) {
 			$owner = $transport['diverted_by'];
 
@@ -905,12 +905,16 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'key'     => 'spf_record',
 					'title'   => __( 'Your SPF record is rejecting this site\'s mail', 'user-registration' ),
 					'status'  => 'error',
+					// Deliberately not "your host isn't on that list" — we never
+					// read the list, and it wouldn't matter if it were: mail
+					// leaves under the host's own return address, so receivers
+					// check the host's SPF record and never open this domain's.
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` ends its SPF record with `-all`, telling receivers to reject mail from any server it hasn\'t listed. This site sends through your host\'s mail server, which isn\'t on that list — so receivers are being instructed to throw your registration emails away.', 'user-registration' ),
+						__( '`%s` tells receivers to reject mail it hasn\'t approved. This site sends through your host\'s shared mail server, which sends under its own return address rather than yours — so the message can\'t be matched to your domain, and receivers are told to throw it away.', 'user-registration' ),
 						$domain
 					),
-					'fix'     => __( 'Send through a mail service that\'s listed in your SPF record, or add this server to it.', 'user-registration' ),
+					'fix'     => __( 'Connect an SMTP service authorised for this domain, so mail goes out under your name rather than your host\'s.', 'user-registration' ),
 				);
 			}
 
