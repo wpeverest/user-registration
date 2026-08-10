@@ -457,10 +457,24 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				return $checks;
 			}
 
-			$checks[] = self::check_from_domain( $domain, $dns );
+			// MX, SPF and DMARC all describe the sending domain's own DNS, which
+			// is only worth reporting when the admin can change it. On a mailbox
+			// provider it's Google's or Yahoo's — calling it "your domain", or
+			// advising them to tighten a DMARC policy they don't own, is advice
+			// nobody can act on. check_from_alignment() has already said the one
+			// thing that matters: move to an address you control.
+			$owns_domain = ! UR_Email_Domain_Inspector::is_mailbox_provider( $domain );
+
+			if ( $owns_domain ) {
+				$checks[] = self::check_from_domain( $domain, $dns );
+			}
+
 			$checks[] = self::check_from_alignment( $domain, $transport );
-			$checks[] = self::check_spf( $domain, $dns, $transport );
-			$checks[] = self::check_dmarc( $domain, $dns, $transport );
+
+			if ( $owns_domain ) {
+				$checks[] = self::check_spf( $domain, $dns, $transport );
+				$checks[] = self::check_dmarc( $domain, $dns, $transport );
+			}
 
 			return array_filter( $checks );
 		}
