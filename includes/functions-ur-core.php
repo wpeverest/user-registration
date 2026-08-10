@@ -11134,6 +11134,62 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_get_non_urm_user_profile_fields' ) ) {
+	/**
+	 * Fallback profile fields for users who were never registered through a User
+	 * Registration form (e.g. created via wp-admin or WooCommerce checkout, so their
+	 * `ur_form_id` never resolves to a real form). Mirrors the basic fields shown in
+	 * templates/myaccount/form-edit-profile-non-urm-user.php so that saving from
+	 * My Account -> Profile Details has something to actually write to the database.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return array
+	 */
+	function ur_get_non_urm_user_profile_fields( $user_id ) {
+		if ( ! get_userdata( $user_id ) ) {
+			return array();
+		}
+
+		/**
+		 * Filters the fallback profile fields used when saving My Account -> Profile
+		 * Details for a user with no resolvable UR registration form.
+		 *
+		 * @param array $fields  Fallback field definitions, keyed like normal UR form fields.
+		 * @param int   $user_id User ID.
+		 */
+		return apply_filters(
+			'user_registration_non_urm_user_profile_fields',
+			array(
+				'user_registration_user_login' => array(
+					'label'     => __( 'Username', 'user-registration' ),
+					'type'      => 'text',
+					'field_key' => 'user_login',
+					'required'  => true,
+				),
+				'user_registration_first_name' => array(
+					'label'     => __( 'First Name', 'user-registration' ),
+					'type'      => 'text',
+					'field_key' => 'first_name',
+					'required'  => false,
+				),
+				'user_registration_user_email' => array(
+					'label'     => __( 'User Email', 'user-registration' ),
+					'type'      => 'email',
+					'field_key' => 'user_email',
+					'required'  => true,
+				),
+				'user_registration_last_name'  => array(
+					'label'     => __( 'Last Name', 'user-registration' ),
+					'type'      => 'text',
+					'field_key' => 'last_name',
+					'required'  => false,
+				),
+			),
+			$user_id
+		);
+	}
+}
 
 if ( ! function_exists( 'urm_update_user_profile_data' ) ) {
 	/**

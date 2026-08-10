@@ -275,6 +275,14 @@ class UR_AJAX {
 
 		$profile = user_registration_form_data( $user_id, $form_id );
 
+		// Users never registered through a UR form (wp-admin/WooCommerce created, ur_form_id
+		// unresolved) get no fields from user_registration_form_data(). Fall back to the basic
+		// account fields so their My Account -> Profile Details save actually persists instead
+		// of silently no-oping.
+		if ( empty( $profile ) ) {
+			$profile = ur_get_non_urm_user_profile_fields( $user_id );
+		}
+
 		if ( empty( $profile ) ) {
 			wp_send_json_error(
 				array(
