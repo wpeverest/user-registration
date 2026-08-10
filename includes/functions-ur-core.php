@@ -10755,6 +10755,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$site_assistant_data = array(
 			'has_default_form'                  => ! empty( $default_form_post ),
 			'missing_pages'                     => $missing_pages_data,
+			'disabled_emails_handled'           => ! ur_option_checked( 'user_registration_email_setting_disable_email' ),
 			'test_email_sent'                   => get_option( 'user_registration_successful_test_mail', false ),
 			'spam_protection_handled'           => ur_string_to_bool( get_option( 'user_registration_captcha_setting_v2_connection_status', false ) ) || ur_string_to_bool( get_option( 'user_registration_spam_protection_skipped', false ) ),
 			'payment_setup_handled'             => $payment_setup_handled,
@@ -10993,6 +10994,7 @@ if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 		return (
 			! $site_assistant_data['has_default_form']
 			|| ! empty( $site_assistant_data['missing_pages'] )
+			|| ! $site_assistant_data['disabled_emails_handled']
 			|| ! $site_assistant_data['test_email_sent']
 			|| ! $site_assistant_data['spam_protection_handled']
 			|| ! $site_assistant_data['payment_setup_handled']
@@ -11014,6 +11016,7 @@ if ( ! function_exists( 'ur_site_assistant_config_count' ) ) {
 		$checks = array(
 			! $site_assistant_data['has_default_form'],
 			! empty( $site_assistant_data['missing_pages'] ),
+			! $site_assistant_data['disabled_emails_handled'],
 			! $site_assistant_data['test_email_sent'],
 			! $site_assistant_data['spam_protection_handled'],
 			! $site_assistant_data['payment_setup_handled'],

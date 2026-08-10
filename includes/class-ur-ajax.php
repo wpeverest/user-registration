@@ -94,6 +94,7 @@ class UR_AJAX {
 			'create_default_form'                  => false,
 			'generate_required_pages'              => false,
 			'handle_default_wordpress_login'       => false,
+			'enable_emails'                        => false,
 			'skip_site_assistant_section'          => false,
 			'login_settings_page_validation'       => false,
 			'activate_dependent_module'            => false,
@@ -2620,6 +2621,25 @@ class UR_AJAX {
 		} else {
 			wp_send_json_error( array( 'message' => __( 'Invalid action specified.', 'user-registration' ) ) );
 		}
+	}
+
+	/**
+	 * Turn the master "Disable emails" setting back off.
+	 */
+	public static function enable_emails() {
+		check_ajax_referer( 'wp_rest', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to modify email settings.', 'user-registration' ) ) );
+		}
+
+		update_option( 'user_registration_email_setting_disable_email', 'no' );
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Emails have been enabled successfully.', 'user-registration' ),
+			)
+		);
 	}
 
 	/**
