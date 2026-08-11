@@ -9545,6 +9545,17 @@ body.user-registration-page {
 									}
 								}
 							}
+
+							// A single active plan is auto-selected; hide the radio since there's
+							// nothing to choose, keeping the rest of the card (name, price, total,
+							// payment gateway section) exactly as-is.
+							&.ur-membership-single-plan {
+								cursor: default;
+
+								input[type="radio"] {
+									display: none;
+								}
+							}
 						}
 
 						&-header {

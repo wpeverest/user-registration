@@ -117,8 +117,8 @@ class MembershipListingShortcode {
 		$currency             = get_option( 'user_registration_payment_currency', 'USD' );
 		$currencies           = ur_payment_integration_get_currencies();
 		$symbol               = $currencies[ $currency ]['symbol'];
-		$registration_page_id = ! empty( $attributes['registration_page_id'] ) ? absint( $attributes['registration_page_id'] ) : get_option( 'user_registration_member_registration_page_id', false );
-		$thank_you_page_id    = ! empty( $attributes['thank_you_page_id'] ) ? absint( $attributes['thank_you_page_id'] ) : get_option( 'user_registration_thank_you_page_id', false );
+		$registration_page_id = ur_get_translated_page_id( ! empty( $attributes['registration_page_id'] ) ? absint( $attributes['registration_page_id'] ) : get_option( 'user_registration_member_registration_page_id', false ) );
+		$thank_you_page_id    = ur_get_translated_page_id( ! empty( $attributes['thank_you_page_id'] ) ? absint( $attributes['thank_you_page_id'] ) : get_option( 'user_registration_thank_you_page_id', false ) );
 		$uuid                 = ! empty( $attributes['uuid'] ) ? $attributes['uuid'] : ur_generate_random_key();
 		$redirect_page_url    = get_permalink( $registration_page_id );
 
@@ -135,7 +135,7 @@ class MembershipListingShortcode {
 					$user_memberships
 				)
 			);
-			$membership_checkout_page_id = get_option( 'user_registration_member_registration_page_id', false );
+			$membership_checkout_page_id = ur_get_translated_page_id( get_option( 'user_registration_member_registration_page_id', false ) );
 
 			$redirect_page_url = get_permalink( $membership_checkout_page_id );
 		}

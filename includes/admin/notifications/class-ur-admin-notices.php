@@ -60,6 +60,7 @@ class UR_Admin_Notices
 		add_action('admin_init', array(__CLASS__, 'user_registration_install_pages_notice'));
 		add_action('admin_notices', array(__CLASS__, 'php_deprecation_notice'));
 		add_action('admin_init', array(__CLASS__, 'same_membership_in_group'));
+		add_action('admin_notices', array(__CLASS__, 'registration_disabled_notice'));
 
 		/**
 		 * Render Notice with Logo and Buttons.
@@ -773,6 +774,11 @@ class UR_Admin_Notices
 
 				foreach ($wp_filter[$wp_notice]->callbacks as $priority => $hooks) {
 					foreach ($hooks as $name => $arr) {
+						// Always keep the registration disabled notice, it blocks every registration form.
+						if (is_string($name) && false !== strpos($name, 'registration_disabled_notice')) {
+							continue;
+						}
+
 						// Remove all notices if the page is form builder page.
 						if ('add-new-registration' === $_REQUEST['page'] || 'user-registration-dashboard' === $_REQUEST['page']) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 							unset($wp_filter[$wp_notice]->callbacks[$priority][$name]);
@@ -897,6 +903,27 @@ class UR_Admin_Notices
 
 			echo wp_kses_post($notice);
 		}
+	}
+
+	/**
+	 * Notify admins when the WordPress "Anyone can register" option blocks registration.
+	 *
+	 * @since 5.2.7
+	 */
+	public static function registration_disabled_notice()
+	{
+		if (ur_users_can_register() || ! current_user_can('manage_options')) {
+			return;
+		}
+
+		$message = '<strong>' . esc_html__('User Registration & Membership: ', 'user-registration') . '</strong>';
+		$message .= sprintf(
+			/* translators: %1$s - WordPress general settings link. */
+			__('Your registration forms are showing "Registration is currently disabled." because the WordPress <strong>Anyone can register</strong> option is turned off. Enable it in <a href="%1$s">General Settings</a> to let visitors register.', 'user-registration'),
+			esc_url(admin_url('options-general.php#users_can_register'))
+		);
+
+		echo '<div class="notice notice-warning is-dismissible ur-registration-disabled-notice"><p>' . wp_kses_post($message) . '</p></div>';
 	}
 
 	/**

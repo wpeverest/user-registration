@@ -55,7 +55,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		$block_id = isset( $this->attributes['clientId'] ) ? $this->attributes['clientId'] : '';
 		$attr     = $this->attributes;
 
-		$page_id = get_option( 'user_registration_member_registration_page_id' );
+		$page_id = ur_get_translated_page_id( get_option( 'user_registration_member_registration_page_id' ) );
 
 		$page_url = get_permalink( absint( $page_id ) );
 
@@ -302,7 +302,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		$membership_details = $membership_repository->get_single_membership_by_ID( $membership_id );
 
 		$intended_action = $membership_service->fetch_intended_action( $action_to_take, $membership_details, $user_membership_ids );
-		$thank_you_page_id   = get_option( 'user_registration_thank_you_page_id', false );
+		$thank_you_page_id   = ur_get_translated_page_id( get_option( 'user_registration_thank_you_page_id', false ) );
 
 		$redirect_link_builder = array(
 				'action'  => $intended_action,

@@ -3737,7 +3737,8 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 				'requires_membership' => true,
 			),
 			'user_registration_thank_you_page_id'          => array(
-				'name'                => 'membership-thankyou',
+				// Same slug the setup wizard uses, so the thank-you URL does not depend on which flow created the page.
+				'name'                => 'thankyou',
 				'title'               => __( 'Membership Thank You', 'user-registration' ),
 				'content'             => '[user_registration_membership_thank_you]',
 				'requires_membership' => true,
@@ -5652,13 +5653,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			}
 		}
 
-		/**
-		 * Filter to override the register settings.
-		 * Default value is the get_option('users_can_register')
-		 */
-		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
-
-		if ( ! is_user_logged_in() && ! $users_can_register ) {
+		if ( ! is_user_logged_in() && ! ur_users_can_register() ) {
 			$logger->warning(
 				sprintf( '[Form #%d] Registration is disabled by the site administrator.', $form_id ) . "\n",
 				array(
@@ -8402,6 +8397,23 @@ if ( ! function_exists( 'ur_rsssl_anyone_can_register_conflict_resolver' ) ) {
 }
 add_filter( 'ur_register_setting_override', 'ur_rsssl_anyone_can_register_conflict_resolver', 10, 1 );
 
+if ( ! function_exists( 'ur_users_can_register' ) ) {
+	/**
+	 * Whether registration is allowed, honoring the WordPress "Anyone can register" option.
+	 *
+	 * @since 5.2.7
+	 *
+	 * @return bool
+	 */
+	function ur_users_can_register() {
+		/**
+		 * Filter to override the register settings.
+		 * Default value is the get_option('users_can_register')
+		 */
+		return (bool) apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
+	}
+}
+
 add_filter( 'user_registration_settings_prevent_default_login', 'ur_prevent_default_login' );
 if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 	/**
@@ -10662,6 +10674,70 @@ if ( ! function_exists( 'user_registration_profile_details_form_field_datas' ) )
 	}
 }
 
+if ( ! function_exists( 'ur_has_membership_plans' ) ) {
+	/**
+	 * Check whether at least one active membership plan exists.
+	 *
+	 * A deactivated plan stays published and only has its status flag turned off,
+	 * so the post status alone is not enough. This mirrors the active check in
+	 * MembershipService::prepare_membership_data().
+	 *
+	 * @return bool
+	 */
+	function ur_has_membership_plans() {
+		if ( ! post_type_exists( 'ur_membership' ) ) {
+			return false;
+		}
+
+		$memberships = get_posts(
+			array(
+				'post_type'              => 'ur_membership',
+				'post_status'            => 'publish',
+				'posts_per_page'         => -1,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			)
+		);
+
+		foreach ( $memberships as $membership ) {
+			$membership_content = json_decode( wp_unslash( $membership->post_content ), true );
+
+			if ( ! empty( $membership_content['status'] ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+}
+
+if ( ! function_exists( 'ur_is_membership_registration_type' ) ) {
+	/**
+	 * Check whether the setup wizard's registration type is a membership type
+	 * (as opposed to "Advanced Registration", stored as 'normal').
+	 *
+	 * @return bool
+	 */
+	function ur_is_membership_registration_type() {
+		$membership_type = get_option( 'urm_onboarding_membership_type', 'normal' );
+
+		return in_array( $membership_type, array( 'free_membership', 'paid_membership' ), true );
+	}
+}
+
+if ( ! function_exists( 'ur_should_show_membership_requirements' ) ) {
+	/**
+	 * Membership-registration-type users always need these; Advanced Registration
+	 * users only need them once a membership plan is created.
+	 *
+	 * @return bool
+	 */
+	function ur_should_show_membership_requirements() {
+		return ur_is_membership_registration_type() || ur_has_membership_plans();
+	}
+}
+
 if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 	/**
 	 * Get site assistant data with all options status.
@@ -10679,8 +10755,10 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 			'user_registration_membership_pricing_page_id' => 'Membership Pricing Page',
 		);
 
-		// Check if membership module is activated.
-		$is_membership_activated = ur_check_module_activation( 'membership' );
+		$has_membership_plans = ur_has_membership_plans();
+
+		// Advanced Registration users only need membership pages once a plan exists.
+		$show_membership_requirements = ur_is_membership_registration_type() || $has_membership_plans;
 
 		$missing_pages_data = array();
 
@@ -10697,7 +10775,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 			}
 
 			if ( $is_page_missing ) {
-				// Only include membership pages if membership module is activated.
+				// Only include membership pages if membership requirements should be shown.
 				$is_membership_page = in_array(
 					$option_name,
 					array(
@@ -10708,7 +10786,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 					true
 				);
 
-				if ( ! $is_membership_page || $is_membership_activated ) {
+				if ( ! $is_membership_page || $show_membership_requirements ) {
 					$missing_pages_data[] = array(
 						'name'   => $page_name,
 						'option' => $option_name,
@@ -10739,22 +10817,11 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 
 		$membership_field_handled = ( ! $membership_enabled ) || $default_form_has_membership || $membership_field_skipped;
 
-		$has_membership_plans = false;
-
-		if ( post_type_exists( 'ur_membership' ) ) {
-			$has_membership_plans = (bool) get_posts(
-				array(
-					'post_type'      => 'ur_membership',
-					'post_status'    => 'publish',
-					'posts_per_page' => 1,
-					'fields'         => 'ids',
-				)
-			);
-		}
-
 		$site_assistant_data = array(
+			'users_can_register'                => ur_users_can_register(),
 			'has_default_form'                  => ! empty( $default_form_post ),
 			'missing_pages'                     => $missing_pages_data,
+			'disabled_emails_handled'           => ! ur_option_checked( 'user_registration_email_setting_disable_email' ),
 			'test_email_sent'                   => get_option( 'user_registration_successful_test_mail', false ),
 			'spam_protection_handled'           => ur_string_to_bool( get_option( 'user_registration_captcha_setting_v2_connection_status', false ) ) || ur_string_to_bool( get_option( 'user_registration_spam_protection_skipped', false ) ),
 			'payment_setup_handled'             => $payment_setup_handled,
@@ -10833,7 +10900,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 		$connections = array();
 
 		// Check Stripe connection (available in free version).
-		if ( ur_check_module_activation( 'stripe' ) || ur_check_module_activation( 'membership' ) ) {
+		if ( ur_check_module_activation( 'stripe' ) || ur_should_show_membership_requirements() ) {
 			$connections['stripe'] = array(
 				'name'         => 'Stripe',
 				'is_connected' => ur_string_to_bool( get_option( 'urm_stripe_connection_status', false ) ),
@@ -10842,7 +10909,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 		}
 
 		// Check PayPal connection (available in free version).
-		if ( ur_check_module_activation( 'payments' ) || ur_check_module_activation( 'membership' ) ) {
+		if ( ur_check_module_activation( 'payments' ) || ur_should_show_membership_requirements() ) {
 			$connections['paypal'] = array(
 				'name'         => 'PayPal',
 				'is_connected' => ur_string_to_bool( get_option( 'urm_paypal_connection_status', false ) ),
@@ -10851,7 +10918,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 		}
 
 		// Check Bank connection (membership only).
-		if ( ur_check_module_activation( 'membership' ) ) {
+		if ( ur_should_show_membership_requirements() ) {
 			$connections['bank'] = array(
 				'name'         => 'Bank Payment',
 				'is_connected' => ur_string_to_bool( get_option( 'urm_bank_connection_status', false ) ),
@@ -10991,8 +11058,10 @@ if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 		$site_assistant_data = ur_get_site_assistant_data();
 
 		return (
-			! $site_assistant_data['has_default_form']
+			! $site_assistant_data['users_can_register']
+			|| ! $site_assistant_data['has_default_form']
 			|| ! empty( $site_assistant_data['missing_pages'] )
+			|| ! $site_assistant_data['disabled_emails_handled']
 			|| ! $site_assistant_data['test_email_sent']
 			|| ! $site_assistant_data['spam_protection_handled']
 			|| ! $site_assistant_data['payment_setup_handled']
@@ -11012,8 +11081,10 @@ if ( ! function_exists( 'ur_site_assistant_config_count' ) ) {
 		$site_assistant_data = ur_get_site_assistant_data();
 
 		$checks = array(
+			! $site_assistant_data['users_can_register'],
 			! $site_assistant_data['has_default_form'],
 			! empty( $site_assistant_data['missing_pages'] ),
+			! $site_assistant_data['disabled_emails_handled'],
 			! $site_assistant_data['test_email_sent'],
 			! $site_assistant_data['spam_protection_handled'],
 			! $site_assistant_data['payment_setup_handled'],
@@ -11134,6 +11205,51 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_get_non_urm_user_profile_fields' ) ) {
+	/**
+	 * Fallback profile fields for users with no resolvable UR registration form.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return array
+	 */
+	function ur_get_non_urm_user_profile_fields( $user_id ) {
+		if ( ! get_userdata( $user_id ) ) {
+			return array();
+		}
+
+		return apply_filters(
+			'user_registration_non_urm_user_profile_fields',
+			array(
+				'user_registration_user_login' => array(
+					'label'     => __( 'Username', 'user-registration' ),
+					'type'      => 'text',
+					'field_key' => 'user_login',
+					'required'  => true,
+				),
+				'user_registration_first_name' => array(
+					'label'     => __( 'First Name', 'user-registration' ),
+					'type'      => 'text',
+					'field_key' => 'first_name',
+					'required'  => false,
+				),
+				'user_registration_user_email' => array(
+					'label'     => __( 'User Email', 'user-registration' ),
+					'type'      => 'email',
+					'field_key' => 'user_email',
+					'required'  => true,
+				),
+				'user_registration_last_name'  => array(
+					'label'     => __( 'Last Name', 'user-registration' ),
+					'type'      => 'text',
+					'field_key' => 'last_name',
+					'required'  => false,
+				),
+			),
+			$user_id
+		);
+	}
+}
 
 if ( ! function_exists( 'urm_update_user_profile_data' ) ) {
 	/**
@@ -11380,6 +11496,314 @@ if ( ! function_exists( 'ur_pro_get_excluded_fields' ) ) {
 		);
 
 		return apply_filters( 'user_registration_pro_excluded_fields', $excluded_fields );
+	}
+}
+
+if ( ! function_exists( 'ur_membership_table_exists' ) ) {
+	/**
+	 * Check whether a membership module table exists.
+	 *
+	 * Mirrors the guard the membership repositories apply before querying, e.g.
+	 * OrdersRepository::get_all() and SubscriptionRepository::query().
+	 *
+	 * @param string $table Fully qualified table name.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_membership_table_exists( $table ) {
+		global $wpdb;
+
+		static $checked = array();
+
+		if ( empty( $table ) ) {
+			return false;
+		}
+
+		if ( ! isset( $checked[ $table ] ) ) {
+			$checked[ $table ] = $table === $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+		}
+
+		return $checked[ $table ];
+	}
+}
+
+if ( ! function_exists( 'ur_has_membership_plans' ) ) {
+	/**
+	 * Check whether at least one published membership plan exists.
+	 *
+	 * The `ur_membership` post type is only registered when the membership module
+	 * is loaded, so fall back to a direct query when it is not.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_has_membership_plans() {
+		static $has_plans = null;
+
+		if ( null !== $has_plans ) {
+			return $has_plans;
+		}
+
+		if ( post_type_exists( 'ur_membership' ) ) {
+			$has_plans = (bool) get_posts(
+				array(
+					'post_type'      => 'ur_membership',
+					'post_status'    => 'publish',
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				)
+			);
+
+			return $has_plans;
+		}
+
+		global $wpdb;
+
+		$has_plans = (bool) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s LIMIT 1",
+				'ur_membership',
+				'publish'
+			)
+		);
+
+		return $has_plans;
+	}
+}
+
+if ( ! function_exists( 'ur_has_payment_entries' ) ) {
+	/**
+	 * Check whether the Payments page has at least one record to display.
+	 *
+	 * Mirrors the two sources merged by OrdersListTable::prepare_items():
+	 * membership orders (only when the membership module is active, and only rows
+	 * whose plan post and user still exist, matching the INNER JOINs in
+	 * OrdersRepository::get_all()) and normal registration payments, which are
+	 * stored as the `ur_payment_status` user meta.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_has_payment_entries() {
+		global $wpdb;
+
+		static $has_entries = null;
+
+		if ( null !== $has_entries ) {
+			return $has_entries;
+		}
+
+		$has_entries = false;
+
+		// Membership orders, gated exactly as OrdersListTable gates its repository.
+		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
+			$orders_table = class_exists( 'WPEverest\URMembership\TableList' )
+				? \WPEverest\URMembership\TableList::orders_table()
+				: $wpdb->prefix . 'ur_membership_orders';
+
+			if ( ur_membership_table_exists( $orders_table ) ) {
+				$orders_query = "SELECT o.ID
+					FROM {$orders_table} o
+					INNER JOIN {$wpdb->posts} p ON o.item_id = p.ID
+					INNER JOIN {$wpdb->users} u ON o.user_id = u.ID
+					LIMIT 1";
+
+				$has_entries = (bool) $wpdb->get_var( $orders_query ); // phpcs:ignore
+			}
+		}
+
+		// Payments made through a registration form.
+		if ( ! $has_entries ) {
+			$has_entries = (bool) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s LIMIT 1",
+					'ur_payment_status'
+				)
+			);
+		}
+
+		return $has_entries;
+	}
+}
+
+if ( ! function_exists( 'ur_has_subscription_entries' ) ) {
+	/**
+	 * Check whether at least one subscription record exists.
+	 *
+	 * Mirrors SubscriptionRepository::query(), which counts the subscriptions
+	 * table directly without joining anything.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_has_subscription_entries() {
+		global $wpdb;
+
+		static $has_entries = null;
+
+		if ( null !== $has_entries ) {
+			return $has_entries;
+		}
+
+		$subscriptions_table = class_exists( 'WPEverest\URMembership\TableList' )
+			? \WPEverest\URMembership\TableList::subscriptions_table()
+			: $wpdb->prefix . 'ur_membership_subscriptions';
+
+		$has_entries = ur_membership_table_exists( $subscriptions_table )
+			&& (bool) $wpdb->get_var( "SELECT ID FROM {$subscriptions_table} LIMIT 1" ); // phpcs:ignore
+
+		return $has_entries;
+	}
+}
+
+if ( ! function_exists( 'ur_has_payment_enabled_form' ) ) {
+	/**
+	 * Check whether any published registration form collects a payment.
+	 *
+	 * There is no per-form "payments enabled" flag; payment fields live inside the
+	 * form's post_content JSON, so this matches on the `"field_key":"..."` markers
+	 * the same way MembershipRepository::get_membership_forms() does.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_has_payment_enabled_form() {
+		global $wpdb;
+
+		static $has_form = null;
+
+		if ( null !== $has_form ) {
+			return $has_form;
+		}
+
+		/**
+		 * Field keys that on their own make a registration form charge the user.
+		 *
+		 * Deliberately narrower than user_registration_payment_fields(): `total_field`
+		 * and `quantity_field` are payment fields but never trigger a gateway by
+		 * themselves. This list matches the gateway check in
+		 * UR_Pro_Payments_Frontend::payment_process_after_registration().
+		 *
+		 * @param array $field_keys Charging field keys.
+		 *
+		 * @since x.x.x
+		 */
+		$field_keys = apply_filters(
+			'user_registration_payments_menu_field_keys',
+			array( 'single_item', 'multiple_choice', 'subscription_plan' )
+		);
+
+		$conditions = array();
+
+		foreach ( (array) $field_keys as $field_key ) {
+			$pattern      = '%' . $wpdb->esc_like( '"field_key":"' . $field_key . '"' ) . '%';
+			$conditions[] = 'post_content LIKE ' . $wpdb->prepare( '%s', $pattern );
+		}
+
+		if ( ! empty( $conditions ) ) {
+			$where_clause = implode( ' OR ', $conditions );
+
+			$fields_query = "SELECT ID FROM {$wpdb->posts}
+				WHERE post_type = 'user_registration'
+				AND post_status = 'publish'
+				AND ({$where_clause})
+				LIMIT 1";
+
+			$has_form = (bool) $wpdb->get_var( $fields_query ); // phpcs:ignore
+
+			if ( $has_form ) {
+				return $has_form;
+			}
+		}
+
+		$has_form = false;
+
+		// A `range` field only charges when its payment slider is enabled. The stored
+		// value is boolean-ish, so candidate forms have to be confirmed in PHP.
+		if ( ! function_exists( 'ur_get_form_fields' ) ) {
+			return $has_form;
+		}
+
+		$candidates = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->posts}
+				WHERE post_type = 'user_registration'
+				AND post_status = 'publish'
+				AND post_content LIKE %s",
+				'%' . $wpdb->esc_like( 'enable_payment_slider' ) . '%'
+			)
+		);
+
+		foreach ( $candidates as $form_id ) {
+			foreach ( (array) ur_get_form_fields( $form_id ) as $field ) {
+				if ( isset( $field->field_key, $field->advance_setting->enable_payment_slider )
+					&& 'range' === $field->field_key
+					&& ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) {
+					$has_form = true;
+
+					return $has_form;
+				}
+			}
+		}
+
+		return $has_form;
+	}
+}
+
+if ( ! function_exists( 'ur_should_show_payments_menu' ) ) {
+	/**
+	 * Whether the Payments submenu should be registered.
+	 *
+	 * Shown when payments are actually in use: the Payments feature is enabled, the
+	 * page already has records, a membership plan exists, or a registration form
+	 * collects a payment. Onboarding's "Advanced Registration" path matches none of
+	 * these, which is what keeps the menu hidden there.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_should_show_payments_menu() {
+		$show = ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'payments' ) )
+			|| ur_has_payment_entries()
+			|| ur_has_membership_plans()
+			|| ur_has_payment_enabled_form();
+
+		/**
+		 * Filter whether the Payments submenu is registered.
+		 *
+		 * @param bool $show Whether to show the menu.
+		 *
+		 * @since x.x.x
+		 */
+		return (bool) apply_filters( 'user_registration_show_payments_menu', $show );
+	}
+}
+
+if ( ! function_exists( 'ur_should_show_subscriptions_menu' ) ) {
+	/**
+	 * Whether the Subscriptions submenu should be registered.
+	 *
+	 * The membership module alone is not enough: onboarding enables it before the
+	 * user picks a registration type, so also require something to manage — a
+	 * membership plan or an existing subscription record.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_should_show_subscriptions_menu() {
+		$show = function_exists( 'ur_check_module_activation' )
+			&& ur_check_module_activation( 'membership' )
+			&& ( ur_has_membership_plans() || ur_has_subscription_entries() );
+
+		/**
+		 * Filter whether the Subscriptions submenu is registered.
+		 *
+		 * @param bool $show Whether to show the menu.
+		 *
+		 * @since x.x.x
+		 */
+		return (bool) apply_filters( 'user_registration_show_subscriptions_menu', $show );
 	}
 }
 
@@ -12295,6 +12719,24 @@ if ( ! function_exists( 'user_registration_create_product_and_price_for_stripe' 
 
 		foreach ( $memberships as $membership ) {
 			$stripe_service->sync_product_and_price_in_stripe( $membership );
+		}
+	}
+}
+
+if ( ! function_exists( 'ur_maybe_flush_rewrite_rules' ) ) {
+	// Flush only when one of the given account endpoints is missing from the saved rules.
+	function ur_maybe_flush_rewrite_rules( $endpoints ) {
+		if ( ! get_option( 'permalink_structure' ) ) {
+			return;
+		}
+
+		$rules = get_option( 'rewrite_rules', array() );
+
+		foreach ( (array) $endpoints as $endpoint ) {
+			if ( ! isset( $rules[ '(.?.+?)/' . $endpoint . '(/(.*))?/?$' ] ) ) {
+				flush_rewrite_rules();
+				return;
+			}
 		}
 	}
 }
