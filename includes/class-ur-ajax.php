@@ -288,8 +288,9 @@ class UR_AJAX {
 				)
 			);
 		}
-
-		$is_admin_user                  = $_POST['is_admin_user'] ?? false;
+    
+		// Server-derived, not client-supplied - avoids a spoofable $_POST flag.
+		$is_admin_user                  = $user_id !== get_current_user_id();
 		list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, $is_admin_user );
 		$user                           = get_userdata( $user_id );
 
@@ -316,7 +317,7 @@ class UR_AJAX {
 				'email'          => ! empty( $single_field['user_registration_user_email'] ) ? $single_field['user_registration_user_email'] : '',
 			);
 
-			if ( $email_updated && ! is_admin() ) {
+			if ( $email_updated && ! $is_admin_user ) {
 				UR_Form_Handler::send_confirmation_email( $user, $pending_email, $form_id );
 				$response['oldUserEmail'] = $user->user_email;
 				/* translators: %s : user email */
@@ -344,7 +345,7 @@ class UR_AJAX {
 				);
 			}
 
-			if ( is_admin() && ! empty( $pending_email ) ) {
+			if ( $is_admin_user && ! empty( $pending_email ) ) {
 				wp_update_user(
 					array(
 						'ID'         => $user_id,
