@@ -273,8 +273,10 @@ class UR_AJAX {
 			}
 		}
 
-		$profile                        = user_registration_form_data( $user_id, $form_id );
-		$is_admin_user                  = $_POST['is_admin_user'] ?? false;
+		$profile = user_registration_form_data( $user_id, $form_id );
+
+		// Server-derived, not client-supplied - avoids a spoofable $_POST flag.
+		$is_admin_user                  = $user_id !== get_current_user_id();
 		list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, $is_admin_user );
 		$user                           = get_userdata( $user_id );
 
