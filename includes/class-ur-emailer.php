@@ -105,6 +105,9 @@ class UR_Emailer {
 
 		$login_option = ur_get_user_login_option( $user_id );
 
+		if ( ( 'email_confirmation' !== $login_option && 'admin_approval_after_email_confirmation' !== $login_option ) && ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
+			return;
+		}
 		/**
 		 * Hook to modify user email attachment.
 		 *
@@ -135,7 +138,7 @@ class UR_Emailer {
 
 			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 
-			if ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) {
+			if ( 'admin_approval' === $login_option ) {
 				self::send_approve_link_in_email( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 			}
 			self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
