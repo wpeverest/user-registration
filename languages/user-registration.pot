@@ -15,6 +15,7 @@ msgstr ""
 "X-Domain: user-registration\n"
 
 #. Plugin Name of the plugin
+#: user-registration.php
 #: includes/3rd-party/elementor/class-ur-elementor.php:83
 #: includes/3rd-party/elementor/class-ur-widget.php:41
 #: includes/3rd-party/oxygen/class-ur-oxygen.php:53
@@ -26,18 +27,22 @@ msgid "User Registration & Membership"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: user-registration.php
 msgid "https://wpuserregistration.com/"
 msgstr ""
 
 #. Description of the plugin
+#: user-registration.php
 msgid "The most flexible User Registration and Membership plugin for WordPress."
 msgstr ""
 
 #. Author of the plugin
+#: user-registration.php
 msgid "WPEverest"
 msgstr ""
 
 #. Author URI of the plugin
+#: user-registration.php
 msgid "https://wpuserregistration.com"
 msgstr ""
 
@@ -673,6 +678,7 @@ msgstr ""
 
 #. translators: %s: Error message
 #: includes/abstracts/abstract-ur-list-table.php:144
+#, php-format
 msgid "The bulk action %s does not have a callback method"
 msgstr ""
 
@@ -720,6 +726,7 @@ msgstr ""
 
 #. translators: %s - Human readable time
 #: includes/abstracts/abstract-ur-list-table.php:585
+#, php-format
 msgid "%s ago"
 msgstr ""
 
@@ -933,11 +940,13 @@ msgstr ""
 
 #. translators: %field%: Field Label
 #: includes/admin/class-ur-admin-assets.php:381
+#, php-format
 msgid "%field% field is Locked."
 msgstr ""
 
 #. translators: %field%: Field Label
 #: includes/admin/class-ur-admin-assets.php:383
+#, php-format
 msgid "%field% field can be used only one time in the form."
 msgstr ""
 
@@ -951,6 +960,7 @@ msgstr ""
 
 #. translators: %field%: Field Text
 #: includes/admin/class-ur-admin-assets.php:388
+#, php-format
 msgid "%field% setting is disabled."
 msgstr ""
 
@@ -1098,6 +1108,7 @@ msgstr ""
 
 #. translators: %field%: Field Label %plan%: License Plan.
 #: includes/admin/class-ur-admin-assets.php:494
+#, php-format
 msgid "%field% field is locked. Upgrade to <strong>%plan%</strong> to unlock this field."
 msgstr ""
 
@@ -1271,6 +1282,7 @@ msgstr ""
 
 #. translators: %field%: Field Label
 #: includes/admin/class-ur-admin-assets.php:622
+#, php-format
 msgctxt "user registration admin"
 msgid "%field% cannot be added to repeater row"
 msgstr ""
@@ -1522,11 +1534,13 @@ msgid "Invalid minimum length count for"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:684
+#, php-format
 msgctxt "user registration admin"
 msgid "The max and min length limit mode for %field% must be same."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:685
+#, php-format
 msgctxt "user registration admin"
 msgid "The max length limit for %field% must be greater than min length."
 msgstr ""
@@ -1557,21 +1571,25 @@ msgstr ""
 
 #. translators: %s: search term
 #: includes/admin/class-ur-admin-base-layout.php:184
+#, php-format
 msgid "Sorry no results found for <i>%s</i>."
 msgstr ""
 
 #. translators: %s: type
 #: includes/admin/class-ur-admin-base-layout.php:190
+#, php-format
 msgid "You don’t have any %s yet."
 msgstr ""
 
 #. translators: %s: type
 #: includes/admin/class-ur-admin-base-layout.php:197
+#, php-format
 msgid "Need help setting up your %s?"
 msgstr ""
 
 #. translators: %s: type
 #: includes/admin/class-ur-admin-base-layout.php:204
+#, php-format
 msgid "Please add %s and you’re good to go."
 msgstr ""
 
@@ -1806,7 +1824,6 @@ msgstr ""
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:103
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:332
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:388
-#: user-registration.php:581
 #: chunks/blocks.js:280
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -2010,6 +2027,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-registrations-table-list.php:101
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:250
 #: modules/payment-history/Admin/OrdersListTable.php:298
+#, php-format
 msgid "ID: %d"
 msgstr ""
 
@@ -2103,6 +2121,7 @@ msgstr ""
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:454
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:441
 #: modules/payment-history/Admin/OrdersListTable.php:894
+#, php-format
 msgctxt "paging"
 msgid "%1$s of %2$s"
 msgstr ""
@@ -2324,6 +2343,7 @@ msgstr ""
 
 #. translators: %s: number of existing users
 #: includes/admin/class-ur-admin-user-list-manager.php:266
+#, php-format
 msgid "Your site has %s users registered before this plugin."
 msgstr ""
 
@@ -2341,11 +2361,13 @@ msgstr ""
 
 #. translators: %s - Number of users approved.
 #: includes/admin/class-ur-admin-user-list-manager.php:307
+#, php-format
 msgid "User Approved: %s users approved."
 msgstr ""
 
 #. translators: %s - Number of users denied.
 #: includes/admin/class-ur-admin-user-list-manager.php:310
+#, php-format
 msgid "User Denied: %s users denied."
 msgstr ""
 
@@ -2496,6 +2518,7 @@ msgstr ""
 
 #. translators: 1: Page Title
 #: includes/admin/class-ur-admin.php:308
+#, php-format
 msgid "URM %s Page"
 msgstr ""
 
@@ -2505,6 +2528,7 @@ msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
 #: includes/admin/class-ur-admin.php:517
+#, php-format
 msgid "%1$d new %2$s registered."
 msgstr ""
 
@@ -2630,6 +2654,7 @@ msgstr ""
 
 #. translators: %1$s - My account Link.
 #: includes/admin/notifications/class-ur-admin-notices.php:114
+#, php-format
 msgid "Please choose a <strong title=\"A page with [user_registration_my_account] shortcode\">My Account</strong> page in <a href=\"%1$s\" style=\"text-decoration:none;\">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href=\"https://docs.wpuserregistration.com/docs/how-to-show-account-profile/\" style=\"text-decoration:none;\" rel=\"noreferrer noopener\" target=\"_blank\">How to setup My Account page</a>."
 msgstr ""
 
@@ -2709,17 +2734,17 @@ msgid ""
 msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:686
-#: user-registration.php:97
-#: user-registration.php:106
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
 #. translators: % s: continue wizard URL
 #: includes/admin/notifications/class-ur-admin-notices.php:882
+#, php-format
 msgid "<a href=\"%s\" class=\"button-primary\" style=\"margin-right: 5px;\">Continue Setup Wizard</a>"
 msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:883
+#, php-format
 msgid "<a class=\"button-secondary skip\" href=\"%s\">Skip setup</a>"
 msgstr ""
 
@@ -2737,6 +2762,7 @@ msgid "Dismiss"
 msgstr ""
 
 #: includes/admin/notifications/views/html-notice-deactivation.php:23
+#, php-format
 msgid "Before we deactivate User Registration & Membership, would you care to <a href=\"%1$s\" rel=\"noreferrer noopener\" target=\"_blank\">let us know why</a> so we can improve it for you? <a href=\"%2$s\">No, deactivate now</a>."
 msgstr ""
 
@@ -2750,16 +2776,19 @@ msgstr ""
 
 #. translators: %s - Link to logout.
 #: includes/admin/notifications/views/html-notice-key-activated.php:17
+#, php-format
 msgid "Your licence for <strong>%s</strong> has been activated. Thanks!"
 msgstr ""
 
 #. translators: %s - Plugin Name.
 #: includes/admin/notifications/views/html-notice-key-deactivated.php:18
+#, php-format
 msgid "Your licence for <strong>%s</strong> has been deactivated."
 msgstr ""
 
 #. translators: 1: License Page 2: Plugin Name
 #: includes/admin/notifications/views/html-notice-key-unvalidated.php:16
+#, php-format
 msgid "%1$s Please enter your license key%2$s to get updates for <strong>%3$s</strong> Add-Ons."
 msgstr ""
 
@@ -2837,6 +2866,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-members-list-table.php:664
 #: includes/admin/settings/class-ur-users-list-table.php:477
 #: modules/membership/includes/Admin/Members/MembersListTable.php:184
+#, php-format
 msgid "Select %s"
 msgstr ""
 
@@ -4015,6 +4045,7 @@ msgid "Registration Page"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:66
+#, php-format
 msgid "Displays the registration form where new users can sign up. Add the Registration Form block or [%s] shortcode to this page."
 msgstr ""
 
@@ -4026,6 +4057,7 @@ msgid "Login Page"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:77
+#, php-format
 msgid "Displays the login form where existing users can access their account. Add the Login Form block or [%s] shortcode to this page. "
 msgstr ""
 
@@ -4035,6 +4067,7 @@ msgid "My Account Page"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:87
+#, php-format
 msgid "Member dashboard for managing account details, subscriptions, and profile information. Add the My Account block or [%s] shortcode to this page."
 msgstr ""
 
@@ -4045,6 +4078,7 @@ msgid "Lost Password Page"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:97
+#, php-format
 msgid "Allows users to reset their password if forgotten. A password reset link will be sent to their registered email address. Add the [%s] shortcode to this page."
 msgstr ""
 
@@ -4053,6 +4087,7 @@ msgid "Membership Pricing Page"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:108
+#, php-format
 msgid "Displays all available membership plans and pricing options. Users can view and select which membership to purchase. Add the Membership Pricing block or [%s] shortcode to this page."
 msgstr ""
 
@@ -4153,6 +4188,7 @@ msgid "Install Pro Version"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-license.php:85
+#, php-format
 msgid "You're currently using the free version of User Registration & Membership.<br>You can continue using all free features without any limitations.<br><br>Want more? <a target=\"_blank\" href=\"%s\">Upgrade to Pro</a> to unlock advanced features and premium support.<br>Already purchased Pro? Enter your license key below and we'll automatically upgrade you to Pro."
 msgstr ""
 
@@ -4184,6 +4220,7 @@ msgstr ""
 
 #. translators: %s - Admin URL for membership page settings
 #: includes/admin/settings/class-ur-settings-membership.php:89
+#, php-format
 msgid "<strong>Membership page setting has moved.</strong> Configure your membership page <a href=\"%s\">here</a>."
 msgstr ""
 
@@ -4240,6 +4277,7 @@ msgstr ""
 
 #. translators: %s - Content rule URL
 #: includes/admin/settings/class-ur-settings-membership.php:162
+#, php-format
 msgid "<strong>The Global Restriction setting has moved.</strong> You can now manage it <a href=\"%1$s\" target=\"_blank\" style=\"text-decoration: underline;\" >here.</a>"
 msgstr ""
 
@@ -4264,6 +4302,7 @@ msgid "Endpoints"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-my-account.php:88
+#, php-format
 msgid "<strong>My Account page setting has moved.</strong> Configure your my account page <a href=\"%s\">here</a>."
 msgstr ""
 
@@ -5555,11 +5594,13 @@ msgstr ""
 
 #. translators: 1: Plugin Name, 2: Changelog Link, 3: New Version, 4: Link Close
 #: includes/admin/updater/class-ur-addon-updater.php:313
+#, php-format
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
 #. translators: 1: Plugin Name, 2: Changelog Link, 3: New Version, 4: Link Close, 5: Upgrade Plugin Link, 6: Link Close
 #: includes/admin/updater/class-ur-addon-updater.php:322
+#, php-format
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
 msgstr ""
 
@@ -5660,27 +5701,32 @@ msgstr ""
 
 #. translators: %s: Template title
 #: includes/admin/views/html-admin-page-form-templates.php:98
+#, php-format
 msgctxt "Template name"
 msgid "%s template"
 msgstr ""
 
 #. translators: %s: Number of plugins
 #: includes/admin/views/html-admin-page-form-templates.php:154
+#, php-format
 msgid "%s plugin successfully installed."
 msgstr ""
 
 #. translators: %s: Number of plugins
 #: includes/admin/views/html-admin-page-form-templates.php:161
+#, php-format
 msgid "%s plugins successfully installed."
 msgstr ""
 
 #. translators: %s: Number of failed installs
 #: includes/admin/views/html-admin-page-form-templates.php:171
+#, php-format
 msgid "%s install failed."
 msgstr ""
 
 #. translators: %s: Number of failed installs
 #: includes/admin/views/html-admin-page-form-templates.php:176
+#, php-format
 msgid "%s installs failed."
 msgstr ""
 
@@ -5996,6 +6042,7 @@ msgstr ""
 
 #. translators: %1$s HTML span tag. translators: %2$s HTML span closing tag.
 #: includes/admin/views/html-deactivation-popup.php:42
+#, php-format
 msgid "Could you please share why you are deactivating %1$sUser Registration%2$s plugin?"
 msgstr ""
 
@@ -6054,6 +6101,7 @@ msgid "View Documentation"
 msgstr ""
 
 #: includes/admin/views/html-login-page-forms.php:49
+#, php-format
 msgid "View Live in %s page"
 msgstr ""
 
@@ -6115,6 +6163,7 @@ msgstr ""
 
 #. Translators: 1: Block name
 #: includes/blocks/block-types/class-ur-block-abstract.php:74
+#, php-format
 msgid "Metadata file for %s block does not exist."
 msgstr ""
 
@@ -6212,6 +6261,7 @@ msgstr ""
 #: includes/class-ur-ajax.php:308
 #: includes/class-ur-form-handler.php:192
 #: includes/class-ur-form-handler.php:328
+#, php-format
 msgid "Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email."
 msgstr ""
 
@@ -6219,6 +6269,7 @@ msgstr ""
 #: includes/class-ur-ajax.php:325
 #: includes/functions-ur-template.php:790
 #: includes/functions-ur-template.php:2097
+#, php-format
 msgid "There is a pending change of your email to <code>%1$s</code>. <a href=\"%2$s\">Cancel</a>"
 msgstr ""
 
@@ -6253,6 +6304,7 @@ msgstr ""
 
 #. translators: %s - WP mail from name
 #: includes/class-ur-ajax.php:563
+#, php-format
 msgid "Test email from %s"
 msgstr ""
 
@@ -6261,6 +6313,7 @@ msgid "Test email was sent successfully! Please check your inbox to make sure it
 msgstr ""
 
 #: includes/class-ur-ajax.php:583
+#, php-format
 msgid "Test email was unsuccessful!. %s"
 msgstr ""
 
@@ -6567,34 +6620,42 @@ msgid "Page validation successful."
 msgstr ""
 
 #: includes/class-ur-cache-helper.php:121
+#, php-format
 msgid "In order for <strong>database caching</strong> to work with User Registration you must add %1$s to the \"Ignored Query Strings\" option in <a href=\"%2$s\">W3 Total Cache settings</a>."
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:158
+#, php-format
 msgid "Removing WPForms captcha script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:179
+#, php-format
 msgid "Removing Contact Form 7 captcha script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:201
+#, php-format
 msgid "Removing Contact Form 7 Simple reCAPTCHA script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:222
+#, php-format
 msgid "Removing Gravity Forms captcha script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:243
+#, php-format
 msgid "Removing WooCommerce captcha script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:264
+#, php-format
 msgid "Removing Elementor captcha script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:310
+#, php-format
 msgid "Removing generic captcha script: %1$s (src: %2$s)"
 msgstr ""
 
@@ -6805,27 +6866,33 @@ msgid "Thanks for confirming your erasure request."
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:96
+#, php-format
 msgid "The password must have minimum length of %d characters"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:103
+#, php-format
 msgid "and contain at least %d uppercase letters"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:113
 #: includes/class-ur-frontend-scripts.php:114
+#, php-format
 msgid "and contain at least %d number"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:124
+#, php-format
 msgid "and contain at least %d special character"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:125
+#, php-format
 msgid "and contain at least %d special characters"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:134
+#, php-format
 msgid "and should only have %d repetitive letters at max"
 msgstr ""
 
@@ -6941,11 +7008,13 @@ msgid "Default Group"
 msgstr ""
 
 #: includes/class-ur-logger.php:62
+#, php-format
 msgid "The provided handler <code>%1$s</code> does not implement UR_Log_Handler_Interface."
 msgstr ""
 
 #. translators: %s - Log Level
 #: includes/class-ur-logger.php:160
+#, php-format
 msgid "UR_Logger::log was called with an invalid level \"%s\"."
 msgstr ""
 
@@ -6954,31 +7023,37 @@ msgid "Deactivate License Key"
 msgstr ""
 
 #: includes/class-ur-plugin-updater.php:368
+#, php-format
 msgid "The provided license key expired on %1$s. Please <a href=\"%2$s\" rel=\"noreferrer noopener\" target=\"_blank\">renew your license key</a>."
 msgstr ""
 
 #. translators: %s: Contact Support URL
 #: includes/class-ur-plugin-updater.php:373
+#, php-format
 msgid "The provided license key has been disabled. Please <a href=\"%s\" rel=\"noreferrer noopener\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
 #. translators: %s: Account Page URL
 #: includes/class-ur-plugin-updater.php:378
+#, php-format
 msgid "The provided license is invalid. Please <a href=\"%s\" rel=\"noreferrer noopener\" target=\"_blank\">visit your account page</a> and verify it."
 msgstr ""
 
 #. translators: %s: Account Page URL
 #: includes/class-ur-plugin-updater.php:384
+#, php-format
 msgid "The provided license is not active for this URL. Please <a href=\"%s\" rel=\"noreferrer noopener\" target=\"_blank\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
 #. translators: %s: Plugin Name
 #: includes/class-ur-plugin-updater.php:390
+#, php-format
 msgid "This appears to be an invalid license key for <strong>%s</strong>."
 msgstr ""
 
 #. translators: %s: Pricing Page URL
 #: includes/class-ur-plugin-updater.php:395
+#, php-format
 msgid "The provided license key has reached its activation limit. Please <a href=\"%s\" rel=\"noreferrer noopener\" target=\"_blank\">View possible upgrades</a> now."
 msgstr ""
 
@@ -6988,11 +7063,13 @@ msgstr ""
 
 #. translators: %s: Contact Support URL
 #: includes/class-ur-plugin-updater.php:404
+#, php-format
 msgid "The provided license key could not be found. Please <a href=\"%s\" rel=\"noreferrer noopener\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
 #. translators: %s: Error Message
 #: includes/class-ur-plugin-updater.php:409
+#, php-format
 msgid "<strong>Activation error:</strong> %s"
 msgstr ""
 
@@ -7112,6 +7189,7 @@ msgstr ""
 
 #. translators: %s - Form name.
 #: includes/class-ur-preview.php:125
+#, php-format
 msgid "%s &ndash; Preview"
 msgstr ""
 
@@ -7319,11 +7397,13 @@ msgstr ""
 
 #. translators: %s - Link to login form.
 #: includes/class-ur-shortcodes.php:205
+#, php-format
 msgid "Please Login to edit password. <a href=\"%s\">Login Here?</a>"
 msgstr ""
 
 #. translators: %s - Link to login form.
 #: includes/class-ur-shortcodes.php:255
+#, php-format
 msgid "Please Login to edit profile. <a href=\"%s\">Login Here?</a>"
 msgstr ""
 
@@ -7735,6 +7815,7 @@ msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-checkbox.php:103
+#, php-format
 msgid "Only %d options can be selected."
 msgstr ""
 
@@ -8763,11 +8844,13 @@ msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-date.php:176
+#, php-format
 msgid "Please select a date after %s."
 msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-date.php:206
+#, php-format
 msgid "Please select a date before %s"
 msgstr ""
 
@@ -8784,6 +8867,7 @@ msgstr ""
 #: includes/form/class-ur-form-field-nickname.php:83
 #: includes/form/class-ur-form-field-text.php:94
 #: includes/form/class-ur-form-field-textarea.php:84
+#, php-format
 msgid "Please enter a value of length less than %d."
 msgstr ""
 
@@ -8795,6 +8879,7 @@ msgstr ""
 #: includes/form/class-ur-form-field-nickname.php:98
 #: includes/form/class-ur-form-field-text.php:109
 #: includes/form/class-ur-form-field-textarea.php:99
+#, php-format
 msgid "Please enter number of words less than %d."
 msgstr ""
 
@@ -8806,6 +8891,7 @@ msgstr ""
 #: includes/form/class-ur-form-field-nickname.php:123
 #: includes/form/class-ur-form-field-text.php:134
 #: includes/form/class-ur-form-field-textarea.php:124
+#, php-format
 msgid "Please enter a value of length at least %d."
 msgstr ""
 
@@ -8817,6 +8903,7 @@ msgstr ""
 #: includes/form/class-ur-form-field-nickname.php:138
 #: includes/form/class-ur-form-field-text.php:149
 #: includes/form/class-ur-form-field-textarea.php:139
+#, php-format
 msgid "Please enter number of words at least %d."
 msgstr ""
 
@@ -8847,16 +8934,19 @@ msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-number.php:81
+#, php-format
 msgid "Please enter a value less than %d"
 msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-number.php:101
+#, php-format
 msgid "Please enter a value greater than %d"
 msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-number.php:121
+#, php-format
 msgid "Please enter multiple of %d"
 msgstr ""
 
@@ -8867,6 +8957,7 @@ msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-password.php:80
+#, php-format
 msgid "Please enter a password of length less than %d"
 msgstr ""
 
@@ -9346,6 +9437,7 @@ msgid "Registration blocked due to potential spam. Reach out to support for help
 msgstr ""
 
 #: includes/frontend/class-ur-frontend-form-handler.php:228
+#, php-format
 msgid "%s"
 msgstr ""
 
@@ -11365,6 +11457,7 @@ msgid "Membership Access Rule"
 msgstr ""
 
 #: includes/libraries/wp-background-process.php:430
+#, php-format
 msgid "Every %d minutes"
 msgstr ""
 
@@ -11499,6 +11592,7 @@ msgstr ""
 
 #. translators: %s: Form ID.
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:686
+#, php-format
 msgid "Form Id: %s"
 msgstr ""
 
@@ -11532,6 +11626,7 @@ msgstr ""
 
 #. translators: 1: Membership plan type 2: Allowed membership plan types.
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:924
+#, php-format
 msgid "Invalid membership type: %1$s. Only %2$s memberships are allowed based on your selection."
 msgstr ""
 
@@ -11691,6 +11786,7 @@ msgstr ""
 
 #. translators: 1: Failed Addon Names
 #: includes/RestApi/controllers/version1/class-ur-modules.php:490
+#, php-format
 msgid "%1$s activation failed. Please try again sometime later."
 msgstr ""
 
@@ -11731,10 +11827,12 @@ msgid "Please enter the valid license key."
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-plugin-status.php:273
+#, php-format
 msgid "%1$s cannot be activated at the moment. %2$s"
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-plugin-status.php:284
+#, php-format
 msgid "%1$s activated successfully."
 msgstr ""
 
@@ -11746,6 +11844,7 @@ msgstr ""
 #. translators: %s - Link to logout.
 #: includes/shortcodes/class-ur-shortcode-login.php:91
 #: modules/membership/includes/Admin/Views/Shortcode/MemberRegistrationFormShortcode.php:65
+#, php-format
 msgid "You are already logged in. <a href=\"%s\">Log out?</a>"
 msgstr ""
 
@@ -11796,31 +11895,38 @@ msgstr ""
 
 #. translators: %s - Field Label
 #: includes/validation/class-ur-form-validation.php:479
+#, php-format
 msgid "<strong>%s</strong> is a required field."
 msgstr ""
 
 #: includes/validation/class-ur-setting-validation.php:209
+#, php-format
 msgid "Please enter a value greater than 0 for %s."
 msgstr ""
 
 #: includes/validation/class-ur-setting-validation.php:210
+#, php-format
 msgid "Please enter an integer value for %s."
 msgstr ""
 
 #: includes/validation/class-ur-setting-validation.php:211
+#, php-format
 msgid "Please enter a numeric value for %s."
 msgstr ""
 
 #: includes/validation/class-ur-setting-validation.php:212
+#, php-format
 msgid "Please enter a valid url or path for %s."
 msgstr ""
 
 #: includes/validation/class-ur-setting-validation.php:213
+#, php-format
 msgid "Please enter a valid email for %s."
 msgstr ""
 
 #. translators: %s: Field Label.
 #: includes/validation/class-ur-setting-validation.php:236
+#, php-format
 msgid "Please enter a valid value for %s."
 msgstr ""
 
@@ -11850,21 +11956,25 @@ msgstr ""
 
 #. translators: %d - Size
 #: includes/validation/class-ur-validation.php:148
+#, php-format
 msgid "Please enter value of length less than %d"
 msgstr ""
 
 #. translators: %d - Size
 #: includes/validation/class-ur-validation.php:166
+#, php-format
 msgid "Please enter value of length at least %d"
 msgstr ""
 
 #. translators: %d - Size
 #: includes/validation/class-ur-validation.php:184
+#, php-format
 msgid "Please enter number of words less than %d"
 msgstr ""
 
 #. translators: %d - Size
 #: includes/validation/class-ur-validation.php:202
+#, php-format
 msgid "Please enter number of words at least %d"
 msgstr ""
 
@@ -12187,6 +12297,7 @@ msgid "Membership ID is required"
 msgstr ""
 
 #: modules/content-restriction/admin/settings/class-urcr-settings-file.php:65
+#, php-format
 msgid "Go to <a href=\"%s\">Content Rules page</a> for advanced restrictions"
 msgstr ""
 
@@ -12195,6 +12306,7 @@ msgid "Global Restriction Settings"
 msgstr ""
 
 #: modules/content-restriction/admin/settings/class-urcr-settings-file.php:86
+#, php-format
 msgid "These settings affect whole site restriction as well as individual page/post restriction if enabled. <a href=\"%1$s\" target=\"_blank\" style=\"text-decoration: underline;\" >Learn More.</a>"
 msgstr ""
 
@@ -12376,6 +12488,7 @@ msgid "Untitled Rule"
 msgstr ""
 
 #: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:427
+#, php-format
 msgid "Successfully %s the Access Rule."
 msgstr ""
 
@@ -13963,6 +14076,7 @@ msgstr ""
 
 #. translators: %s: link to Content Restriction Settings
 #: modules/membership/includes/Admin/Views/Partials/membership-create-access-tab.php:150
+#, php-format
 msgid "Show visitors the default restricted message. Customize it in <a href=\"%s\">Content Restriction Settings</a>."
 msgstr ""
 
@@ -15290,6 +15404,7 @@ msgstr ""
 
 #. translators: %d: User id
 #: modules/payment-history/AJAX.php:276
+#, php-format
 msgid "Cannot find user with id %d."
 msgstr ""
 
@@ -15304,6 +15419,7 @@ msgstr ""
 
 #. translators: %d: Order id
 #: modules/payment-history/AJAX.php:327
+#, php-format
 msgid "Cannot find record of %d order id."
 msgstr ""
 
@@ -15329,6 +15445,7 @@ msgstr ""
 
 #. translators: %s: trial duration
 #: modules/payment-history/AJAX.php:418
+#, php-format
 msgid "Trial period cannot exceed %s."
 msgstr ""
 
@@ -15590,15 +15707,18 @@ msgstr ""
 
 #. translators: %s: Form Status.
 #: templates/form-registration.php:120
+#, php-format
 msgid "The form is in %s. Please contact your site administrator."
 msgstr ""
 
 #. translators: %s - registration Title.
 #: templates/form-registration.php:134
+#, php-format
 msgid "<span class=\"user-registration-registration-title\"> %s </span> </br>"
 msgstr ""
 
 #: templates/form-registration.php:135
+#, php-format
 msgid "<p class=\"user-registration-registration-description\"> %s </p>"
 msgstr ""
 
@@ -15608,6 +15728,7 @@ msgstr ""
 
 #. translators: %d: number of days
 #: templates/modules/content-drip/base-content-drip-template.php:58
+#, php-format
 msgid "in %d day"
 msgid_plural "in %d days"
 msgstr[0] ""
@@ -15684,6 +15805,7 @@ msgstr ""
 
 #. translators: %s: formatted date
 #: templates/myaccount/courses.php:58
+#, php-format
 msgid "Started on %s"
 msgstr ""
 
@@ -15723,6 +15845,7 @@ msgid "Enter team name"
 msgstr ""
 
 #: templates/myaccount/edit-team.php:99
+#, php-format
 msgid "Members (Max: %s)"
 msgstr ""
 
@@ -15786,10 +15909,12 @@ msgstr ""
 
 #. translators: %s - Login Title.
 #: templates/myaccount/form-login.php:172
+#, php-format
 msgid "<span class=\"user-registration-login-title\"> %s </span> </br>"
 msgstr ""
 
 #: templates/myaccount/form-login.php:173
+#, php-format
 msgid "<p class=\"user-registration-login-description\"> %s </p>"
 msgstr ""
 
@@ -15871,71 +15996,6 @@ msgstr ""
 
 #: templates/ur-form-preview-template.php:24
 msgid "Form Preview"
-msgstr ""
-
-#: user-registration.php:163
-msgid "Unknown error"
-msgstr ""
-
-#: user-registration.php:164
-msgid "Unknown file"
-msgstr ""
-
-#. translators: %s: error timestamp
-#: user-registration.php:188
-msgid "[%s] CRITICAL  Fatal error"
-msgstr ""
-
-#. translators: %s: error message
-#: user-registration.php:194
-msgid "Message : %s"
-msgstr ""
-
-#. translators: 1: file path, 2: line number
-#: user-registration.php:199
-msgid "File    : %1$s:%2$d"
-msgstr ""
-
-#: user-registration.php:203
-msgid "Status  : FAILED"
-msgstr ""
-
-#: user-registration.php:206
-msgid "Trace:"
-msgstr ""
-
-#. translators: 1: composer command. 2: plugin directory
-#: user-registration.php:291
-msgid "Your installation of the User Registration is incomplete. Please run %1$s within the %2$s directory."
-msgstr ""
-
-#. translators: 1: composer command. 2: plugin directory
-#: user-registration.php:310
-msgid "Your installation of the  User Registration is incomplete. Please run %1$s within the %2$s directory."
-msgstr ""
-
-#: user-registration.php:581
-msgid "View User Registration & Membership settings"
-msgstr ""
-
-#: user-registration.php:597
-msgid "View User Registration & Membership documentation"
-msgstr ""
-
-#: user-registration.php:597
-msgid "Docs"
-msgstr ""
-
-#: user-registration.php:598
-msgid "Visit free customer support"
-msgstr ""
-
-#: user-registration.php:598
-msgid "Free support"
-msgstr ""
-
-#: user-registration.php:789
-msgid "As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration & Membership Free</strong> is now not needed."
 msgstr ""
 
 #: chunks/analytics.js:1
@@ -16451,6 +16511,7 @@ msgstr ""
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/settings/MessageAction.js:381
+#, js-format
 msgid "Show visitors the default restricted message. Customize it in %s."
 msgstr ""
 
@@ -16565,6 +16626,7 @@ msgstr ""
 
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
+<<<<<<< HEAD
 #: src/content-restriction/components/rules/URFormFieldCondition.js:136
 msgid "is not"
 msgstr ""
@@ -17646,11 +17708,13 @@ msgstr ""
 
 #: chunks/dashboard.js:280
 #: src/dashboard/components/common/UsePluginInstallActivate.js:115
+#, js-format
 msgid "%s plugin installed and activated successfully"
 msgstr ""
 
 #: chunks/dashboard.js:280
 #: src/dashboard/components/common/UsePluginInstallActivate.js:65
+#, js-format
 msgid "%s plugin activated successfully"
 msgstr ""
 
@@ -17677,11 +17741,13 @@ msgstr ""
 
 #: chunks/dashboard.js:280
 #: src/dashboard/screens/Products/components/ProductCard.js:169
+#, js-format
 msgid "Are you sure? You want to activate %s plugin."
 msgstr ""
 
 #: chunks/dashboard.js:280
 #: src/dashboard/screens/Products/components/ProductCard.js:176
+#, js-format
 msgid "Are you sure? You want to install and activate %s plugin."
 msgstr ""
 
@@ -17734,11 +17800,13 @@ msgstr ""
 
 #: chunks/form_templates.js:1
 #: src/form-templates/components/PluginStatus.js:168
+#, js-format
 msgid "Failed to activate plugin: %s."
 msgstr ""
 
 #: chunks/form_templates.js:1
 #: src/form-templates/components/PluginStatus.js:186
+#, js-format
 msgid "Unable to activate %s."
 msgstr ""
 
@@ -17776,11 +17844,13 @@ msgstr ""
 
 #: chunks/form_templates.js:1
 #: src/form-templates/components/TemplateList.js:629
+#, js-format
 msgid "%s Requires License Upgrade"
 msgstr ""
 
 #: chunks/form_templates.js:1
 #: src/form-templates/components/TemplateList.js:636
+#, js-format
 msgid "%s is a Premium Template"
 msgstr ""
 
@@ -17973,7 +18043,12 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+#: src/content-restriction/components/inputs/FormFieldValueInput.js:34
+msgid "Select value"
+msgstr ""
+
 #: src/dashboard/components/Header/Header.js:148
+#, js-format
 msgid "You are currently using User Registration & Membership %s"
 msgstr ""
 
