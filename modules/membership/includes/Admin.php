@@ -406,10 +406,6 @@ if ( ! class_exists( 'Admin' ) ) :
 			if ( ! ur_check_module_activation( 'membership' ) ) {
 				return $success_params;
 			}
-			// membership POST signals present
-			if ( empty( $_POST['is_membership_active'] ) && empty( $_POST['membership_type'] ) ) {
-				return $success_params;
-			}
 			// Membership processing requirement is derived from the server-side selected value of the
 			// membership field, never from client POST signals (is_membership_active / membership_type)
 			// or members_data — those are trivially omitted to skip enrollment and the payment gate.
