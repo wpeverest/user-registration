@@ -3691,6 +3691,13 @@ class StripeService {
 	 * IDs are cached per mode (test/live) in WordPress options to avoid duplicate Tax Rates in Stripe.
 	 */
 	private function get_or_create_stripe_tax_rate( $percentage ) {
+		$percentage = floatval( $percentage );
+
+		// Guard against a stray rate creating unbounded Tax Rate objects and options.
+		if ( $percentage <= 0 || $percentage > 100 ) {
+			return '';
+		}
+
 		$mode        = self::get_stripe_settings()['mode'] ?? 'test';
 		$option_key  = 'urm_stripe_tax_rate_' . $mode . '_' . str_replace( '.', '_', (string) $percentage );
 		$tax_rate_id = get_option( $option_key );

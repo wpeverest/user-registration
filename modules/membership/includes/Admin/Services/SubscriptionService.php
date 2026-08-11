@@ -598,7 +598,8 @@ class SubscriptionService {
 			);
 		}
 
-		if ( ! empty( $data['tax_rate'] ) ) {
+		// A negative or absurd rate would reduce the charged amount below the plan price.
+		if ( ! empty( $data['tax_rate'] ) && floatval( $data['tax_rate'] ) > 0 && floatval( $data['tax_rate'] ) <= 100 ) {
 			$members_data['tax_data'] = array(
 				'tax_rate'               => floatval( $data['tax_rate'] ),
 				'tax_calculation_method' => ur_string_to_bool( $data['tax_calculation_method'] ?? '1' ),

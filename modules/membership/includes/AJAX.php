@@ -1901,10 +1901,9 @@ class AJAX {
 			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
 		}
 
-		if ( ! empty( $_POST['tax_rate'] ) ) {
-			$data['tax_rate']               = sanitize_text_field( $_POST['tax_rate'] );
-			$data['tax_calculation_method'] = ! empty( $_POST['tax_calculation_method'] ) ? sanitize_text_field( $_POST['tax_calculation_method'] ) : '1';
-		}
+		// Tax is resolved from the site's own region settings; a posted tax_rate would set the charge.
+		$tax_region = urm_get_user_tax_region( get_current_user_id(), isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0 );
+		$data       = urm_apply_resolved_tax_data( $data, $tax_region['country'], $tax_region['state'] );
 
 		$subscription_service = new SubscriptionService();
 		$status               = $subscription_service->can_upgrade( $data );
@@ -2178,10 +2177,9 @@ class AJAX {
 			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
 		}
 
-		if ( ! empty( $_POST['tax_rate'] ) ) {
-			$data['tax_rate']               = sanitize_text_field( $_POST['tax_rate'] );
-			$data['tax_calculation_method'] = ! empty( $_POST['tax_calculation_method'] ) ? sanitize_text_field( $_POST['tax_calculation_method'] ) : '1';
-		}
+		// Tax is resolved from the site's own region settings; a posted tax_rate would set the charge.
+		$tax_region = urm_get_user_tax_region( $current_user_id, isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0 );
+		$data       = urm_apply_resolved_tax_data( $data, $tax_region['country'], $tax_region['state'] );
 
 		if ( ! empty( $user_membership_ids ) ) {
 			$subscription_service = new SubscriptionService();

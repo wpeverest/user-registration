@@ -422,6 +422,19 @@ if ( ! class_exists( 'Admin' ) ) :
 				return $success_params;
 			}
 
+			// Tax is resolved from the site's own region settings; a members_data tax_rate would set the charge.
+			$tax_region = array(
+				'country' => '',
+				'state'   => '',
+			);
+			foreach ( $valid_form_data as $field_data ) {
+				if ( isset( $field_data->extra_params['field_key'] ) && 'country' === $field_data->extra_params['field_key'] ) {
+					$tax_region = urm_parse_country_field_value( isset( $field_data->value ) ? $field_data->value : '' );
+					break;
+				}
+			}
+			$data = urm_apply_resolved_tax_data( $data, $tax_region['country'], $tax_region['state'] );
+
 			// Inject user identity from the just-created user
 			$member    = get_userdata( $user_id );
 			$member_id = $user_id;

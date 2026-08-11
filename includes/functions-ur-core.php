@@ -11730,6 +11730,152 @@ if ( ! function_exists( 'urm_check_if_plus_and_above_plan' ) ) {
 }
 
 
+if ( ! function_exists( 'urm_parse_country_field_value' ) ) {
+
+	function urm_parse_country_field_value( $value ) {
+		$region = array(
+			'country' => '',
+			'state'   => '',
+		);
+
+		if ( is_array( $value ) ) {
+			$region['country'] = isset( $value['country'] ) ? $value['country'] : '';
+			$region['state']   = isset( $value['state'] ) ? $value['state'] : '';
+
+			return $region;
+		}
+
+		if ( ! is_string( $value ) || '' === $value ) {
+			return $region;
+		}
+
+		if ( preg_match( '/^\{.*\}$/s', $value ) ) {
+			$decoded = json_decode( $value, true );
+
+			if ( is_array( $decoded ) ) {
+				$region['country'] = isset( $decoded['country'] ) ? $decoded['country'] : '';
+				$region['state']   = isset( $decoded['state'] ) ? $decoded['state'] : '';
+
+				return $region;
+			}
+		}
+
+		$region['country'] = $value;
+
+		return $region;
+	}
+}
+
+if ( ! function_exists( 'urm_get_user_tax_region' ) ) {
+
+	function urm_get_user_tax_region( $user_id, $form_id = 0 ) {
+		$region = array(
+			'country' => '',
+			'state'   => '',
+		);
+
+		$user_id = absint( $user_id );
+
+		if ( ! $user_id ) {
+			return $region;
+		}
+
+		$form_id     = $form_id ? absint( $form_id ) : ur_get_form_id_by_userid( $user_id );
+		$field_names = array();
+
+		if ( $form_id ) {
+			$form_rows = UR()->form->get_form( $form_id, array( 'content_only' => true ) );
+
+			foreach ( (array) $form_rows as $row ) {
+				foreach ( (array) $row as $grid ) {
+					foreach ( (array) $grid as $field ) {
+						if ( isset( $field->field_key ) && 'country' === $field->field_key && ! empty( $field->general_setting->field_name ) ) {
+							$field_names[] = $field->general_setting->field_name;
+						}
+					}
+				}
+			}
+		}
+
+		$field_names[] = 'country';
+
+		foreach ( array_unique( $field_names ) as $field_name ) {
+			$value = get_user_meta( $user_id, 'user_registration_' . $field_name, true );
+
+			if ( empty( $value ) ) {
+				continue;
+			}
+
+			$parsed = urm_parse_country_field_value( $value );
+
+			if ( ! empty( $parsed['country'] ) ) {
+				return $parsed;
+			}
+		}
+
+		return $region;
+	}
+}
+
+if ( ! function_exists( 'urm_resolve_tax_data' ) ) {
+
+	/**
+	 * Resolve the authoritative tax rate for a region from the site's own settings.
+	 * Client-submitted tax_rate / tax_calculation_method must never be trusted; they set the
+	 * charged amount. Mirrors calculate_tax_amount() in the membership frontend script.
+	 */
+	function urm_resolve_tax_data( $country = '', $state = '' ) {
+		$no_tax = array(
+			'tax_rate'               => 0.0,
+			'tax_calculation_method' => false,
+		);
+
+		if ( ! ur_check_module_activation( 'taxes' ) || empty( $country ) ) {
+			return $no_tax;
+		}
+
+		$regions = get_option( 'user_registration_tax_regions_and_rates', array() );
+		$region  = isset( $regions['regions'][ $country ] ) ? $regions['regions'][ $country ] : array();
+
+		if ( empty( $region ) ) {
+			return $no_tax;
+		}
+
+		if ( ! empty( $state ) && isset( $region['states'][ $state ] ) ) {
+			$rate = $region['states'][ $state ];
+		} else {
+			$rate = isset( $region['rate'] ) ? $region['rate'] : 0;
+		}
+
+		$rate = floatval( $rate );
+
+		if ( $rate <= 0 || $rate > 100 ) {
+			return $no_tax;
+		}
+
+		return array(
+			'tax_rate'               => $rate,
+			'tax_calculation_method' => ur_string_to_bool( get_option( 'user_registration_tax_calculation_during_checkout', 'no' ) ),
+		);
+	}
+}
+
+if ( ! function_exists( 'urm_apply_resolved_tax_data' ) ) {
+
+	function urm_apply_resolved_tax_data( $data, $country, $state ) {
+		unset( $data['tax_rate'], $data['tax_calculation_method'] );
+
+		$tax = urm_resolve_tax_data( $country, $state );
+
+		if ( $tax['tax_rate'] > 0 ) {
+			$data['tax_rate']               = $tax['tax_rate'];
+			$data['tax_calculation_method'] = $tax['tax_calculation_method'] ? '1' : '0';
+		}
+
+		return $data;
+	}
+}
+
 if ( ! function_exists( 'ur_get_country_lists' ) ) {
 
 	/**

@@ -115,11 +115,16 @@ class MembersService {
 		$response['role']    = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : 'subscriber';
 
 		if ( isset( $data['tax_rate'] ) && ! empty( $data['tax_rate'] ) ) {
-			$tax_details = array(
-				'tax_rate'       		 => floatval( $data['tax_rate'] ),
-				'tax_calculation_method' =>  ur_string_to_bool( sanitize_text_field( $data['tax_calculation_method'] ) ),
-				);
-			$response['tax_data'] = $tax_details;
+			$tax_rate = floatval( $data['tax_rate'] );
+
+			// A negative or absurd rate would reduce the charged amount below the plan price.
+			if ( $tax_rate > 0 && $tax_rate <= 100 ) {
+				$tax_details = array(
+					'tax_rate'       		 => $tax_rate,
+					'tax_calculation_method' =>  ur_string_to_bool( sanitize_text_field( $data['tax_calculation_method'] ) ),
+					);
+				$response['tax_data'] = $tax_details;
+			}
 		}
 
 		if ( isset( $data['switched_currency'] ) && ! empty( $data['switched_currency'] ) ) {
