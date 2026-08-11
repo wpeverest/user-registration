@@ -107,6 +107,10 @@ $plugin_url = UR()->plugin_url();
 // Get field label.
 $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 
+// A single membership is auto-selected and rendered without a selectable radio,
+// both here in the builder preview and on the live frontend.
+$memberships_count = count( $memberships );
+
 ?>
 <div class="ur-input-type-select ur-admin-template">
 	<div class="ur-label">
@@ -165,7 +169,7 @@ $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 							}
 						}
 						?>
-						<div class="urmg-plan-card <?php echo esc_attr( $selected_class ); ?>"
+						<div class="urmg-plan-card <?php echo esc_attr( $selected_class ); ?><?php echo 1 === $memberships_count ? ' ur-membership-single-plan' : ''; ?>"
 							data-plan-id="<?php echo $plan_id; ?>"
 							data-plan-amount="<?php echo esc_attr( $plan_amount ); ?>"
 							data-plan-type="<?php echo esc_attr( $plan_type ); ?>">
@@ -208,7 +212,6 @@ $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 
 				<?php
 				// Payment Gateway Selection - only show if there's more than one membership, or if single membership is not free.
-				$memberships_count       = count( $memberships );
 				$membership_type         = UR_PRO_ACTIVE ? 'subscription' : 'paid';
 				$active_payment_gateways = urm_get_all_active_payment_gateways( $membership_type );
 				$show_payment_gateways   = false;

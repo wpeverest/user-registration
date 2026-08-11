@@ -107,6 +107,10 @@
 				$memberships = apply_filters( 'user_registration_membership_lists', $memberships );
 			}
 
+			// A single active plan is auto-selected and rendered without a selectable radio;
+			// everything else about the field (total, coupon, payment gateway sections) is unchanged.
+			$single_plan = 1 === count( $memberships ) ? reset( $memberships ) : null;
+
 			foreach ( $memberships as $m => $membership ) :
 				$local_currency_details = array();
 				$enabled_zones          = array();
@@ -217,7 +221,7 @@
 				$urm_default_pg   = apply_filters( 'user_registration_membership_default_payment_gateway', '' );
 				$has_team_pricing = $is_team_addon_activated && ! empty( $membership['team_pricing'] );
 				?>
-				<label class="ur_membership_input_label ur-label <?php echo $has_team_pricing ? 'ur-has-team-pricing' : 'ur-normal-pricing'; ?>"
+				<label class="ur_membership_input_label ur-label <?php echo $has_team_pricing ? 'ur-has-team-pricing' : 'ur-normal-pricing'; ?><?php echo $single_plan ? ' ur-membership-option-static' : ''; ?>"
 						for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
 						data-membership-id="<?php echo esc_attr( $membership['ID'] ); ?>">
 					<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
@@ -240,7 +244,7 @@
 							data-urm-local-currency-details = "<?php echo esc_attr( json_encode( $enabled_zones ) ); ?>"
 							data-urm-converted-amount = "<?php echo esc_attr( $converted_amount ); ?>"
 							data-has-coupon-link="<?php echo esc_attr( in_array( $membership['ID'], $membership_ids_link_with_coupons ) ? 'yes' : 'no' ); ?>"
-						<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
+						<?php echo ( $single_plan || ( isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ) ) ? 'checked' : ''; ?>
 							data-local-currency="<?php echo esc_attr( ! empty( $final_period ) ? $local_currency_by_country : '' ); ?>"
 							data-zone-id="<?php echo esc_attr( ! empty( $final_period ) && isset( $enabled_zones[ $local_currency_by_country ]['ID'] ) ? $enabled_zones[ $local_currency_by_country ]['ID'] : '' ); ?>"
 					>
@@ -283,7 +287,7 @@
 										data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['calculated_amount'] ); ?>"
 										data-has-coupon-link="<?php echo esc_attr( in_array( $membership['ID'], $membership_ids_link_with_coupons ) ? 'yes' : 'no' ); ?>"
 										data-urm-default-pg="<?php echo $urm_default_pg; ?>"
-									<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
+									<?php echo ( $single_plan || ( isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ) ) ? 'checked' : ''; ?>
 								>
 								<span
 									class="ur-membership-duration ur-membership-title ur-membership-name-wrap">
