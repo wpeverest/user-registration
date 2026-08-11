@@ -271,10 +271,6 @@ class UR_Shortcodes {
 			return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . __( 'Registration is currently disabled.', 'user-registration' ) . '</p>' );
 		}
 
-		if ( ! is_user_logged_in() && ! $check_user_state && ! $users_can_register ) {
-			return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . __( 'Registration is currently disabled.', 'user-registration' ) . '</p>' );
-		}
-
 		if ( is_user_logged_in() || $check_user_state ) {
 
 			$is_membership_module_active = ur_check_module_activation( 'membership' );

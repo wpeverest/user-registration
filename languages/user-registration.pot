@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-11T03:38:34+00:00\n"
+"POT-Creation-Date: 2026-08-11T03:43:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -6650,6 +6650,7 @@ msgid "You do not have permission to modify email settings."
 msgstr ""
 
 #: includes/class-ur-ajax.php:2640
+#: chunks/dashboard.js:280
 #: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:67
 msgid "Emails have been enabled successfully."
 msgstr ""
@@ -17015,6 +17016,32 @@ msgid "All Features"
 msgstr ""
 
 #: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/RegistrationDisabled.js:54
+msgid "Registration Is Disabled"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/RegistrationDisabled.js:77
+msgid "Your registration forms show \"Registration is currently disabled.\" because the WordPress \"Anyone can register\" option is turned off."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/RegistrationDisabled.js:96
+msgid "Anyone can register"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/RegistrationDisabled.js:99
+msgid "Enable membership registration in WordPress General Settings"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/RegistrationDisabled.js:111
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:193
+msgid "Configure Settings"
+msgstr ""
+
+#: chunks/dashboard.js:280
 #: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:99
 msgid "Default Form Missing"
 msgstr ""
@@ -17126,6 +17153,56 @@ msgid "Skip Setup"
 msgstr ""
 
 #: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:121
+msgid "Emails Disabled"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:144
+msgid "The Disable emails setting is turned on, so no emails are sent to your users or admins. Registration confirmation, admin approval and membership emails are all affected."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:157
+msgid "Enable Emails"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:161
+msgid "Enabling..."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:162
+msgid "Turns off the Disable emails setting"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:59
+msgid "Failed to enable emails."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:64
+msgid "Emails Enabled"
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:84
+msgid "Failed to enable emails. Please try again."
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:179
+msgid "You can also manage this from "
+msgstr ""
+
+#: chunks/dashboard.js:280
+#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:189
+msgid "Email Settings"
+msgstr ""
+
+#: chunks/dashboard.js:280
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:184
 msgid "Make sure emails are being sent to your users during registration. Test by sending a sample email to yourself."
 msgstr ""
@@ -17183,12 +17260,6 @@ msgstr ""
 #: chunks/dashboard.js:280
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:181
 msgid "Enable Google reCaptcha protection"
-msgstr ""
-
-#: chunks/dashboard.js:280
-#: src/dashboard/screens/SiteAssistant/components/RegistrationDisabled.js:111
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:193
-msgid "Configure Settings"
 msgstr ""
 
 #: chunks/dashboard.js:280
@@ -18439,68 +18510,12 @@ msgstr ""
 msgid "Prevents access to wp-login.php"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:59
-msgid "Failed to enable emails."
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:64
-msgid "Emails Enabled"
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:84
-msgid "Failed to enable emails. Please try again."
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:121
-msgid "Emails Disabled"
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:144
-msgid "The Disable emails setting is turned on, so no emails are sent to your users or admins. Registration confirmation, admin approval and membership emails are all affected."
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:157
-msgid "Enable Emails"
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:161
-msgid "Enabling..."
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:162
-msgid "Turns off the Disable emails setting"
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:179
-msgid "You can also manage this from "
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/DisabledEmails.js:189
-msgid "Email Settings"
-msgstr ""
-
 #: src/dashboard/screens/SiteAssistant/components/MembershipField.js:105
 msgid "Membership field setup skipped."
 msgstr ""
 
 #: src/dashboard/screens/SiteAssistant/components/MembershipField.js:125
 msgid "Failed to skip membership field setup."
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/RegistrationDisabled.js:54
-msgid "Registration Is Disabled"
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/RegistrationDisabled.js:77
-msgid "Your registration forms show \"Registration is currently disabled.\" because the WordPress \"Anyone can register\" option is turned off."
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/RegistrationDisabled.js:96
-msgid "Anyone can register"
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/RegistrationDisabled.js:99
-msgid "Enable membership registration in WordPress General Settings"
 msgstr ""
 
 #: chunks/content-restriction-enhanced/block.json
