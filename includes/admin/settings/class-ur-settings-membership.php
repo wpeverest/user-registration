@@ -76,43 +76,111 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 				 *
 				 * @param array Options to be enlisted.
 				 */
-				$settings = apply_filters(
-					'user_registration_membership_settings',
-					array(
-						'title'    => '',
-						'sections' => array(
-							'membership_settings' => array(
-								'title'    => __( 'General', 'user-registration' ),
-								'type'     => 'card',
-								'desc'     => sprintf(
-									/* translators: %s - Admin URL for membership page settings */
-									__( '<strong>Membership page setting has moved.</strong> Configure your membership page <a href="%s">here</a>.', 'user-registration' ),
-									admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages' )
-								),
-								'settings' => array(
-									array(
-										'title'    => __( 'Renewal Behaviour', 'user-registration' ),
-										'desc'     => __( 'Choose how membership subscriptions are renewed, automatically through the payment provider or manually by the user', 'user-registration' ),
-										'id'       => 'user_registration_renewal_behaviour',
-										'type'     => 'select',
-										'default'  => 'automatic',
-										'class'    => 'ur-enhanced-select',
-										'css'      => '',
-										'options'  => array(
-											'automatic' => __( 'Renew Automatically', 'user-registration' ),
-											'manual'    => __( 'Renew Manually', 'user-registration' ),
-										),
-										'desc_tip' => true,
-									),
-								),
-							),
-						),
-					)
-				);
+				$settings = apply_filters( 'user_registration_membership_settings', $this->get_general_membership_settings() );
 			} elseif ( 'content-rules' === $current_section ) {
 				$settings = $this->urcr_settings();
 			}
 			return $settings;
+		}
+
+		/**
+		 * General membership settings (Renewal Behaviour), or an empty-state
+		 * notice in place of it when no active membership plan exists yet.
+		 *
+		 * @return array
+		 */
+		private function get_general_membership_settings() {
+			$card = array(
+				'title' => __( 'General', 'user-registration' ),
+				'type'  => 'card',
+			);
+
+			$plan_state = $this->get_membership_plan_state();
+
+			if ( 'active' !== $plan_state ) {
+				if ( 'inactive' === $plan_state ) {
+					$card['desc'] = sprintf(
+						/* translators: %s - Admin URL to the membership plan list */
+						__( '<strong>No active membership plan.</strong> Activate a plan to configure the Renewal Behaviour. <a href="%s">Manage memberships &rarr;</a>', 'user-registration' ),
+						admin_url( 'admin.php?page=user-registration-membership' )
+					);
+				} else {
+					$card['desc'] = sprintf(
+						/* translators: %s - Admin URL to create a new membership plan */
+						__( '<strong>No membership plans yet.</strong> Set up a plan to configure the Renewal Behaviour. <a href="%s">Create a membership &rarr;</a>', 'user-registration' ),
+						admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' )
+					);
+				}
+
+				$card['settings'] = array();
+			} else {
+				$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
+				if ( ! $is_new_installation ) {
+					$card['desc'] = sprintf(
+						/* translators: %s - Admin URL for membership page settings */
+						__( '<strong>Membership page setting has moved.</strong> Configure your membership page <a href="%s">here</a>.', 'user-registration' ),
+						admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages' )
+					);
+				}
+				$card['settings'] = array(
+					array(
+						'title'    => __( 'Renewal Behaviour', 'user-registration' ),
+						'desc'     => __( 'Choose how membership subscriptions are renewed, automatically through the payment provider or manually by the user', 'user-registration' ),
+						'id'       => 'user_registration_renewal_behaviour',
+						'type'     => 'select',
+						'default'  => 'automatic',
+						'class'    => 'ur-enhanced-select',
+						'css'      => '',
+						'options'  => array(
+							'automatic' => __( 'Renew Automatically', 'user-registration' ),
+							'manual'    => __( 'Renew Manually', 'user-registration' ),
+						),
+						'desc_tip' => true,
+					),
+				);
+			}
+
+			return array(
+				'title'    => '',
+				'sections' => array(
+					'membership_settings' => $card,
+				),
+			);
+		}
+
+		/**
+		 * State of the published membership plans.
+		 *
+		 * Deactivated plans do not count as usable, since there is nothing to
+		 * renew while every plan is switched off.
+		 *
+		 * @return string One of 'active' (at least one active plan exists),
+		 *                'inactive' (plans exist but all are deactivated) or
+		 *                'none' (no plan has been created yet).
+		 */
+		private function get_membership_plan_state() {
+			if ( ! class_exists( 'WPEverest\URMembership\Admin\Repositories\MembershipRepository' ) ) {
+				return 'active';
+			}
+
+			$membership_repository = new WPEverest\URMembership\Admin\Repositories\MembershipRepository();
+			$memberships           = $membership_repository->get_all_memberships_without_status_filter();
+			$has_plan              = false;
+
+			foreach ( $memberships as $membership ) {
+				if ( ! isset( $membership['post_status'] ) || 'publish' !== $membership['post_status'] ) {
+					continue;
+				}
+
+				$has_plan = true;
+				$status   = isset( $membership['post_content']['status'] ) ? $membership['post_content']['status'] : false;
+
+				if ( ur_string_to_bool( $status ) ) {
+					return 'active';
+				}
+			}
+
+			return $has_plan ? 'inactive' : 'none';
 		}
 
 		/**
