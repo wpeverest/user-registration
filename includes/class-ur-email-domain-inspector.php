@@ -44,6 +44,11 @@ if ( ! class_exists( 'UR_Email_Domain_Inspector' ) ) :
 		private static $local_tlds = array( 'local', 'test', 'example', 'invalid', 'localhost' );
 
 		/**
+		 * Matches SPF's own ten-lookup cap from RFC 7208.
+		 */
+		const SPF_LOOKUP_LIMIT = 10;
+
+		/**
 		 * Mailbox providers a site owner cannot publish DNS for. Sending "as" one
 		 * of these from your own server can never be authenticated — no setting
 		 * fixes it, because you don't control the domain.
@@ -190,20 +195,38 @@ if ( ! class_exists( 'UR_Email_Domain_Inspector' ) ) :
 				return self::$lookups[ $domain ];
 			}
 
+			// RFC 2606 reserves these precisely so they never resolve. Asking
+			// anyway just buys a timeout per lookup on every local dev site.
+			if ( self::is_local_domain( $domain ) ) {
+				self::$lookups[ $domain ] = self::unresolvable();
+
+				return self::$lookups[ $domain ];
+			}
+
 			if ( ! function_exists( 'dns_get_record' ) || ! function_exists( 'checkdnsrr' ) ) {
 				self::$lookups[ $domain ] = self::unresolvable();
 
 				return self::$lookups[ $domain ];
 			}
 
-			$has_mx    = (bool) @checkdnsrr( $domain, 'MX' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			$root_txt  = @dns_get_record( $domain, DNS_TXT ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			$dmarc_txt = @dns_get_record( '_dmarc.' . $domain, DNS_TXT ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			// Establish the domain exists before asking it anything else. A name
+			// that doesn't resolve answers every query with a timeout, so the
+			// four lookups this used to make cost four times as long as one —
+			// and a mistyped domain is exactly when that happens.
+			$has_mx = (bool) @checkdnsrr( $domain, 'MX' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 
 			// An A record proves the resolver is working even when a domain
 			// publishes no mail records at all, which distinguishes "nothing
 			// published" from "DNS didn't answer".
-			$resolvable = $has_mx || is_array( $root_txt ) || (bool) @checkdnsrr( $domain, 'A' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			if ( ! $has_mx && ! @checkdnsrr( $domain, 'A' ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				self::$lookups[ $domain ] = self::unresolvable();
+
+				return self::$lookups[ $domain ];
+			}
+
+			$resolvable = true;
+			$root_txt   = @dns_get_record( $domain, DNS_TXT ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$dmarc_txt  = @dns_get_record( '_dmarc.' . $domain, DNS_TXT ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 
 			$result = array(
 				'resolvable' => $resolvable,
@@ -227,9 +250,11 @@ if ( ! class_exists( 'UR_Email_Domain_Inspector' ) ) :
 				'resolvable' => false,
 				'has_mx'     => false,
 				'spf'        => array(
-					'found'     => false,
-					'record'    => '',
-					'qualifier' => '',
+					'found'      => false,
+					'record'     => '',
+					'qualifier'  => '',
+					'delegates'  => array(),
+					'authorises' => false,
 				),
 				'dmarc'      => array(
 					'found'  => false,
@@ -252,9 +277,11 @@ if ( ! class_exists( 'UR_Email_Domain_Inspector' ) ) :
 
 			if ( '' === $record ) {
 				return array(
-					'found'     => false,
-					'record'    => '',
-					'qualifier' => '',
+					'found'      => false,
+					'record'     => '',
+					'qualifier'  => '',
+					'delegates'  => array(),
+					'authorises' => false,
 				);
 			}
 
@@ -264,10 +291,20 @@ if ( ! class_exists( 'UR_Email_Domain_Inspector' ) ) :
 				$qualifier = $matches[1] . 'all';
 			}
 
+			preg_match_all( '/(?:include:|redirect=)([^\s]+)/i', $record, $delegates );
+
+			// Whether the record names any sender at all. `v=spf1 -all` is a
+			// valid, deliberate record that authorises *nobody* — so a domain
+			// publishing it can be reported as unsendable with certainty, not
+			// as a guess.
+			$authorises = (bool) preg_match( '/\b(?:include:|redirect=|ip4:|ip6:|exists:|ptr\b|a[:\s]|a$|mx[:\s]|mx$)/i', $record );
+
 			return array(
-				'found'     => true,
-				'record'    => $record,
-				'qualifier' => $qualifier,
+				'found'      => true,
+				'record'     => $record,
+				'qualifier'  => $qualifier,
+				'delegates'  => array_map( 'strtolower', $delegates[1] ),
+				'authorises' => $authorises,
 			);
 		}
 
@@ -343,6 +380,112 @@ if ( ! class_exists( 'UR_Email_Domain_Inspector' ) ) :
 			$at_pos = strrpos( (string) $address, '@' );
 
 			return false === $at_pos ? '' : strtolower( substr( $address, $at_pos + 1 ) );
+		}
+
+		/**
+		 * Whether a domain's SPF record authorises a given sending host.
+		 *
+		 * Answers with certainty where certainty exists and says so otherwise:
+		 *
+		 *  - 'no'      the record names no sender at all (`v=spf1 -all`), so
+		 *              nothing on earth passes SPF for it; or the host matches
+		 *              nothing and the record delegates only to named services.
+		 *  - 'yes'     the host belongs to one of the services it delegates to.
+		 *  - 'unknown' no record to check, no host to check, or the record
+		 *              authorises raw IP ranges we can't attribute to a host.
+		 *
+		 * Cheap despite the recursion: `include:` targets are real domains, so
+		 * every lookup is a cache hit. Measured at ~0.1s for a two-level chain.
+		 * Bounded anyway, since SPF itself caps evaluation at ten lookups.
+		 *
+		 * @param string $domain Sending domain.
+		 * @param string $host   SMTP host in use, if known.
+		 * @return string 'yes' | 'no' | 'unknown'
+		 */
+		public static function spf_covers_host( $domain, $host ) {
+			$spf = self::inspect( $domain )['spf'];
+
+			if ( empty( $spf['found'] ) ) {
+				return 'unknown';
+			}
+
+			// A record that names nobody is decisive on its own — no host to
+			// compare is needed, because none would match.
+			if ( empty( $spf['authorises'] ) ) {
+				return 'no';
+			}
+
+			$host = strtolower( trim( (string) $host ) );
+
+			if ( '' === $host ) {
+				return 'unknown';
+			}
+
+			$seen     = array();
+			$pending  = $spf['delegates'];
+			$budget   = self::SPF_LOOKUP_LIMIT;
+			$has_ips  = self::spf_has_ip_mechanism( $spf['record'] );
+
+			while ( $pending && $budget > 0 ) {
+				$target = array_shift( $pending );
+
+				if ( '' === $target || isset( $seen[ $target ] ) ) {
+					continue;
+				}
+
+				$seen[ $target ] = true;
+				--$budget;
+
+				if ( self::domains_align( $host, $target ) ) {
+					return 'yes';
+				}
+
+				// Only the SPF record — inspect() would also fire MX and
+				// _dmarc lookups on every delegate, and those miss, at ten
+				// seconds each.
+				$nested = self::spf_record_of( $target );
+
+				if ( '' === $nested ) {
+					continue;
+				}
+
+				if ( self::spf_has_ip_mechanism( $nested ) ) {
+					$has_ips = true;
+				}
+
+				if ( preg_match_all( '/(?:include:|redirect=)([^\s]+)/i', $nested, $more ) ) {
+					$pending = array_merge( $pending, array_map( 'strtolower', $more[1] ) );
+				}
+			}
+
+			// Raw IP ranges anywhere in the chain can't be matched against a
+			// hostname — a provider rarely sends from the address it listens
+			// on. Say so rather than report a failure we haven't earned.
+			return $has_ips ? 'unknown' : 'no';
+		}
+
+		/**
+		 * The SPF record of a domain, with no other lookups attached.
+		 *
+		 * @param string $domain Domain.
+		 * @return string Empty when none is published.
+		 */
+		private static function spf_record_of( $domain ) {
+			if ( ! function_exists( 'dns_get_record' ) ) {
+				return '';
+			}
+
+			return self::find_txt( @dns_get_record( $domain, DNS_TXT ), 'v=spf1' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		}
+
+		/**
+		 * Whether an SPF record authorises senders by address rather than name.
+		 *
+		 * @param string $record SPF record.
+		 * @return bool
+		 */
+		private static function spf_has_ip_mechanism( $record ) {
+			return (bool) preg_match( '/\b(?:ip4:|ip6:|exists:|ptr\b|a[:\s]|mx[:\s])/i', (string) $record );
 		}
 
 		/**
