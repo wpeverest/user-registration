@@ -3737,7 +3737,8 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 				'requires_membership' => true,
 			),
 			'user_registration_thank_you_page_id'          => array(
-				'name'                => 'membership-thankyou',
+				// Same slug the setup wizard uses, so the thank-you URL does not depend on which flow created the page.
+				'name'                => 'thankyou',
 				'title'               => __( 'Membership Thank You', 'user-registration' ),
 				'content'             => '[user_registration_membership_thank_you]',
 				'requires_membership' => true,
