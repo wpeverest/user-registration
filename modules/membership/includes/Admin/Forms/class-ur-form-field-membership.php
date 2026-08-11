@@ -54,7 +54,7 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		$default_membership_field_name  = get_option( 'ur_membership_default_membership_field_name', true );
 
 		$this->field_defaults = array(
-			'default_label'                     => __( 'Membership Field', 'user-registration' ),
+			'default_label'                     => __( 'Membership', 'user-registration' ),
 			'default_field_name'                => ! empty( $default_membership_field_name ) && str_contains( $default_membership_field_name, 'membership_field_' ) ? $default_membership_field_name : 'membership_field_' . ur_get_random_number(),
 			'default_group'                     => ! empty( $default_group_id ) ? $default_group_id : 0,
 			'default_membership_listing_option' => 'all',
