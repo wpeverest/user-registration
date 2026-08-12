@@ -554,14 +554,14 @@ class UR_AJAX {
 		 * Filter to test mail from name.
 		 * Default value is get_option('user_registration_email_from_name').
 		 */
-		$from_name = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		$from_name = apply_filters( 'wp_mail_from_name', UR_Emailer::ur_sender_name() );
 		do_action( 'user_registration_email_send_before' );
 
 		/**
 		 * Filter to test mail from address.
 		 * Default value is get_option('user_registration_email_from_address').
 		 */
-		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
+		$sender_email = apply_filters( 'wp_mail_from', UR_Emailer::ur_sender_email() );
 		$email        = sanitize_email( isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification
 		/* translators: %s - WP mail from name */
 		$subject = 'User Registration & Membership: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from_name );

@@ -231,21 +231,34 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 									'autoload' => false,
 								),
 								array(
-									'title'    => __( '"From" name', 'user-registration' ),
-									'desc'     => __( 'How the sender name appears in outgoing user registration emails.', 'user-registration' ),
-									'id'       => 'user_registration_email_from_name',
-									'type'     => 'text',
-									'css'      => 'min-width:300px;',
-									'default'  => esc_attr( get_bloginfo( 'name', 'display' ) ),
-									'autoload' => false,
-									'desc_tip' => true,
+									'title'       => __( '"From" name', 'user-registration' ),
+									'desc'        => __( 'How the sender name appears in outgoing user registration emails. Leave blank to use the site title.', 'user-registration' ),
+									'id'          => 'user_registration_email_from_name',
+									'type'        => 'text',
+									// The description is a tooltip, so the placeholder is the
+									// only thing an admin reliably reads — it has to name the
+									// fallback rather than just show a value.
+									'placeholder' => sprintf(
+										/* translators: %s: site title */
+										__( 'Defaults to the site title (%s)', 'user-registration' ),
+										get_bloginfo( 'name', 'display' )
+									),
+									'css'         => 'min-width:300px;',
+									'default'     => esc_attr( get_bloginfo( 'name', 'display' ) ),
+									'autoload'    => false,
+									'desc_tip'    => true,
 								),
 
 								array(
 									'title'             => __( '"From" address', 'user-registration' ),
-									'desc'              => __( 'How the sender email appears in outgoing user registration emails.', 'user-registration' ),
+									'desc'              => __( 'How the sender email appears in outgoing user registration emails. Leave blank to use the site admin email.', 'user-registration' ),
 									'id'                => 'user_registration_email_from_address',
 									'type'              => 'email',
+									'placeholder'       => sprintf(
+										/* translators: %s: site admin email address */
+										__( 'Defaults to the site admin email (%s)', 'user-registration' ),
+										get_option( 'admin_email' )
+									),
 									'custom_attributes' => array(
 										'multiple' => 'multiple',
 									),

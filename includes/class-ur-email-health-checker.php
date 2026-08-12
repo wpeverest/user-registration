@@ -638,18 +638,13 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			if ( '' === $from ) {
 				return array(
 					'key'     => 'from_address_valid',
-					'title'   => __( 'No "From" address is set', 'user-registration' ),
+					'title'   => __( 'There is no address to send from', 'user-registration' ),
 					'status'  => 'error',
-					'message' => sprintf(
-						/* translators: %s: the malformed From header this produces */
-						__( 'The sender field is saved but empty, so emails go out with a broken sender header (`%s`). Mail servers reject that. Note that an empty field is not the same as an unset one — it stops the admin address being used as a fallback.', 'user-registration' ),
-						'From: ' . get_option( 'user_registration_email_from_name', get_bloginfo( 'name', 'display' ) ) . ' <>'
-					),
-					'fix'     => sprintf(
-						/* translators: %s: admin email address */
-						__( 'Set a "From" address under **Emails → General** — `%s` is a reasonable default.', 'user-registration' ),
-						get_option( 'admin_email' )
-					),
+					// Reachable only when the admin email is empty too: a blank
+					// "From" field falls back to it, so both have to be missing
+					// before there is genuinely nothing to send as.
+					'message' => __( 'The "From" address is blank and so is the site\'s admin email, so there is nothing to put in the sender field. Emails go out with a broken sender header, which mail servers reject.', 'user-registration' ),
+					'fix'     => __( 'Set a "From" address under **Emails → General**, or an admin email under **Settings → General**.', 'user-registration' ),
 				);
 			}
 
@@ -1667,7 +1662,12 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		 * @return string
 		 */
 		private static function from_address() {
-			return get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) );
+			// Mirrors UR_Emailer::ur_sender_email(), including its empty-value
+			// fallback — reading the raw option instead would report our own
+			// fallback as though something were overriding the sender.
+			return class_exists( 'UR_Emailer' )
+				? UR_Emailer::ur_sender_email()
+				: get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) );
 		}
 
 		/**
@@ -1676,7 +1676,9 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		 * @return string
 		 */
 		private static function from_name() {
-			return (string) get_option( 'user_registration_email_from_name', get_bloginfo( 'name', 'display' ) );
+			return class_exists( 'UR_Emailer' )
+				? (string) UR_Emailer::ur_sender_name()
+				: (string) get_option( 'user_registration_email_from_name', get_bloginfo( 'name', 'display' ) );
 		}
 
 		/**
