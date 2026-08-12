@@ -118,8 +118,10 @@ interface RowStyle {
 	badgeBorderColor: string;
 }
 
-// Red is reserved for "this will fail". A setting that's merely switched off,
-// or something we simply couldn't verify, must not look like a broken site.
+// Severity is carried by the icon, the badge and the background tint — never by
+// the text colour. Coloured body copy on a coloured panel is harder to read, and
+// it made a warning's orange title look louder than an error's red one. Titles
+// stay dark, matching the summary banner above the list.
 const rowStyles: Record<CheckStatus, RowStyle> = {
 	pass: {
 		icon: <FiCheck size={18} />,
@@ -139,8 +141,8 @@ const rowStyles: Record<CheckStatus, RowStyle> = {
 		borderColor: "red.200",
 		bg: "red.50",
 		iconColor: "red.600",
-		titleColor: "red.600",
-		messageColor: "red.600",
+		titleColor: "gray.800",
+		messageColor: "gray.600",
 		badgeColor: "red.600",
 		badgeBg: "white",
 		badgeBorderColor: "red.200",
@@ -151,7 +153,7 @@ const rowStyles: Record<CheckStatus, RowStyle> = {
 		borderColor: "orange.200",
 		bg: "orange.50",
 		iconColor: "orange.700",
-		titleColor: "orange.700",
+		titleColor: "gray.800",
 		messageColor: "gray.600",
 		badgeColor: "orange.700",
 		badgeBg: "white",

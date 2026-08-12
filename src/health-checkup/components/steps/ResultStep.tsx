@@ -31,6 +31,7 @@ const CAUSE_PRIORITY = [
 	"smtp_connection",
 	"from_address_valid",
 	"from_effective",
+	"sender_rules",
 	"from_alignment",
 	"from_domain",
 	"spf_record",

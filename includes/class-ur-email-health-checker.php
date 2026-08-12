@@ -495,11 +495,123 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			$checks[] = self::check_from_alignment( $domain, $transport );
 
 			if ( $owns_domain ) {
-				$checks[] = self::check_spf( $domain, $dns, $transport );
-				$checks[] = self::check_dmarc( $domain, $dns, $transport );
+				// SPF and DMARC fail together, for one cause, with one fix. Two
+				// red rows saying "rejected" and "deleted" read as two problems
+				// and leave the admin looking for two answers.
+				$combined = self::check_sender_rules( $domain, $dns, $transport );
+
+				if ( $combined ) {
+					$checks[] = $combined;
+				} else {
+					$checks[] = self::check_spf( $domain, $dns, $transport );
+					$checks[] = self::check_dmarc( $domain, $dns, $transport );
+				}
 			}
 
-			return array_filter( $checks );
+			// A row that says "we couldn't tell" gives the admin doubt and no
+			// action. The summary already reports when the scan as a whole
+			// couldn't reach a conclusion.
+			return array_filter(
+				$checks,
+				function ( $check ) {
+					return $check && 'unknown' !== $check['status'];
+				}
+			);
+		}
+
+		/**
+		 * What names the thing doing the sending, mid-sentence.
+		 *
+		 * @param array $transport Transport inspection.
+		 * @return string
+		 */
+		private static function sender_phrase( $transport ) {
+			if ( 'php_mail' === $transport['route'] ) {
+				return __( 'your web host\'s shared mail server', 'user-registration' );
+			}
+
+			return empty( $transport['owner']['name'] )
+				? __( 'whatever sends your mail', 'user-registration' )
+				: $transport['owner']['name'];
+		}
+
+		/**
+		 * SPF and DMARC as a single finding, in the case where they share a
+		 * cause: the domain refuses senders it hasn't approved, and this site
+		 * isn't one of them.
+		 *
+		 * Returns null when they don't share a cause, so each is reported on its
+		 * own terms instead.
+		 *
+		 * @param string $domain    From domain.
+		 * @param array  $dns       DNS inspection.
+		 * @param array  $transport Transport inspection.
+		 * @return array|null
+		 */
+		private static function check_sender_rules( $domain, $dns, $transport ) {
+			if ( ! self::is_unauthenticated_for( $transport, $domain ) ) {
+				return null;
+			}
+
+			$spf    = $dns['spf'];
+			$strict = ! empty( $spf['found'] ) && '-all' === $spf['qualifier'];
+			$policy = ! empty( $dns['dmarc']['found'] ) ? $dns['dmarc']['policy'] : '';
+
+			// A record naming nobody is its own story: the domain isn't refusing
+			// *this* site, it refuses everyone.
+			if ( ! empty( $spf['found'] ) && empty( $spf['authorises'] ) ) {
+				return array(
+					'key'     => 'sender_rules',
+					'title'   => sprintf(
+						/* translators: %s: domain */
+						__( '`%s` doesn\'t let anyone send email as it', 'user-registration' ),
+						$domain
+					),
+					'status'  => 'error',
+					'message' => __( 'This domain has approved nobody — not you, not anyone. Every message claiming to come from it is blocked on arrival. Domains that are never meant to send mail are set up this way on purpose.', 'user-registration' ),
+					'fix'     => __( 'Send from a domain you own.', 'user-registration' ),
+				);
+			}
+
+			if ( 'reject' === $policy || $strict ) {
+				return array(
+					'key'     => 'sender_rules',
+					'title'   => __( 'Your emails are being blocked before anyone sees them', 'user-registration' ),
+					'status'  => 'error',
+					'message' => sprintf(
+						/* translators: 1: sending domain, 2: what is doing the sending */
+						__( 'You send as `%1$s`, but this site sends through %2$s — which `%1$s` has not approved. Your domain instructs mail servers to refuse anything from a sender it hasn\'t approved, so your emails are blocked on arrival. They never reach the spam folder, and you get no bounce.', 'user-registration' ),
+						$domain,
+						self::sender_phrase( $transport )
+					),
+					'fix'     => sprintf(
+						/* translators: %s: domain */
+						__( 'Connect an email service (SMTP) to this site, then list it as an approved sender for `%s`.', 'user-registration' ),
+						$domain
+					),
+				);
+			}
+
+			if ( 'quarantine' === $policy ) {
+				return array(
+					'key'     => 'sender_rules',
+					'title'   => __( 'Your emails are going straight to spam', 'user-registration' ),
+					'status'  => 'warning',
+					'message' => sprintf(
+						/* translators: 1: sending domain, 2: what is doing the sending */
+						__( 'You send as `%1$s`, but this site sends through %2$s — which `%1$s` has not approved. Your domain tells mail servers to treat anything from an unapproved sender as spam, so that is where your emails are landing.', 'user-registration' ),
+						$domain,
+						self::sender_phrase( $transport )
+					),
+					'fix'     => sprintf(
+						/* translators: %s: domain */
+						__( 'Connect an email service (SMTP) to this site, then list it as an approved sender for `%s`.', 'user-registration' ),
+						$domain
+					),
+				);
+			}
+
+			return null;
 		}
 
 		/**
@@ -752,14 +864,14 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			if ( empty( $dns['resolvable'] ) ) {
 				return array(
 					'key'     => 'from_domain',
-					'title'   => __( 'Couldn\'t look up the "From" domain', 'user-registration' ),
-					'status'  => 'unknown',
+					'title'   => __( 'The "From" domain doesn\'t exist', 'user-registration' ),
+					'status'  => 'warning',
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( 'This server couldn\'t reach DNS to check `%s`, so its mail records can\'t be verified from here. This says nothing about the domain itself.', 'user-registration' ),
+						__( '`%s` didn\'t answer any DNS lookup, so as far as the internet is concerned it isn\'t a real domain. Mail sent from an address there has nowhere to come back to, and receivers treat it as forged. Check the spelling.', 'user-registration' ),
 						$domain
 					),
-					'fix'     => '',
+					'fix'     => __( 'Correct the domain under **Emails → General**, or use one you own.', 'user-registration' ),
 				);
 			}
 
@@ -1043,7 +1155,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						'status'  => 'pass',
 						'message' => sprintf(
 							/* translators: %s: domain */
-							__( '`%s` ends with `-all`, so receivers reject anything sent from a server it hasn\'t listed — and the service you send through is one of them.', 'user-registration' ),
+							__( '`%s` tells receivers to reject anything sent from a server it hasn\'t listed — and the service you send through is one of them.', 'user-registration' ),
 							$domain
 						),
 						'fix'     => '',
@@ -1056,7 +1168,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'status'  => 'unknown',
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` ends with `-all`, so receivers reject anything sent from a server it hasn\'t listed. We followed the record but couldn\'t match it to whatever sends your mail — it may authorise servers by address rather than by name.', 'user-registration' ),
+						__( '`%s` tells receivers to reject anything sent from a server it hasn\'t listed. We followed the record but couldn\'t match it to whatever sends your mail — it may authorise servers by address rather than by name.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => __( 'Confirm your mail service is listed in the SPF record for this domain.', 'user-registration' ),
@@ -1165,7 +1277,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				return array(
 					'key'     => 'dmarc_policy',
 					'title'   => __( 'DMARC is set to reject — the strictest protection', 'user-registration' ),
-					'status'  => 'pass',
+					'status'  => $authenticated ? 'pass' : 'unknown',
 					'message' => sprintf(
 						/* translators: %s: domain */
 						$authenticated
@@ -1197,7 +1309,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				return array(
 					'key'     => 'dmarc_policy',
 					'title'   => __( 'DMARC is set to quarantine', 'user-registration' ),
-					'status'  => 'pass',
+					'status'  => $authenticated ? 'pass' : 'unknown',
 					'message' => sprintf(
 						/* translators: %s: domain */
 						$authenticated

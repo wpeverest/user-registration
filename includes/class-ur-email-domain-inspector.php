@@ -209,19 +209,27 @@ if ( ! class_exists( 'UR_Email_Domain_Inspector' ) ) :
 				return self::$lookups[ $domain ];
 			}
 
-			// Establish the domain exists before asking it anything else. A name
-			// that doesn't resolve answers every query with a timeout, so the
-			// four lookups this used to make cost four times as long as one —
-			// and a mistyped domain is exactly when that happens.
-			$has_mx = (bool) @checkdnsrr( $domain, 'MX' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			// Establish the domain exists before asking it anything else: a name
+			// that doesn't resolve answers every query with a full timeout, and
+			// a mistyped domain is exactly when that happens. Asking for both
+			// types in one call costs one timeout rather than two, and the A
+			// record proves the resolver is working even for a domain that
+			// publishes no mail records at all.
+			$existence = @dns_get_record( $domain, DNS_MX | DNS_A ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 
-			// An A record proves the resolver is working even when a domain
-			// publishes no mail records at all, which distinguishes "nothing
-			// published" from "DNS didn't answer".
-			if ( ! $has_mx && ! @checkdnsrr( $domain, 'A' ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			if ( empty( $existence ) ) {
 				self::$lookups[ $domain ] = self::unresolvable();
 
 				return self::$lookups[ $domain ];
+			}
+
+			$has_mx = false;
+
+			foreach ( (array) $existence as $record ) {
+				if ( isset( $record['type'] ) && 'MX' === $record['type'] ) {
+					$has_mx = true;
+					break;
+				}
 			}
 
 			$resolvable = true;
