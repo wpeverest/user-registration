@@ -345,6 +345,9 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 		);
 	}
 
+	// Deliberately refers back to the scan rather than giving generic advice:
+	// SPF and DMARC are already checked above, so repeating "go and look at your
+	// DNS" would either duplicate a finding or contradict a clean one.
 	if (variant === "spam") {
 		return (
 			<ResultFrame
@@ -359,7 +362,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 						{__("Right now:", "user-registration")}
 					</Text>{" "}
 					{__(
-						'open the email and mark it "Not spam" — the strongest single signal you can give your provider to trust this sender.',
+						'open the email and mark it "Not spam". That teaches your own mailbox to trust this sender, and counts for a little at the provider — but it won\'t fix delivery for your users on its own.',
 						"user-registration"
 					)}
 				</Text>
@@ -368,7 +371,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 						{__("If it keeps happening:", "user-registration")}
 					</Text>{" "}
 					{__(
-						"one test in spam isn't proof of a problem, but if real users report the same it usually comes down to sender authentication (SPF, DKIM, DMARC) — DNS records you add at your domain's provider, not something we can set for you. Send a report and support can help.",
+						"one test in spam isn't proof of a problem. The scan above already checked SPF and DMARC, so start with anything it flagged there. If those look clean, the usual causes are DKIM — a signature we can't check from here — or simply sending reputation: a domain that has only recently started sending gets filtered more heavily until it builds a history. Send a report and support can help.",
 						"user-registration"
 					)}
 				</Text>
