@@ -308,8 +308,14 @@ class EmailService {
 		);
 		$values               = $data + $values;
 
+		$email_classes = apply_filters( 'user_registration_email_classes', array() );
+
+		if ( ! isset( $email_classes['UR_Settings_Payment_Retry_Failed_Email'] ) ) {
+			return;
+		}
+
 		$subject  = __( 'Payment Attempt Failed – Action Required on {{blog_info}}', 'user-registration' );
-		$settings = new \UR_Settings_Payment_Retry_Failed_Email();
+		$settings = $email_classes['UR_Settings_Payment_Retry_Failed_Email'];
 		$message  = $settings->ur_get_payment_retry_failed_email();
 		$message  = get_option( 'user_registration_payment_retry_failed_email', $message );
 		$message  = \UR_Emailer::parse_smart_tags( $message, $values );
@@ -338,8 +344,14 @@ class EmailService {
 		);
 		$values               = $data + $values;
 
+		$email_classes = apply_filters( 'user_registration_email_classes', array() );
+
+		if ( ! isset( $email_classes['UR_Settings_Payment_Retry_Cancel_Email'] ) ) {
+			return;
+		}
+
 		$subject  = __( 'Payment Cancelled – Registration Cancelled on {{blog_info}}', 'user-registration' );
-		$settings = new \UR_Settings_Payment_Retry_Cancel_Email();
+		$settings = $email_classes['UR_Settings_Payment_Retry_Cancel_Email'];
 		$message  = $settings->ur_get_payment_retry_cancel_email();
 		$message  = get_option( 'user_registration_payment_retry_cancel_email', $message );
 		$message  = \UR_Emailer::parse_smart_tags( $message, $values );
@@ -381,7 +393,7 @@ class EmailService {
 		$message = apply_filters( 'ur_membership_payment_successful_email_custom_template', $message, $subject );
 		$headers = \UR_Emailer::ur_get_header();
 
-		return wp_mail( $data['user_email'], $subject, $message, $headers );
+		return \UR_Emailer::user_registration_process_and_send_email( $data['user_email'], $subject, $message, $headers, array(), 0 );
 	}
 	// **
 	// * Send payment successful email
@@ -588,6 +600,11 @@ class EmailService {
 	}
 
 	public function send_membership_renewal_email( $data ) {
+		// Renewal reminder only applies to automatic renewal; manual sites get the expiring soon email instead.
+		if ( 'automatic' !== get_option( 'user_registration_renewal_behaviour', 'automatic' ) ) {
+			return false;
+		}
+
 		$subject = get_option( 'user_registration_membership_renewal_reminder_user_email_subject', esc_html__( 'Your Membership Renews Soon', 'user-registration' ) );
 		$user    = get_userdata( $data['member_id'] );
 
@@ -609,6 +626,11 @@ class EmailService {
 	}
 
 	public function send_membership_expiring_soon_email( $data ) {
+		// Expiring soon only applies to manual renewal; automatic sites get the renewal reminder email instead.
+		if ( 'manual' !== get_option( 'user_registration_renewal_behaviour', 'automatic' ) ) {
+			return false;
+		}
+
 		$subject = get_option( 'user_registration_membership_expiring_soon_user_email_subject', esc_html__( 'Your Membership Expires on {{membership_end_date}}', 'user-registration' ) );
 
 		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
@@ -695,6 +717,6 @@ class EmailService {
 		$message = apply_filters( 'ur_membership_registration_email_custom_template', $message, $subject );
 		$headers = \UR_Emailer::ur_get_header();
 
-		return wp_mail( $data['email'], $subject, $message, $headers );
+		return \UR_Emailer::user_registration_process_and_send_email( $data['email'], $subject, $message, $headers, array(), 0 );
 	}
 }

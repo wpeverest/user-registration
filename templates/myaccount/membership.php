@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( empty( $membership_data ) ) {
-	echo esc_html_e( 'You do not have any records', 'user-registration' );
+	esc_html_e( 'You do not have any records', 'user-registration' );
 	return;
 }
 
@@ -208,9 +208,9 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 										} else {
 
 											if ( isset( $data['is_upgrading'] ) && ! $data['is_upgrading'] && ! empty( $membership ) ) :
-												$membership_checkout_page_id = get_option( 'user_registration_member_registration_page_id', false );
+												$membership_checkout_page_id = ur_get_translated_page_id( get_option( 'user_registration_member_registration_page_id', false ) );
 												$redirect_page_url           = get_permalink( $membership_checkout_page_id );
-												$thank_you_page_id           = get_option( 'user_registration_thank_you_page_id', false );
+												$thank_you_page_id           = ur_get_translated_page_id( get_option( 'user_registration_thank_you_page_id', false ) );
 												$uuid                        = ur_generate_random_key();
 												$subscription_id             = $membership['subscription_id'];
 												$redirect_link_builder       = array(

@@ -665,6 +665,17 @@ body,
 					margin-right: 0;
 				}
 			}
+
+			// Single-plan static summary (one paid plan, or one free plan with
+			// "Always show this field" enabled): show the plan as plain info,
+			// not as a selectable control.
+			&.ur-membership-option-static {
+				cursor: default;
+
+				.ur_membership_radio_input {
+					display: none;
+				}
+			}
 		}
 	}
 

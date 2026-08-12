@@ -60,6 +60,10 @@ class UR_Frontend_Form_Handler {
 			)
 		);
 
+		// Reset per-submission static state so a prior request can't leak stale data into this one (e.g. on persistent PHP workers).
+		self::$response_array  = array();
+		self::$valid_form_data = array();
+
 		self::$form_id      = $form_id;
 		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
@@ -505,6 +509,19 @@ class UR_Frontend_Form_Handler {
 
 		$login_option = ur_get_user_login_option( $user_id );
 		update_user_meta( $user_id, 'ur_login_option', $login_option );
+
+		// Server-side payment-gate flag so login fails closed even if the client omits membership signals. UR-4811.
+		if ( 'payment' === $login_option && function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
+			$hidden_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( wp_unslash( $_POST['urcl_hide_fields'] ), true ) : array();
+			foreach ( $valid_form_data as $field ) {
+				if ( isset( $field->extra_params['field_key'] ) && 'membership' === $field->extra_params['field_key'] ) {
+					if ( ! in_array( $field->field_name, $hidden_fields, true ) ) {
+						update_user_meta( $user_id, 'ur_requires_payment', 'yes' );
+					}
+					break;
+				}
+			}
+		}
 
 		$current_language = ur_get_current_language();
 		$current_language = isset( $_POST['registration_language'] ) ? ur_clean( $_POST['registration_language'] ) : $current_language; //phpcs:ignore.

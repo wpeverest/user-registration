@@ -315,8 +315,9 @@ class UR_User_Approval {
 				$last_order               = $members_order_repository->get_member_orders( $user->ID );
 			}
 
-			$payment_status = get_user_meta( $user->ID, 'ur_payment_status', true );
-			$is_member      = $is_membership_active && ! empty( $membership ) && ! empty( $last_order );
+			$payment_status   = get_user_meta( $user->ID, 'ur_payment_status', true );
+			$requires_payment = 'yes' === get_user_meta( $user->ID, 'ur_requires_payment', true );
+			$is_member        = $is_membership_active && ! empty( $membership ) && ! empty( $last_order );
 			if ( $is_member ) {
 				$payment_status            = $last_order['status'];
 				$membership_payment_method = $last_order['payment_method'];
@@ -331,7 +332,7 @@ class UR_User_Approval {
 			 */
 			do_action( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
 
-			if ( ! empty( $payment_status ) && 'completed' !== $payment_status ) {
+			if ( 'completed' !== $payment_status && ( $requires_payment || ! empty( $payment_status ) ) ) {
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending payment.', 'user-registration' );
 
 				$payment_method = $is_member ? $membership_payment_method : get_user_meta( $user->ID, 'ur_payment_method', true );

@@ -41,6 +41,14 @@ class Frontend {
 		add_action( 'template_redirect', array( $this, 'set_thank_you_transient' ) );
 		add_action( 'wp_loaded', array( $this, 'clear_upgrade_data' ) );
 		add_action( 'user_registration_before_register_user_action', array( $this, 'validate_stripe_card_before_register' ), 10, 2 );
+		add_action( 'wp_login', array( $this, 'reconcile_membership_role' ), 10, 2 );
+	}
+
+	// UR-4710: Grant a deferred paid-membership role once the member logs in with an active subscription.
+	public function reconcile_membership_role( $user_login, $user ) {
+		if ( $user instanceof \WP_User ) {
+			( new \WPEverest\URMembership\Admin\Services\MembersService() )->maybe_grant_pending_role( $user->ID );
+		}
 	}
 
 	/**

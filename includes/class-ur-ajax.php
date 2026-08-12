@@ -94,6 +94,7 @@ class UR_AJAX {
 			'create_default_form'                  => false,
 			'generate_required_pages'              => false,
 			'handle_default_wordpress_login'       => false,
+			'enable_emails'                        => false,
 			'skip_site_assistant_section'          => false,
 			'login_settings_page_validation'       => false,
 			'activate_dependent_module'            => false,
@@ -273,8 +274,23 @@ class UR_AJAX {
 			}
 		}
 
-		$profile                        = user_registration_form_data( $user_id, $form_id );
-		$is_admin_user                  = $_POST['is_admin_user'] ?? false;
+		$profile = user_registration_form_data( $user_id, $form_id );
+
+		// No resolvable UR form (e.g. wp-admin/WooCommerce created user) - fall back to basic fields.
+		if ( empty( $profile ) ) {
+			$profile = ur_get_non_urm_user_profile_fields( $user_id );
+		}
+
+		if ( empty( $profile ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Unable to update profile. No editable profile fields were found for this account.', 'user-registration' ),
+				)
+			);
+		}
+    
+		// Server-derived, not client-supplied - avoids a spoofable $_POST flag.
+		$is_admin_user                  = $user_id !== get_current_user_id();
 		list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, $is_admin_user );
 		$user                           = get_userdata( $user_id );
 
@@ -301,7 +317,7 @@ class UR_AJAX {
 				'email'          => ! empty( $single_field['user_registration_user_email'] ) ? $single_field['user_registration_user_email'] : '',
 			);
 
-			if ( $email_updated && ! is_admin() ) {
+			if ( $email_updated && ! $is_admin_user ) {
 				UR_Form_Handler::send_confirmation_email( $user, $pending_email, $form_id );
 				$response['oldUserEmail'] = $user->user_email;
 				/* translators: %s : user email */
@@ -329,7 +345,7 @@ class UR_AJAX {
 				);
 			}
 
-			if ( is_admin() && ! empty( $pending_email ) ) {
+			if ( $is_admin_user && ! empty( $pending_email ) ) {
 				wp_update_user(
 					array(
 						'ID'         => $user_id,
@@ -2611,6 +2627,25 @@ class UR_AJAX {
 		} else {
 			wp_send_json_error( array( 'message' => __( 'Invalid action specified.', 'user-registration' ) ) );
 		}
+	}
+
+	/**
+	 * Turn the master "Disable emails" setting back off.
+	 */
+	public static function enable_emails() {
+		check_ajax_referer( 'wp_rest', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to modify email settings.', 'user-registration' ) ) );
+		}
+
+		update_option( 'user_registration_email_setting_disable_email', 'no' );
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Emails have been enabled successfully.', 'user-registration' ),
+			)
+		);
 	}
 
 	/**

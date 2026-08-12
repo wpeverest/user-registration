@@ -319,6 +319,10 @@ if ( ! class_exists( 'Admin' ) ) :
 		}
 
 		public function add_memberships_in_urcr_settings( $settings ) {
+			if ( empty( $settings['sections']['user_registration_content_restriction_settings']['settings'] ) ) {
+				return $settings;
+			}
+
 			$options             = get_active_membership_id_name();
 			$additional_settings = array(
 				array(
@@ -347,12 +351,22 @@ if ( ! class_exists( 'Admin' ) ) :
 		 * is not sent during form submission — it should only fire after payment is confirmed.
 		 */
 		public function set_payment_process_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
-			if ( empty( $_POST['is_membership_active'] ) && empty( $_POST['membership_type'] ) ) {
+			$selected_membership = 0;
+			foreach ( (array) $valid_form_data as $field_data ) {
+				if ( isset( $field_data->extra_params['field_key'] ) && 'membership' === $field_data->extra_params['field_key'] ) {
+					$selected_membership = isset( $field_data->value ) ? absint( $field_data->value ) : 0;
+					break;
+				}
+			}
+			if ( empty( $selected_membership ) ) {
 				return $success_params;
 			}
 
-			$data = isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array();
-			if ( empty( $data['payment_method'] ) || 'free' === $data['payment_method'] ) {
+			// Determine paid vs free from the server-side membership record, not client members_data.
+			$membership_repository = new MembershipRepository();
+			$membership_data       = $membership_repository->get_single_membership_by_ID( $selected_membership );
+			$membership_meta       = ! empty( $membership_data['meta_value'] ) ? json_decode( wp_unslash( $membership_data['meta_value'] ), true ) : array();
+			if ( empty( $membership_meta['type'] ) || 'free' === $membership_meta['type'] ) {
 				return $success_params;
 			}
 
@@ -396,37 +410,46 @@ if ( ! class_exists( 'Admin' ) ) :
 			if ( ! ur_check_module_activation( 'membership' ) ) {
 				return $success_params;
 			}
-			// membership POST signals present
-			if ( empty( $_POST['is_membership_active'] ) && empty( $_POST['membership_type'] ) ) {
-				return $success_params;
-			}
-			// Guard 3: form has a membership field
-			$has_membership_field  = false;
+			// Membership processing requirement is derived from the server-side selected value of the
+			// membership field, never from client POST signals (is_membership_active / membership_type)
+			// or members_data — those are trivially omitted to skip enrollment and the payment gate.
 			$membership_field_data = null;
 			foreach ( $valid_form_data as $field_data ) {
 				if ( isset( $field_data->extra_params['field_key'] ) && 'membership' === $field_data->extra_params['field_key'] ) {
-					$has_membership_field  = true;
 					$membership_field_data = $field_data;
 					break;
 				}
 			}
-			if ( ! $has_membership_field ) {
+			if ( ! $membership_field_data ) {
 				return $success_params;
+			}
+
+			$selected_membership = isset( $membership_field_data->value ) ? absint( $membership_field_data->value ) : 0;
+			if ( empty( $selected_membership ) ) {
+				// No plan selected server-side: no enrollment intended. Leave a plain account.
+				return $success_params;
+			}
+
+			$member    = get_userdata( $user_id );
+			$member_id = $user_id;
+			if ( ! $member ) {
+				wp_delete_user( absint( $user_id ) );
+				wp_send_json_error( array( 'message' => esc_html__( 'Invalid membership selection.', 'user-registration' ) ) );
 			}
 
 			$data = apply_filters(
 				'user_registration_membership_before_register_member',
 				isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array()
 			);
-			if ( empty( $data ) || empty( $data['payment_method'] ) || empty( $data['membership'] ) ) {
-				return $success_params;
+			if ( ! is_array( $data ) ) {
+				$data = array();
 			}
+			// Authoritative membership id from the server-side field value, not client members_data.
+			$data['membership'] = $selected_membership;
 
-			// Inject user identity from the just-created user
-			$member    = get_userdata( $user_id );
-			$member_id = $user_id;
-			if ( ! $member ) {
-				return $success_params;
+			// Client-submitted tax_rate must never be negative (would reduce the charge below base).
+			if ( isset( $data['tax_rate'] ) ) {
+				$data['tax_rate'] = max( 0, floatval( $data['tax_rate'] ) );
 			}
 
 			// Validate that the submitted membership ID is one the form is actually configured to offer.
@@ -511,12 +534,25 @@ if ( ! class_exists( 'Admin' ) ) :
 				}
 			}
 
-			// Get membership type for logging
+			// Resolve membership type from the server-side membership record.
 			$membership_repository = new MembershipRepository();
 			$membership_data       = $membership_repository->get_single_membership_by_ID( $data['membership'] );
-			$membership_meta       = json_decode( wp_unslash( $membership_data['meta_value'] ), true );
-			$membership_type       = $membership_meta['type'] ?? 'unknown';
-			$payment_gateway       = $data['payment_method'] ?? 'unknown';
+			if ( empty( $membership_data ) || empty( $membership_data['meta_value'] ) ) {
+				wp_delete_user( absint( $member_id ) );
+				wp_send_json_error( array( 'message' => esc_html__( 'Invalid membership selection.', 'user-registration' ) ) );
+			}
+			$membership_meta = json_decode( wp_unslash( $membership_data['meta_value'] ), true );
+			$membership_type = $membership_meta['type'] ?? 'unknown';
+
+			// A paid plan needs a payment method to produce a payable order. Missing method (forged or
+			// omitted members_data) must fail closed, not create an unpaid payment-gated account.
+			if ( 'free' === $membership_type ) {
+				$data['payment_method'] = 'free';
+			} elseif ( empty( $data['payment_method'] ) ) {
+				wp_delete_user( absint( $member_id ) );
+				wp_send_json_error( array( 'message' => esc_html__( 'Invalid membership selection.', 'user-registration' ) ) );
+			}
+			$payment_gateway = $data['payment_method'] ?? 'unknown';
 
 			// Reject attacker-supplied payment_method values that don't match the membership.
 			// A paid/subscription membership must use one of its configured gateways; 'free'
@@ -701,6 +737,7 @@ if ( ! class_exists( 'Admin' ) ) :
 
 			} else {
 				$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while registering the user.', 'user-registration' );
+				wp_delete_user( absint( $member_id ) );
 				wp_send_json_error( array( 'message' => $message ) );
 			}
 		}

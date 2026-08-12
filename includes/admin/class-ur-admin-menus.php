@@ -583,12 +583,22 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$content_rules->add_urcr_menus();
 			}
 
+			// Instantiate regardless of the gate: the constructor wires the invoice
+			// download handler and gateway options, which must keep working even when
+			// the Payments submenu itself is hidden.
 			$orders_obj = new Orders();
-			$orders_obj->add_orders_menu();
+
+			if ( ur_should_show_payments_menu() ) {
+				$orders_obj->add_orders_menu();
+			}
 
 			if ( ur_check_module_activation( 'membership' ) ) {
+				// Instantiated for its admin_init delete handler, see above.
 				$subscription_obj = new Subscriptions();
-				$subscription_obj->add_menu();
+
+				if ( ur_should_show_subscriptions_menu() ) {
+					$subscription_obj->add_menu();
+				}
 			}
 
 			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'coupon' ) && class_exists( 'WPEverest\URMembership\Coupons\Coupons' ) ) {

@@ -167,12 +167,14 @@ class PaymentGatewaysWebhookActions {
 		$candidates  = array_filter( array( $legacy, $secret_test, $secret_live ) );
 
 		if ( empty( $candidates ) ) {
-			PaymentGatewayLogging::log_general(
+			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Missing Stripe webhook secret, skipping verification.',
-				'notice'
+				'Stripe webhook rejected: no signing secret configured.',
+				array(
+					'error_code' => 'MISSING_WEBHOOK_SECRET',
+				)
 			);
-			return true;
+			return false;
 		}
 
 		if ( empty( $stripe_signature ) ) {

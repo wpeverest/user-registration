@@ -462,7 +462,8 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 			'option'  => '',
 		);
 		$pages['membership_thankyou'] = array(
-			'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
+			// Same slug the setup wizard uses, so the thank-you URL does not depend on which flow created the page.
+			'name'    => _x( 'thankyou', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Membership ThankYou', 'Page title', 'user-registration' ),
 			'content' => '[user_registration_membership_thank_you]',
 			'option'  => 'user_registration_thank_you_page_id',
