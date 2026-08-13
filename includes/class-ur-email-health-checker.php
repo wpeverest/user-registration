@@ -76,6 +76,15 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				self::check_admin_email_pending_change(),
 			);
 
+			// SPF and DMARC are reported to support rather than shown as findings:
+			// they describe DNS the admin often can't change from here, and on an
+			// opaque transport we can't tell whether they even apply to this site.
+			// Presenting them as issues to fix produced red rows nobody could act
+			// on; the support report is where the detail belongs.
+			$dns_checks = self::dns_checks( $transport, $domain, $dns );
+
+			// Deliberately excludes $dns_checks, so they never reach the issue
+			// counts, the result screen's leftover list, or its cause diagnosis.
 			$all = array_merge( $delivery, $settings );
 
 			return array(
@@ -95,8 +104,50 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				),
 				'summary'          => self::build_summary( $transport, $sender, $domain, $dns, $sending_disabled ),
 				'checks'           => $all,
+				'dns_checks'       => $dns_checks,
 				'smartsmtp_status' => self::smartsmtp_status(),
 				'smtp_plugin'      => self::detected_smtp_plugin(),
+			);
+		}
+
+		/**
+		 * What the sending domain publishes about who may send as it — SPF and
+		 * DMARC, or the single merged finding when they share a cause.
+		 *
+		 * These go to the support report only. Unlike the on-screen checks,
+		 * "unknown" results are kept: an agent reading this cold wants to know the
+		 * domain publishes `-all` and that we couldn't match the sender to it,
+		 * which is exactly the case a hidden row used to throw away.
+		 *
+		 * @param array      $transport Transport inspection.
+		 * @param string     $domain    Effective From domain.
+		 * @param array|null $dns       DNS inspection for that domain.
+		 * @return array
+		 */
+		private static function dns_checks( $transport, $domain, $dns ) {
+			if ( '' === $domain || null === $dns ) {
+				return array();
+			}
+
+			// On a mailbox provider this DNS is Google's or Yahoo's, not the
+			// admin's — reporting it as "your domain" would mislead support too.
+			if ( UR_Email_Domain_Inspector::is_mailbox_provider( $domain ) ) {
+				return array();
+			}
+
+			$combined = self::check_sender_rules( $domain, $dns, $transport );
+
+			if ( $combined ) {
+				return array( $combined );
+			}
+
+			return array_values(
+				array_filter(
+					array(
+						self::check_spf( $domain, $dns, $transport ),
+						self::check_dmarc( $domain, $dns, $transport ),
+					)
+				)
 			);
 		}
 
@@ -117,10 +168,11 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 
 			if ( 'smtp' === $transport['route'] ) {
 				$checks[] = self::check_smtp_connection( $transport );
-			} elseif ( empty( $transport['diverted_by'] ) ) {
-				$checks[] = self::check_smtp_recommended( $transport );
 			}
 
+			// No "install this" / "activate that" row here. This step diagnoses;
+			// recommending a plugin is the result screen's job, once the delivery
+			// test has shown whether anything actually needs recommending.
 			return $checks;
 		}
 
@@ -213,19 +265,14 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				$php_mail = $transport['php_mail'];
 
 				if ( empty( $php_mail['usable'] ) ) {
-					// The exact path/function is what a host or support agent
-					// needs, but it explains nothing to a site owner — so it
-					// goes on its own line, after the plain-language cause.
+					// Deliberately no technical second line naming the sendmail
+					// binary or the disabled function: it means nothing to a site
+					// owner, and the support report carries the same finding for
+					// anyone who does need it.
 					if ( 'no_sendmail' === $php_mail['reason'] ) {
-						$message = __( 'No mail service is connected, so WordPress hands each message to the server\'s own mail program — which isn\'t installed here. Every email fails silently, with no warning.', 'user-registration' )
-							. "\n" . sprintf(
-								/* translators: %s: path to the mail program PHP is configured to use */
-								__( 'PHP is set to use `%s`, which doesn\'t exist on this server.', 'user-registration' ),
-								isset( $php_mail['binary'] ) ? $php_mail['binary'] : 'sendmail'
-							);
+						$message = __( 'No mail service is connected, so WordPress hands each message to the server\'s own mail program — which isn\'t installed here. Every email fails silently, with no warning.', 'user-registration' );
 					} else {
-						$message = __( 'No mail service is connected, so WordPress tries to send through the server itself — and your host has switched that ability off. Every email fails the instant it\'s sent, with no bounce and no warning.', 'user-registration' )
-							. "\n" . __( 'PHP\'s `mail()` function is disabled on this server.', 'user-registration' );
+						$message = __( 'No mail service is connected, so WordPress tries to send through the server itself — and your host has switched that ability off. Every email fails the instant it\'s sent, with no bounce and no warning.', 'user-registration' );
 					}
 
 					return array(
@@ -380,83 +427,6 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			);
 		}
 
-		/**
-		 * When nothing has taken over the transport, point at the smallest
-		 * accurate next step rather than always saying "no SMTP found".
-		 *
-		 * @param array $transport Transport inspection.
-		 * @return array|null
-		 */
-		private static function check_smtp_recommended( $transport ) {
-			if ( 'php_mail' !== $transport['route'] ) {
-				return null;
-			}
-
-			$active_plugin = self::detected_smtp_plugin();
-
-			if ( $active_plugin ) {
-				return array(
-					'key'     => 'smtp_setup',
-					'title'   => sprintf(
-						/* translators: %s: SMTP plugin name */
-						__( '%s is active but not connected', 'user-registration' ),
-						$active_plugin['name']
-					),
-					'status'  => 'error',
-					'message' => __( 'The plugin is running but has no working connection, so your site quietly falls back to PHP mail.', 'user-registration' ),
-					'fix'     => '',
-					'action'  => $active_plugin['is_smartsmtp']
-						? array(
-							'type'  => 'link',
-							'label' => __( 'Configure SmartSMTP', 'user-registration' ),
-							'url'   => admin_url( 'admin.php?page=smart-smtp#/primary-connection' ),
-						)
-						: array(
-							'type'  => 'link',
-							'label' => __( 'Go to Installed Plugins', 'user-registration' ),
-							'url'   => admin_url( 'plugins.php' ),
-						),
-				);
-			}
-
-			$inactive_plugin = self::installed_inactive_smtp_plugin();
-
-			if ( $inactive_plugin ) {
-				return array(
-					'key'     => 'smtp_setup',
-					'title'   => sprintf(
-						/* translators: %s: SMTP plugin name */
-						__( '%s is installed but not active', 'user-registration' ),
-						$inactive_plugin['name']
-					),
-					'status'  => 'warning',
-					'message' => __( 'Activating it and setting up its connection is the quickest route off PHP mail.', 'user-registration' ),
-					'fix'     => '',
-					'action'  => array(
-						'type'   => 'activate',
-						'plugin' => $inactive_plugin['slug'],
-						'label'  => sprintf(
-							/* translators: %s: SMTP plugin name */
-							__( 'Activate %s', 'user-registration' ),
-							$inactive_plugin['name']
-						),
-					),
-				);
-			}
-
-			return array(
-				'key'     => 'smtp_setup',
-				'title'   => __( 'No SMTP service is connected', 'user-registration' ),
-				'status'  => 'warning',
-				'message' => __( 'An SMTP service signs your mail as genuinely coming from you, which is what stops it being filtered.', 'user-registration' ),
-				'fix'     => '',
-				'action'  => array(
-					'type'  => 'install_smartsmtp',
-					'label' => __( 'Install & activate SmartSMTP', 'user-registration' ),
-				),
-			);
-		}
-
 		/* --------------------------------------------------------------------
 		 * Section 1b — is this site allowed to send as the "From" address?
 		 * ----------------------------------------------------------------- */
@@ -480,33 +450,29 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				return $checks;
 			}
 
-			// MX, SPF and DMARC all describe the sending domain's own DNS, which
-			// is only worth reporting when the admin can change it. On a mailbox
-			// provider it's Google's or Yahoo's — calling it "your domain", or
-			// advising them to tighten a DMARC policy they don't own, is advice
-			// nobody can act on. check_from_alignment() has already said the one
-			// thing that matters: move to an address you control.
-			$owns_domain = ! UR_Email_Domain_Inspector::is_mailbox_provider( $domain );
-
-			if ( $owns_domain ) {
+			// MX describes the sending domain's own DNS, which is only worth
+			// reporting when the admin can change it. On a mailbox provider it's
+			// Google's or Yahoo's — calling it "your domain" is advice nobody can
+			// act on. check_from_alignment() has already said the one thing that
+			// matters: move to an address you control.
+			if ( ! UR_Email_Domain_Inspector::is_mailbox_provider( $domain ) ) {
 				$checks[] = self::check_from_domain( $domain, $dns );
 			}
 
-			$checks[] = self::check_from_alignment( $domain, $transport );
-
-			if ( $owns_domain ) {
-				// SPF and DMARC fail together, for one cause, with one fix. Two
-				// red rows saying "rejected" and "deleted" read as two problems
-				// and leave the admin looking for two answers.
-				$combined = self::check_sender_rules( $domain, $dns, $transport );
-
-				if ( $combined ) {
-					$checks[] = $combined;
-				} else {
-					$checks[] = self::check_spf( $domain, $dns, $transport );
-					$checks[] = self::check_dmarc( $domain, $dns, $transport );
-				}
+			// Whether the site is entitled to send as this domain only matters once
+			// something is actually sending. With no working mail path there is one
+			// problem to fix, and a second red row claiming receiving mail servers
+			// treat the message as forged describes a journey no message is making.
+			//
+			// It is a real finding, and it comes back on the next scan once the
+			// route is fixed — unless the fix resolves it, which connecting through
+			// the address's own provider does.
+			if ( ! self::cannot_send( $transport ) ) {
+				$checks[] = self::check_from_alignment( $domain, $transport );
 			}
+
+			// SPF and DMARC are not here — see dns_checks(), which sends them to
+			// the support report instead of presenting them as issues to fix.
 
 			// A row that says "we couldn't tell" gives the admin doubt and no
 			// action. The summary already reports when the scan as a whole
@@ -517,6 +483,26 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					return $check && 'unknown' !== $check['status'];
 				}
 			);
+		}
+
+		/**
+		 * Whether the server has no working way to send mail at all.
+		 *
+		 * When this is true nothing leaves the machine, so every finding about
+		 * who the site is allowed to send *as* describes a journey no message is
+		 * making. Those findings are suppressed until this is fixed — see
+		 * identity_checks().
+		 *
+		 * Note this covers only the dead-PHP-mail case, which is decided locally.
+		 * An unreachable SMTP host is equally fatal but is established inside
+		 * check_smtp_connection() by a socket probe, and reaching it from here
+		 * would mean probing the host a second time.
+		 *
+		 * @param array $transport Transport inspection.
+		 * @return bool
+		 */
+		private static function cannot_send( $transport ) {
+			return 'php_mail' === $transport['route'] && empty( $transport['php_mail']['usable'] );
 		}
 
 		/**
@@ -1758,29 +1744,6 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		 */
 		public static function known_smtp_plugin_name( $plugin_file ) {
 			return self::is_known_smtp_plugin( $plugin_file ) ? self::$known_smtp_plugins[ $plugin_file ] : '';
-		}
-
-		/**
-		 * A known SMTP plugin that's installed but not currently active.
-		 *
-		 * @return array|null { slug, name, is_smartsmtp } or null.
-		 */
-		private static function installed_inactive_smtp_plugin() {
-			if ( ! function_exists( 'is_plugin_active' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/plugin.php';
-			}
-
-			foreach ( self::$known_smtp_plugins as $plugin_file => $name ) {
-				if ( ! is_plugin_active( $plugin_file ) && file_exists( WP_PLUGIN_DIR . '/' . $plugin_file ) ) {
-					return array(
-						'slug'         => $plugin_file,
-						'name'         => $name,
-						'is_smartsmtp' => 'smart-smtp/smart-smtp.php' === $plugin_file,
-					);
-				}
-			}
-
-			return null;
 		}
 	}
 

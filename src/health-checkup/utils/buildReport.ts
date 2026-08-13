@@ -1,4 +1,11 @@
-import { CheckSection, CheckStatus, DeliveryOutcome, HealthCheck, ScanSummary } from "../api/healthCheckupApi";
+import {
+	CheckSection,
+	CheckStatus,
+	DeliveryOutcome,
+	HealthCheck,
+	orderedSections,
+	ScanSummary,
+} from "../api/healthCheckupApi";
 
 /** Strip the `**bold**` / `` `code` `` markers the UI renders, for a plain-text report. */
 const plain = (text: string) => text.replace(/\*\*/g, "").replace(/`/g, "");
@@ -32,17 +39,22 @@ export function buildReport(
 	checks: HealthCheck[],
 	outcome: DeliveryOutcome | null,
 	summary?: ScanSummary | null,
-	sections?: CheckSection[]
+	sections?: CheckSection[],
+	dnsChecks?: HealthCheck[]
 ): string {
 	const failing = checks.filter(
 		(check) => check.status === "error" || check.status === "warning"
 	);
 
+	// Screen order, not server order: the report is read alongside the admin's
+	// description of what they saw, so the groups have to come in the order the
+	// wizard walked them through — plugin settings, then mail delivery.
+	//
 	// One unlabelled group keeps the report readable if it is ever built before
 	// a scan has grouped anything.
 	const groups: CheckSection[] =
 		sections && sections.length > 0
-			? sections
+			? orderedSections(sections)
 			: [{ key: "delivery", title: "All checks", description: "", checks }];
 
 	const lines: string[] = [
@@ -65,6 +77,32 @@ export function buildReport(
 		});
 		lines.push("");
 	});
+
+	// SPF and DMARC, in full and on their own. They are not findings the admin was
+	// asked to fix, so they are stated here rather than counted above — an agent
+	// still needs the records, including the cases we couldn't resolve.
+	if (dnsChecks && dnsChecks.length > 0) {
+		lines.push(
+			rule,
+			"SPF AND DMARC CHECK REPORT",
+			rule,
+			"For information — not counted in the issue total above.",
+			""
+		);
+
+		dnsChecks.forEach((check) => {
+			lines.push(
+				`[${statusLabels[check.status] ?? "ERROR"}] ${check.title}`,
+				`   ${plain(check.message).replace(/\n/g, "\n   ")}`
+			);
+
+			if (check.fix) {
+				lines.push(`   Suggested fix: ${plain(check.fix)}`);
+			}
+
+			lines.push("");
+		});
+	}
 
 	if (failing.length > 0) {
 		lines.push(rule, "WHAT IS WRONG, IN DETAIL", rule);

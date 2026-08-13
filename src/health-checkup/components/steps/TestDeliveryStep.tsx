@@ -94,7 +94,7 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent, onSendFailed }: TestD
 				color="primary.500"
 				mb="9px"
 			>
-				{__("Step 2 · The real test", "user-registration")}
+				{__("Step 4 · The real test", "user-registration")}
 			</Text>
 			<Text as="h2" fontSize="21px" fontWeight="600" mb="10px" letterSpacing="-0.01em" color="gray.800">
 				{isSending

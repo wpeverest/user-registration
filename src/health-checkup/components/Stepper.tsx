@@ -3,23 +3,32 @@ import { FiCheck, FiMail } from "react-icons/fi";
 
 export type WizardStep =
 	| "intro"
-	| "scan"
+	| "settings"
+	| "delivery"
 	| "test"
 	| "result-good"
 	| "result-none"
 	| "result-spam";
 
+/**
+ * The two steps that present scan findings. They share one scan: "settings"
+ * fetches it, "delivery" reads what it left behind — so anything keyed off
+ * "is this step showing scan results" has to name both.
+ */
+export const SCAN_STEPS: WizardStep[] = ["settings", "delivery"];
+
 // One node per stage the user actually passes through — no phantom slots.
 const STEP_INDEX: Record<WizardStep, number> = {
 	intro: 0,
-	scan: 1,
-	test: 2,
-	"result-none": 3,
-	"result-spam": 3,
-	"result-good": 3,
+	settings: 1,
+	delivery: 2,
+	test: 3,
+	"result-none": 4,
+	"result-spam": 4,
+	"result-good": 4,
 };
 
-const NODE_COUNT = 4;
+const NODE_COUNT = 5;
 const ACTIVE_COLOR = "primary.500";
 
 const Stepper = ({ step }: { step: WizardStep }) => {

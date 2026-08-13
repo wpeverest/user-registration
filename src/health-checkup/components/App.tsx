@@ -1,21 +1,20 @@
 import { Box, ChakraProvider, extendTheme } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-	CheckSection,
 	confirmDelivery,
 	DeliveryOutcome,
-	HealthCheck,
-	SmartSmtpStatus,
-	SmtpPluginInfo,
-	ScanSummary,
+	runScan,
+	ScanResult,
+	sectionOf,
 } from "../api/healthCheckupApi";
 import { buildReport } from "../utils/buildReport";
 import { loadState, saveState } from "../utils/persistedState";
 import ReportModal from "./ReportModal";
-import Stepper, { WizardStep } from "./Stepper";
+import Stepper, { SCAN_STEPS, WizardStep } from "./Stepper";
+import DeliveryStep from "./steps/DeliveryStep";
 import IntroStep from "./steps/IntroStep";
 import ResultStep, { ResultVariant } from "./steps/ResultStep";
-import ScanStep from "./steps/ScanStep";
+import SettingsStep from "./steps/SettingsStep";
 import TestDeliveryStep from "./steps/TestDeliveryStep";
 
 // Match wp-admin's own font stack instead of loading a separate webfont.
@@ -101,29 +100,67 @@ const RESULT_VARIANTS: Record<DeliveryOutcome, ResultVariant> = {
 // render would just re-parse the same JSON.
 const restored = loadState();
 
+// A refresh part-way through the scan restores the step but has no result to
+// restore with it, so the scan has to be kicked again — otherwise that step
+// renders with no rows and no way to ask for them.
+const needsInitialScan = !!restored && SCAN_STEPS.includes(restored.step) && !restored.scan;
+
 const App = () => {
 	const [step, setStep] = useState<WizardStep>(restored?.step ?? "intro");
-	const [checks, setChecks] = useState<HealthCheck[]>(restored?.checks ?? []);
+	const [scan, setScan] = useState<ScanResult | null>(restored?.scan ?? null);
+	// Incremented to request a scan. Starts at 0 — "nothing asked for yet" — so a
+	// restored run that already has its result doesn't pay for a second one.
+	const [scanToken, setScanToken] = useState(needsInitialScan ? 1 : 0);
+	const [isScanning, setIsScanning] = useState(needsInitialScan);
+	const [scanError, setScanError] = useState("");
 	const [deliveryOutcome, setDeliveryOutcome] = useState<DeliveryOutcome | null>(
 		restored?.deliveryOutcome ?? null
 	);
 	const [isReportOpen, setIsReportOpen] = useState(false);
 	const [reportText, setReportText] = useState("");
 	const [testEmailSent, setTestEmailSent] = useState(restored?.testEmailSent ?? false);
-	const [smartSmtpStatus, setSmartSmtpStatus] = useState<SmartSmtpStatus>(
-		restored?.smartSmtpStatus ?? "not_installed"
-	);
-	const [smtpPlugin, setSmtpPlugin] = useState<SmtpPluginInfo | null>(restored?.smtpPlugin ?? null);
-	const [summary, setSummary] = useState<ScanSummary | null>(restored?.summary ?? null);
-	const [sections, setSections] = useState<CheckSection[]>(restored?.sections ?? []);
 	const [sendError, setSendError] = useState<string | null>(restored?.sendError ?? null);
 	const rootRef = useRef<HTMLDivElement>(null);
+
+	// One scan per run, owned here rather than by a step: the two scan steps are
+	// two views of the same result, so fetching it in the first would leave the
+	// second either re-running every DNS lookup or reading a value it can't reach.
+	useEffect(() => {
+		if (0 === scanToken) {
+			return;
+		}
+
+		let cancelled = false;
+		setIsScanning(true);
+		setScanError("");
+
+		runScan()
+			.then((result) => {
+				if (!cancelled) {
+					setScan(result);
+				}
+			})
+			.catch((error: Error) => {
+				if (!cancelled) {
+					setScanError(error.message);
+				}
+			})
+			.finally(() => {
+				if (!cancelled) {
+					setIsScanning(false);
+				}
+			});
+
+		return () => {
+			cancelled = true;
+		};
+	}, [scanToken]);
 
 	// Survive a page refresh: without this the admin lands back on the intro and
 	// loses a completed run.
 	useEffect(() => {
-		saveState({ step, checks, deliveryOutcome, smartSmtpStatus, smtpPlugin, testEmailSent, summary, sections, sendError });
-	}, [step, checks, deliveryOutcome, smartSmtpStatus, smtpPlugin, testEmailSent, summary, sections, sendError]);
+		saveState({ step, scan, deliveryOutcome, testEmailSent, sendError });
+	}, [step, scan, deliveryOutcome, testEmailSent, sendError]);
 
 	// Prevents Chrome's scroll-anchoring from re-adjusting scroll after a step change.
 	useEffect(() => {
@@ -144,23 +181,32 @@ const App = () => {
 	// run can't resurrect the old result.
 	const startNewRun = () => {
 		setTestEmailSent(false);
-		setChecks([]);
+		setScan(null);
+		setScanError("");
 		setDeliveryOutcome(null);
-		setSummary(null);
-		setSections([]);
 		setSendError(null);
-		setStep("scan");
+		setStep("settings");
+		setScanToken((token) => token + 1);
 	};
 
-	// Args, not state: a caller that just called setChecks() would still read the
-	// pre-update value here and report zero issues on the first open.
-	const openReport = (
-		reportChecks: HealthCheck[],
-		outcome: DeliveryOutcome | null,
-		reportSummary: ScanSummary | null,
-		reportSections: CheckSection[]
-	) => {
-		setReportText(buildReport(reportChecks, outcome, reportSummary, reportSections));
+	// Re-read the checks after an inline fix so the row reflects the new state.
+	// The rows already on screen stay put while it runs — `isLoading` below is
+	// false whenever a result is in hand — so a fixed row flips to Pass instead
+	// of the whole screen dropping back to a progress bar.
+	const rescan = useCallback(() => setScanToken((token) => token + 1), []);
+
+	const openReport = () => {
+		setReportText(
+			buildReport(
+				scan?.checks ?? [],
+				// Untested until the delivery step has been through, so never carry a
+				// previous run's outcome into a report opened from a scan step.
+				SCAN_STEPS.includes(step) ? null : deliveryOutcome,
+				scan?.summary ?? null,
+				scan?.sections ?? [],
+				scan?.dns_checks ?? []
+			)
+		);
 		setIsReportOpen(true);
 	};
 
@@ -184,28 +230,35 @@ const App = () => {
 		);
 	};
 
+	// A rescan after an inline fix keeps the existing rows visible; only a run
+	// with nothing to show yet gets the progress bar.
+	const isLoading = isScanning && !scan;
+
 	const renderStep = () => {
 		switch (step) {
 			case "intro":
 				return <IntroStep onStart={startNewRun} />;
-			case "scan":
+			case "settings":
 				return (
-					<ScanStep
-						onNext={(scannedChecks, scannedSmartSmtpStatus, scannedSmtpPlugin, scannedSummary, scannedSections) => {
-							setChecks(scannedChecks);
-							setSmartSmtpStatus(scannedSmartSmtpStatus);
-							setSmtpPlugin(scannedSmtpPlugin);
-							setSummary(scannedSummary);
-							setSections(scannedSections);
-							setStep("test");
-						}}
-						onOpenReport={(scannedChecks, scannedSummary, scannedSections) => {
-							setChecks(scannedChecks);
-							setSummary(scannedSummary);
-							setSections(scannedSections);
-							// Untested at this point, so never carry over a previous run's outcome.
-							openReport(scannedChecks, null, scannedSummary, scannedSections);
-						}}
+					<SettingsStep
+						section={scan ? sectionOf(scan.sections, "settings") : null}
+						isLoading={isLoading}
+						error={scanError}
+						onBack={() => setStep("intro")}
+						onNext={() => setStep("delivery")}
+						onResolved={rescan}
+					/>
+				);
+			case "delivery":
+				return (
+					<DeliveryStep
+						section={scan ? sectionOf(scan.sections, "delivery") : null}
+						isLoading={isLoading}
+						error={scanError}
+						onBack={() => setStep("settings")}
+						onNext={() => setStep("test")}
+						onOpenReport={openReport}
+						onResolved={rescan}
 					/>
 				);
 			case "test":
@@ -228,11 +281,11 @@ const App = () => {
 				return (
 					<ResultStep
 						variant={variant}
-						checks={checks}
+						checks={scan?.checks ?? []}
 						onRunAgain={startNewRun}
-						onOpenReport={() => openReport(checks, deliveryOutcome, summary, sections)}
-						smartSmtpStatus={smartSmtpStatus}
-						smtpPlugin={smtpPlugin}
+						onOpenReport={openReport}
+						smartSmtpStatus={scan?.smartsmtp_status ?? "not_installed"}
+						smtpPlugin={scan?.smtp_plugin ?? null}
 						sendError={sendError}
 					/>
 				);

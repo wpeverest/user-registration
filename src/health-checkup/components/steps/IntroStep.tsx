@@ -12,14 +12,14 @@ const IntroStep = ({ onStart }: { onStart: () => void }) => (
 			color="primary.500"
 			mb="9px"
 		>
-			{__("Takes about 2 minutes", "user-registration")}
+			{__("Step 1 · Start", "user-registration")}
 		</Text>
 		<Text as="h2" fontSize="21px" fontWeight="600" mb="10px" letterSpacing="-0.01em" color="gray.800">
 			{__("Quick email delivery checkup", "user-registration")}
 		</Text>
 		<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px">
 			{__(
-				"We'll check your settings, send a real test email, then ask whether it actually arrived — the one thing no automated check can confirm on its own.",
+				"Takes about 2 minutes. We'll check your plugin settings, then how mail actually leaves this site, then send a real test email and ask whether it arrived — the one thing no automated check can confirm on its own.",
 				"user-registration"
 			)}
 		</Text>

@@ -1,7 +1,7 @@
-import { Box, Button, Flex, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Link, useToast } from "@chakra-ui/react";
 import { __, sprintf } from "@wordpress/i18n";
 import { ReactNode, useState } from "react";
-import { FiAlertTriangle, FiCheck, FiDownload, FiExternalLink, FiSettings, FiX } from "react-icons/fi";
+import { FiAlertTriangle, FiArrowRight, FiCheck, FiX } from "react-icons/fi";
 import { HealthCheck, installSmartSmtp, SmartSmtpStatus, SmtpPluginInfo } from "../../api/healthCheckupApi";
 import IssueList from "../IssueList";
 import RichText from "../RichText";
@@ -23,40 +23,32 @@ interface ResultStepProps {
 // The scan already worked out the cause and worded it; re-deriving it here would
 // only let the two drift apart. So take the most fundamental failing check and
 // reuse its message — this order is "what stops mail earliest".
+// SPF and DMARC are absent on purpose: they are report-only now, never counted
+// as issues, so they can't be the cause this screen names.
 const CAUSE_PRIORITY = [
 	"sending_enabled",
 	"sending_route",
 	"recent_failures",
-	"smtp_setup",
 	"smtp_connection",
 	"from_address_valid",
 	"from_effective",
-	"sender_rules",
 	"from_alignment",
 	"from_domain",
-	"spf_record",
-	"dmarc_policy",
 ];
 
-// Causes whose fix is "connect a proper mail service".
-const SMTP_FIXABLE = ["sending_route", "smtp_setup", "smtp_connection"];
-
-const diagnoseNonDelivery = (
+/**
+ * What to say when the send reported no error and nothing in the scan failed
+ * either — every check passed and the mail still went missing. With no remedy
+ * list to lead with, this names the most likely place to look instead.
+ *
+ * When something *did* fail, the remedy list speaks for itself and this isn't
+ * consulted; the priority order above is only used to pick the one finding whose
+ * wording best explains the failure.
+ */
+const nonDeliveryExplanation = (
 	checks: HealthCheck[],
-	smtpPlugin: SmtpPluginInfo | null,
-	sendError?: string | null
-) => {
-	// An error from the mail server itself outranks every inference below it:
-	// the scan predicts what should happen, this is what did.
-	if (sendError) {
-		return {
-			causeKey: "send_failed",
-			message: sendError,
-			showSmartSmtpAction: true,
-			showOtherPluginNotice: false,
-		};
-	}
-
+	smtpPlugin: SmtpPluginInfo | null
+): string => {
 	const failing = new Map(
 		checks
 			.filter((check) => check.status === "error" || check.status === "warning")
@@ -66,49 +58,47 @@ const diagnoseNonDelivery = (
 	const causeKey = CAUSE_PRIORITY.find((key) => failing.has(key));
 	const cause = causeKey ? failing.get(causeKey) : undefined;
 
-	if (cause && causeKey) {
-		return {
-			causeKey,
-			message: cause.message,
-			showSmartSmtpAction: SMTP_FIXABLE.includes(causeKey),
-			showOtherPluginNotice: false,
-		};
+	if (cause) {
+		return cause.message;
 	}
 
 	if (smtpPlugin?.is_smartsmtp) {
-		return {
-			causeKey: null,
-			message: __("SmartSMTP is active and configured, but the test still didn't arrive — its primary connection may need reconnecting.", "user-registration"),
-			showSmartSmtpAction: true,
-			showOtherPluginNotice: false,
-		};
+		return __(
+			"SmartSMTP is active and configured, but the test still didn't arrive — its primary connection may need reconnecting.",
+			"user-registration"
+		);
 	}
 
 	if (smtpPlugin) {
-		return {
-			causeKey: null,
-			message: sprintf(
-				/* translators: %s: SMTP plugin name, e.g. "FluentSMTP" */
-				__("Your site sends through `%s`, but the test didn't arrive — most likely that plugin's connection settings (host, port, or API key), or the receiving server rejecting the message.", "user-registration"),
-				smtpPlugin.name
+		return sprintf(
+			/* translators: %s: SMTP plugin name, e.g. "FluentSMTP" */
+			__(
+				"Your site sends through `%s`, but the test didn't arrive — most likely that plugin's connection settings (host, port, or API key), or the receiving server rejecting the message.",
+				"user-registration"
 			),
-			showSmartSmtpAction: false,
-			showOtherPluginNotice: true,
-		};
+			smtpPlugin.name
+		);
 	}
 
-	return {
-		causeKey: null,
-		message: __("An SMTP connection is configured, but the test didn't arrive — check whichever service handles your outgoing mail for delivery errors.", "user-registration"),
-		showSmartSmtpAction: false,
-		showOtherPluginNotice: false,
-	};
+	return __(
+		"An SMTP connection is configured, but the test didn't arrive — check whichever service handles your outgoing mail for delivery errors.",
+		"user-registration"
+	);
 };
 
-// Install/activate and configure are two separate clicks: the first only
-// installs/activates and toasts; the second (relabeled) opens the Primary
-// Connection screen in a new tab.
-const SmartSmtpAction = ({ status }: { status: SmartSmtpStatus }) => {
+/**
+ * The recommended route out, offered as a sentence and one link.
+ *
+ * Deliberately not a filled button: the failure screen is prose the admin has to
+ * read, and a solid button planted in the middle of it reads as *the* action of
+ * the page — which it isn't, since the alternative below is equally valid. It
+ * stays a real <button> underneath, because it performs work rather than
+ * navigating, and it carries its own loading state while the install runs.
+ *
+ * Install/activate and configure remain two separate clicks: the first does the
+ * work and relabels, the second opens the Primary Connection screen.
+ */
+const SmartSmtpRecommendation = ({ status }: { status: SmartSmtpStatus }) => {
 	const [isWorking, setIsWorking] = useState(false);
 	const [localStatus, setLocalStatus] = useState<SmartSmtpStatus>(status);
 	const [justActivated, setJustActivated] = useState(false);
@@ -149,87 +139,130 @@ const SmartSmtpAction = ({ status }: { status: SmartSmtpStatus }) => {
 		}
 	};
 
+	// One sentence naming what will happen, then the link that does it. The
+	// wording tracks what is actually needed here — installing, activating, or
+	// just finishing the connection — so it never offers to install something
+	// that is already sitting on the site.
 	const copy = {
 		not_installed: {
-			title: __("Recommended: install SmartSMTP", "user-registration"),
-			desc: __("Our own SMTP plugin — free, reliable, and built for WordPress email delivery.", "user-registration"),
-			button: __("Install & activate SmartSMTP", "user-registration"),
+			lead: __(
+				"Our best recommendation is to install and activate SmartSMTP — our own free plugin — and let it deliver your email reliably.",
+				"user-registration"
+			),
+			action: __("Install & activate SmartSMTP", "user-registration"),
 			loading: __("Installing…", "user-registration"),
-			icon: <FiDownload size={16} />,
 		},
 		inactive: {
-			title: __("SmartSMTP is installed but not active", "user-registration"),
-			desc: __("Activate it, then set up its connection to start delivering reliably.", "user-registration"),
-			button: __("Activate SmartSMTP", "user-registration"),
+			lead: __(
+				"Our best recommendation is to activate SmartSMTP — it is already installed here — and let it deliver your email reliably.",
+				"user-registration"
+			),
+			action: __("Activate SmartSMTP", "user-registration"),
 			loading: __("Activating…", "user-registration"),
-			icon: <FiSettings size={16} />,
 		},
 		active: {
-			title: justActivated
-				? __("SmartSMTP is ready to connect", "user-registration")
-				: __("SmartSMTP is active but not connected", "user-registration"),
-			desc: __("Open its Primary Connection screen and finish the SMTP setup.", "user-registration"),
-			button: justActivated
-				? __("Set Up Configuration", "user-registration")
-				: __("Configure SmartSMTP", "user-registration"),
+			lead: justActivated
+				? __(
+						"SmartSMTP is ready. One step left: connect it to a mail service and it will deliver your email from here on.",
+						"user-registration"
+					)
+				: __(
+						"Our best recommendation is to finish setting up SmartSMTP — it is active but has no working connection yet, which is why nothing is being delivered.",
+						"user-registration"
+					),
+			action: __("Set up SmartSMTP", "user-registration"),
 			loading: __("Opening…", "user-registration"),
-			icon: <FiSettings size={16} />,
 		},
 	}[localStatus];
 
 	return (
-		<Box border="1px solid" borderColor="gray.200" bg="white" borderRadius="8px" p="14px 15px" mt="14px">
-			<Flex align="center" gap="11px" mb="11px">
-				<Box flexShrink={0} color="primary.600" mt="1px">
-					{copy.icon}
-				</Box>
-				<Box>
-					<Text fontSize="13.5px" fontWeight="700">
-						{copy.title}
-					</Text>
-					<Text fontSize="12px" color="gray.600" mt="1px">
-						{copy.desc}
-					</Text>
-				</Box>
-			</Flex>
+		<Box>
+			<Text fontSize="13px" color="gray.700" lineHeight="1.6">
+				{copy.lead}
+			</Text>
 			<Button
+				variant="link"
 				colorScheme="primary"
-				fontSize="13.5px"
-				fontWeight="600"
+				fontSize="13px"
+				fontWeight="700"
+				mt="9px"
 				onClick={handleClick}
 				isLoading={isWorking}
 				loadingText={copy.loading}
+				rightIcon={<FiArrowRight size={13} />}
 			>
-				{copy.button}
+				{copy.action}
 			</Button>
 		</Box>
 	);
 };
 
-// Points to a different, already-active SMTP plugin instead of pushing SmartSMTP.
-const OtherSmtpPluginNotice = ({ name }: { name: string }) => (
-	<Box border="1px solid" borderColor="gray.200" bg="white" borderRadius="8px" p="14px 15px" mt="14px">
-		<Flex align="center" gap="11px" mb="9px">
-			<Box flexShrink={0} color="gray.600" mt="1px">
-				<FiSettings size={16} />
-			</Box>
-			<Box>
-				<Text fontSize="13.5px" fontWeight="700">
-					{sprintf(
-						/* translators: %s: SMTP plugin name */
-						__("Check %s's connection status", "user-registration"),
-						name
-					)}
+/** Failing checks that actually have a remedy to offer. */
+const remediableChecks = (checks: HealthCheck[]) =>
+	checks.filter((check) => (check.status === "error" || check.status === "warning") && check.fix);
+
+/**
+ * The remedies for every failing check.
+ *
+ * The mail delivery step states findings and stops there — "connect an SMTP
+ * service", "send from a domain you own" are recommendations, and a scan alone
+ * hasn't earned the right to make them. Once the live test has actually failed
+ * it has, so they surface here, in the order the checks ran: the route mail
+ * takes first, then who the site may send as, then the plugin's own settings.
+ *
+ * Borderless on purpose — it sits inside the result card rather than beside it.
+ */
+const SuggestedFixes = ({ suggestions }: { suggestions: HealthCheck[] }) => (
+	<Box as="ol" pl="17px" m="0" mt="10px">
+		{suggestions.map((check) => (
+			<Box as="li" key={check.key} mb="9px" _last={{ mb: 0 }} color="gray.600">
+				<Text fontSize="12.5px" fontWeight="600" color="gray.700">
+					{check.title}
 				</Text>
-				<Text fontSize="12px" color="gray.600" mt="1px">
-					{__("Its send log usually shows the exact rejection reason.", "user-registration")}
+				<Text fontSize="12.5px" color="gray.600" mt="1px" lineHeight="1.55">
+					<RichText text={check.fix} />
 				</Text>
 			</Box>
-		</Flex>
-		<Button as="a" href="plugins.php" variant="outline" fontSize="13.5px" fontWeight="600" rightIcon={<FiExternalLink size={14} />}>
-			{__("Go to Installed Plugins", "user-registration")}
-		</Button>
+		))}
 	</Box>
+);
+
+/** A labelled paragraph, for a result that has more than one thing to say. */
+const Advice = ({ label, children }: { label: string; children: ReactNode }) => (
+	<Box mt="15px">
+		<Text fontSize="12.5px" fontWeight="700" color="gray.700">
+			{label}
+		</Text>
+		<Text fontSize="12.5px" color="gray.600" mt="3px" lineHeight="1.6">
+			{children}
+		</Text>
+	</Box>
+);
+
+/** The last resort, set apart from the advice above it. */
+const SupportFootnote = ({ children }: { children: ReactNode }) => (
+	<Text
+		fontSize="12.5px"
+		color="gray.500"
+		mt="18px"
+		pt="15px"
+		borderTop="1px solid"
+		borderColor="gray.200"
+		lineHeight="1.55"
+	>
+		{children}
+	</Text>
+);
+
+/** Separates "fix these yourself" from "or let SmartSMTP handle it". */
+const OrDivider = () => (
+	<Flex align="center" gap="10px" my="16px">
+		<Box flex="1" h="1px" bg="gray.200" />
+		<Text fontSize="11px" fontWeight="700" letterSpacing="0.04em" color="gray.500" textTransform="uppercase">
+			{__("Or", "user-registration")}
+		</Text>
+		<Box flex="1" h="1px" bg="gray.200" />
+	</Flex>
 );
 
 type Tone = "green" | "orange" | "red";
@@ -246,15 +279,15 @@ const TONE_ICON_COLOR: Record<Tone, string> = {
 	red: "red.600",
 };
 
-// Every outcome renders through this same frame — banner, body, then the one
+// Every outcome renders through this same frame — headline, body, then the one
 // pair of actions — so the three results read as the same screen with a
-// different summary rather than three unrelated endings.
+// different verdict rather than three unrelated endings.
 const ResultFrame = ({
 	tone,
 	title,
 	subtitle,
 	bannerFooter,
-	children,
+	body,
 	onRunAgain,
 	onOpenReport,
 }: {
@@ -262,7 +295,8 @@ const ResultFrame = ({
 	title: string;
 	subtitle: ReactNode;
 	bannerFooter?: ReactNode;
-	children?: ReactNode;
+	/** Everything the outcome has to say, below the headline. */
+	body?: ReactNode;
 	onRunAgain: () => void;
 	onOpenReport: () => void;
 }) => (
@@ -273,45 +307,45 @@ const ResultFrame = ({
 			letterSpacing="0.06em"
 			textTransform="uppercase"
 			color="primary.500"
-			mb="9px"
+			mb="14px"
 		>
-			{__("Step 3 · Result", "user-registration")}
+			{__("Step 5 · Result", "user-registration")}
 		</Text>
 
-		<Flex
-			bg={`${tone}.50`}
-			border="1px solid"
-			borderColor={`${tone}.200`}
-			borderRadius="9px"
-			p="16px 17px"
-			gap="13px"
-		>
+		{/* No panel of its own. This already sits inside the wizard's card, so a
+		    second border around the same content just drew a box inside a box —
+		    and a tinted one turned a whole screen of remedy into an alarm. The
+		    outcome is carried by the icon and the headline instead.
+
+		    The icon pairs with the title on one row rather than owning a column:
+		    as a column it left a 32px disc atop a gutter as tall as the screen. */}
+		<Flex align="center" gap="12px">
+			{/* Tinted disc rather than filled — white on any of these three hues is
+			    too low-contrast to be safe, and the soft circle reads as a status
+			    marker instead of a button. */}
 			<Flex
 				flexShrink={0}
 				w="32px"
 				h="32px"
-				borderRadius="8px"
-				bg="white"
+				borderRadius="full"
+				bg={`${tone}.50`}
 				align="center"
 				justify="center"
 				color={TONE_ICON_COLOR[tone]}
 			>
 				{TONE_ICON[tone]}
 			</Flex>
-			<Box>
-				<Text as="h2" fontSize="16px" fontWeight="700" letterSpacing="-0.01em" color="gray.800">
-					{title}
-				</Text>
-				<Text fontSize="12.5px" color="gray.600" mt="3px" lineHeight="1.55">
-					{subtitle}
-				</Text>
-				{bannerFooter}
-			</Box>
+			<Text as="h2" fontSize="16.5px" fontWeight="700" letterSpacing="-0.01em" color="gray.800">
+				{title}
+			</Text>
 		</Flex>
+		<Text fontSize="13px" color="gray.600" mt="12px" lineHeight="1.6">
+			{subtitle}
+		</Text>
+		{bannerFooter}
+		{body}
 
-		{children}
-
-		<Flex gap="10px" mt="20px" wrap="wrap" justify="flex-end">
+		<Flex gap="10px" mt="24px" wrap="wrap" justify="flex-end">
 			<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={onOpenReport}>
 				{__("Send report to support", "user-registration")}
 			</Button>
@@ -332,101 +366,167 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 			<ResultFrame
 				tone="green"
 				title={__("Your test email arrived", "user-registration")}
+				// Says plainly that the leftovers didn't stop it. Without that, a
+				// green headline over "3 more things to fix" reads as a contradiction
+				// and the admin can't tell which half to believe.
 				subtitle={
 					openIssues.length > 0
-						? __("Delivery works from this site. A few settings are still worth a look.", "user-registration")
-						: __("Delivery works and every check passed — nothing to fix.", "user-registration")
+						? __(
+								"Delivery works from this site — the message reached the inbox. Nothing below stopped it arriving, but a few settings are still worth a look.",
+								"user-registration"
+							)
+						: __(
+								"Delivery works from this site and every check passed. There is nothing left to fix.",
+								"user-registration"
+							)
 				}
 				onRunAgain={onRunAgain}
 				onOpenReport={onOpenReport}
-			>
-				<IssueList issues={openIssues} />
-			</ResultFrame>
+				body={
+					openIssues.length > 0 ? (
+						<IssueList issues={openIssues} />
+					) : (
+						<SupportFootnote>
+							{__(
+								"Registration emails should reach your users the same way. Run this again any time you change your email or hosting setup.",
+								"user-registration"
+							)}
+						</SupportFootnote>
+					)
+				}
+			/>
 		);
 	}
 
-	// Deliberately refers back to the scan rather than giving generic advice:
-	// SPF and DMARC are already checked above, so repeating "go and look at your
-	// DNS" would either duplicate a finding or contradict a clean one.
+	// No SPF, DMARC or DKIM by name. Whether a message is filed as spam is the
+	// receiving provider's judgement, and the levers behind those acronyms are not
+	// ones an admin can pull from this screen — naming them only invites a search
+	// engine detour. "What your domain says about who may send for it" carries the
+	// same meaning to the one audience that can act on it: our support team.
 	if (variant === "spam") {
 		return (
 			<ResultFrame
 				tone="orange"
-				title={__("Delivered — but filed as spam", "user-registration")}
-				subtitle={__("Sending works. It's the receiving provider that flagged the message.", "user-registration")}
+				title={__("It arrived — but landed in spam", "user-registration")}
+				subtitle={__(
+					"Sending works: the message got through. It was the receiving mailbox that decided to file it as spam.",
+					"user-registration"
+				)}
 				onRunAgain={onRunAgain}
 				onOpenReport={onOpenReport}
-			>
-				<Text fontSize="13.5px" lineHeight="1.65" color="gray.600" mt="18px">
-					<Text as="b" color="inherit">
-						{__("Right now:", "user-registration")}
-					</Text>{" "}
-					{__(
-						'open the email and mark it "Not spam". That teaches your own mailbox to trust this sender, and counts for a little at the provider — but it won\'t fix delivery for your users on its own.',
-						"user-registration"
-					)}
-				</Text>
-				<Text fontSize="13.5px" lineHeight="1.65" color="gray.600" mt="10px">
-					<Text as="b" color="inherit">
-						{__("If it keeps happening:", "user-registration")}
-					</Text>{" "}
-					{__(
-						"one test in spam isn't proof of a problem. The scan above already checked SPF and DMARC, so start with anything it flagged there. If those look clean, the usual causes are DKIM — a signature we can't check from here — or simply sending reputation: a domain that has only recently started sending gets filtered more heavily until it builds a history. Send a report and support can help.",
-						"user-registration"
-					)}
-				</Text>
-				<IssueList issues={openIssues} />
-			</ResultFrame>
+				body={
+					<>
+						<Advice label={__("Do this first", "user-registration")}>
+							{__(
+								'Open the email and mark it "Not spam". That teaches your own mailbox to trust you — though it won\'t change anything for the people registering on your site.',
+								"user-registration"
+							)}
+						</Advice>
+
+						<Advice label={__("If it keeps happening", "user-registration")}>
+							{__(
+								"One message in spam isn't proof of a problem. Filtering is the receiving provider's own judgement, and a domain that has only recently started sending email gets treated more harshly until it builds up a history.",
+								"user-registration"
+							)}
+						</Advice>
+
+						<IssueList issues={openIssues} />
+
+						{/* Last, so the escape hatch stays the final word on the screen. */}
+						<SupportFootnote>
+							{__(
+								"Still landing in spam? Send the issue report to our support team and get help.",
+								"user-registration"
+							)}
+						</SupportFootnote>
+					</>
+				}
+			/>
 		);
 	}
 
-	const diagnosis = diagnoseNonDelivery(checks, smtpPlugin, sendError);
-	// The diagnosis already speaks to whichever check caused it, so listing that
-	// one again below would just repeat itself.
-	const otherIssues = openIssues.filter((check) => check.key !== diagnosis.causeKey);
+	const suggestions = remediableChecks(checks);
 
+	// The failed outcome used to be a banner plus a stack of bordered cards, each
+	// making its own separate-looking demand. It is one panel now, reading as two
+	// routes out and a way to ask for help: fix these, or let SmartSMTP do it.
 	return (
 		<ResultFrame
 			tone="red"
 			title={__("The test email didn't arrive", "user-registration")}
-			subtitle={<RichText text={diagnosis.message} />}
-			bannerFooter={
-				sendError ? (
-					<Button
-						as="a"
-						href={window._UR_EMAIL_HEALTH_.mailLogUrl}
-						target="_blank"
-						rel="noreferrer noopener"
-						variant="link"
-						colorScheme="primary"
-						fontSize="12px"
-						fontWeight="700"
-						mt="7px"
-						rightIcon={<FiExternalLink size={11} />}
-					>
-						{__("Open the mail log", "user-registration")}
-					</Button>
-				) : undefined
+			subtitle={
+				sendError
+					? __(
+							"Your site couldn't send it at all — the attempt failed before the message left the server.",
+							"user-registration"
+						)
+					: suggestions.length > 0
+						? __(
+								"Your site sent it without reporting an error, so it was lost or refused after it left.",
+								"user-registration"
+							)
+						: <RichText text={nonDeliveryExplanation(checks, smtpPlugin)} />
 			}
 			onRunAgain={onRunAgain}
 			onOpenReport={onOpenReport}
-		>
-			{diagnosis.showSmartSmtpAction && <SmartSmtpAction status={smartSmtpStatus} />}
-			{diagnosis.showOtherPluginNotice && smtpPlugin && (
+			body={
 				<>
-					<OtherSmtpPluginNotice name={smtpPlugin.name} />
-					<Flex align="center" gap="10px" my="14px">
-						<Box flex="1" h="1px" bg="gray.200" />
-						<Text fontSize="11px" fontWeight="700" letterSpacing="0.04em" color="gray.500" textTransform="uppercase">
-							{__("Or", "user-registration")}
+					{/* The recommendation leads. Most admins hitting this screen want the
+					    problem gone, not a reading list — so the one-click route comes
+					    first and the findings are the alternative for anyone who'd rather
+					    fix their own setup. */}
+					<Box mt="12px">
+						<SmartSmtpRecommendation status={smartSmtpStatus} />
+					</Box>
+
+					{suggestions.length > 0 && (
+						<>
+							<OrDivider />
+							{/* No "Or" here — the divider immediately above already said it. */}
+							<Text fontSize="12.5px" fontWeight="700" color="gray.700">
+								{__("Fix what the scan found:", "user-registration")}
+							</Text>
+							<SuggestedFixes suggestions={suggestions} />
+						</>
+					)}
+
+					{/* The generic "check the log" text the server returns says only what
+					    this link already says, so it is dropped — but a mailer that
+					    reports a real error is worth quoting verbatim. */}
+					{sendError && !sendError.includes("ur_mail_logs") && (
+						<Text fontSize="12.5px" color="gray.600" mt="10px" lineHeight="1.55">
+							{__("Your mail server reported:", "user-registration")}{" "}
+							<Text as="code" fontFamily="mono" fontSize="0.92em">
+								{sendError}
+							</Text>
 						</Text>
-						<Box flex="1" h="1px" bg="gray.200" />
-					</Flex>
-					<SmartSmtpAction status={smartSmtpStatus} />
+					)}
+
+					{smtpPlugin && !smtpPlugin.is_smartsmtp && (
+						<Text fontSize="12px" color="gray.500" mt="10px" lineHeight="1.55">
+							{sprintf(
+								/* translators: %s: SMTP plugin name */
+								__(
+									"Already using %s? Its own send log usually names the exact rejection reason.",
+									"user-registration"
+								),
+								smtpPlugin.name
+							)}{" "}
+							<Link href="plugins.php" color="primary.600" fontWeight="600" textDecoration="underline">
+								{__("Installed Plugins", "user-registration")}
+							</Link>
+						</Text>
+					)}
+
+					<SupportFootnote>
+						{__(
+							"Still stuck? Send the issue report to our support team and get help.",
+							"user-registration"
+						)}
+					</SupportFootnote>
 				</>
-			)}
-			<IssueList issues={otherIssues} />
-		</ResultFrame>
+			}
+		/>
 	);
 };
 

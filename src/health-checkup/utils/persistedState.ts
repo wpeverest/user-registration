@@ -1,31 +1,32 @@
-import {
-	CheckSection,
-	DeliveryOutcome,
-	HealthCheck,
-	SmartSmtpStatus,
-	SmtpPluginInfo,
-	ScanSummary,
-} from "../api/healthCheckupApi";
+import { DeliveryOutcome, ScanResult } from "../api/healthCheckupApi";
 import { WizardStep } from "../components/Stepper";
 
 export interface PersistedState {
 	step: WizardStep;
-	checks: HealthCheck[];
+	/** The whole scan, kept as one value: both scan steps read from this. */
+	scan: ScanResult | null;
 	deliveryOutcome: DeliveryOutcome | null;
-	smartSmtpStatus: SmartSmtpStatus;
-	smtpPlugin: SmtpPluginInfo | null;
 	testEmailSent: boolean;
-	summary: ScanSummary | null;
-	sections: CheckSection[];
 	/** Optional, so a payload saved before this existed still restores. */
 	sendError?: string | null;
 }
 
 // Bumping the suffix retires state saved by an older shape rather than letting
-// it deserialise into something the current code doesn't expect.
-const STORAGE_KEY = "urEmailHealthCheckup:v2";
+// it deserialise into something the current code doesn't expect. v3 split the
+// single scan step in two and folded the loose scan fields into `scan`; v4 moved
+// SPF and DMARC out of the delivery section, so a v3 payload would still hold
+// those rows and render them.
+const STORAGE_KEY = "urEmailHealthCheckup:v4";
 
-const VALID_STEPS: WizardStep[] = ["intro", "scan", "test", "result-good", "result-none", "result-spam"];
+const VALID_STEPS: WizardStep[] = [
+	"intro",
+	"settings",
+	"delivery",
+	"test",
+	"result-good",
+	"result-none",
+	"result-spam",
+];
 
 /**
  * sessionStorage, not localStorage: a reload should land the admin back where
@@ -43,7 +44,13 @@ export function loadState(): PersistedState | null {
 
 		const parsed = JSON.parse(raw) as PersistedState;
 
-		if (!VALID_STEPS.includes(parsed?.step) || !Array.isArray(parsed?.checks)) {
+		if (!VALID_STEPS.includes(parsed?.step)) {
+			return null;
+		}
+
+		// A scan is either absent or complete. Half a payload would render a step
+		// with no rows and no way to ask for them again.
+		if (parsed.scan && !Array.isArray(parsed.scan.sections)) {
 			return null;
 		}
 
