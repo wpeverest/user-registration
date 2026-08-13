@@ -67,12 +67,12 @@ class UR_Admin {
 	 */
 	public function run_membership_migration_script() {
 
-		$membership_service = new MembershipService();
-		$logger             = ur_get_logger();
-
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+
+		$logger = ur_get_logger();
+
 		update_option( 'user_registration_content_restriction_enable', true );
 		if ( ur_check_module_activation( 'payments' ) && ! get_option( 'global_paypal_setting_migration', false ) ) {
 			$get_all_forms = ur_get_all_user_registration_form();
@@ -88,6 +88,18 @@ class UR_Admin {
 		}
 
 		if ( UR_PRO_ACTIVE && UR_VERSION <= '5.0' && is_plugin_active( 'user-registration-membership/user-registration-membership.php' ) && ! get_option( 'membership_migration_finished', false ) ) {
+
+			if ( ! class_exists( MembershipService::class ) ) {
+				$logger->error(
+					'MembershipService class not found. Skipping membership migration.',
+					array(
+						'source' => 'migration-logger',
+					)
+				);
+				return;
+			}
+
+			$membership_service = new MembershipService();
 
 			deactivate_plugins( 'user-registration-membership/user-registration-membership.php' );
 
