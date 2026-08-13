@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( empty( $orders ) || empty( $orders['items'] ) ) {
-	echo esc_html_e( 'You do not have any payment records', 'user-registration' );
+	esc_html_e( 'You do not have any payment records', 'user-registration' );
 	return;
 }
 

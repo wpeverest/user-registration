@@ -148,7 +148,7 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 												<?php
 											} else {
 												?>
-												<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
+												<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) ); ?>" />
 												<input type="hidden" name="profile-default-image" value="<?php echo esc_url( $gravatar_image ); ?>" />
 												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/gif,image/png" style="display:none" />
 												<?php
@@ -171,7 +171,40 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 										</div>
 										<div class="ur-form-grid ur-grid-2" style="width:48%;">
 											<div class="ur-field-item field-user_email" data-field-id="user_email" data-ref-id="user_registration_user_email">
-												<div class="form-row validate-required" id="user_registration_user_email_field" data-priority=""><label for="user_registration_user_email" class="ur-label"><?php _e( 'User Email', 'user-registration' ); ?> <abbr class="required" title="required">*</abbr></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_user_email" type="email" class="input-text  without_icon input-email ur-edit-profile-field " name="user_registration_user_email" id="user_registration_user_email" placeholder="" value="<?php echo $user->user_email; ?>" required="required" data-default="zapoda@mailinator.com"> </span> </div>
+												<?php
+												// Same pending-email notice non-ajax UR-form fields get (see functions-ur-template.php).
+												// Rendered right after the input - matches where the ajax success handler
+												// looks (input.next('div.email-updated')) so it gets replaced, not duplicated.
+												$pending_email       = get_user_meta( $user_id, 'user_registration_pending_email', true );
+												$expiration          = get_user_meta( $user_id, 'user_registration_pending_email_expiration', true );
+												$pending_email_notice = '';
+
+												if ( ! empty( $pending_email ) && time() <= $expiration ) {
+													$cancel_url = esc_url(
+														add_query_arg(
+															array(
+																'cancel_email_change' => $user_id,
+																'_wpnonce'            => wp_create_nonce( 'cancel_email_change_nonce' ),
+															),
+															ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' )
+														)
+													);
+													$pending_email_notice = sprintf(
+														'<div class="email-updated inline"><p>%s</p></div>',
+														wp_kses_post(
+															sprintf(
+																/* translators: 1: Pending email 2: Cancel link */
+																__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
+																esc_html( $pending_email ),
+																$cancel_url
+															)
+														)
+													);
+												} else {
+													UR_Form_Handler::delete_pending_email_change( $user_id );
+												}
+												?>
+												<div class="form-row validate-required" id="user_registration_user_email_field" data-priority=""><label for="user_registration_user_email" class="ur-label"><?php _e( 'User Email', 'user-registration' ); ?> <abbr class="required" title="required">*</abbr></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_user_email" type="email" class="input-text  without_icon input-email ur-edit-profile-field " name="user_registration_user_email" id="user_registration_user_email" placeholder="" value="<?php echo $user->user_email; ?>" required="required" data-default="zapoda@mailinator.com"> <?php echo $pending_email_notice; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already wp_kses_post()'d above. ?></span> </div>
 											</div>
 											<div class="ur-field-item field-last_name" data-field-id="last_name" data-ref-id="user_registration_last_name">
 												<div class="form-row" id="user_registration_last_name_field" data-priority=""><label for="user_registration_last_name" class="ur-label"><?php _e( 'Last Name', 'user-registration' ); ?></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_last_name" type="text" class="input-text  without_icon input-text ur-edit-profile-field " name="user_registration_last_name" id="user_registration_last_name" placeholder="" value="<?php echo esc_attr( $user->last_name ); ?>" data-default=""> </span> </div>

@@ -16,8 +16,10 @@ import * as URIcon from "../../components/Icon/Icon";
 // Import new components
 import {
 	DefaultFormMissing,
+	DisabledEmails,
 	MembershipField,
 	PaymentSetup,
+	RegistrationDisabled,
 	RequiredPagesMissing,
 	SendTestEmail,
 	SpamProtection
@@ -34,13 +36,21 @@ const ticketUrl =
 
 const SiteAssistant = () => {
 	const [open, setOpen] = useState({
+		registrationDisabled: false,
 		defaultForm: false,
 		requiredPages: false,
 		paymentSetup: false,
+		disabledEmails: false,
 		sendTestEmail: false,
 		spamProtection: false,
 		membershipField: false
 	});
+
+	// Check if the WordPress "Anyone can register" option allows registration
+	const usersCanRegister =
+		typeof _UR_DASHBOARD_ !== "undefined" &&
+		_UR_DASHBOARD_.site_assistant_data &&
+		_UR_DASHBOARD_.site_assistant_data.users_can_register;
 
 	// Check if default form exists
 	const hasDefaultForm =
@@ -55,6 +65,17 @@ const SiteAssistant = () => {
 		_UR_DASHBOARD_.site_assistant_data.missing_pages
 			? _UR_DASHBOARD_.site_assistant_data.missing_pages
 			: [];
+
+	// Check if the disabled emails notice is already handled (enabled or skipped)
+	const initialDisabledEmailsHandled =
+		typeof _UR_DASHBOARD_ === "undefined" ||
+		!_UR_DASHBOARD_.site_assistant_data ||
+		_UR_DASHBOARD_.site_assistant_data.disabled_emails_handled !== false;
+
+	// State to track if the disabled emails notice was handled during this session
+	const [disabledEmailsHandled, setDisabledEmailsHandled] = useState(
+		initialDisabledEmailsHandled
+	);
 
 	// Check if test email was already sent successfully
 	const initialTestEmailSent =
@@ -131,6 +152,11 @@ const SiteAssistant = () => {
 	// State to track if all components are completed
 	const [allCompleted, setAllCompleted] = useState(false);
 
+	// Callback to handle when emails are enabled or the notice is skipped
+	const handleDisabledEmailsHandled = useCallback(() => {
+		setDisabledEmailsHandled(true);
+	}, []);
+
 	// Callback to handle when test email is sent successfully
 	const handleTestEmailSent = useCallback(() => {
 		setTestEmailSent(true);
@@ -156,19 +182,23 @@ const SiteAssistant = () => {
 		(id) => {
 			if (typeof id === "undefined") {
 				const site_config_array = [
+					usersCanRegister,
 					hasDefaultForm,
 					missingPagesData.length === 0,
 					!shouldShowMembershipField,
 					paymentSetupHandled,
+					disabledEmailsHandled,
 					testEmailSent,
 					spamProtectionHandled
 				];
 
 				const openKeys = [
+					"registrationDisabled",
 					"defaultForm",
 					"requiredPages",
 					"membershipField",
 					"paymentSetup",
+					"disabledEmails",
 					"sendTestEmail",
 					"spamProtection"
 				];
@@ -191,10 +221,12 @@ const SiteAssistant = () => {
 			});
 		},
 		[
+			usersCanRegister,
 			hasDefaultForm,
 			missingPagesData.length,
 			shouldShowMembershipField,
 			paymentSetupHandled,
+			disabledEmailsHandled,
 			testEmailSent,
 			spamProtectionHandled
 		]
@@ -204,9 +236,11 @@ const SiteAssistant = () => {
 	useEffect(() => {
 		// Check if all components are handled
 		const allComponentsHandled =
+			usersCanRegister &&
 			hasDefaultForm &&
 			missingPagesData.length === 0 &&
 			!shouldShowMembershipField &&
+			disabledEmailsHandled &&
 			testEmailSent &&
 			spamProtectionHandled &&
 			paymentSetupHandled;
@@ -223,9 +257,11 @@ const SiteAssistant = () => {
 		}
 
 		const site_config_array = [
+			usersCanRegister,
 			hasDefaultForm,
 			missingPagesData.length === 0,
 			!shouldShowMembershipField,
+			disabledEmailsHandled,
 			testEmailSent,
 			spamProtectionHandled,
 			paymentSetupHandled
@@ -263,9 +299,11 @@ const SiteAssistant = () => {
 
 		toggleOpen();
 	}, [
+		usersCanRegister,
 		hasDefaultForm,
 		missingPagesData.length,
 		shouldShowMembershipField,
+		disabledEmailsHandled,
 		testEmailSent,
 		spamProtectionHandled,
 		paymentSetupHandled,
@@ -314,6 +352,15 @@ const SiteAssistant = () => {
 				)}
 				{!allCompleted && (
 					<Stack gap="5">
+						{/* Registration Disabled - only show if WordPress "Anyone can register" is off */}
+						{!usersCanRegister && (
+							<RegistrationDisabled
+								isOpen={open.registrationDisabled}
+								onToggle={() => toggleOpen("registrationDisabled")}
+								numbering={++config_number}
+							/>
+						)}
+
 						{/* Default Form Missing - only show if no default form exists */}
 						{!hasDefaultForm && (
 							<DefaultFormMissing
@@ -349,6 +396,16 @@ const SiteAssistant = () => {
 								isOpen={open.paymentSetup}
 								onToggle={() => toggleOpen("paymentSetup")}
 								onSkipped={handlePaymentSetupHandled}
+								numbering={++config_number}
+							/>
+						)}
+
+						{/* Emails Disabled - only show while the master disable setting is on */}
+						{!disabledEmailsHandled && (
+							<DisabledEmails
+								isOpen={open.disabledEmails}
+								onToggle={() => toggleOpen("disabledEmails")}
+								onHandled={handleDisabledEmailsHandled}
 								numbering={++config_number}
 							/>
 						)}

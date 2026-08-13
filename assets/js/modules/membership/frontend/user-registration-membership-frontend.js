@@ -3118,6 +3118,10 @@
 					}
 
 					urm_hidden_pg_containers.addClass("urm-d-none");
+					// Total should always reflect the selected plan (including $0.00 for a
+					// free plan), independent of whether coupon/payment-gateway boxes show.
+					$("#urm-total_container").removeClass("urm-d-none");
+					ur_membership_ajax_utils.calculate_total($(this));
 
 					$(".urm_apply_coupon").show();
 					if (urm_payment_type !== "free") {
@@ -3195,7 +3199,6 @@
 								);
 							}
 						}
-						ur_membership_ajax_utils.calculate_total($(this));
 					} else {
 						stripe_container.addClass("urm-d-none");
 					}

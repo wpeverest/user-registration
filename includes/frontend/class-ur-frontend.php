@@ -93,10 +93,11 @@ class UR_Frontend {
 				$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			foreach ( $form_data as $data ) {
-				if ( isset( $data->field_name ) && 'user_registration_profile_pic_url' === $data->field_name ) {
+				// Unrendered fields send field_name only - require value too, or this wipes the picture.
+				if ( isset( $data->field_name, $data->value ) && 'user_registration_profile_pic_url' === $data->field_name ) {
 					if ( ! is_array( $data->value ) && ! ur_is_valid_url( $data->value ) ) {
 						$valid_form_data['profile_pic_url']        = new stdClass();
-						$valid_form_data['profile_pic_url']->value = isset( $data->value ) ? $data->value : '';
+						$valid_form_data['profile_pic_url']->value = $data->value;
 					}
 				}
 			}
@@ -361,6 +362,10 @@ class UR_Frontend {
 	 * Check if can add payment tabs.
 	 */
 	public function ur_register_payment_tab_if_eligible() {
+		// Rewrite rules are global, so the endpoints are always registered regardless of the current user.
+		$this->ur_add_payments_tab_endpoint();
+		$this->ur_add_membership_tab_endpoint();
+
 		$user_id = get_current_user_id();
 
 		$payment_method = get_user_meta( $user_id, 'ur_payment_method', true );
@@ -374,7 +379,6 @@ class UR_Frontend {
 		$is_admin = in_array( 'administrator', (array) $user->roles, true );
 
 		if ( 'membership' === $user_source || $payment_method || $is_admin ) {
-			add_action( 'wp_loaded', array( $this, 'ur_add_payments_tab_endpoint' ) );
 			add_filter( 'user_registration_account_menu_items', array( $this, 'urm_payment_history_tab' ), 10, 1 );
 			add_action(
 				'user_registration_account_urm-payments_endpoint',
@@ -386,7 +390,6 @@ class UR_Frontend {
 		}
 
 		if ( 'membership' === $user_source || ( ! empty( $payment_method ) && ( ! empty( $ur_payment_subscription ) || 'paypal_standard' === $payment_method ) ) ) {
-			add_action( 'wp_loaded', array( $this, 'ur_add_membership_tab_endpoint' ) );
 			add_filter( 'user_registration_account_menu_items', array( $this, 'ur_membership_tab' ), 10, 1 );
 			add_action(
 				'user_registration_account_ur-membership_endpoint',
@@ -407,9 +410,6 @@ class UR_Frontend {
 		$new_items                 = array();
 		$new_items['urm-payments'] = __( 'Payments', 'user-registration' );
 		$items                     = array_merge( $items, $new_items );
-
-		$mask = Ur()->query->get_endpoints_mask();
-		add_rewrite_endpoint( 'ur-membership', $mask );
 
 		return $this->insert_after_helper( $items, $new_items, 'edit-profile' );
 	}
@@ -450,7 +450,7 @@ class UR_Frontend {
 		$is_admin = in_array( 'administrator', (array) $user->roles, true );
 
 		if ( $is_admin ) {
-			echo esc_html_e( 'You do not have any payment records', 'user-registration' );
+			esc_html_e( 'You do not have any payment records', 'user-registration' );
 			return;
 		}
 
@@ -564,7 +564,7 @@ class UR_Frontend {
 		$mask = Ur()->query->get_endpoints_mask();
 
 		add_rewrite_endpoint( 'urm-payments', $mask );
-		flush_rewrite_rules();
+		ur_maybe_flush_rewrite_rules( 'urm-payments' );
 	}
 
 	/**
@@ -574,7 +574,7 @@ class UR_Frontend {
 		$mask = Ur()->query->get_endpoints_mask();
 
 		add_rewrite_endpoint( 'ur-membership', $mask );
-		flush_rewrite_rules();
+		ur_maybe_flush_rewrite_rules( 'ur-membership' );
 	}
 
 	/**

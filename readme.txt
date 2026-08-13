@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: membership, subscription, content restriction, user profile, user registration
 Requires at least: 5.5
 Requires PHP: 7.4
-Tested up to: 7.0.2
-Stable tag: 5.2.6
+Tested up to: 7.0.3
+Stable tag: 5.2.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -251,6 +251,27 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 9. Subscription Management
 
 == Changelog ==
+
+= 5.2.7    - 11/08/2026 =
+* Fix      - Payment related issues for tax & others
+* Fix      - User login after invalid failed payment.
+* Fix      - Performance issue on flush rewrite rules.
+* Fix      - Malformed my account URL on Plain permalinks.
+* Fix      - Both renewal emails sent regardless of setting.
+* Fix      - Disable emails setting not blocking all emails.
+* Fix      - Fatal error on registration if form data is null.
+* Fix      - Default subscriber role added for disabling settings.
+* Fix      - False success shown when profile update saves nothing.
+* Fix      - Show emails only when respective settings are enabled.
+* Fix      - Membership links not translated on multilingual sites.
+* Fix      - Change Plan/Renew links not using correct language page.
+* Fix      - Profile Picture removed when saving another user's profile.
+* Fix      - Added site assistant and admin notice when registration disabled.
+* Fix      - Hide Payments and Subscriptions menus until relevant data exists.
+* Fix      - Hide Global Restriction Message setting until a plan or rule exists.
+* Fix      - Membership field hides radio button for single plan; correct Total for free plans.
+* Fix      - Hide Renewal Behaviour setting on Membership settings until a membership plan is created.
+* Fix      - Site Assistant hides membership/payment notices until a plan exists for Advanced Registration users.
 
 = 5.2.6    - 22/07/2026 =
 * Enhance  - Compatibility with divi 5.

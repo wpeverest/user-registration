@@ -1611,6 +1611,26 @@ body .membership-upgrade-container .ur_membership_input_label .ur-membership-dur
 #pg-container .membership-upgrade-container .ur_membership_input_label .ur-membership-duration:last-child {
   margin-right: 0;
 }
+body .ur_membership_registration_container .ur_membership_input_label.ur-membership-option-static,
+body .membership-upgrade-container .ur_membership_input_label.ur-membership-option-static,
+.user-registration-page .ur_membership_registration_container .ur_membership_input_label.ur-membership-option-static,
+.user-registration-page .membership-upgrade-container .ur_membership_input_label.ur-membership-option-static,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_input_label.ur-membership-option-static,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_input_label.ur-membership-option-static,
+#pg-container .ur_membership_registration_container .ur_membership_input_label.ur-membership-option-static,
+#pg-container .membership-upgrade-container .ur_membership_input_label.ur-membership-option-static {
+  cursor: default;
+}
+body .ur_membership_registration_container .ur_membership_input_label.ur-membership-option-static .ur_membership_radio_input,
+body .membership-upgrade-container .ur_membership_input_label.ur-membership-option-static .ur_membership_radio_input,
+.user-registration-page .ur_membership_registration_container .ur_membership_input_label.ur-membership-option-static .ur_membership_radio_input,
+.user-registration-page .membership-upgrade-container .ur_membership_input_label.ur-membership-option-static .ur_membership_radio_input,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_input_label.ur-membership-option-static .ur_membership_radio_input,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_input_label.ur-membership-option-static .ur_membership_radio_input,
+#pg-container .ur_membership_registration_container .ur_membership_input_label.ur-membership-option-static .ur_membership_radio_input,
+#pg-container .membership-upgrade-container .ur_membership_input_label.ur-membership-option-static .ur_membership_radio_input {
+  display: none;
+}
 body .membership-body,
 .user-registration-page .membership-body,
 .ur-multi-device-form-preview .membership-body,
