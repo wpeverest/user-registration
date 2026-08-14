@@ -49,15 +49,13 @@ export interface SmtpPluginInfo {
 
 export interface ScanResult {
 	sections: CheckSection[];
-	/** Feeds the support report's headline. Not rendered on any step. */
+	/** Feeds the report's headline; not rendered on any step. */
 	summary: ScanSummary;
 	/** Every check flattened, for the support report and the result screen. */
 	checks: HealthCheck[];
 	/**
-	 * SPF and DMARC. Report-only, and deliberately absent from `checks` — they
-	 * describe DNS the admin often cannot change, so they are never counted as
-	 * issues nor shown as findings. Optional: a scan restored from an older
-	 * payload won't carry it.
+	 * SPF and DMARC. Report-only and absent from `checks`, so never counted as
+	 * issues. Optional: an older restored payload won't carry it.
 	 */
 	dns_checks?: HealthCheck[];
 	smartsmtp_status: SmartSmtpStatus;
@@ -67,10 +65,8 @@ export interface ScanResult {
 export type DeliveryOutcome = "arrived" | "spam" | "none";
 
 /**
- * The order the admin meets the two sections in — one wizard step each, plugin
- * settings before mail delivery. The server returns them delivery-first, so this
- * is the single place that decides presentation order; the support report reads
- * it too, so the report can't list them in an order nobody saw on screen.
+ * Presentation order, settings before delivery. The server returns them
+ * delivery-first, so this is the one place that decides; the report reads it too.
  */
 export const SECTION_ORDER: CheckSection["key"][] = ["settings", "delivery"];
 
@@ -82,7 +78,7 @@ export function sectionOf(
 	return sections.find((section) => section.key === key) ?? null;
 }
 
-/** Sections in screen order, keeping any the server adds later rather than dropping them. */
+/** Sections in screen order, keeping any the server adds later. */
 export function orderedSections(sections: CheckSection[]): CheckSection[] {
 	const known = SECTION_ORDER.map((key) => sectionOf(sections, key)).filter(
 		(section): section is CheckSection => null !== section

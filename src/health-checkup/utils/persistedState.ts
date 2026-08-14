@@ -3,7 +3,7 @@ import { WizardStep } from "../components/Stepper";
 
 export interface PersistedState {
 	step: WizardStep;
-	/** The whole scan, kept as one value: both scan steps read from this. */
+	/** Both scan steps read from this. */
 	scan: ScanResult | null;
 	deliveryOutcome: DeliveryOutcome | null;
 	testEmailSent: boolean;
@@ -11,11 +11,8 @@ export interface PersistedState {
 	sendError?: string | null;
 }
 
-// Bumping the suffix retires state saved by an older shape rather than letting
-// it deserialise into something the current code doesn't expect. v3 split the
-// single scan step in two and folded the loose scan fields into `scan`; v4 moved
-// SPF and DMARC out of the delivery section, so a v3 payload would still hold
-// those rows and render them.
+// Bump the suffix to retire state saved by an older shape. v3 split the scan
+// step in two; v4 moved SPF and DMARC out of the delivery section.
 const STORAGE_KEY = "urEmailHealthCheckup:v4";
 
 const VALID_STEPS: WizardStep[] = [
@@ -29,10 +26,8 @@ const VALID_STEPS: WizardStep[] = [
 ];
 
 /**
- * sessionStorage, not localStorage: a reload should land the admin back where
- * they were, but a scan is a point-in-time snapshot — and this flow actively
- * sends people off to change email settings — so it shouldn't outlive the tab
- * and start presenting stale results as current.
+ * sessionStorage, not localStorage: a reload should restore the run, but a scan is
+ * a snapshot and shouldn't outlive the tab presenting stale results as current.
  */
 export function loadState(): PersistedState | null {
 	try {
@@ -48,16 +43,14 @@ export function loadState(): PersistedState | null {
 			return null;
 		}
 
-		// A scan is either absent or complete. Half a payload would render a step
-		// with no rows and no way to ask for them again.
+		// A half payload would render a step with no rows and no way to refetch.
 		if (parsed.scan && !Array.isArray(parsed.scan.sections)) {
 			return null;
 		}
 
 		return parsed;
 	} catch (error) {
-		// Storage can be unavailable (private mode, blocked cookies) or hold
-		// unparseable text — either way, just start the wizard fresh.
+		// Unavailable (private mode) or unparseable: start fresh.
 		return null;
 	}
 }

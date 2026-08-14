@@ -73,9 +73,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				self::check_admin_email_set(),
 			);
 
-			// "Disable Emails" already says nothing goes out. Reporting each
-			// individual email as blocked underneath it restates the same finding
-			// once per email, and none of those rows has a fix of its own.
+			// "Disable Emails" already says nothing goes out; per-email rows restate it.
 			if ( ! $sending_disabled ) {
 				$settings[] = self::check_user_registration_email_enabled();
 				$settings[] = self::check_admin_notification_enabled();
@@ -83,21 +81,14 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 
 			$settings[] = self::check_admin_email_pending_change();
 
-			// SPF and DMARC are reported to support rather than shown as findings:
-			// they describe DNS the admin often can't change from here, and on an
-			// opaque transport we can't tell whether they even apply to this site.
-			// Presenting them as issues to fix produced red rows nobody could act
-			// on; the support report is where the detail belongs.
+			// Reported to support rather than shown as findings: DNS the admin often
+			// can't change, and on an opaque transport we can't tell if it applies.
 			$dns_checks = self::dns_checks( $transport, $domain, $dns );
 
-			// Deliberately excludes $dns_checks, so they never reach the issue
-			// counts, the result screen's leftover list, or its cause diagnosis.
+			// Excludes $dns_checks, so they never reach the issue counts.
 			$all = array_merge( $delivery, $settings );
 
-			// Each description says what its rows are and how much they matter.
-			// Neither restates the step heading above it, and the second halves are
-			// written against each other: only one of these two groups can actually
-			// stop an email, and the admin needs to know which.
+			// Written against each other: only one of these groups can stop an email.
 			return array(
 				'sections'         => array(
 					array(
@@ -122,13 +113,9 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		}
 
 		/**
-		 * What the sending domain publishes about who may send as it — SPF and
-		 * DMARC, or the single merged finding when they share a cause.
-		 *
-		 * These go to the support report only. Unlike the on-screen checks,
-		 * "unknown" results are kept: an agent reading this cold wants to know the
-		 * domain publishes `-all` and that we couldn't match the sender to it,
-		 * which is exactly the case a hidden row used to throw away.
+		 * SPF and DMARC, or the merged finding when they share a cause. Report-only,
+		 * and unlike the on-screen checks "unknown" results are kept: an agent wants
+		 * to know the domain publishes `-all` and we couldn't match the sender.
 		 *
 		 * @param array      $transport Transport inspection.
 		 * @param string     $domain    Effective From domain.
@@ -181,9 +168,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				$checks[] = self::check_smtp_connection( $transport );
 			}
 
-			// No "install this" / "activate that" row here. This step diagnoses;
-			// recommending a plugin is the result screen's job, once the delivery
-			// test has shown whether anything actually needs recommending.
+			// No "install this" row: recommending a plugin is the result screen's job.
 			return $checks;
 		}
 
@@ -276,10 +261,8 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				$php_mail = $transport['php_mail'];
 
 				if ( empty( $php_mail['usable'] ) ) {
-					// Deliberately no technical second line naming the sendmail
-					// binary or the disabled function: it means nothing to a site
-					// owner, and the support report carries the same finding for
-					// anyone who does need it.
+						// No technical second line naming the binary: it means nothing to a
+					// site owner, and the report carries the same finding.
 					if ( 'no_sendmail' === $php_mail['reason'] ) {
 						$message = __( 'No mail service is connected, so WordPress hands each message to the server\'s own mail program, which isn\'t installed here. Every email fails silently, with no warning.', 'user-registration' );
 					} else {
@@ -461,29 +444,19 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				return $checks;
 			}
 
-			// MX describes the sending domain's own DNS, which is only worth
-			// reporting when the admin can change it. On a mailbox provider it's
-			// Google's or Yahoo's — calling it "your domain" is advice nobody can
-			// act on. check_from_alignment() has already said the one thing that
-			// matters: move to an address you control.
+			// On a mailbox provider this DNS is Google's or Yahoo's, so calling it "your
+			// domain" is advice nobody can act on.
 			if ( ! UR_Email_Domain_Inspector::is_mailbox_provider( $domain ) ) {
 				$checks[] = self::check_from_domain( $domain, $dns );
 			}
 
-			// Whether the site is entitled to send as this domain only matters once
-			// something is actually sending. With no working mail path there is one
-			// problem to fix, and a second red row claiming receiving mail servers
-			// treat the message as forged describes a journey no message is making.
-			//
-			// It is a real finding, and it comes back on the next scan once the
-			// route is fixed — unless the fix resolves it, which connecting through
-			// the address's own provider does.
+			// Only matters once something is actually sending. It returns on the next
+			// scan once the route is fixed, unless the fix resolves it.
 			if ( ! self::cannot_send( $transport ) ) {
 				$checks[] = self::check_from_alignment( $domain, $transport );
 			}
 
-			// SPF and DMARC are not here — see dns_checks(), which sends them to
-			// the support report instead of presenting them as issues to fix.
+			// SPF and DMARC live in dns_checks(), which reports rather than presents.
 
 			// A row that says "we couldn't tell" gives the admin doubt and no
 			// action. The summary already reports when the scan as a whole
@@ -497,17 +470,10 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		}
 
 		/**
-		 * Whether the server has no working way to send mail at all.
-		 *
-		 * When this is true nothing leaves the machine, so every finding about
-		 * who the site is allowed to send *as* describes a journey no message is
-		 * making. Those findings are suppressed until this is fixed — see
-		 * identity_checks().
-		 *
-		 * Note this covers only the dead-PHP-mail case, which is decided locally.
-		 * An unreachable SMTP host is equally fatal but is established inside
-		 * check_smtp_connection() by a socket probe, and reaching it from here
-		 * would mean probing the host a second time.
+		 * Whether the server has no working way to send mail at all. Findings about
+		 * who the site may send *as* are suppressed while this is true; see
+		 * identity_checks(). Covers only the dead-PHP-mail case: an unreachable SMTP
+		 * host is established by a socket probe in check_smtp_connection().
 		 *
 		 * @param array $transport Transport inspection.
 		 * @return bool
@@ -1527,9 +1493,8 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 		}
 
 		/**
-		 * A link out to the screen that owns a setting, so a finding can be acted
-		 * on without hunting for it. Opened in a new tab by the UI, and the wizard
-		 * re-scans when the admin comes back, so the row settles green on return.
+		 * A link to the screen that owns a setting. Opened in a new tab, and the
+		 * wizard re-scans on return so the row settles green.
 		 *
 		 * @param string $label Link text.
 		 * @param string $url   Destination.
@@ -1565,10 +1530,8 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				'message' => $disabled
 					? __( '"Disable Emails" is on. No registration emails will be sent.', 'user-registration' )
 					: __( '"Disable Emails" is off. Emails will fire after registration.', 'user-registration' ),
-				// No remedy sentence: the message says what is wrong and the link
-				// below goes straight to the switch that fixes it. Spelling out
-				// "turn it off under Emails → General" between the two just says the
-				// same thing a third time.
+				// No remedy sentence: the message says what is wrong and the link goes
+				// to the switch that fixes it.
 				'fix'     => '',
 				'action'  => $disabled
 					? self::settings_action(

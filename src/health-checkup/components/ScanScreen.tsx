@@ -26,13 +26,9 @@ import StepHeader from "./StepHeader";
 import Text from "./Text";
 
 /**
- * Split a finding's message after its first sentence, so a warning can lead with
- * its gist and keep the reasoning behind a disclosure.
- *
- * The naive split on ". " is wrong here: these messages are full of dotted
- * values — `themegrill.com`, `mail()`, `v=spf1 -all` — so only a full stop
- * outside a `code` span counts, and only when what follows starts a new
- * sentence rather than continuing an abbreviation.
+ * Split a message after its first sentence, so a warning can lead with its gist.
+ * A naive split on ". " breaks on the dotted values these messages are full of
+ * (`themegrill.com`, `mail()`), so only a stop outside a `code` span counts.
  */
 export const splitFirstSentence = (text: string): { lead: string; rest: string } => {
 	let inCode = false;
@@ -56,8 +52,7 @@ export const splitFirstSentence = (text: string): { lead: string; rest: string }
 			continue;
 		}
 
-		// A lowercase letter next means the stop was part of a value, not the end
-		// of a thought. Backticks, `**` and digits have no case, so they pass.
+		// Lowercase next means the stop was part of a value, not a sentence end.
 		const next = following[1];
 
 		if (next !== next.toUpperCase()) {
@@ -70,9 +65,8 @@ export const splitFirstSentence = (text: string): { lead: string; rest: string }
 	return { lead: text, rest: "" };
 };
 
-// Resolves a failing check in place — a single inline link, deliberately not a
-// card, so the fix sits with the finding it belongs to. On success the scan is
-// re-run so the row itself flips to Pass.
+// Resolves a failing check in place; on success the scan re-runs so the row
+// flips to Pass.
 const CheckActionLink = ({ action, onResolved }: { action: CheckAction; onResolved: () => void }) => {
 	const [isWorking, setIsWorking] = useState(false);
 	const toast = useToast();
@@ -154,10 +148,8 @@ interface RowStyle {
 	badgeBorderColor: string;
 }
 
-// Severity is carried by the icon, the badge and the background tint — never by
-// the text colour. Coloured body copy on a coloured panel is harder to read, and
-// it made a warning's orange title look louder than an error's red one. Titles
-// stay dark, matching the summary banner above the list.
+// Severity is carried by the icon, badge and tint, never by the text colour:
+// coloured copy on a coloured panel reads worse and skews the hierarchy.
 const rowStyles: Record<CheckStatus, RowStyle> = {
 	pass: {
 		icon: <FiCheck size={18} />,
@@ -237,10 +229,8 @@ const CheckRow = ({
 	const { lead, rest } = splitFirstSentence(check.message);
 	const { isOpen, onToggle } = useDisclosure();
 
-	// Only "may fail" folds, and only when there is something to fold. An error is
-	// something the admin has to act on, so its reasoning stays on screen; a pass
-	// has nothing to justify; and a one-sentence warning is already short enough
-	// that hiding its fix behind an arrow would only add a click.
+	// Only "may fail" folds, and only when there is something to fold: an error
+	// has to stay readable and a one-sentence warning is short already.
 	const isCollapsible = "warning" === check.status && "" !== rest;
 
 	const badge = (
@@ -359,36 +349,23 @@ export interface ScanScreenProps {
 	/** The one section this step presents, or null while the scan is in flight. */
 	section: CheckSection | null;
 	/**
-	 * Whether a failing row carries its remedy inline. Plugin settings do — they
-	 * are the admin's own switches, a click away. Mail delivery doesn't: those
-	 * remedies are recommendations ("connect an SMTP service", "send from another
-	 * domain"), and they are only worth making once the live test has shown the
-	 * mail really didn't arrive, so the result screen makes them instead.
+	 * Whether a failing row carries its remedy inline. Plugin settings do; mail
+	 * delivery's remedies are recommendations the result screen makes instead.
 	 */
 	showFixes?: boolean;
 	isLoading: boolean;
 	error: string;
 	onNext: () => void;
 	onBack?: () => void;
-	/**
-	 * Omitted where a report wouldn't help yet: the settings findings alone are
-	 * not what support needs, and offering the button before the delivery checks
-	 * have even been seen invites a half-empty ticket.
-	 */
+	/** Omitted where a report wouldn't help yet, e.g. before the delivery checks. */
 	onOpenReport?: () => void;
 	onResolved: () => void;
 }
 
 /**
- * The frame both scan steps render in: one section's findings, the same header,
- * progress bar and footer. Splitting the scan across two steps was a change of
- * pagination, not of presentation, so the two screens share this rather than
- * each growing their own copy of it.
- *
- * No verdict banner. A headline asserting whether mail will arrive sat above
- * findings that often couldn't support it — and on an opaque transport it said
- * so in as many words, which is not a headline. The verdict still leads the
- * support report, where a hedge is useful rather than alarming.
+ * The frame both scan steps render in. No verdict banner: a headline asserting
+ * whether mail will arrive sat above findings that often couldn't support it.
+ * The verdict still leads the support report.
  */
 const ScanScreen = ({
 	loadingHeading,
@@ -404,8 +381,7 @@ const ScanScreen = ({
 	onResolved,
 }: ScanScreenProps) => (
 	<Box>
-		{/* The section's own description is written server-side and already says
-		    what this group covers, so the step doesn't restate it. */}
+		{/* The section's description is written server-side. */}
 		<StepHeader
 			title={isLoading ? loadingHeading : heading}
 			description={isLoading ? loadingBlurb : (section?.description ?? "")}
@@ -475,8 +451,7 @@ const ScanScreen = ({
 								{__("Send report", "user-registration")}
 							</Button>
 						)}
-						{/* The wizard's Next, values and all — including the arrow, which
-						    was missing here. */}
+	
 						<Button
 							bg={COLOR.link}
 							color="white"

@@ -2,11 +2,8 @@
 /**
  * Email Delivery Checkup screen.
  *
- * Renders the checkup as a full-page takeover rather than a settings section,
- * the same way the setup wizard does: its own HTML document, only its own
- * styles, no admin chrome. The checkup is a guided run with its own step
- * sequence, and framing it inside the settings navigation invited the admin to
- * wander off mid-run.
+ * A full-page takeover on the setup wizard's pattern: its own HTML document, only
+ * its own styles, no admin chrome.
  *
  * @package UserRegistration\Admin
  */
@@ -35,15 +32,11 @@ class UR_Admin_Email_Checkup {
 	}
 
 	/**
-	 * Register the page so admin.php will serve the URL at all.
+	 * Register the page so admin.php will serve the URL at all: without a hook for
+	 * the slug it answers with a 403 before render() gets a chance.
 	 *
-	 * Without a registered hook for the slug, admin.php answers "Sorry, you are
-	 * not allowed to access this page" with a 403 before render() gets a chance.
-	 *
-	 * Registered only on its own request — this class is also loaded on the
-	 * settings page, to hand the old section off — so the slug never becomes a
-	 * stray item in the sidebar. The callback stays empty because render()
-	 * prints the document and exits long before any callback would run.
+	 * Registered only on its own request, so the slug never becomes a stray sidebar
+	 * item. The callback stays empty because render() exits first.
 	 *
 	 * @return void
 	 */
@@ -83,9 +76,8 @@ class UR_Admin_Email_Checkup {
 	}
 
 	/**
-	 * The checkup used to live at Emails → Health Checkup. That section is still
-	 * in the settings navigation because it is where admins look for it — it now
-	 * hands off to the full-screen run instead of rendering inside the page.
+	 * Emails → Health Checkup stays in the settings navigation, where admins look
+	 * for it, and hands off to the full-screen run.
 	 *
 	 * @return void
 	 */
@@ -143,8 +135,7 @@ class UR_Admin_Email_Checkup {
 
 		wp_enqueue_script( $handle );
 
-		// The setup wizard's stylesheet, for its reset and base type — the point
-		// of this screen is that the two look like one product.
+		// The wizard's stylesheet, for its reset and base type.
 		wp_enqueue_style(
 			'ur-setup-wizard-style',
 			UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css',

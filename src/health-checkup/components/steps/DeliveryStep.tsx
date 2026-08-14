@@ -13,9 +13,8 @@ interface DeliveryStepProps {
 }
 
 /**
- * Step 3 — the route mail takes off this server and whether the site is allowed
- * to send as the configured "From" address. This is where mail actually goes
- * missing, so it sits immediately before the live test that confirms it.
+ * Step 3, the route mail takes and whether the site may send as its "From"
+ * address. Sits before the live test that confirms it.
  */
 const DeliveryStep = ({
 	section,
@@ -34,8 +33,7 @@ const DeliveryStep = ({
 			"user-registration"
 		)}
 		section={section}
-		// Findings only. The remedies for these are recommendations, and they are
-		// made on the result screen once the test has proved mail didn't arrive.
+		// Findings only; the remedies are made on the result screen.
 		showFixes={false}
 		isLoading={isLoading}
 		error={error}

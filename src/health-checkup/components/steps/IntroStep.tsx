@@ -8,9 +8,6 @@ const IntroStep = ({ onStart }: { onStart: () => void }) => (
 	<Box>
 		<StepHeader
 			title={__("Quick email delivery checkup", "user-registration")}
-			// Was three "then" clauses and a caveat about what automated checks
-			// can't confirm — true, but not what someone needs before they've
-			// started. This says what happens, in order, and how long it takes.
 			description={__(
 				"We'll check your settings, work out how mail leaves this site, then send a real test email and ask whether it arrived. Takes about two minutes.",
 				"user-registration"

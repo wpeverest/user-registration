@@ -19,9 +19,8 @@ import ResultStep, { ResultVariant } from "./steps/ResultStep";
 import SettingsStep from "./steps/SettingsStep";
 import TestDeliveryStep from "./steps/TestDeliveryStep";
 
-// Inter first, exactly as the setup wizard loads it, then the same fallbacks —
-// this screen is a takeover with no admin chrome around it, so it sets its own
-// type rather than inheriting wp-admin's.
+// Inter first, as the setup wizard loads it. This is a takeover with no admin
+// chrome, so it sets its own type.
 const SANS_STACK = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif";
 const MONO_STACK = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
 
@@ -31,10 +30,8 @@ const theme = extendTheme({
 		body: SANS_STACK,
 		mono: MONO_STACK,
 	},
-	// Every colour below comes from the plugin's own SCSS tokens in
-	// assets/css/variables/_colors.scss, shaded with the same lighten()/darken()
-	// steps components/_badge.scss uses for its subtle variants — so a status
-	// here reads the same as the identical status anywhere else in the plugin.
+	// From assets/css/variables/_colors.scss, shaded with the lighten()/darken()
+	// steps _badge.scss uses, so a status reads the same as elsewhere.
 	colors: {
 		// $primary_color, matching the setup wizard (src/welcome/components/App.tsx).
 		primary: {
@@ -96,7 +93,7 @@ const theme = extendTheme({
 	},
 });
 
-/** The setup wizard's page ground and bar height, so the two screens line up. */
+/** The setup wizard's ground and bar height. */
 const PAGE_BG = "#F8F8FA";
 const HEADER_HEIGHT = "65px";
 
@@ -106,21 +103,17 @@ const RESULT_VARIANTS: Record<DeliveryOutcome, ResultVariant> = {
 	none: "none",
 };
 
-// Read once at module load — the wizard mounts a single time, and reading per
-// render would just re-parse the same JSON.
+// Read once: the wizard mounts a single time.
 const restored = loadState();
 
-// Landing on a scan step always re-scans, even when a result was restored with
-// it. A scan is a snapshot of settings that live on other screens: go and change
-// "Disable Emails", come back, and a restored result would still show the state
-// from before the change — green over a setting the admin just turned off.
+// A scan is a snapshot of settings that live on other screens, so landing on a
+// scan step always re-scans rather than trusting a restored result.
 const needsInitialScan = !!restored && SCAN_STEPS.includes(restored.step);
 
 const App = () => {
 	const [step, setStep] = useState<WizardStep>(restored?.step ?? "intro");
 	const [scan, setScan] = useState<ScanResult | null>(restored?.scan ?? null);
-	// Incremented to request a scan. Starts at 0 — "nothing asked for yet" — so a
-	// restored run that already has its result doesn't pay for a second one.
+	// Incremented to request a scan; 0 means none asked for yet.
 	const [scanToken, setScanToken] = useState(needsInitialScan ? 1 : 0);
 	const [isScanning, setIsScanning] = useState(needsInitialScan);
 	const [scanError, setScanError] = useState("");
@@ -133,9 +126,7 @@ const App = () => {
 	const [sendError, setSendError] = useState<string | null>(restored?.sendError ?? null);
 	const rootRef = useRef<HTMLDivElement>(null);
 
-	// One scan per run, owned here rather than by a step: the two scan steps are
-	// two views of the same result, so fetching it in the first would leave the
-	// second either re-running every DNS lookup or reading a value it can't reach.
+	// One scan per run, owned here: the two scan steps are views of one result.
 	useEffect(() => {
 		if (0 === scanToken) {
 			return;
@@ -167,13 +158,8 @@ const App = () => {
 		};
 	}, [scanToken]);
 
-	// The fix links on each finding open their settings screen in a new tab, so
-	// the admin changes something and switches back here rather than reloading.
-	// Nothing about that is a page load, so re-read the checks on the way back in
-	// — otherwise the row they just fixed keeps reporting the old verdict.
-	//
-	// Rows already on screen stay put while this runs, so the refresh reads as a
-	// row settling to green rather than the screen reloading under them.
+	// Fix links open settings in a new tab, so coming back is not a page load.
+	// Re-read on the way in, or the row just fixed keeps its old verdict.
 	useEffect(() => {
 		if (!SCAN_STEPS.includes(step)) {
 			return;
@@ -190,18 +176,17 @@ const App = () => {
 		return () => document.removeEventListener("visibilitychange", refreshWhenVisible);
 	}, [step]);
 
-	// Survive a page refresh: without this the admin lands back on the intro and
-	// loses a completed run.
+	// Survive a refresh; without this a completed run is lost.
 	useEffect(() => {
 		saveState({ step, scan, deliveryOutcome, testEmailSent, sendError });
 	}, [step, scan, deliveryOutcome, testEmailSent, sendError]);
 
-	// Prevents Chrome's scroll-anchoring from re-adjusting scroll after a step change.
+	// Stops Chrome's scroll-anchoring re-adjusting after a step change.
 	useEffect(() => {
 		document.documentElement.style.overflowAnchor = "none";
 	}, []);
 
-	// Scroll each step to its own top, except on first mount where it's already correct.
+	// Scroll each step to its top; first mount is already correct.
 	const isFirstRender = useRef(true);
 	useEffect(() => {
 		if (isFirstRender.current) {
@@ -211,8 +196,7 @@ const App = () => {
 		rootRef.current?.scrollIntoView({ block: "start" });
 	}, [step]);
 
-	// Clear the previous run's data too, so a refresh part-way through the new
-	// run can't resurrect the old result.
+	// Clears the old result too, so a mid-run refresh can't resurrect it.
 	const clearRun = () => {
 		setTestEmailSent(false);
 		setScan(null);
@@ -228,26 +212,20 @@ const App = () => {
 		setScanToken((token) => token + 1);
 	};
 
-	// From a result: back to step 1. Running again used to drop the admin straight
-	// into step 2, which left the stepper opening mid-run and no way back to the
-	// start screen except the browser's Back.
+	// Back to step 1, not step 2: otherwise the start screen is unreachable.
 	const restartRun = () => {
 		clearRun();
 		setStep("intro");
 	};
 
-	// Re-read the checks after an inline fix so the row reflects the new state.
-	// The rows already on screen stay put while it runs — `isLoading` below is
-	// false whenever a result is in hand — so a fixed row flips to Pass instead
-	// of the whole screen dropping back to a progress bar.
+	// Re-read after an inline fix. Rows stay on screen while it runs.
 	const rescan = useCallback(() => setScanToken((token) => token + 1), []);
 
 	const openReport = () => {
 		setReportText(
 			buildReport(
 				scan?.checks ?? [],
-				// Untested until the delivery step has been through, so never carry a
-				// previous run's outcome into a report opened from a scan step.
+				// Never carry a previous run's outcome into a scan-step report.
 				SCAN_STEPS.includes(step) ? null : deliveryOutcome,
 				scan?.summary ?? null,
 				scan?.sections ?? [],
@@ -257,11 +235,9 @@ const App = () => {
 		setIsReportOpen(true);
 	};
 
-	// Nothing for the admin to confirm, so record the outcome here and carry the
-	// server's own error through to the result.
+	// Nothing to confirm, so record it here and carry the error through.
 	const handleSendFailure = (error: string) => {
-		// The message is built for an admin notice and can carry markup, which
-		// RichText would render as visible tags — it parses no HTML by design.
+		// Built for an admin notice, so it can carry markup RichText won't parse.
 		setSendError(error.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim());
 		setDeliveryOutcome("none");
 		confirmDelivery("none").catch(() => undefined);
@@ -277,8 +253,7 @@ const App = () => {
 		);
 	};
 
-	// A rescan after an inline fix keeps the existing rows visible; only a run
-	// with nothing to show yet gets the progress bar.
+	// Only a run with nothing to show yet gets the progress bar.
 	const isLoading = isScanning && !scan;
 
 	const renderStep = () => {
@@ -323,8 +298,7 @@ const App = () => {
 				const variant: ResultVariant = deliveryOutcome
 					? RESULT_VARIANTS[deliveryOutcome]
 					: "good";
-				// The result is where a run ends: it stays put until the admin
-				// explicitly starts another one.
+
 				return (
 					<ResultStep
 						variant={variant}
@@ -342,16 +316,12 @@ const App = () => {
 		}
 	};
 
-	// Full-page takeover, matching the setup wizard: fixed bar carrying the logo,
-	// the progress, and the way out; one centred card below it. The measurements
-	// here are the wizard's — 65px bar, 920px card, #F8F8FA ground — because the
-	// two screens are the same product and shouldn't look like two.
+	// Full-page takeover on the setup wizard's measurements: 65px bar, 920px
+	// card, #F8F8FA ground.
 	return (
 		<ChakraProvider theme={theme}>
-			{/* Font set here rather than left to the cascade: the wizard stylesheet
-			    also declares one on `body`, and which of the two wins depends on
-			    stylesheet order. Naming it on the root makes the screen's type its
-			    own decision. */}
+			{/* Named here, not left to the cascade: the wizard stylesheet also sets a
+			    body font, and which wins depends on stylesheet order. */}
 			<Box minH="100vh" bg={PAGE_BG} fontFamily="body" sx={{ overflowAnchor: "none" }}>
 				<Flex
 					position="fixed"
@@ -375,10 +345,8 @@ const App = () => {
 						</Box>
 					</Flex>
 
-					{/* Absolutely centred, 920px wide: the same axis and width as the
-					    card below, so each node sits over the content it describes.
-					    Pinned rather than flexed so the logo and close button can't
-					    shift it off centre. */}
+					{/* Centred on the card's axis, pinned so the logo and close can't
+					    shift it. */}
 					<Flex
 						position={{ base: "relative", lg: "absolute" }}
 						left={{ base: "auto", lg: "50%" }}

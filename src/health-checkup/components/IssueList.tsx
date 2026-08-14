@@ -8,12 +8,9 @@ import RichText from "./RichText";
 import Text from "./Text";
 
 /**
- * A collapsed list of findings, each with its remedy.
- *
- * Used by every result screen, which is why the label is a prop: on a successful
- * send these are optional "suggested improvements"; on a failed one they are the
- * things to fix. Either way they start closed — the outcome of the live test is
- * the headline, and a wall of remediation text underneath competes with it.
+ * A list of findings with their remedies, shared by all three result screens.
+ * The label is a prop: optional "suggested improvements" on a delivered result,
+ * things to fix on a failed one.
  */
 const IssueList = ({
 	issues,
@@ -23,10 +20,9 @@ const IssueList = ({
 	issues: HealthCheck[];
 	label?: string;
 	/**
-	 * Open unless told otherwise. Where the message did arrive these findings are
-	 * the only thing left to read, so hiding them would be hiding the point. The
-	 * failed screen closes them instead: it leads with a recommendation, and a
-	 * list of alternatives unfurled beneath it competes with that.
+	 * Open unless told otherwise: where the message arrived these are the only
+	 * thing left to read. The failed screen closes them, leading with its
+	 * recommendation instead.
 	 */
 	defaultOpen?: boolean;
 }) => {
@@ -116,8 +112,7 @@ const IssueList = ({
 			</Flex>
 
 			<Collapse in={isOpen} animateOpacity>
-				{/* Hairline rather than a nested panel: the list belongs to the header
-				    above it, and a second border would box content already in a box. */}
+				{/* Hairline, not a nested panel: the list belongs to its header. */}
 				<Box borderTop="1px solid" borderColor="gray.200" p="13px 14px 14px">
 					{items}
 				</Box>

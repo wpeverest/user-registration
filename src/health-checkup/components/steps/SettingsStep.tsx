@@ -12,19 +12,9 @@ interface SettingsStepProps {
 }
 
 /**
- * Step 2 — what the plugin will send and to whom. The cheap, local answers come
- * first: they are settings the admin owns and can change in one click, so
- * getting them out of the way before the delivery diagnosis means nobody reads a
- * page of DNS findings only to discover "Disable Emails" was on all along.
- *
- * This is the step that runs the scan; step 3 reads the same result.
- *
- * It carries a Back too, even though it is the first step with findings: the
- * start screen is restored past on every reload, so without a way back to it
- * that screen is unreachable for the rest of the session.
- *
- * No support report here — half a scan, with the delivery findings still unread,
- * isn't what an agent needs. The offer starts on step 3.
+ * Step 2, the plugin's own settings: cheap local answers before the delivery
+ * diagnosis. Runs the scan that step 3 also reads. No support report here, with
+ * the delivery findings still unread.
  */
 const SettingsStep = ({
 	section,

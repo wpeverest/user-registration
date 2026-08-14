@@ -12,14 +12,10 @@ export type WizardStep =
 	| "result-none"
 	| "result-spam";
 
-/**
- * The two steps that present scan findings. They share one scan: "settings"
- * fetches it, "delivery" reads what it left behind — so anything keyed off
- * "is this step showing scan results" has to name both.
- */
+/** The steps that present scan findings; both read one shared scan. */
 export const SCAN_STEPS: WizardStep[] = ["settings", "delivery"];
 
-// Zero-based position of each step; the stepper itself counts from one.
+// Zero-based; the stepper counts from one.
 const STEP_INDEX: Record<WizardStep, number> = {
 	intro: 0,
 	settings: 1,
@@ -30,14 +26,10 @@ const STEP_INDEX: Record<WizardStep, number> = {
 	"result-good": 4,
 };
 
-/** One node per stage, and the denominator StepHeader counts against. */
+/** One node per stage. */
 export const TOTAL_STEPS = 5;
 
-/** Named, so the bar reads as a map of the run — as the setup wizard's does. */
-// "Mail delivery" and "Test delivery" were a poor pair: both read as "we test
-// whether mail is delivered", so which one you were on told you nothing. They
-// name different things — one inspects the machinery, the other sends a real
-// message — so the labels now say which is which.
+/** One inspects the machinery, the other sends a real message. */
 const STEP_LABELS = [
 	__("Start", "user-registration"),
 	__("Settings", "user-registration"),
@@ -46,31 +38,19 @@ const STEP_LABELS = [
 	__("Result", "user-registration"),
 ];
 
-// The wizard's own values, not tokens, so the two bars can't drift apart.
+// The wizard's literals, so the two bars can't drift.
 const ACTIVE_COLOR = "#475BB2";
 const MUTED_COLOR = "gray.400";
 const LINE_COLOR = "gray.300";
 
 /**
- * Progress through the run, built to the setup wizard's stepper: numbered
- * circles that become ticks, the label beside each on wide screens and in a
- * tooltip otherwise, and a connector filling the gap between them.
- *
- * Deliberately not clickable, where the wizard's is. The wizard's steps are a
- * form the admin can revisit; these are a sequence with side effects — jumping
- * to "Live test" would send a real email, and jumping to "Result" would ask for
- * an outcome that doesn't exist yet. Back and Next own the navigation.
- *
- * A failed send is not marked here. The step still ran, and its outcome is what
- * carried the run to the result — which states the failure in full. Singling the
- * node out only put a second, quieter verdict in the progress bar.
- *
- * @param step Where the run is now.
+ * The setup wizard's stepper. Not clickable, unlike the wizard's: these steps
+ * have side effects, so jumping to "Live test" would send a real email. Back and
+ * Next own the navigation.
  */
 const Stepper = ({ step }: { step: WizardStep }) => {
 	const current = STEP_INDEX[step] + 1;
-	// Every result is terminal: the run is over whatever the outcome was, so the
-	// last node reads as complete rather than still in progress.
+	// Every result is terminal, so the last node reads as complete.
 	const finished = step.startsWith("result-");
 
 	const showLabels = useBreakpointValue({ base: false, md: false, lg: true });

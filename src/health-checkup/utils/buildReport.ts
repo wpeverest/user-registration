@@ -27,13 +27,9 @@ const outcomeText: Record<DeliveryOutcome, string> = {
 const rule = "-".repeat(58);
 
 /**
- * A support agent reads this cold, with no access to the site. So it leads with
- * the answer, keeps the checks grouped exactly as the admin saw them on screen,
- * and spells out every failing one in full — a bare list of titles would make
- * "please send the details" their first reply.
- *
- * Nothing here is sensitive: the scan never reads an SMTP password, so no part
- * of this should make someone hesitate to paste it into a ticket.
+ * Read cold by a support agent with no access to the site, so it leads with the
+ * answer, groups the checks as the admin saw them, and spells out every failing
+ * one in full. Nothing here is sensitive; the scan never reads a password.
  */
 export function buildReport(
 	checks: HealthCheck[],
@@ -46,12 +42,8 @@ export function buildReport(
 		(check) => check.status === "error" || check.status === "warning"
 	);
 
-	// Screen order, not server order: the report is read alongside the admin's
-	// description of what they saw, so the groups have to come in the order the
-	// wizard walked them through — plugin settings, then mail delivery.
-	//
-	// One unlabelled group keeps the report readable if it is ever built before
-	// a scan has grouped anything.
+	// Screen order, not server order: read alongside the admin's own description.
+	// One unlabelled group covers a report built before a scan grouped anything.
 	const groups: CheckSection[] =
 		sections && sections.length > 0
 			? orderedSections(sections)
@@ -78,9 +70,7 @@ export function buildReport(
 		lines.push("");
 	});
 
-	// SPF and DMARC, in full and on their own. They are not findings the admin was
-	// asked to fix, so they are stated here rather than counted above — an agent
-	// still needs the records, including the cases we couldn't resolve.
+	// SPF and DMARC stated rather than counted: an agent still needs the records.
 	if (dnsChecks && dnsChecks.length > 0) {
 		lines.push(
 			rule,
