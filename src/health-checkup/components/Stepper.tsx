@@ -1,5 +1,5 @@
 import { Circle, Flex } from "@chakra-ui/react";
-import { FiCheck, FiMail } from "react-icons/fi";
+import { FiCheck, FiMail, FiX } from "react-icons/fi";
 
 export type WizardStep =
 	| "intro"
@@ -30,8 +30,15 @@ const STEP_INDEX: Record<WizardStep, number> = {
 
 const NODE_COUNT = 5;
 const ACTIVE_COLOR = "primary.500";
+const TEST_STEP_INDEX = STEP_INDEX.test;
 
-const Stepper = ({ step }: { step: WizardStep }) => {
+/**
+ * @param step       Where the wizard is now.
+ * @param testFailed The send failed outright, so the wizard skipped straight
+ *                   from the test to the result without the admin ever
+ *                   answering "did it arrive?".
+ */
+const Stepper = ({ step, testFailed = false }: { step: WizardStep; testFailed?: boolean }) => {
 	const current = STEP_INDEX[step];
 	// Every result is a terminal step: the run is over whatever the outcome was,
 	// so the last node reads as complete instead of still-in-progress.
@@ -40,21 +47,28 @@ const Stepper = ({ step }: { step: WizardStep }) => {
 	return (
 		<Flex align="center" px="2px" pb="24px">
 			{Array.from({ length: NODE_COUNT }).map((_, index) => {
-				const isCompleted = index < current;
+				// A tick on the test node would claim the delivery test passed. When
+				// the send failed we jumped over that question entirely, so the step
+				// was reached and not completed — marked, not ticked.
+				const isFailed = testFailed && index === TEST_STEP_INDEX;
+				const isCompleted = index < current && !isFailed;
 				const isCurrent = index === current;
+				const isFilled = isCompleted || (isCurrent && finished);
 
 				return (
 					<Flex key={index} align="center" flex={index === NODE_COUNT - 1 ? "0 0 auto" : "1 1 auto"}>
 						<Circle
 							size="28px"
 							flexShrink={0}
-							bg={isCompleted || (isCurrent && finished) ? ACTIVE_COLOR : "white"}
+							bg={isFailed ? "red.50" : isFilled ? ACTIVE_COLOR : "white"}
 							borderWidth="2px"
-							borderColor={isCompleted || isCurrent ? ACTIVE_COLOR : "gray.300"}
-							color={isCompleted || (isCurrent && finished) ? "white" : isCurrent ? ACTIVE_COLOR : "gray.400"}
+							borderColor={isFailed ? "red.200" : isCompleted || isCurrent ? ACTIVE_COLOR : "gray.300"}
+							color={isFailed ? "red.600" : isFilled ? "white" : isCurrent ? ACTIVE_COLOR : "gray.400"}
 							transition="background 300ms ease, border-color 300ms ease"
 						>
-							{isCompleted || (isCurrent && finished) ? (
+							{isFailed ? (
+								<FiX size={13} />
+							) : isFilled ? (
 								<FiCheck size={13} />
 							) : isCurrent ? (
 								<FiMail size={13} />

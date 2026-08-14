@@ -3,6 +3,7 @@ import { __ } from "@wordpress/i18n";
 import { useEffect, useRef, useState } from "react";
 import { FiAlertTriangle, FiCheck, FiChevronRight, FiX } from "react-icons/fi";
 import { DeliveryOutcome, sendTestEmail } from "../../api/healthCheckupApi";
+import { LEGACY_BUTTON_OPT_OUT } from "../../utils/legacyButtonOptOut";
 import Text from "../Text";
 
 interface Choice {
@@ -147,6 +148,9 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent, onSendFailed }: TestD
 							<Flex
 								as="button"
 								type="button"
+								// Without this the legacy admin CSS gives every card after
+								// the first a 6px left margin, so they stop lining up.
+								className={LEGACY_BUTTON_OPT_OUT}
 								key={choice.outcome}
 								align="center"
 								gap="13px"

@@ -304,7 +304,7 @@ const App = () => {
 					Email Delivery Checkup
 				</Box>
 
-				<Stepper step={step} />
+				<Stepper step={step} testFailed={!!sendError} />
 
 				<Box
 					bg="white"

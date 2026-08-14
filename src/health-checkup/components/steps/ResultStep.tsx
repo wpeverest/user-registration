@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Link, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, useToast } from "@chakra-ui/react";
 import { __, sprintf } from "@wordpress/i18n";
 import { ReactNode, useState } from "react";
 import { FiAlertTriangle, FiArrowRight, FiCheck, FiX } from "react-icons/fi";
@@ -139,35 +139,36 @@ const SmartSmtpRecommendation = ({ status }: { status: SmartSmtpStatus }) => {
 		}
 	};
 
-	// One sentence naming what will happen, then the link that does it. The
-	// wording tracks what is actually needed here — installing, activating, or
-	// just finishing the connection — so it never offers to install something
-	// that is already sitting on the site.
+	// One claim, then the state-specific half. The claim is identical across all
+	// three states and carries the weight — this screen exists to recommend
+	// SmartSMTP, and a recommendation that opens by describing plugin status
+	// reads as a status report. The clause after it never offers to install
+	// something already sitting on the site.
 	const copy = {
 		not_installed: {
-			lead: __(
-				"Our best recommendation is to install and activate SmartSMTP — our own free plugin — and let it deliver your email reliably.",
+			detail: __(
+				"Our own free plugin takes over sending, so your email actually arrives.",
 				"user-registration"
 			),
 			action: __("Install & activate SmartSMTP", "user-registration"),
 			loading: __("Installing…", "user-registration"),
 		},
 		inactive: {
-			lead: __(
-				"Our best recommendation is to activate SmartSMTP — it is already installed here — and let it deliver your email reliably.",
+			detail: __(
+				"It's already installed here — activate it and it takes over sending.",
 				"user-registration"
 			),
 			action: __("Activate SmartSMTP", "user-registration"),
 			loading: __("Activating…", "user-registration"),
 		},
 		active: {
-			lead: justActivated
+			detail: justActivated
 				? __(
-						"SmartSMTP is ready. One step left: connect it to a mail service and it will deliver your email from here on.",
+						"One step left: connect it to a mail service and it handles delivery from here on.",
 						"user-registration"
 					)
 				: __(
-						"Our best recommendation is to finish setting up SmartSMTP — it is active but has no working connection yet, which is why nothing is being delivered.",
+						"It's active but never finished connecting, which is why nothing is going out.",
 						"user-registration"
 					),
 			action: __("Set up SmartSMTP", "user-registration"),
@@ -178,7 +179,10 @@ const SmartSmtpRecommendation = ({ status }: { status: SmartSmtpStatus }) => {
 	return (
 		<Box>
 			<Text fontSize="13px" color="gray.700" lineHeight="1.6">
-				{copy.lead}
+				<Text as="b" color="gray.800">
+					{__("SmartSMTP is the most reliable fix.", "user-registration")}
+				</Text>{" "}
+				{copy.detail}
 			</Text>
 			<Button
 				variant="link"
@@ -200,32 +204,6 @@ const SmartSmtpRecommendation = ({ status }: { status: SmartSmtpStatus }) => {
 /** Failing checks that actually have a remedy to offer. */
 const remediableChecks = (checks: HealthCheck[]) =>
 	checks.filter((check) => (check.status === "error" || check.status === "warning") && check.fix);
-
-/**
- * The remedies for every failing check.
- *
- * The mail delivery step states findings and stops there — "connect an SMTP
- * service", "send from a domain you own" are recommendations, and a scan alone
- * hasn't earned the right to make them. Once the live test has actually failed
- * it has, so they surface here, in the order the checks ran: the route mail
- * takes first, then who the site may send as, then the plugin's own settings.
- *
- * Borderless on purpose — it sits inside the result card rather than beside it.
- */
-const SuggestedFixes = ({ suggestions }: { suggestions: HealthCheck[] }) => (
-	<Box as="ol" pl="17px" m="0" mt="10px">
-		{suggestions.map((check) => (
-			<Box as="li" key={check.key} mb="9px" _last={{ mb: 0 }} color="gray.600">
-				<Text fontSize="12.5px" fontWeight="600" color="gray.700">
-					{check.title}
-				</Text>
-				<Text fontSize="12.5px" color="gray.600" mt="1px" lineHeight="1.55">
-					<RichText text={check.fix} />
-				</Text>
-			</Box>
-		))}
-	</Box>
-);
 
 /** A labelled paragraph, for a result that has more than one thing to say. */
 const Advice = ({ label, children }: { label: string; children: ReactNode }) => (
@@ -252,17 +230,6 @@ const SupportFootnote = ({ children }: { children: ReactNode }) => (
 	>
 		{children}
 	</Text>
-);
-
-/** Separates "fix these yourself" from "or let SmartSMTP handle it". */
-const OrDivider = () => (
-	<Flex align="center" gap="10px" my="16px">
-		<Box flex="1" h="1px" bg="gray.200" />
-		<Text fontSize="11px" fontWeight="700" letterSpacing="0.04em" color="gray.500" textTransform="uppercase">
-			{__("Or", "user-registration")}
-		</Text>
-		<Box flex="1" h="1px" bg="gray.200" />
-	</Flex>
 );
 
 type Tone = "green" | "orange" | "red";
@@ -409,23 +376,20 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 				tone="orange"
 				title={__("It arrived — but landed in spam", "user-registration")}
 				subtitle={__(
-					"Sending works: the message got through. It was the receiving mailbox that decided to file it as spam.",
+					"Your site sent it fine. The receiving mailbox is what put it in spam.",
 					"user-registration"
 				)}
 				onRunAgain={onRunAgain}
 				onOpenReport={onOpenReport}
 				body={
 					<>
-						<Advice label={__("Do this first", "user-registration")}>
-							{__(
-								'Open the email and mark it "Not spam". That teaches your own mailbox to trust you — though it won\'t change anything for the people registering on your site.',
-								"user-registration"
-							)}
-						</Advice>
-
+						{/* Kept as a labelled block rather than folded into the subtitle:
+						    the label is the reassurance — it separates "this one landed
+						    in spam" from "this happens every time", which are different
+						    problems and only the second is worth acting on. */}
 						<Advice label={__("If it keeps happening", "user-registration")}>
 							{__(
-								"One message in spam isn't proof of a problem. Filtering is the receiving provider's own judgement, and a domain that has only recently started sending email gets treated more harshly until it builds up a history.",
+								"One email in spam is normal. Domains that have only recently started sending get filtered more until they build up a history.",
 								"user-registration"
 							)}
 						</Advice>
@@ -462,7 +426,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 						)
 					: suggestions.length > 0
 						? __(
-								"Your site sent it without reporting an error, so it was lost or refused after it left.",
+								"Your site reported no error, so the message was dropped or rejected after it left.",
 								"user-registration"
 							)
 						: <RichText text={nonDeliveryExplanation(checks, smtpPlugin)} />
@@ -479,15 +443,16 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 						<SmartSmtpRecommendation status={smartSmtpStatus} />
 					</Box>
 
+					{/* The "Or" is a word in this toggle rather than a ruled divider and
+					    a bordered panel. Those out-weighed the recommendation they were
+					    meant to defer to, and stacked three sets of lines into a screen
+					    that is otherwise borderless. */}
 					{suggestions.length > 0 && (
-						<>
-							<OrDivider />
-							{/* No "Or" here — the divider immediately above already said it. */}
-							<Text fontSize="12.5px" fontWeight="700" color="gray.700">
-								{__("Fix what the scan found:", "user-registration")}
-							</Text>
-							<SuggestedFixes suggestions={suggestions} />
-						</>
+						<IssueList
+							issues={suggestions}
+							variant="quiet"
+							label={__("Or fix what the scan found", "user-registration")}
+						/>
 					)}
 
 					{/* The generic "check the log" text the server returns says only what
@@ -499,22 +464,6 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 							<Text as="code" fontFamily="mono" fontSize="0.92em">
 								{sendError}
 							</Text>
-						</Text>
-					)}
-
-					{smtpPlugin && !smtpPlugin.is_smartsmtp && (
-						<Text fontSize="12px" color="gray.500" mt="10px" lineHeight="1.55">
-							{sprintf(
-								/* translators: %s: SMTP plugin name */
-								__(
-									"Already using %s? Its own send log usually names the exact rejection reason.",
-									"user-registration"
-								),
-								smtpPlugin.name
-							)}{" "}
-							<Link href="plugins.php" color="primary.600" fontWeight="600" textDecoration="underline">
-								{__("Installed Plugins", "user-registration")}
-							</Link>
 						</Text>
 					)}
 

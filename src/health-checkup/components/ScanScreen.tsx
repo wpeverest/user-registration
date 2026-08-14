@@ -19,6 +19,7 @@ import {
 	HealthCheck,
 	installSmartSmtp,
 } from "../api/healthCheckupApi";
+import { LEGACY_BUTTON_OPT_OUT } from "../utils/legacyButtonOptOut";
 import RichText from "./RichText";
 import Text from "./Text";
 
@@ -302,6 +303,7 @@ const CheckRow = ({
 						? {
 								as: "button",
 								type: "button",
+								className: LEGACY_BUTTON_OPT_OUT,
 								onClick: onToggle,
 								"aria-expanded": isOpen,
 								width: "100%",
@@ -470,7 +472,8 @@ const ScanScreen = ({
 					{onBack && (
 						<Button
 							variant="link"
-							colorScheme="primary"
+							color="gray.600"
+							_hover={{ color: "gray.800", textDecoration: "none" }}
 							fontSize="13.5px"
 							fontWeight="600"
 							onClick={onBack}
