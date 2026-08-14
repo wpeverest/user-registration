@@ -177,7 +177,11 @@ class UR_Admin_Email_Checkup {
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
 			<title><?php esc_html_e( 'Email Delivery Checkup', 'user-registration' ); ?></title>
 			<?php
-			wp_print_styles();
+			// Named handles, not a bare call: `wp_print_styles()` with no argument
+			// fires the `wp_print_styles` action, and core still hooks the
+			// deprecated print_emoji_styles() to it. With WP_DEBUG_DISPLAY on that
+			// prints a deprecation notice into <body>, above the app.
+			wp_print_styles( array( 'ur-setup-wizard-style', 'ur-inter-font' ) );
 			wp_print_head_scripts();
 			?>
 		</head>

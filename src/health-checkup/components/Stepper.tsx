@@ -95,7 +95,7 @@ const Stepper = ({ step }: { step: WizardStep }) => {
 									size={circleSize}
 									flexShrink={0}
 									bg={isCompleted ? ACTIVE_COLOR : "white"}
-									borderWidth="2px"
+									borderWidth="1px"
 									borderColor={ringColor}
 									color={isCompleted ? "white" : ringColor}
 									transition="background 300ms ease, border-color 300ms ease"

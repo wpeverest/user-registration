@@ -375,7 +375,7 @@ const App = () => {
 				</Flex>
 
 				<Box pt={HEADER_HEIGHT}>
-					<Flex justify="center" align="flex-start" px={{ base: 3, md: 4 }} py={{ base: 4, md: 6 }}>
+					<Flex justify="center" align="flex-start" px={{ base: 3, md: 4 }} py={{ base: 6, md: 10 }}>
 						<Box
 							ref={rootRef}
 							w="100%"
