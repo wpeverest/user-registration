@@ -201,9 +201,18 @@ const SmartSmtpRecommendation = ({ status }: { status: SmartSmtpStatus }) => {
 	);
 };
 
-/** Failing checks that actually have a remedy to offer. */
+/**
+ * Failing checks that actually have a remedy to offer — either a sentence
+ * describing one, or a link straight to the screen that owns it.
+ *
+ * The settings checks carry only the link: their message already says what is
+ * wrong, so a remedy sentence would restate it. Filtering on `fix` alone would
+ * drop them from this list entirely.
+ */
 const remediableChecks = (checks: HealthCheck[]) =>
-	checks.filter((check) => (check.status === "error" || check.status === "warning") && check.fix);
+	checks.filter(
+		(check) => (check.status === "error" || check.status === "warning") && (check.fix || check.action)
+	);
 
 /** A labelled paragraph, for a result that has more than one thing to say. */
 const Advice = ({ label, children }: { label: string; children: ReactNode }) => (

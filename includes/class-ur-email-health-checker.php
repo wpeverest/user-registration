@@ -71,10 +71,17 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			$settings = array(
 				self::check_sending_enabled(),
 				self::check_admin_email_set(),
-				self::check_user_registration_email_enabled( $sending_disabled ),
-				self::check_admin_notification_enabled( $sending_disabled ),
-				self::check_admin_email_pending_change(),
 			);
+
+			// "Disable Emails" already says nothing goes out. Reporting each
+			// individual email as blocked underneath it restates the same finding
+			// once per email, and none of those rows has a fix of its own.
+			if ( ! $sending_disabled ) {
+				$settings[] = self::check_user_registration_email_enabled();
+				$settings[] = self::check_admin_notification_enabled();
+			}
+
+			$settings[] = self::check_admin_email_pending_change();
 
 			// SPF and DMARC are reported to support rather than shown as findings:
 			// they describe DNS the admin often can't change from here, and on an
@@ -1510,6 +1517,33 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			return (bool) ur_option_checked( 'user_registration_email_setting_disable_email' );
 		}
 
+		/**
+		 * A link out to the screen that owns a setting, so a finding can be acted
+		 * on without hunting for it. Opened in a new tab by the UI, and the wizard
+		 * re-scans when the admin comes back, so the row settles green on return.
+		 *
+		 * @param string $label Link text.
+		 * @param string $url   Destination.
+		 * @return array
+		 */
+		private static function settings_action( $label, $url ) {
+			return array(
+				'type'  => 'link',
+				'label' => $label,
+				'url'   => $url,
+			);
+		}
+
+		/**
+		 * A section of the plugin's own email settings.
+		 *
+		 * @param string $section Section slug, e.g. 'general'.
+		 * @return string
+		 */
+		private static function email_settings_url( $section ) {
+			return admin_url( 'admin.php?page=user-registration-settings&tab=email&section=' . $section );
+		}
+
 		private static function check_sending_enabled() {
 			$disabled = self::is_sending_disabled();
 
@@ -1522,7 +1556,17 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				'message' => $disabled
 					? __( '"Disable Emails" is on. No registration emails will be sent.', 'user-registration' )
 					: __( '"Disable Emails" is off. Emails will fire after registration.', 'user-registration' ),
-				'fix'     => $disabled ? __( 'Turn it off under **Emails → General**.', 'user-registration' ) : '',
+				// No remedy sentence: the message says what is wrong and the link
+				// below goes straight to the switch that fixes it. Spelling out
+				// "turn it off under Emails → General" between the two just says the
+				// same thing a third time.
+				'fix'     => '',
+				'action'  => $disabled
+					? self::settings_action(
+						__( 'Open Emails → General', 'user-registration' ),
+						self::email_settings_url( 'general' )
+					)
+					: null,
 			);
 		}
 
@@ -1543,39 +1587,18 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						$admin_email
 					)
 					: __( 'No valid admin email address is configured.', 'user-registration' ),
-				'fix'     => $is_valid ? '' : __( 'Set a valid address under **Settings → General**.', 'user-registration' ),
-			);
-		}
-
-		/**
-		 * Result for a per-email setting that is on but can't send because
-		 * "Disable Emails" is. Neither a pass (nothing goes out) nor an issue
-		 * (the setting itself is correct) — the one real fix lives on the
-		 * "sending_enabled" check.
-		 *
-		 * @param string $key   Check key.
-		 * @param string $title Title describing what won't be sent.
-		 * @return array
-		 */
-		private static function blocked_by_disable_emails( $key, $title ) {
-			return array(
-				'key'     => $key,
-				'title'   => $title,
-				'status'  => 'blocked',
-				'message' => __( 'The setting is on, but "Disable Emails" overrides it and stops the plugin sending this.', 'user-registration' ),
 				'fix'     => '',
+				'action'  => $is_valid
+					? null
+					: self::settings_action(
+						__( 'Open Settings → General', 'user-registration' ),
+						admin_url( 'options-general.php' )
+					),
 			);
 		}
 
-		private static function check_user_registration_email_enabled( $sending_disabled = false ) {
+		private static function check_user_registration_email_enabled() {
 			$enabled = ur_option_checked( 'user_registration_enable_successfully_registered_email', true );
-
-			if ( $enabled && $sending_disabled ) {
-				return self::blocked_by_disable_emails(
-					'user_registration_email_enabled',
-					__( 'User registration email will not be sent', 'user-registration' )
-				);
-			}
 
 			return array(
 				'key'     => 'user_registration_email_enabled',
@@ -1586,19 +1609,18 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				'message' => $enabled
 					? __( 'Users will receive an email when they register.', 'user-registration' )
 					: __( 'Users will not receive a confirmation email when they register.', 'user-registration' ),
-				'fix'     => $enabled ? '' : __( 'Enable it under **Emails → To User**.', 'user-registration' ),
+				'fix'     => '',
+				'action'  => $enabled
+					? null
+					: self::settings_action(
+						__( 'Open Emails → To User', 'user-registration' ),
+						self::email_settings_url( 'to-user' )
+					),
 			);
 		}
 
-		private static function check_admin_notification_enabled( $sending_disabled = false ) {
+		private static function check_admin_notification_enabled() {
 			$enabled = ur_option_checked( 'user_registration_enable_admin_email', true );
-
-			if ( $enabled && $sending_disabled ) {
-				return self::blocked_by_disable_emails(
-					'admin_notification_enabled',
-					__( 'Admin notification email will not be sent', 'user-registration' )
-				);
-			}
 
 			return array(
 				'key'     => 'admin_notification_enabled',
@@ -1609,7 +1631,13 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				'message' => $enabled
 					? __( 'You will be notified of new registrations.', 'user-registration' )
 					: __( 'You won\'t be notified of new registrations.', 'user-registration' ),
-				'fix'     => $enabled ? '' : __( 'Enable it in the **Emails → To Admin** tab.', 'user-registration' ),
+				'fix'     => '',
+				'action'  => $enabled
+					? null
+					: self::settings_action(
+						__( 'Open Emails → To Admin', 'user-registration' ),
+						self::email_settings_url( 'to-admin' )
+					),
 			);
 		}
 
@@ -1634,7 +1662,13 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						__( 'Notifications keep going to `%s`.', 'user-registration' ),
 						get_option( 'admin_email' )
 					),
-				'fix'     => $has_pending ? __( 'Check the old inbox for the confirmation link, or cancel the change under **Settings → General**.', 'user-registration' ) : '',
+				'fix'     => $has_pending ? __( 'Check the old inbox for the confirmation link, or cancel the change.', 'user-registration' ) : '',
+				'action'  => $has_pending
+					? self::settings_action(
+						__( 'Open Settings → General', 'user-registration' ),
+						admin_url( 'options-general.php' )
+					)
+					: null,
 			);
 		}
 

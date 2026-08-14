@@ -100,10 +100,11 @@ const RESULT_VARIANTS: Record<DeliveryOutcome, ResultVariant> = {
 // render would just re-parse the same JSON.
 const restored = loadState();
 
-// A refresh part-way through the scan restores the step but has no result to
-// restore with it, so the scan has to be kicked again — otherwise that step
-// renders with no rows and no way to ask for them.
-const needsInitialScan = !!restored && SCAN_STEPS.includes(restored.step) && !restored.scan;
+// Landing on a scan step always re-scans, even when a result was restored with
+// it. A scan is a snapshot of settings that live on other screens: go and change
+// "Disable Emails", come back, and a restored result would still show the state
+// from before the change — green over a setting the admin just turned off.
+const needsInitialScan = !!restored && SCAN_STEPS.includes(restored.step);
 
 const App = () => {
 	const [step, setStep] = useState<WizardStep>(restored?.step ?? "intro");
@@ -155,6 +156,29 @@ const App = () => {
 			cancelled = true;
 		};
 	}, [scanToken]);
+
+	// The fix links on each finding open their settings screen in a new tab, so
+	// the admin changes something and switches back here rather than reloading.
+	// Nothing about that is a page load, so re-read the checks on the way back in
+	// — otherwise the row they just fixed keeps reporting the old verdict.
+	//
+	// Rows already on screen stay put while this runs, so the refresh reads as a
+	// row settling to green rather than the screen reloading under them.
+	useEffect(() => {
+		if (!SCAN_STEPS.includes(step)) {
+			return;
+		}
+
+		const refreshWhenVisible = () => {
+			if ("visible" === document.visibilityState) {
+				setScanToken((token) => token + 1);
+			}
+		};
+
+		document.addEventListener("visibilitychange", refreshWhenVisible);
+
+		return () => document.removeEventListener("visibilitychange", refreshWhenVisible);
+	}, [step]);
 
 	// Survive a page refresh: without this the admin lands back on the intro and
 	// loses a completed run.
