@@ -1,4 +1,5 @@
-import { Box, Button, Collapse, Flex, useDisclosure, useToast } from "@chakra-ui/react";
+import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { Box, Button, Collapse, Flex, Link, useDisclosure, useToast } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import { ReactNode, useState } from "react";
 import {
@@ -6,7 +7,6 @@ import {
 	FiAlertTriangle,
 	FiCheck,
 	FiChevronDown,
-	FiChevronLeft,
 	FiExternalLink,
 	FiHelpCircle,
 	FiSlash,
@@ -19,8 +19,10 @@ import {
 	HealthCheck,
 	installSmartSmtp,
 } from "../api/healthCheckupApi";
+import { COLOR, TYPE } from "../tokens";
 import { LEGACY_BUTTON_OPT_OUT } from "../utils/legacyButtonOptOut";
 import RichText from "./RichText";
+import StepHeader from "./StepHeader";
 import Text from "./Text";
 
 /**
@@ -77,20 +79,21 @@ const CheckActionLink = ({ action, onResolved }: { action: CheckAction; onResolv
 
 	if (action.type === "link") {
 		return (
-			<Button
-				as="a"
+			<Link
 				href={action.url}
-				target="_blank"
-				rel="noreferrer noopener"
-				variant="link"
-				colorScheme="primary"
-				fontSize="12.5px"
-				fontWeight="700"
-				mt="6px"
-				rightIcon={<FiExternalLink size={12} />}
+				isExternal
+				display="inline-flex"
+				alignItems="center"
+				gap="5px"
+				mt="8px"
+				fontSize={TYPE.body}
+				fontWeight="500"
+				color={COLOR.link}
+				_hover={{ textDecoration: "underline" }}
 			>
 				{action.label}
-			</Button>
+				<FiExternalLink size={13} />
+			</Link>
 		);
 	}
 
@@ -122,9 +125,9 @@ const CheckActionLink = ({ action, onResolved }: { action: CheckAction; onResolv
 		<Button
 			variant="link"
 			colorScheme="primary"
-			fontSize="12.5px"
-			fontWeight="700"
-			mt="6px"
+			fontSize={TYPE.body}
+			fontWeight="500"
+			mt="8px"
 			onClick={handleClick}
 			isLoading={isWorking}
 			loadingText={
@@ -242,7 +245,7 @@ const CheckRow = ({
 
 	const badge = (
 		<Text
-			fontSize="10.5px"
+			fontSize={TYPE.badge}
 			fontWeight="700"
 			letterSpacing="0.03em"
 			textTransform="uppercase"
@@ -262,7 +265,7 @@ const CheckRow = ({
 	const fixAndAction = (
 		<>
 			{showFix && check.fix && (
-				<Text fontSize="12.5px" color={style.titleColor} mt="6px" lineHeight="1.55">
+				<Text fontSize={TYPE.body} color={style.titleColor} mt="7px" lineHeight="1.6">
 					<RichText text={check.fix} />
 				</Text>
 			)}
@@ -312,7 +315,7 @@ const CheckRow = ({
 							}
 						: {})}
 				>
-					<Text fontSize="13.5px" fontWeight="600" color={style.titleColor}>
+					<Text fontSize={TYPE.body} fontWeight="600" color={style.titleColor}>
 						{check.title}
 					</Text>
 					<Flex align="center" gap="7px" flexShrink={0}>
@@ -330,13 +333,13 @@ const CheckRow = ({
 					</Flex>
 				</Flex>
 
-				<Text fontSize="12.5px" color={style.messageColor} mt="3px" lineHeight="1.55">
+				<Text fontSize={TYPE.body} color={style.messageColor} mt="4px" lineHeight="1.6">
 					<RichText text={isCollapsible ? lead : check.message} />
 				</Text>
 
 				{isCollapsible ? (
 					<Collapse in={isOpen} animateOpacity>
-						<Text fontSize="12.5px" color={style.messageColor} mt="6px" lineHeight="1.55">
+						<Text fontSize={TYPE.body} color={style.messageColor} mt="7px" lineHeight="1.6">
 							<RichText text={rest} />
 						</Text>
 						{fixAndAction}
@@ -350,8 +353,6 @@ const CheckRow = ({
 };
 
 export interface ScanScreenProps {
-	/** e.g. "Step 2 · Plugin settings". */
-	stepLabel: string;
 	loadingHeading: string;
 	heading: string;
 	loadingBlurb: string;
@@ -367,7 +368,6 @@ export interface ScanScreenProps {
 	showFixes?: boolean;
 	isLoading: boolean;
 	error: string;
-	nextLabel: string;
 	onNext: () => void;
 	onBack?: () => void;
 	/**
@@ -391,7 +391,6 @@ export interface ScanScreenProps {
  * support report, where a hedge is useful rather than alarming.
  */
 const ScanScreen = ({
-	stepLabel,
 	loadingHeading,
 	heading,
 	loadingBlurb,
@@ -399,31 +398,18 @@ const ScanScreen = ({
 	showFixes = true,
 	isLoading,
 	error,
-	nextLabel,
 	onNext,
 	onBack,
 	onOpenReport,
 	onResolved,
 }: ScanScreenProps) => (
 	<Box>
-		<Text
-			fontSize="11.5px"
-			fontWeight="700"
-			letterSpacing="0.06em"
-			textTransform="uppercase"
-			color="primary.500"
-			mb="9px"
-		>
-			{stepLabel}
-		</Text>
-		<Text as="h2" fontSize="21px" fontWeight="600" mb="10px" letterSpacing="-0.01em" color="gray.800">
-			{isLoading ? loadingHeading : heading}
-		</Text>
-		<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px">
-			{/* The section's own description is written server-side and already says
-			    what this group covers, so the step doesn't restate it. */}
-			{isLoading ? loadingBlurb : (section?.description ?? "")}
-		</Text>
+		{/* The section's own description is written server-side and already says
+		    what this group covers, so the step doesn't restate it. */}
+		<StepHeader
+			title={isLoading ? loadingHeading : heading}
+			description={isLoading ? loadingBlurb : (section?.description ?? "")}
+		/>
 
 		{isLoading && (
 			<Box pb="26px">
@@ -470,30 +456,40 @@ const ScanScreen = ({
 					justify={onBack ? "space-between" : "flex-end"}
 				>
 					{onBack && (
-						<Button
-							variant="link"
-							color="gray.600"
-							_hover={{ color: "gray.800", textDecoration: "none" }}
-							fontSize="13.5px"
-							fontWeight="600"
+						<Link
+							display="flex"
+							alignItems="center"
+							fontSize="sm"
+							color={COLOR.body}
+							_hover={{ color: COLOR.title, textDecoration: "none" }}
+							cursor="pointer"
 							onClick={onBack}
-							// Chakra's leftIcon wrapper carries no aria-hidden, which leaves
-							// assistive tech computing the name from the icon as well as the
-							// label. Naming the button outright sidesteps that.
-							aria-label={__("Back", "user-registration")}
-							leftIcon={<FiChevronLeft size={14} />}
 						>
+							<ArrowBackIcon mr={1} />
 							{__("Back", "user-registration")}
-						</Button>
+						</Link>
 					)}
 					<Flex gap="10px" wrap="wrap" justify="flex-end">
 						{onOpenReport && (
 							<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={onOpenReport}>
-								{__("Send report to support", "user-registration")}
+								{__("Send report", "user-registration")}
 							</Button>
 						)}
-						<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={onNext}>
-							{nextLabel}
+						{/* The wizard's Next, values and all — including the arrow, which
+						    was missing here. */}
+						<Button
+							bg={COLOR.link}
+							color="white"
+							_hover={{ bg: "#38488e" }}
+							_active={{ bg: COLOR.link }}
+							rightIcon={<ArrowForwardIcon />}
+							fontSize={{ base: "sm", md: "md" }}
+							fontWeight="500"
+							px={{ base: 2, md: 4 }}
+							py={2}
+							onClick={onNext}
+						>
+							{__("Next", "user-registration")}
 						</Button>
 					</Flex>
 				</Flex>

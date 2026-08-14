@@ -2,19 +2,10 @@ import { Box, Collapse, Flex, useDisclosure } from "@chakra-ui/react";
 import { __, _n, sprintf } from "@wordpress/i18n";
 import { FiAlertCircle, FiChevronDown } from "react-icons/fi";
 import { HealthCheck } from "../api/healthCheckupApi";
+import { COLOR, TYPE } from "../tokens";
 import { LEGACY_BUTTON_OPT_OUT } from "../utils/legacyButtonOptOut";
 import RichText from "./RichText";
 import Text from "./Text";
-
-/**
- * "card"  — a bordered panel. For a result whose findings are the only thing
- *           left to look at, so the panel is the content.
- * "quiet" — a bare line of muted text with a chevron. For the failed screen,
- *           where this is the *alternative* to the recommendation above it and
- *           has to read as the lesser option. A bordered panel there outweighed
- *           the plain-prose recommendation it was supposed to defer to.
- */
-type IssueListVariant = "card" | "quiet";
 
 /**
  * A collapsed list of findings, each with its remedy.
@@ -27,13 +18,19 @@ type IssueListVariant = "card" | "quiet";
 const IssueList = ({
 	issues,
 	label,
-	variant = "card",
+	defaultOpen = true,
 }: {
 	issues: HealthCheck[];
 	label?: string;
-	variant?: IssueListVariant;
+	/**
+	 * Open unless told otherwise. Where the message did arrive these findings are
+	 * the only thing left to read, so hiding them would be hiding the point. The
+	 * failed screen closes them instead: it leads with a recommendation, and a
+	 * list of alternatives unfurled beneath it competes with that.
+	 */
+	defaultOpen?: boolean;
 }) => {
-	const { isOpen, onToggle } = useDisclosure();
+	const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: defaultOpen });
 
 	if (issues.length === 0) {
 		return null;
@@ -60,16 +57,16 @@ const IssueList = ({
 			transform={isOpen ? "rotate(180deg)" : undefined}
 			transition="transform 180ms ease"
 		>
-			<FiChevronDown size={variant === "quiet" ? 15 : 16} />
+			<FiChevronDown size={16} />
 		</Box>
 	);
 
 	const itemContent = (issue: HealthCheck) => (
 		<>
-			<Text fontSize="12.5px" fontWeight="600" color="gray.700">
+			<Text fontSize={TYPE.body} fontWeight="600" color={COLOR.title}>
 				{issue.title}
 			</Text>
-			<Text fontSize="12.5px" color="gray.600" mt="2px" lineHeight="1.55">
+			<Text fontSize={TYPE.body} color={COLOR.body} mt="3px" lineHeight="1.6">
 				<RichText text={issue.fix || issue.message} />
 			</Text>
 		</>
@@ -80,43 +77,6 @@ const IssueList = ({
 			{itemContent(issue)}
 		</Box>
 	));
-
-	if (variant === "quiet") {
-		return (
-			<Box mt="16px">
-				<Flex
-					as="button"
-					type="button"
-					className={LEGACY_BUTTON_OPT_OUT}
-					onClick={onToggle}
-					align="center"
-					gap="6px"
-					textAlign="left"
-					cursor="pointer"
-					aria-expanded={isOpen}
-					_hover={{ "& > *": { color: "gray.700" } }}
-				>
-					<Text fontSize="12px" fontWeight="400" color="gray.500">
-						{heading}
-					</Text>
-					{chevron}
-				</Flex>
-
-				<Collapse in={isOpen} animateOpacity>
-					{/* Bulleted here, unlike the card variant: these are the several
-					    separate things standing between the admin and a delivered
-					    email, and a marker each stops them reading as one paragraph. */}
-					<Box as="ul" listStyleType="disc" pl="17px" m="0" mt="11px">
-						{issues.map((issue, index) => (
-							<Box as="li" key={issue.key} mt={index === 0 ? 0 : "10px"} color="gray.400">
-								{itemContent(issue)}
-							</Box>
-						))}
-					</Box>
-				</Collapse>
-			</Box>
-		);
-	}
 
 	return (
 		<Box border="1px solid" borderColor="gray.200" bg="white" borderRadius="9px" mt="16px" overflow="hidden">
@@ -148,13 +108,10 @@ const IssueList = ({
 					<FiAlertCircle size={14} />
 				</Flex>
 
-				<Text flex="1" fontSize="13px" fontWeight="600" color="gray.800">
+				<Text flex="1" fontSize={TYPE.body} fontWeight="600" color={COLOR.title}>
 					{heading}
 				</Text>
 
-				<Text fontSize="12px" fontWeight="600" color="gray.500" flexShrink={0}>
-					{isOpen ? __("Hide", "user-registration") : __("Show", "user-registration")}
-				</Text>
 				{chevron}
 			</Flex>
 

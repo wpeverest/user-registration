@@ -3,7 +3,9 @@ import { __ } from "@wordpress/i18n";
 import { useEffect, useRef, useState } from "react";
 import { FiAlertTriangle, FiCheck, FiChevronRight, FiX } from "react-icons/fi";
 import { DeliveryOutcome, sendTestEmail } from "../../api/healthCheckupApi";
+import { COLOR, TYPE } from "../../tokens";
 import { LEGACY_BUTTON_OPT_OUT } from "../../utils/legacyButtonOptOut";
+import StepHeader from "../StepHeader";
 import Text from "../Text";
 
 interface Choice {
@@ -53,7 +55,7 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent, onSendFailed }: TestD
 	const choices: Choice[] = [
 		{
 			outcome: "arrived",
-			title: __("Yes — it's in my inbox", "user-registration"),
+			title: __("Yes, it's in my inbox", "user-registration"),
 			desc: __("It landed where it should", "user-registration"),
 			icon: <FiCheck size={15} />,
 			iconBg: "green.50",
@@ -69,7 +71,7 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent, onSendFailed }: TestD
 		},
 		{
 			outcome: "none",
-			title: __("No — nothing at all", "user-registration"),
+			title: __("No, nothing at all", "user-registration"),
 			desc: __("Not in the inbox, not in spam", "user-registration"),
 			icon: <FiX size={15} />,
 			iconBg: "red.50",
@@ -87,34 +89,26 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent, onSendFailed }: TestD
 
 	return (
 		<Box>
-			<Text
-				fontSize="11.5px"
-				fontWeight="700"
-				letterSpacing="0.06em"
-				textTransform="uppercase"
-				color="primary.500"
-				mb="9px"
-			>
-				{__("Step 4 · The real test", "user-registration")}
-			</Text>
-			<Text as="h2" fontSize="21px" fontWeight="600" mb="10px" letterSpacing="-0.01em" color="gray.800">
-				{isSending
-					? __("Sending your test email…", "user-registration")
-					: __("Did the test email actually arrive?", "user-registration")}
-			</Text>
-			<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb={isSending ? "22px" : "10px"}>
-				{isSending ? (
-					__("Hang tight — this only takes a second.", "user-registration")
-				) : (
-					<>
-						{__("We just sent a test email to", "user-registration")}{" "}
-						<Text as="b" color="inherit">
-							{adminEmail}
-						</Text>
-						. {__("Check that inbox now — and check spam too.", "user-registration")}
-					</>
-				)}
-			</Text>
+			<StepHeader
+				title={
+					isSending
+						? __("Sending your test email…", "user-registration")
+						: __("Did the test email actually arrive?", "user-registration")
+				}
+				description={
+					isSending ? (
+						__("Hang tight, this only takes a second.", "user-registration")
+					) : (
+						<>
+							{__("We just sent a test email to", "user-registration")}{" "}
+							<Text as="b" color="inherit">
+								{adminEmail}
+							</Text>
+							. {__("Check that inbox now, and check spam too.", "user-registration")}
+						</>
+					)
+				}
+			/>
 
 			{isSending && (
 				<Box pb="26px">
@@ -132,12 +126,12 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent, onSendFailed }: TestD
 
 			{!isSending && (
 				<>
-					<Text fontSize="13.5px" lineHeight="1.6" color="gray.500" mb="22px">
+					<Text fontSize={TYPE.body} lineHeight="1.62" color={COLOR.muted} mb="22px">
 						{__(
 							'A "sent successfully" message only means the site tried. What matters is whether it actually',
 							"user-registration"
 						)}{" "}
-						<Text as="b" color="gray.600">
+						<Text as="b" color={COLOR.body}>
 							{__("landed", "user-registration")}
 						</Text>
 						.
@@ -181,10 +175,10 @@ const TestDeliveryStep = ({ onChoice, alreadySent, onSent, onSendFailed }: TestD
 									{pendingChoice === choice.outcome ? <Spinner size="sm" /> : choice.icon}
 								</Flex>
 								<Box flex="1" minW="0">
-									<Text fontSize="13.5px" fontWeight="600" display="block">
+									<Text fontSize={TYPE.body} fontWeight="600" color={COLOR.title} display="block">
 										{choice.title}
 									</Text>
-									<Text fontSize="12px" color="gray.500" mt="1px">
+									<Text fontSize={TYPE.small} color={COLOR.muted} mt="2px">
 										{choice.desc}
 									</Text>
 								</Box>

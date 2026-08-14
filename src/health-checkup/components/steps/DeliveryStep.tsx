@@ -27,7 +27,6 @@ const DeliveryStep = ({
 	onResolved,
 }: DeliveryStepProps) => (
 	<ScanScreen
-		stepLabel={__("Step 3 · Mail delivery", "user-registration")}
 		loadingHeading={__("Checking how your mail is sent…", "user-registration")}
 		heading={__("How your mail leaves this site", "user-registration")}
 		loadingBlurb={__(
@@ -40,7 +39,6 @@ const DeliveryStep = ({
 		showFixes={false}
 		isLoading={isLoading}
 		error={error}
-		nextLabel={__("Next: test delivery", "user-registration")}
 		onNext={onNext}
 		onBack={onBack}
 		onOpenReport={onOpenReport}

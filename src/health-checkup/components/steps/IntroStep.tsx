@@ -1,31 +1,35 @@
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import Text from "../Text";
+import { COLOR } from "../../tokens";
+import StepHeader from "../StepHeader";
 
 const IntroStep = ({ onStart }: { onStart: () => void }) => (
 	<Box>
-		<Text
-			fontSize="11.5px"
-			fontWeight="700"
-			letterSpacing="0.06em"
-			textTransform="uppercase"
-			color="primary.500"
-			mb="9px"
-		>
-			{__("Step 1 · Start", "user-registration")}
-		</Text>
-		<Text as="h2" fontSize="21px" fontWeight="600" mb="10px" letterSpacing="-0.01em" color="gray.800">
-			{__("Quick email delivery checkup", "user-registration")}
-		</Text>
-		<Text fontSize="14px" lineHeight="1.62" color="gray.600" mb="22px">
-			{__(
-				"Takes about 2 minutes. We'll check your plugin settings, then how mail actually leaves this site, then send a real test email and ask whether it arrived — the one thing no automated check can confirm on its own.",
+		<StepHeader
+			title={__("Quick email delivery checkup", "user-registration")}
+			// Was three "then" clauses and a caveat about what automated checks
+			// can't confirm — true, but not what someone needs before they've
+			// started. This says what happens, in order, and how long it takes.
+			description={__(
+				"We'll check your settings, work out how mail leaves this site, then send a real test email and ask whether it arrived. Takes about two minutes.",
 				"user-registration"
 			)}
-		</Text>
+		/>
 		<Flex justify="flex-end">
-			<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={onStart}>
-				{__("Scan Email Settings", "user-registration")}
+			<Button
+				bg={COLOR.link}
+				color="white"
+				_hover={{ bg: "#38488e" }}
+				_active={{ bg: COLOR.link }}
+				rightIcon={<ArrowForwardIcon />}
+				fontSize={{ base: "sm", md: "md" }}
+				fontWeight="500"
+				px={{ base: 2, md: 4 }}
+				py={2}
+				onClick={onStart}
+			>
+				{__("Start the checkup", "user-registration")}
 			</Button>
 		</Flex>
 	</Box>

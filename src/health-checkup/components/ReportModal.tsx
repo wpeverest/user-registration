@@ -55,7 +55,7 @@ const ReportModal = ({ isOpen, onClose, report }: ReportModalProps) => {
 		toast({
 			title: copied
 				? __("Copied", "user-registration")
-				: __("Couldn't copy automatically — text is selected, press Ctrl/Cmd+C.", "user-registration"),
+				: __("Couldn't copy automatically. The text is selected, so press Ctrl/Cmd+C.", "user-registration"),
 			status: copied ? "success" : "warning",
 			duration: copied ? 1600 : 4000,
 			isClosable: true,
@@ -104,7 +104,7 @@ const ReportModal = ({ isOpen, onClose, report }: ReportModalProps) => {
 						</Box>
 						<Text fontSize="11.5px" lineHeight="1.5">
 							{__(
-								"No passwords or API keys are included — the scan never reads them.",
+								"No passwords or API keys are included, because the scan never reads them.",
 								"user-registration"
 							)}
 						</Text>

@@ -1,4 +1,6 @@
-import { Box, ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { Box, ChakraProvider, extendTheme, Flex, IconButton, Image, Tooltip } from "@chakra-ui/react";
+import { __ } from "@wordpress/i18n";
+import { FiX } from "react-icons/fi";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
 	confirmDelivery,
@@ -17,8 +19,10 @@ import ResultStep, { ResultVariant } from "./steps/ResultStep";
 import SettingsStep from "./steps/SettingsStep";
 import TestDeliveryStep from "./steps/TestDeliveryStep";
 
-// Match wp-admin's own font stack instead of loading a separate webfont.
-const SANS_STACK = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif";
+// Inter first, exactly as the setup wizard loads it, then the same fallbacks —
+// this screen is a takeover with no admin chrome around it, so it sets its own
+// type rather than inheriting wp-admin's.
+const SANS_STACK = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif";
 const MONO_STACK = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
 
 const theme = extendTheme({
@@ -55,14 +59,16 @@ const theme = extendTheme({
 		},
 		// $red — issue.
 		red: {
-			50: "#ffe8e9", // lighten($red, 30%)
+			50: "#fff4f4", // lighten($red, 38%) — row fills, deliberately faint
+			100: "#ffe8e9", // lighten($red, 30%)
 			200: "#ffb5b8", // lighten($red, 20%)
 			500: "#ff4f55", // $red
 			600: "#ff4f55", // _badge.scss uses the base tone for danger text.
 		},
 		// $orange — warning.
 		orange: {
-			50: "#fff8e6", // lighten($orange, 45%)
+			50: "#fffbf0", // lighten($orange, 48%) — row fills, deliberately faint
+			100: "#fff8e6", // lighten($orange, 45%)
 			200: "#ffeab3", // lighten($orange, 35%)
 			300: "#ffeab3",
 			500: "#ffba00", // $orange
@@ -89,6 +95,10 @@ const theme = extendTheme({
 		},
 	},
 });
+
+/** The setup wizard's page ground and bar height, so the two screens line up. */
+const PAGE_BG = "#F8F8FA";
+const HEADER_HEIGHT = "65px";
 
 const RESULT_VARIANTS: Record<DeliveryOutcome, ResultVariant> = {
 	arrived: "good",
@@ -203,14 +213,27 @@ const App = () => {
 
 	// Clear the previous run's data too, so a refresh part-way through the new
 	// run can't resurrect the old result.
-	const startNewRun = () => {
+	const clearRun = () => {
 		setTestEmailSent(false);
 		setScan(null);
 		setScanError("");
 		setDeliveryOutcome(null);
 		setSendError(null);
+	};
+
+	// From the start screen: begin the run and fetch the scan behind it.
+	const beginRun = () => {
+		clearRun();
 		setStep("settings");
 		setScanToken((token) => token + 1);
+	};
+
+	// From a result: back to step 1. Running again used to drop the admin straight
+	// into step 2, which left the stepper opening mid-run and no way back to the
+	// start screen except the browser's Back.
+	const restartRun = () => {
+		clearRun();
+		setStep("intro");
 	};
 
 	// Re-read the checks after an inline fix so the row reflects the new state.
@@ -261,7 +284,7 @@ const App = () => {
 	const renderStep = () => {
 		switch (step) {
 			case "intro":
-				return <IntroStep onStart={startNewRun} />;
+				return <IntroStep onStart={beginRun} />;
 			case "settings":
 				return (
 					<SettingsStep
@@ -306,7 +329,7 @@ const App = () => {
 					<ResultStep
 						variant={variant}
 						checks={scan?.checks ?? []}
-						onRunAgain={startNewRun}
+						onRunAgain={restartRun}
 						onOpenReport={openReport}
 						smartSmtpStatus={scan?.smartsmtp_status ?? "not_installed"}
 						smtpPlugin={scan?.smtp_plugin ?? null}
@@ -319,26 +342,87 @@ const App = () => {
 		}
 	};
 
+	// Full-page takeover, matching the setup wizard: fixed bar carrying the logo,
+	// the progress, and the way out; one centred card below it. The measurements
+	// here are the wizard's — 65px bar, 920px card, #F8F8FA ground — because the
+	// two screens are the same product and shouldn't look like two.
 	return (
 		<ChakraProvider theme={theme}>
-			{/* Left-aligned, not centred: the wizard has to sit on the same axis as
-			    the section heading and every other Emails settings card. */}
-			<Box ref={rootRef} maxW="780px" sx={{ overflowAnchor: "none" }}>
-				<Box fontSize="21px" fontWeight="600" letterSpacing="-0.01em" color="gray.800" px="2px" mb="26px">
-					Email Delivery Checkup
-				</Box>
-
-				<Stepper step={step} testFailed={!!sendError} />
-
-				<Box
+			{/* Font set here rather than left to the cascade: the wizard stylesheet
+			    also declares one on `body`, and which of the two wins depends on
+			    stylesheet order. Naming it on the root makes the screen's type its
+			    own decision. */}
+			<Box minH="100vh" bg={PAGE_BG} fontFamily="body" sx={{ overflowAnchor: "none" }}>
+				<Flex
+					position="fixed"
+					top={0}
+					left={0}
+					right={0}
+					zIndex={1000}
 					bg="white"
-					border="1px solid"
-					borderColor="gray.100"
-					borderRadius="8px"
-					boxShadow="0 10px 15px -3px rgba(0, 0, 0, 0.06)"
-					p="24px 32px 32px"
+					borderBottomWidth="1px"
+					borderColor="gray.200"
+					align="center"
+					justify="space-between"
+					gap="16px"
+					py={3}
+					px={{ base: 3, md: 4, lg: 6 }}
 				>
-					{renderStep()}
+					<Flex align="center" gap="10px" flexShrink={0}>
+						<Image src={window._UR_EMAIL_HEALTH_.logoUrl} alt="" h="30px" w="auto" />
+						<Box fontSize="15px" fontWeight="600" color="gray.800" display={{ base: "none", md: "block" }}>
+							{__("Email Delivery Checkup", "user-registration")}
+						</Box>
+					</Flex>
+
+					{/* Absolutely centred, 920px wide: the same axis and width as the
+					    card below, so each node sits over the content it describes.
+					    Pinned rather than flexed so the logo and close button can't
+					    shift it off centre. */}
+					<Flex
+						position={{ base: "relative", lg: "absolute" }}
+						left={{ base: "auto", lg: "50%" }}
+						transform={{ base: "none", lg: "translateX(-50%)" }}
+						align="center"
+						justify="center"
+						w="100%"
+						maxW="920px"
+						px={{ base: 3, md: 4 }}
+					>
+						<Stepper step={step} />
+					</Flex>
+
+					<Tooltip label={__("Close", "user-registration")} hasArrow placement="bottom">
+						<IconButton
+							as="a"
+							href={window._UR_EMAIL_HEALTH_.exitUrl}
+							aria-label={__("Close the checkup", "user-registration")}
+							icon={<FiX size={20} />}
+							variant="ghost"
+							color="#909090"
+							_hover={{ color: "gray.700", bg: "gray.100" }}
+							flexShrink={0}
+						/>
+					</Tooltip>
+				</Flex>
+
+				<Box pt={HEADER_HEIGHT}>
+					<Flex justify="center" align="flex-start" px={{ base: 3, md: 4 }} py={{ base: 4, md: 6 }}>
+						<Box
+							ref={rootRef}
+							w="100%"
+							maxW="920px"
+							bg="white"
+							borderWidth="1px"
+							borderColor="#F4F4F4"
+							borderRadius="8px"
+							px={{ base: 4, md: 8 }}
+							py={{ base: 5, md: 6 }}
+							boxShadow="0 10px 15px -3px rgba(0, 0, 0, 0.06)"
+						>
+							{renderStep()}
+						</Box>
+					</Flex>
 				</Box>
 			</Box>
 

@@ -58,7 +58,7 @@ export function buildReport(
 			: [{ key: "delivery", title: "All checks", description: "", checks }];
 
 	const lines: string[] = [
-		"USER REGISTRATION & MEMBERSHIP — EMAIL HEALTH REPORT",
+		"USER REGISTRATION & MEMBERSHIP: EMAIL HEALTH REPORT",
 		"Generated from Settings → Emails → Health Checkup",
 		rule,
 		"",
@@ -86,7 +86,7 @@ export function buildReport(
 			rule,
 			"SPF AND DMARC CHECK REPORT",
 			rule,
-			"For information — not counted in the issue total above.",
+			"For information only. Not counted in the issue total above.",
 			""
 		);
 

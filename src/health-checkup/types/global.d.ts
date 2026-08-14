@@ -11,5 +11,8 @@ interface Window {
 		pluginVersion: string;
 		smartSmtpUrl: string;
 		mailLogUrl: string;
+		/** Where the close button returns to. */
+		exitUrl: string;
+		logoUrl: string;
 	};
 }

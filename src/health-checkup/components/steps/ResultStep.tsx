@@ -4,7 +4,9 @@ import { ReactNode, useState } from "react";
 import { FiAlertTriangle, FiArrowRight, FiCheck, FiX } from "react-icons/fi";
 import { HealthCheck, installSmartSmtp, SmartSmtpStatus, SmtpPluginInfo } from "../../api/healthCheckupApi";
 import IssueList from "../IssueList";
+import { COLOR, TYPE } from "../../tokens";
 import RichText from "../RichText";
+import StepHeader from "../StepHeader";
 import Text from "../Text";
 
 export type ResultVariant = "good" | "none" | "spam";
@@ -32,6 +34,7 @@ const CAUSE_PRIORITY = [
 	"smtp_connection",
 	"from_address_valid",
 	"from_effective",
+	"from_effective_unknown",
 	"from_alignment",
 	"from_domain",
 ];
@@ -64,7 +67,7 @@ const nonDeliveryExplanation = (
 
 	if (smtpPlugin?.is_smartsmtp) {
 		return __(
-			"SmartSMTP is active and configured, but the test still didn't arrive — its primary connection may need reconnecting.",
+			"SmartSMTP is active and configured, but the test still didn't arrive. Its primary connection may need reconnecting.",
 			"user-registration"
 		);
 	}
@@ -73,7 +76,7 @@ const nonDeliveryExplanation = (
 		return sprintf(
 			/* translators: %s: SMTP plugin name, e.g. "FluentSMTP" */
 			__(
-				"Your site sends through `%s`, but the test didn't arrive — most likely that plugin's connection settings (host, port, or API key), or the receiving server rejecting the message.",
+				"Your site sends through `%s`, but the test didn't arrive. The likeliest causes are that plugin's connection settings (host, port, or API key), or the receiving server rejecting the message.",
 				"user-registration"
 			),
 			smtpPlugin.name
@@ -81,7 +84,7 @@ const nonDeliveryExplanation = (
 	}
 
 	return __(
-		"An SMTP connection is configured, but the test didn't arrive — check whichever service handles your outgoing mail for delivery errors.",
+		"An SMTP connection is configured, but the test didn't arrive. Check whichever service handles your outgoing mail for delivery errors.",
 		"user-registration"
 	);
 };
@@ -155,7 +158,7 @@ const SmartSmtpRecommendation = ({ status }: { status: SmartSmtpStatus }) => {
 		},
 		inactive: {
 			detail: __(
-				"It's already installed here — activate it and it takes over sending.",
+				"It's already installed here, so activate it and it takes over sending.",
 				"user-registration"
 			),
 			action: __("Activate SmartSMTP", "user-registration"),
@@ -178,18 +181,18 @@ const SmartSmtpRecommendation = ({ status }: { status: SmartSmtpStatus }) => {
 
 	return (
 		<Box>
-			<Text fontSize="13px" color="gray.700" lineHeight="1.6">
-				<Text as="b" color="gray.800">
-					{__("SmartSMTP is the most reliable fix.", "user-registration")}
-				</Text>{" "}
+			<Text fontSize={TYPE.subheading} fontWeight="600" color={COLOR.title} lineHeight="1.5">
+				{__("SmartSMTP is the most reliable fix", "user-registration")}
+			</Text>
+			<Text fontSize={TYPE.body} color={COLOR.body} lineHeight="1.62" mt="5px">
 				{copy.detail}
 			</Text>
 			<Button
 				variant="link"
 				colorScheme="primary"
-				fontSize="13px"
-				fontWeight="700"
-				mt="9px"
+				fontSize={TYPE.body}
+				fontWeight="500"
+				mt="10px"
 				onClick={handleClick}
 				isLoading={isWorking}
 				loadingText={copy.loading}
@@ -200,6 +203,25 @@ const SmartSmtpRecommendation = ({ status }: { status: SmartSmtpStatus }) => {
 		</Box>
 	);
 };
+
+/**
+ * Findings the live test has already answered.
+ *
+ * "The sender can't be confirmed from here" is a statement about the limits of
+ * the scan, not about the site — it means the mailer addresses messages
+ * somewhere we can't read. Once a test email has actually arrived, that
+ * uncertainty is settled, and listing it under a delivered result sends the
+ * admin to go and check a sender that demonstrably worked.
+ */
+const SUPERSEDED_BY_DELIVERY = ["from_effective_unknown"];
+
+/** Open findings worth showing once the message did arrive, inbox or spam. */
+const issuesWorthShowingAfterDelivery = (checks: HealthCheck[]) =>
+	checks.filter(
+		(check) =>
+			(check.status === "error" || check.status === "warning") &&
+			!SUPERSEDED_BY_DELIVERY.includes(check.key)
+	);
 
 /**
  * Failing checks that actually have a remedy to offer — either a sentence
@@ -217,10 +239,10 @@ const remediableChecks = (checks: HealthCheck[]) =>
 /** A labelled paragraph, for a result that has more than one thing to say. */
 const Advice = ({ label, children }: { label: string; children: ReactNode }) => (
 	<Box mt="15px">
-		<Text fontSize="12.5px" fontWeight="700" color="gray.700">
+		<Text fontSize={TYPE.body} fontWeight="600" color={COLOR.title}>
 			{label}
 		</Text>
-		<Text fontSize="12.5px" color="gray.600" mt="3px" lineHeight="1.6">
+		<Text fontSize={TYPE.body} color={COLOR.body} mt="4px" lineHeight="1.62">
 			{children}
 		</Text>
 	</Box>
@@ -229,8 +251,8 @@ const Advice = ({ label, children }: { label: string; children: ReactNode }) => 
 /** The last resort, set apart from the advice above it. */
 const SupportFootnote = ({ children }: { children: ReactNode }) => (
 	<Text
-		fontSize="12.5px"
-		color="gray.500"
+		fontSize={TYPE.small}
+		color={COLOR.muted}
 		mt="18px"
 		pt="15px"
 		borderTop="1px solid"
@@ -277,65 +299,66 @@ const ResultFrame = ({
 	onOpenReport: () => void;
 }) => (
 	<Box>
-		<Text
-			fontSize="11.5px"
-			fontWeight="700"
-			letterSpacing="0.06em"
-			textTransform="uppercase"
-			color="primary.500"
-			mb="14px"
-		>
-			{__("Step 5 · Result", "user-registration")}
-		</Text>
-
 		{/* No panel of its own. This already sits inside the wizard's card, so a
 		    second border around the same content just drew a box inside a box —
 		    and a tinted one turned a whole screen of remedy into an alarm. The
-		    outcome is carried by the icon and the headline instead.
-
-		    The icon pairs with the title on one row rather than owning a column:
-		    as a column it left a 32px disc atop a gutter as tall as the screen. */}
-		<Flex align="center" gap="12px">
-			{/* Tinted disc rather than filled — white on any of these three hues is
-			    too low-contrast to be safe, and the soft circle reads as a status
-			    marker instead of a button. */}
-			<Flex
-				flexShrink={0}
-				w="32px"
-				h="32px"
-				borderRadius="full"
-				bg={`${tone}.50`}
-				align="center"
-				justify="center"
-				color={TONE_ICON_COLOR[tone]}
-			>
-				{TONE_ICON[tone]}
-			</Flex>
-			<Text as="h2" fontSize="16.5px" fontWeight="700" letterSpacing="-0.01em" color="gray.800">
-				{title}
-			</Text>
-		</Flex>
-		<Text fontSize="13px" color="gray.600" mt="12px" lineHeight="1.6">
-			{subtitle}
-		</Text>
+		    outcome is carried by the icon and the headline instead. */}
+		<StepHeader
+			title={title}
+			description={subtitle}
+			icon={
+				/* Tinted disc rather than filled — white on any of these three hues
+				   is too low-contrast to be safe, and the soft circle reads as a
+				   status marker instead of a button. */
+				<Flex
+					flexShrink={0}
+					w="32px"
+					h="32px"
+					borderRadius="full"
+					bg={`${tone}.50`}
+					align="center"
+					justify="center"
+					color={TONE_ICON_COLOR[tone]}
+				>
+					{TONE_ICON[tone]}
+				</Flex>
+			}
+		/>
 		{bannerFooter}
 		{body}
 
+		{/* The run ends here, so it needs a way to say so. Until now the only exit
+		    was the × in the corner, which reads as "abandon" rather than "done" —
+		    and left the two secondary actions carrying the whole footer with
+		    sentence-length labels. Finish takes the primary slot; the other two are
+		    trimmed to fit beside it. */}
 		<Flex gap="10px" mt="24px" wrap="wrap" justify="flex-end">
-			<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={onOpenReport}>
-				{__("Send report to support", "user-registration")}
+			<Button variant="outline" fontSize="sm" fontWeight="500" onClick={onOpenReport}>
+				{__("Send report", "user-registration")}
 			</Button>
-			<Button colorScheme="primary" fontSize="13.5px" fontWeight="600" onClick={onRunAgain}>
-				{__("Run the checkup again", "user-registration")}
+			<Button variant="outline" fontSize="sm" fontWeight="500" onClick={onRunAgain}>
+				{__("Run again", "user-registration")}
+			</Button>
+			<Button
+				as="a"
+				href={window._UR_EMAIL_HEALTH_.exitUrl}
+				bg={COLOR.link}
+				color="white"
+				_hover={{ bg: "#38488e" }}
+				_active={{ bg: COLOR.link }}
+				fontSize={{ base: "sm", md: "md" }}
+				fontWeight="500"
+				px={{ base: 2, md: 4 }}
+				py={2}
+			>
+				{__("Finish", "user-registration")}
 			</Button>
 		</Flex>
 	</Box>
 );
 
 const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus, smtpPlugin, sendError }: ResultStepProps) => {
-	const openIssues = checks.filter(
-		(check) => check.status === "error" || check.status === "warning"
-	);
+	const openIssues = issuesWorthShowingAfterDelivery(checks);
 
 	if (variant === "good") {
 		return (
@@ -348,7 +371,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 				subtitle={
 					openIssues.length > 0
 						? __(
-								"Delivery works from this site — the message reached the inbox. Nothing below stopped it arriving, but a few settings are still worth a look.",
+								"Delivery works from this site and the message reached the inbox. Nothing below stopped it arriving, but a few settings are still worth a look.",
 								"user-registration"
 							)
 						: __(
@@ -383,7 +406,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 		return (
 			<ResultFrame
 				tone="orange"
-				title={__("It arrived — but landed in spam", "user-registration")}
+				title={__("It arrived, but landed in spam", "user-registration")}
 				subtitle={__(
 					"Your site sent it fine. The receiving mailbox is what put it in spam.",
 					"user-registration"
@@ -430,7 +453,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 			subtitle={
 				sendError
 					? __(
-							"Your site couldn't send it at all — the attempt failed before the message left the server.",
+							"Your site couldn't send it at all. The attempt failed before the message left the server.",
 							"user-registration"
 						)
 					: suggestions.length > 0
@@ -459,8 +482,8 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 					{suggestions.length > 0 && (
 						<IssueList
 							issues={suggestions}
-							variant="quiet"
 							label={__("Or fix what the scan found", "user-registration")}
+							defaultOpen={false}
 						/>
 					)}
 
@@ -468,7 +491,7 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 					    this link already says, so it is dropped — but a mailer that
 					    reports a real error is worth quoting verbatim. */}
 					{sendError && !sendError.includes("ur_mail_logs") && (
-						<Text fontSize="12.5px" color="gray.600" mt="10px" lineHeight="1.55">
+						<Text fontSize={TYPE.body} color={COLOR.body} mt="10px" lineHeight="1.6">
 							{__("Your mail server reported:", "user-registration")}{" "}
 							<Text as="code" fontFamily="mono" fontSize="0.92em">
 								{sendError}

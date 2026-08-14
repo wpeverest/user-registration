@@ -510,7 +510,13 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
 			switch ( $current_section ) {
 				case 'health-checkup':
-					echo '<div id="ur-email-health-checkup-root"></div>';
+					// UR_Admin_Email_Checkup redirects this section to the full-screen
+					// run on admin_init. This is only reached if that could not fire.
+					printf(
+						'<p><a class="button button-primary" href="%1$s">%2$s</a></p>',
+						esc_url( UR_Admin_Email_Checkup::url() ),
+						esc_html__( 'Open the Email Delivery Checkup', 'user-registration' )
+					);
 					return;
 				case 'to-admin':
 					$settings = $this->get_to_admin_email_list_section();

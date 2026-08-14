@@ -94,18 +94,22 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			// counts, the result screen's leftover list, or its cause diagnosis.
 			$all = array_merge( $delivery, $settings );
 
+			// Each description says what its rows are and how much they matter.
+			// Neither restates the step heading above it, and the second halves are
+			// written against each other: only one of these two groups can actually
+			// stop an email, and the admin needs to know which.
 			return array(
 				'sections'         => array(
 					array(
 						'key'         => 'delivery',
 						'title'       => __( 'Mail Delivery', 'user-registration' ),
-						'description' => __( 'Whether this site can send email that actually arrives. Anything failing here is a real reason mail goes missing.', 'user-registration' ),
+						'description' => __( 'The route your mail takes, and whether receiving servers will accept who it\'s from. Anything failing here really does stop mail.', 'user-registration' ),
 						'checks'      => $delivery,
 					),
 					array(
 						'key'         => 'settings',
 						'title'       => __( 'Plugin Settings', 'user-registration' ),
-						'description' => __( 'What User Registration sends and who it goes to. Apart from "Disable Emails", nothing here stops a message that would otherwise arrive.', 'user-registration' ),
+						'description' => __( 'Which emails are switched on, and where they go. Only "Disable Emails" stops mail completely.', 'user-registration' ),
 						'checks'      => $settings,
 					),
 				),
@@ -216,13 +220,13 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				case 'theme':
 					return sprintf(
 						/* translators: %s: theme name */
-						__( 'The mail code lives in your active theme (%s) — check which sender it sets.', 'user-registration' ),
+						__( 'The mail code lives in your active theme (%s). Check which sender it sets.', 'user-registration' ),
 						$owner['name']
 					);
 				case 'mu_plugin':
-					return __( 'The mail code is in a must-use plugin, under wp-content/mu-plugins — check which sender it sets.', 'user-registration' );
+					return __( 'The mail code is in a must-use plugin, under wp-content/mu-plugins. Check which sender it sets.', 'user-registration' );
 				default:
-					return __( 'The mail code is a custom snippet on your site — check which sender it sets.', 'user-registration' );
+					return __( 'The mail code is a custom snippet on your site. Check which sender it sets.', 'user-registration' );
 			}
 		}
 
@@ -277,9 +281,9 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					// owner, and the support report carries the same finding for
 					// anyone who does need it.
 					if ( 'no_sendmail' === $php_mail['reason'] ) {
-						$message = __( 'No mail service is connected, so WordPress hands each message to the server\'s own mail program — which isn\'t installed here. Every email fails silently, with no warning.', 'user-registration' );
+						$message = __( 'No mail service is connected, so WordPress hands each message to the server\'s own mail program, which isn\'t installed here. Every email fails silently, with no warning.', 'user-registration' );
 					} else {
-						$message = __( 'No mail service is connected, so WordPress tries to send through the server itself — and your host has switched that ability off. Every email fails the instant it\'s sent, with no bounce and no warning.', 'user-registration' );
+						$message = __( 'No mail service is connected, so WordPress tries to send through the server itself, and your host has switched that ability off. Every email fails the instant it\'s sent, with no bounce and no warning.', 'user-registration' );
 					}
 
 					return array(
@@ -287,7 +291,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						'title'   => __( 'This site cannot send email at all', 'user-registration' ),
 						'status'  => 'error',
 						'message' => $message,
-						'fix'     => __( 'Connect an SMTP service — it sends over the network, so nothing needs installing on the server.', 'user-registration' ),
+						'fix'     => __( 'Connect an SMTP service. It sends over the network, so nothing needs installing on the server.', 'user-registration' ),
 					);
 				}
 
@@ -561,7 +565,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						$domain
 					),
 					'status'  => 'error',
-					'message' => __( 'This domain has approved nobody — not you, not anyone. Every message claiming to come from it is blocked on arrival. Domains that are never meant to send mail are set up this way on purpose.', 'user-registration' ),
+					'message' => __( 'This domain has approved nobody: not you, not anyone. Every message claiming to come from it is blocked on arrival. Domains that are never meant to send mail are set up this way on purpose.', 'user-registration' ),
 					'fix'     => __( 'Send from a domain you own.', 'user-registration' ),
 				);
 			}
@@ -573,7 +577,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'status'  => 'error',
 					'message' => sprintf(
 						/* translators: 1: sending domain, 2: what is doing the sending */
-						__( 'You send as `%1$s`, but this site sends through %2$s — which `%1$s` has not approved. Your domain instructs mail servers to refuse anything from a sender it hasn\'t approved, so your emails are blocked on arrival. They never reach the spam folder, and you get no bounce.', 'user-registration' ),
+						__( 'You send as `%1$s`, but this site sends through %2$s, which `%1$s` has not approved. Your domain instructs mail servers to refuse anything from a sender it hasn\'t approved, so your emails are blocked on arrival. They never reach the spam folder, and you get no bounce.', 'user-registration' ),
 						$domain,
 						self::sender_phrase( $transport )
 					),
@@ -592,7 +596,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'status'  => 'warning',
 					'message' => sprintf(
 						/* translators: 1: sending domain, 2: what is doing the sending */
-						__( 'You send as `%1$s`, but this site sends through %2$s — which `%1$s` has not approved. Your domain tells mail servers to treat anything from an unapproved sender as spam, so that is where your emails are landing.', 'user-registration' ),
+						__( 'You send as `%1$s`, but this site sends through %2$s, which `%1$s` has not approved. Your domain tells mail servers to treat anything from an unapproved sender as spam, so that is where your emails are landing.', 'user-registration' ),
 						$domain,
 						self::sender_phrase( $transport )
 					),
@@ -672,7 +676,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'status'  => 'error',
 					'message' => sprintf(
 						/* translators: %s: configured From address */
-						__( '`%s` isn\'t a usable email address. It was saved anyway — the settings screen only warns about this.', 'user-registration' ),
+						__( '`%s` isn\'t a usable email address. It was saved anyway, because the settings screen only warns about this.', 'user-registration' ),
 						$from
 					),
 					'fix'     => __( 'Correct it under **Emails → General**.', 'user-registration' ),
@@ -726,7 +730,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						/* translators: %s: the sender mail actually goes out as */
 						? __( 'Mail is sent as `%s`.', 'user-registration' )
 						/* translators: %s: the best-known sender */
-						: __( '`%s` is the sender we can see. Whatever handles your sending may replace it — see the note below.', 'user-registration' ),
+						: __( '`%s` is the sender we can see. Whatever handles your sending may replace it. See the note below.', 'user-registration' ),
 					$display
 				),
 				'fix'     => '',
@@ -794,7 +798,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						__( 'Your mail plugin replaces the sender before the message goes out: %s. The checks below describe the address actually being used, not the one under **Emails → General**.', 'user-registration' ),
 						implode( __( ', and ', 'user-registration' ), $changed )
 					),
-					'fix'     => __( 'That is fine if it is deliberate — just make sure the address it forces is one you can authenticate. Otherwise turn off "force from address" in your SMTP plugin.', 'user-registration' ),
+					'fix'     => __( 'That is fine if it is deliberate. Just make sure the address it forces is one you can authenticate. Otherwise turn off "force from address" in your SMTP plugin.', 'user-registration' ),
 				);
 			}
 
@@ -804,12 +808,17 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				$label = self::owner_label( $owner );
 
 				return array(
-					'key'     => 'from_effective',
+					// Its own key, not "from_effective": this finding is a statement
+					// about what the scan can see rather than about the site, so the
+					// result screens drop it once a test email has actually arrived
+					// and settled the question. The override variant below is a fact
+					// that survives delivery, and keeps the original key.
+					'key'     => 'from_effective_unknown',
 					'title'   => __( 'The sender can\'t be confirmed from here', 'user-registration' ),
 					'status'  => 'warning',
 					'message' => sprintf(
 						/* translators: 1: owner name, 2: configured From address */
-						__( '`%1$s` can send mail through its own connection, addressing each message internally where nothing outside can read it. Your **Emails → General** setting is `%2$s`, but if it is set to force its own sender, that address is used instead — and the checks below would then describe the wrong domain.', 'user-registration' ),
+						__( '`%1$s` can send mail through its own connection, addressing each message internally where nothing outside can read it. Your **Emails → General** setting is `%2$s`, but if it is set to force its own sender, that address is used instead, and the checks below would then describe the wrong domain.', 'user-registration' ),
 						$label,
 						'' === $configured_address ? __( '(empty)', 'user-registration' ) : $configured_address
 					),
@@ -842,7 +851,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'status'  => 'warning',
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` is a development domain, not a real one — it was never meant to have mail servers.', 'user-registration' ),
+						__( '`%s` is a development domain, not a real one, and it was never meant to have mail servers.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => __( 'Fine while developing. Switch to a real domain before sending live email.', 'user-registration' ),
@@ -939,7 +948,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'status'  => 'error',
 					'message' => sprintf(
 						/* translators: %s: from domain */
-						__( 'Mail is sent as `%s` but not through their servers. Only they can approve senders for their domain, and they won\'t approve yours — so receiving mail servers treat it as forged.', 'user-registration' ),
+						__( 'Mail is sent as `%s` but not through their servers. Only they can approve senders for their domain, and they won\'t approve yours, so receiving mail servers treat it as forged.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => sprintf(
@@ -985,7 +994,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				'status'  => 'warning',
 				'message' => sprintf(
 					/* translators: 1: from domain, 2: site domain */
-					__( 'Mail claims to come from `%1$s` while the site is `%2$s`. That is allowed, but `%1$s` has to explicitly authorise this server to send for it — otherwise receiving mail servers treat the message as forged.', 'user-registration' ),
+					__( 'Mail claims to come from `%1$s` while the site is `%2$s`. That is allowed, but `%1$s` has to explicitly authorise this server to send for it. Otherwise receiving mail servers treat the message as forged.', 'user-registration' ),
 					$domain,
 					$site_domain
 				),
@@ -1080,11 +1089,11 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			if ( empty( $dns['spf']['found'] ) ) {
 				return array(
 					'key'     => 'spf_record',
-					'title'   => __( 'No SPF record — receiving mail servers can\'t verify your mail', 'user-registration' ),
+					'title'   => __( 'No SPF record, so receiving mail servers can\'t verify your mail', 'user-registration' ),
 					'status'  => 'warning',
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( 'SPF is a DNS record listing which servers may send email as `%s`. Yours doesn\'t publish one, so receiving mail servers have nothing to check against and judge your mail on reputation alone — which usually means the spam folder.', 'user-registration' ),
+						__( 'SPF is a DNS record listing which servers may send email as `%s`. Yours doesn\'t publish one, so receiving mail servers have nothing to check against and judge your mail on reputation alone, which usually means the spam folder.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => __( 'Add an SPF record at your domain\'s DNS provider. Whichever mail service you use will give you the exact line to publish.', 'user-registration' ),
@@ -1109,7 +1118,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						'status'  => 'error',
 						'message' => sprintf(
 							/* translators: %s: domain */
-							__( 'The SPF record for `%s` is `v=spf1 -all` — it names no permitted sender at all, so every message claiming to come from it is rejected. That is deliberate on domains never meant to send mail, and it means this address can never deliver.', 'user-registration' ),
+							__( 'The SPF record for `%s` is `v=spf1 -all`, which names no permitted sender at all, so every message claiming to come from it is rejected. That is deliberate on domains never meant to send mail, and it means this address can never deliver.', 'user-registration' ),
 							$domain
 						),
 						'fix'     => __( 'Send from a domain you control and can publish DNS for.', 'user-registration' ),
@@ -1126,7 +1135,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					// check the host's SPF record and never open this domain's.
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` tells receiving mail servers to reject mail it hasn\'t approved. This site sends through your host\'s shared mail server, which sends under its own return address rather than yours — so the message can\'t be matched to your domain, and receiving mail servers are told to throw it away.', 'user-registration' ),
+						__( '`%s` tells receiving mail servers to reject mail it hasn\'t approved. This site sends through your host\'s shared mail server, which sends under its own return address rather than yours, so the message can\'t be matched to your domain, and receiving mail servers are told to throw it away.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => __( 'Connect an SMTP service authorised for this domain, so mail goes out under your name rather than your host\'s.', 'user-registration' ),
@@ -1143,7 +1152,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						'status'  => 'pass',
 						'message' => sprintf(
 							/* translators: %s: domain */
-							__( '`%s` tells receiving mail servers to reject anything sent from a server it hasn\'t listed — and the service you send through is one of them.', 'user-registration' ),
+							__( '`%s` tells receiving mail servers to reject anything sent from a server it hasn\'t listed, and the service you send through is one of them.', 'user-registration' ),
 							$domain
 						),
 						'fix'     => '',
@@ -1156,7 +1165,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'status'  => 'unknown',
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` tells receiving mail servers to reject anything sent from a server it hasn\'t listed. We followed the record but couldn\'t match it to whatever sends your mail — it may authorise servers by address rather than by name.', 'user-registration' ),
+						__( '`%s` tells receiving mail servers to reject anything sent from a server it hasn\'t listed. We followed the record but couldn\'t match it to whatever sends your mail. It may authorise servers by address rather than by name.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => __( 'Confirm your mail service is listed in the SPF record for this domain.', 'user-registration' ),
@@ -1189,7 +1198,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'status'  => 'pass',
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` publishes an SPF record, but it sets no final rule of its own — it defers to another record. Receivers can still check your mail; how strictly depends on the record it points at.', 'user-registration' ),
+						__( '`%s` publishes an SPF record, but it sets no final rule of its own, so it defers to another record. Receivers can still check your mail; how strictly depends on the record it points at.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => '',
@@ -1232,7 +1241,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 			if ( empty( $dns['dmarc']['found'] ) ) {
 				return array(
 					'key'     => 'dmarc_policy',
-					'title'   => __( 'No DMARC record — each receiver decides for itself', 'user-registration' ),
+					'title'   => __( 'No DMARC record, so each receiver decides for itself', 'user-registration' ),
 					'status'  => 'pass',
 					'message' => sprintf(
 						/* translators: %s: domain */
@@ -1255,7 +1264,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						'status'  => 'error',
 						'message' => sprintf(
 							/* translators: %s: domain */
-							__( '`%s` tells receiving mail servers to throw away any mail it can\'t verify. This site can\'t be verified, so your emails are deleted on arrival — no spam folder, no bounce.', 'user-registration' ),
+							__( '`%s` tells receiving mail servers to throw away any mail it can\'t verify. This site can\'t be verified, so your emails are deleted on arrival: no spam folder, no bounce.', 'user-registration' ),
 							$domain
 						),
 						'fix'     => __( 'Send from your own domain, or through a service authorised for this one.', 'user-registration' ),
@@ -1264,15 +1273,15 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 
 				return array(
 					'key'     => 'dmarc_policy',
-					'title'   => __( 'DMARC is set to reject — the strictest protection', 'user-registration' ),
+					'title'   => __( 'DMARC is set to reject, the strictest protection', 'user-registration' ),
 					'status'  => $authenticated ? 'pass' : 'unknown',
 					'message' => sprintf(
 						/* translators: %s: domain */
 						$authenticated
 							/* translators: %s: domain */
-							? __( '`%s` tells receiving mail servers to discard anything that can\'t prove it came from an authorised server. Your own mail is unaffected — its SPF record covers the service you send through.', 'user-registration' )
+							? __( '`%s` tells receiving mail servers to discard anything that can\'t prove it came from an authorised server. Your own mail is unaffected, because its SPF record covers the service you send through.', 'user-registration' )
 							/* translators: %s: domain */
-							: __( '`%s` tells receiving mail servers to discard anything that can\'t prove it came from an authorised server. Whether your own mail clears that bar isn\'t something we can confirm from here — the delivery test in the next step will show.', 'user-registration' ),
+							: __( '`%s` tells receiving mail servers to discard anything that can\'t prove it came from an authorised server. Whether your own mail clears that bar isn\'t something we can confirm from here. The delivery test in the next step will show.', 'user-registration' ),
 						$domain
 					),
 					'fix'     => '',
@@ -1302,7 +1311,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						/* translators: %s: domain */
 						$authenticated
 							/* translators: %s: domain */
-							? __( '`%s` asks receiving mail servers to file unauthenticated mail as spam. Your own mail is unaffected — its SPF record covers the service you send through.', 'user-registration' )
+							? __( '`%s` asks receiving mail servers to file unauthenticated mail as spam. Your own mail is unaffected, because its SPF record covers the service you send through.', 'user-registration' )
 							/* translators: %s: domain */
 							: __( '`%s` asks receiving mail servers to file unauthenticated mail as spam. Whether your own mail clears that bar isn\'t something we can confirm from here.', 'user-registration' ),
 						$domain
@@ -1317,7 +1326,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				'status'  => 'pass',
 				'message' => sprintf(
 					/* translators: %s: domain */
-					__( '`%s` publishes DMARC but asks receiving mail servers to take no action on failures — it collects reports without protecting the domain. A fine first step; tighten to `quarantine` once the reports look clean.', 'user-registration' ),
+					__( '`%s` publishes DMARC but asks receiving mail servers to take no action on failures, so it collects reports without protecting the domain. A fine first step; tighten to `quarantine` once the reports look clean.', 'user-registration' ),
 					$domain
 				),
 				'fix'     => '',
@@ -1386,7 +1395,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				return array(
 					'level'   => 'error',
 					'title'   => __( 'Registration emails are switched off', 'user-registration' ),
-					'message' => __( 'Nobody gets an email when they register, whatever else is configured below. The test email in the next step still sends, so it can confirm delivery works — it just won\'t tell you anything about real registrations.', 'user-registration' ),
+					'message' => __( 'Nobody gets an email when they register, whatever else is configured below. The test email in the next step still sends, so it can confirm delivery works. It just won\'t tell you anything about real registrations.', 'user-registration' ),
 				);
 			}
 
@@ -1415,7 +1424,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'title'   => __( 'We can\'t confirm how your mail is being sent', 'user-registration' ),
 					'message' => sprintf(
 						/* translators: %s: owner name */
-						__( 'Send the test email in the next step — with `%s` handling delivery, that is the only way to find out what really happens.', 'user-registration' ),
+						__( 'Send the test email in the next step. With `%s` handling delivery, that is the only way to find out what really happens.', 'user-registration' ),
 						self::owner_label( $owner )
 					),
 				);
@@ -1458,7 +1467,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'title'   => __( 'Emails will be rejected', 'user-registration' ),
 					'message' => sprintf(
 						/* translators: %s: domain */
-						__( '`%s` tells receiving servers to discard unauthenticated mail, and yours is. Messages won\'t reach the spam folder — they will be dropped.', 'user-registration' ),
+						__( '`%s` tells receiving servers to discard unauthenticated mail, and yours is. Messages won\'t reach the spam folder; they will be dropped.', 'user-registration' ),
 						$domain
 					),
 				);

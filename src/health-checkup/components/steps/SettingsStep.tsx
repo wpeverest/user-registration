@@ -35,7 +35,6 @@ const SettingsStep = ({
 	onResolved,
 }: SettingsStepProps) => (
 	<ScanScreen
-		stepLabel={__("Step 2 · Plugin settings", "user-registration")}
 		loadingHeading={__("Checking your settings…", "user-registration")}
 		heading={__("What the plugin will send", "user-registration")}
 		loadingBlurb={__(
@@ -45,7 +44,6 @@ const SettingsStep = ({
 		section={section}
 		isLoading={isLoading}
 		error={error}
-		nextLabel={__("Next: mail delivery", "user-registration")}
 		onNext={onNext}
 		onBack={onBack}
 		onResolved={onResolved}
