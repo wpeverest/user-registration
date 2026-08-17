@@ -68,11 +68,17 @@ const IssueList = ({
 		</>
 	);
 
-	const items = issues.map((issue, index) => (
-		<Box key={issue.key} mt={index === 0 ? 0 : "12px"}>
-			{itemContent(issue)}
+	// A marker each, so several findings read as several things rather than one
+	// run-on block of title-then-remedy pairs.
+	const items = (
+		<Box as="ul" listStyleType="disc" pl="18px" m="0">
+			{issues.map((issue, index) => (
+				<Box as="li" key={issue.key} mt={index === 0 ? 0 : "12px"} color="gray.400">
+					{itemContent(issue)}
+				</Box>
+			))}
 		</Box>
-	));
+	);
 
 	return (
 		<Box border="1px solid" borderColor="gray.200" bg="white" borderRadius="9px" mt="16px" overflow="hidden">

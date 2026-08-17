@@ -358,7 +358,6 @@ export interface ScanScreenProps {
 	onNext: () => void;
 	onBack?: () => void;
 	/** Omitted where a report wouldn't help yet, e.g. before the delivery checks. */
-	onOpenReport?: () => void;
 	onResolved: () => void;
 }
 
@@ -377,7 +376,6 @@ const ScanScreen = ({
 	error,
 	onNext,
 	onBack,
-	onOpenReport,
 	onResolved,
 }: ScanScreenProps) => (
 	<Box>
@@ -445,13 +443,11 @@ const ScanScreen = ({
 							{__("Back", "user-registration")}
 						</Link>
 					)}
+					{/* No support report here. Sent before the live test it would reach
+					    support carrying only what the scan guessed, with no outcome — and
+					    it showed on step 3 but not step 2, so it read as something the
+					    admin had missed. The result screen offers it instead. */}
 					<Flex gap="10px" wrap="wrap" justify="flex-end">
-						{onOpenReport && (
-							<Button variant="outline" fontSize="13.5px" fontWeight="600" onClick={onOpenReport}>
-								{__("Send report", "user-registration")}
-							</Button>
-						)}
-	
 						<Button
 							bg={COLOR.link}
 							color="white"

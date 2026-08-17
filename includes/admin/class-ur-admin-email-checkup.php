@@ -67,6 +67,29 @@ class UR_Admin_Email_Checkup {
 	}
 
 	/**
+	 * SmartSMTP's primary connection screen, with Gmail preselected and its
+	 * one-click setup offered rather than the default provider.
+	 *
+	 * The `evf_setup` parameter is the only deep link SmartSMTP reads (see
+	 * ProviderContainer's isEverestFormsGoogleWorkspaceSetup): it selects Gmail,
+	 * highlights the setup, and strips itself from the URL afterwards. Named for
+	 * Everest Forms because that product asked for it first — SmartSMTP has no
+	 * product-neutral equivalent yet, and a bare `#gmail` cannot work because the
+	 * app is a HashRouter and `#gmail` matches no route.
+	 *
+	 * @return string
+	 */
+	public static function smartsmtp_gmail_url() {
+		return add_query_arg(
+			array(
+				'page'      => 'smart-smtp',
+				'evf_setup' => 'google_workspace',
+			),
+			admin_url( 'admin.php' )
+		) . '#/primary-connection';
+	}
+
+	/**
 	 * Where the close button goes back to.
 	 *
 	 * @return string
@@ -163,10 +186,14 @@ class UR_Admin_Email_Checkup {
 				'wpVersion'      => get_bloginfo( 'version' ),
 				'phpVersion'     => PHP_VERSION,
 				'pluginVersion'  => defined( 'UR_VERSION' ) ? UR_VERSION : '',
-				'smartSmtpUrl'   => admin_url( 'admin.php?page=smart-smtp#/primary-connection' ),
+				'smartSmtpUrl'   => self::smartsmtp_gmail_url(),
 				'mailLogUrl'     => ur_get_mail_log_url(),
 				'exitUrl'        => self::exit_url(),
 				'logoUrl'        => UR()->plugin_url() . '/assets/images/logo.svg',
+				// Shipped with this plugin rather than read from SmartSMTP's own
+				// folder: the recommendation is shown precisely when SmartSMTP may
+				// not be installed, so its assets cannot be relied on.
+				'smartSmtpLogoUrl' => UR()->plugin_url() . '/assets/images/smart-smtp.svg',
 			)
 		);
 		?>

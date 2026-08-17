@@ -706,7 +706,11 @@ class UR_AJAX {
 
 		wp_send_json_success(
 			array(
-				'redirect' => admin_url( 'admin.php?page=smart-smtp#/primary-connection' ),
+				// Gmail preselected with its one-click setup, not the default
+				// provider — see UR_Admin_Email_Checkup::smartsmtp_gmail_url().
+				'redirect' => class_exists( 'UR_Admin_Email_Checkup' )
+					? UR_Admin_Email_Checkup::smartsmtp_gmail_url()
+					: admin_url( 'admin.php?page=smart-smtp#/primary-connection' ),
 			)
 		);
 	}

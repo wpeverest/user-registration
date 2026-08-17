@@ -14,5 +14,6 @@ interface Window {
 		/** Where the close button returns to. */
 		exitUrl: string;
 		logoUrl: string;
+		smartSmtpLogoUrl: string;
 	};
 }

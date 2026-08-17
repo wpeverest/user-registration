@@ -1,7 +1,8 @@
-import { Box, Button, Flex, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, useToast } from "@chakra-ui/react";
 import { __, sprintf } from "@wordpress/i18n";
 import { ReactNode, useState } from "react";
-import { FiAlertTriangle, FiArrowRight, FiCheck, FiX } from "react-icons/fi";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { FiAlertTriangle, FiCheck, FiX } from "react-icons/fi";
 import { HealthCheck, installSmartSmtp, SmartSmtpStatus, SmtpPluginInfo } from "../../api/healthCheckupApi";
 import IssueList from "../IssueList";
 import { COLOR, TYPE } from "../../tokens";
@@ -83,17 +84,16 @@ const nonDeliveryExplanation = (
 };
 
 /**
- * The recommended route out. A link rather than a filled button, which would read
- * as *the* action of a screen whose alternative is equally valid. Still a real
- * <button>, since it performs work and carries a loading state.
+ * The recommended route out, below the scan's findings.
  *
  * Install/activate and configure stay two clicks: the first relabels, the second
- * opens the Primary Connection screen.
+ * opens SmartSMTP with Gmail preselected and its one-click setup offered — see
+ * UR_Admin_Email_Checkup::smartsmtp_gmail_url(), and note the URL comes back from
+ * the install response, so a fresh install lands in the same place.
  */
 const SmartSmtpRecommendation = ({ status }: { status: SmartSmtpStatus }) => {
 	const [isWorking, setIsWorking] = useState(false);
 	const [localStatus, setLocalStatus] = useState<SmartSmtpStatus>(status);
-	const [justActivated, setJustActivated] = useState(false);
 	const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
 	const toast = useToast();
 
@@ -107,7 +107,6 @@ const SmartSmtpRecommendation = ({ status }: { status: SmartSmtpStatus }) => {
 		try {
 			const result = await installSmartSmtp();
 			setRedirectUrl(result.redirect);
-			setJustActivated(true);
 			setLocalStatus("active");
 			toast({
 				title:
@@ -131,62 +130,90 @@ const SmartSmtpRecommendation = ({ status }: { status: SmartSmtpStatus }) => {
 		}
 	};
 
-	// One claim, identical in all three states, then the state-specific half. Never
-	// offers to install something already on the site.
+	// Only the action varies. The description used to report SmartSMTP's status
+	// ("it's active but never finished connecting"), which the button label already
+	// says and which is no reason to pick it — so it now says what the admin gets:
+	// a connection they can finish in one step.
 	const copy = {
 		not_installed: {
-			detail: __(
-				"Our own free plugin takes over sending, so your email actually arrives.",
-				"user-registration"
-			),
 			action: __("Install & activate SmartSMTP", "user-registration"),
 			loading: __("Installing…", "user-registration"),
 		},
 		inactive: {
-			detail: __(
-				"It's already installed here, so activate it and it takes over sending.",
-				"user-registration"
-			),
 			action: __("Activate SmartSMTP", "user-registration"),
 			loading: __("Activating…", "user-registration"),
 		},
 		active: {
-			detail: justActivated
-				? __(
-						"One step left: connect it to a mail service and it handles delivery from here on.",
-						"user-registration"
-					)
-				: __(
-						"It's active but never finished connecting, which is why nothing is going out.",
-						"user-registration"
-					),
 			action: __("Set up SmartSMTP", "user-registration"),
 			loading: __("Opening…", "user-registration"),
 		},
 	}[localStatus];
 
+	// Two columns on a tinted fill, no border: the claim and its detail read as a
+	// sentence on the left, the action sits where the eye lands last. Sitting below
+	// the scan's findings, a text link read as a footnote to the list — hence the
+	// filled button — but centring it made a poster of it, and a border made it a
+	// third framed panel on a screen that already has one. Stacks on narrow.
 	return (
-		<Box>
-			<Text fontSize={TYPE.subheading} fontWeight="600" color={COLOR.title} lineHeight="1.5">
-				{__("SmartSMTP is the most reliable fix", "user-registration")}
-			</Text>
-			<Text fontSize={TYPE.body} color={COLOR.body} lineHeight="1.62" mt="5px">
-				{copy.detail}
-			</Text>
+		<Flex
+			bg="primary.50"
+			borderRadius="8px"
+			p="18px 20px"
+			mt="16px"
+			gap={{ base: "14px", md: "18px" }}
+			align={{ base: "stretch", md: "center" }}
+			justify="space-between"
+			direction={{ base: "column", md: "row" }}
+		>
+			{/* Mark and copy are one group, so space-between opens a gap only before
+			    the button. As three siblings the free space was shared out evenly and
+			    left 80px stranded between the logo and the heading it belongs to. */}
+			<Flex align="center" gap="18px" minW="0">
+				<Image
+					src={window._UR_EMAIL_HEALTH_.smartSmtpLogoUrl}
+					alt=""
+					// Sized to the copy beside it: heading plus two lines of detail is
+					// about 58px tall, so the mark reads as its equal rather than as a
+					// bullet in front of it.
+					w="56px"
+					h="56px"
+					flexShrink={0}
+					alignSelf={{ base: "flex-start", md: "center" }}
+				/>
+
+				{/* Capped width so the detail sets over two lines. Unbounded it ran as
+				    a single line the width of the card, which read as a caption to the
+				    heading rather than a paragraph of its own. */}
+				<Box minW="0" maxW={{ base: "100%", md: "380px" }}>
+					<Text fontSize={TYPE.subheading} fontWeight="600" color={COLOR.title} lineHeight="1.5">
+						{__("SmartSMTP is the most reliable fix", "user-registration")}
+					</Text>
+					<Text fontSize={TYPE.body} color={COLOR.body} lineHeight="1.62" mt="5px">
+						{__(
+							"Connect your Gmail account in one click. No hosts or passwords to fill in, or add another SMTP provider.",
+							"user-registration"
+						)}
+					</Text>
+				</Box>
+			</Flex>
 			<Button
-				variant="link"
-				colorScheme="primary"
-				fontSize={TYPE.body}
+				flexShrink={0}
+				bg={COLOR.link}
+				color="white"
+				_hover={{ bg: "#38488e" }}
+				_active={{ bg: COLOR.link }}
+				rightIcon={<ArrowForwardIcon />}
+				fontSize={{ base: "sm", md: "md" }}
 				fontWeight="500"
-				mt="10px"
+				px={{ base: 4, md: 6 }}
+				py={2}
 				onClick={handleClick}
 				isLoading={isWorking}
 				loadingText={copy.loading}
-				rightIcon={<FiArrowRight size={13} />}
 			>
 				{copy.action}
 			</Button>
-		</Box>
+		</Flex>
 	);
 };
 
@@ -426,18 +453,17 @@ const ResultStep = ({ variant, checks, onRunAgain, onOpenReport, smartSmtpStatus
 			onOpenReport={onOpenReport}
 			body={
 				<>
-					{/* The recommendation leads; the findings are the alternative. */}
-					<Box mt="12px">
-						<SmartSmtpRecommendation status={smartSmtpStatus} />
-					</Box>
-
+					{/* The findings lead. They are what the scan established about this
+					    site; putting a product recommendation above them put the pitch
+					    ahead of the diagnosis. */}
 					{suggestions.length > 0 && (
 						<IssueList
 							issues={suggestions}
-							label={__("Or fix what the scan found", "user-registration")}
-							defaultOpen={false}
+							label={__("What the scan found", "user-registration")}
 						/>
 					)}
+
+					<SmartSmtpRecommendation status={smartSmtpStatus} />
 
 					{/* The generic pointer is dropped; a real reported error is quoted. */}
 					{sendError && !sendError.includes("ur_mail_logs") && (

@@ -225,8 +225,7 @@ const App = () => {
 		setReportText(
 			buildReport(
 				scan?.checks ?? [],
-				// Never carry a previous run's outcome into a scan-step report.
-				SCAN_STEPS.includes(step) ? null : deliveryOutcome,
+				deliveryOutcome,
 				scan?.summary ?? null,
 				scan?.sections ?? [],
 				scan?.dns_checks ?? []
@@ -279,7 +278,6 @@ const App = () => {
 						error={scanError}
 						onBack={() => setStep("settings")}
 						onNext={() => setStep("test")}
-						onOpenReport={openReport}
 						onResolved={rescan}
 					/>
 				);

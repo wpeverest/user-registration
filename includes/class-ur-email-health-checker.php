@@ -79,7 +79,9 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 				$settings[] = self::check_admin_notification_enabled();
 			}
 
-			$settings[] = self::check_admin_email_pending_change();
+			// No pending-admin-email-change row: it fires on a narrow WordPress state
+			// most admins have never been in, and reads as noise beside the checks
+			// that decide whether mail sends at all.
 
 			// Reported to support rather than shown as findings: DNS the admin often
 			// can't change, and on an opaque transport we can't tell if it applies.
@@ -94,7 +96,13 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					array(
 						'key'         => 'delivery',
 						'title'       => __( 'Mail Delivery', 'user-registration' ),
-						'description' => __( 'The route your mail takes, and whether receiving servers will accept who it\'s from. Anything failing here really does stop mail.', 'user-registration' ),
+						// Names the badge rather than saying "anything failing", which
+						// covered both verdicts with one claim and so overstated the
+						// milder one. Only "Will fail" is asserted, because only that
+						// one is established; "May fail" speaks for itself.
+						// Keep this label in step with the badge text in ScanScreen's
+						// rowStyles.
+						'description' => __( 'The route your mail takes, and whether receiving servers will accept who it\'s from. Anything here tagged "Will fail" really does stop mail.', 'user-registration' ),
 						'checks'      => $delivery,
 					),
 					array(
@@ -1610,37 +1618,6 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 						__( 'Open Emails → To Admin', 'user-registration' ),
 						self::email_settings_url( 'to-admin' )
 					),
-			);
-		}
-
-		private static function check_admin_email_pending_change() {
-			$pending     = get_option( 'new_admin_email' );
-			$has_pending = ! empty( $pending ) && is_array( $pending ) && ! empty( $pending['newemail'] );
-
-			return array(
-				'key'     => 'admin_email_pending_change',
-				'title'   => $has_pending
-					? __( 'Admin email change pending confirmation', 'user-registration' )
-					: __( 'No admin email change pending', 'user-registration' ),
-				'status'  => $has_pending ? 'warning' : 'pass',
-				'message' => $has_pending
-					? sprintf(
-						/* translators: %s: pending new admin email */
-						__( 'An email change to `%s` is waiting on confirmation. Notifications still go to the old address until it\'s confirmed.', 'user-registration' ),
-						$pending['newemail']
-					)
-					: sprintf(
-						/* translators: %s: admin email */
-						__( 'Notifications keep going to `%s`.', 'user-registration' ),
-						get_option( 'admin_email' )
-					),
-				'fix'     => $has_pending ? __( 'Check the old inbox for the confirmation link, or cancel the change.', 'user-registration' ) : '',
-				'action'  => $has_pending
-					? self::settings_action(
-						__( 'Open Settings → General', 'user-registration' ),
-						admin_url( 'options-general.php' )
-					)
-					: null,
 			);
 		}
 

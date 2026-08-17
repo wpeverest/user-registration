@@ -8,7 +8,6 @@ interface DeliveryStepProps {
 	error: string;
 	onBack: () => void;
 	onNext: () => void;
-	onOpenReport: () => void;
 	onResolved: () => void;
 }
 
@@ -22,7 +21,6 @@ const DeliveryStep = ({
 	error,
 	onBack,
 	onNext,
-	onOpenReport,
 	onResolved,
 }: DeliveryStepProps) => (
 	<ScanScreen
@@ -39,7 +37,6 @@ const DeliveryStep = ({
 		error={error}
 		onNext={onNext}
 		onBack={onBack}
-		onOpenReport={onOpenReport}
 		onResolved={onResolved}
 	/>
 );
