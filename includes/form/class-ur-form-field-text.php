@@ -74,7 +74,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 		$label = $single_form_field->general_setting->field_name;
 
 		$field_name  = isset( $form_data->field_name ) ? $form_data->field_name : '';
-		$urcl_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array();
+		$urcl_fields = ur_get_conditionally_hidden_fields( $form_id );
 		//Ignore URCL fields validation.
 		if ( in_array( $field_name, $urcl_fields ) ) {
 			return;
