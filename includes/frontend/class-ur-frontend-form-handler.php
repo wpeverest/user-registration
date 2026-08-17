@@ -318,10 +318,14 @@ class UR_Frontend_Form_Handler {
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = false;
 					}
-				} elseif ( isset( $_POST['is_membership_active'] ) ) {
+				} elseif ( check_membership_field_in_form( $form_id ) ) {
+					// Membership form: never auto-login immediately here (that would log in before any order
+					// exists). Detection is server-side, so omitting the client is_membership_active signal
+					// can't drop into the immediate-cookie branch below. Login is deferred to the membership
+					// flow, which only logs in free/completed memberships. UR-4811.
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login']      = true;
-						$success_params['membership_type'] = $_POST['membership_type'];
+						$success_params['membership_type'] = isset( $_POST['membership_type'] ) ? $_POST['membership_type'] : '';
 					}
 				} elseif ( 'auto_login' === $login_option ) {
 					delete_transient( 'urm_pending_login_' . $user_id );

@@ -306,8 +306,11 @@ class UR_User_Approval {
 			}
 
 			return $user;
-		} elseif ( 'payment' === $login_option ) {
+		} elseif ( 'payment' === $login_option || ( $is_membership_active && function_exists( 'check_membership_field_in_form' ) && check_membership_field_in_form( $form_id ) ) ) {
 
+			// Membership-form accounts are gated here regardless of the form's login option (e.g. auto_login):
+			// the membership field is auto-required, so a legit registration always has an order, and an
+			// account with no completed order is either an omitted-field forgery or awaiting payment. UR-4811.
 			$membership = array();
 			$last_order = array();
 			if ( $is_membership_active ) {
