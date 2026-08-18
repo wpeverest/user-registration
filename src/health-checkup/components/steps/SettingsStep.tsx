@@ -26,9 +26,9 @@ const SettingsStep = ({
 }: SettingsStepProps) => (
 	<ScanScreen
 		loadingHeading={__("Checking your settings…", "user-registration")}
-		heading={__("What the plugin will send", "user-registration")}
+		heading={__("How your email settings are set up", "user-registration")}
 		loadingBlurb={__(
-			"Reading your mail configuration and checking what your domain publishes.",
+			"Reading which emails are switched on and where they are sent.",
 			"user-registration"
 		)}
 		section={section}

@@ -792,7 +792,7 @@ if ( ! class_exists( 'UR_Email_Health_Checker' ) ) :
 					'status'  => 'warning',
 					'message' => sprintf(
 						/* translators: 1: owner name, 2: configured From address */
-						__( '`%1$s` can send mail through its own connection, addressing each message internally where nothing outside can read it. Your **Emails → General** setting is `%2$s`, but if it is set to force its own sender, that address is used instead, and the checks below would then describe the wrong domain.', 'user-registration' ),
+						__( '`%1$s` can send mail through its own connection, addressing each message internally where nothing outside can read it. Your **Emails → General** setting is `%2$s`, but if it is set to force its own sender, that address is used instead.', 'user-registration' ),
 						$label,
 						'' === $configured_address ? __( '(empty)', 'user-registration' ) : $configured_address
 					),

@@ -9,7 +9,7 @@ const IntroStep = ({ onStart }: { onStart: () => void }) => (
 		<StepHeader
 			title={__("Quick email delivery checkup", "user-registration")}
 			description={__(
-				"We'll check your settings, work out how mail leaves this site, then send a real test email and ask whether it arrived. Takes about two minutes.",
+				"We'll scan your email settings, detect how mail leaves this site, then send a real test email and ask whether it arrived. Takes about two minutes.",
 				"user-registration"
 			)}
 		/>
