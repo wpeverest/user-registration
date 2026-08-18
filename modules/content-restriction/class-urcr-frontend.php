@@ -1376,8 +1376,7 @@ class URCR_Frontend {
 		// Get message
 		$restricted_message      = get_post_meta( $post->ID, 'urcr_meta_content', true );
 		$override_global_message = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', true );
-		$message                 = ! empty( $restricted_message ) && $override_global_message ? wp_kses_post( $restricted_message ) : get_option( 'user_registration_content_restriction_message', '' );
-		$message                 = ( false === $message || empty( $message ) ) ? esc_html__( 'This content is restricted!', 'user-registration' ) : $message;
+		$message                 = urcr_get_restriction_message( ! empty( $restricted_message ) && $override_global_message ? wp_kses_post( $restricted_message ) : '' );
 		$message                 = apply_filters( 'user_registration_process_smart_tags', $message );
 		if ( function_exists( 'apply_shortcodes' ) ) {
 			$message = apply_shortcodes( $message );
@@ -1554,18 +1553,7 @@ class URCR_Frontend {
 	 */
 	public function message() {
 
-		$message = get_option( 'user_registration_content_restriction_message' );
-
-		if ( false === $message || empty( $message ) ) {
-			if ( class_exists( 'URCR_Admin_Assets' ) ) {
-				$message = URCR_Admin_Assets::get_default_message();
-			} else {
-				$message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
-<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
-<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
-<p>{{sign_up}} {{log_in}}</p>';
-			}
-		}
+		$message = urcr_get_restriction_message();
 
 		$message = apply_filters( 'user_registration_process_smart_tags', $message );
 

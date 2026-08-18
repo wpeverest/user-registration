@@ -299,9 +299,12 @@ class UR_Gutenberg_Blocks {
 	 *
 	 */
 	public static function ur_get_content_restriction_data() {
-		$message = get_option( 'user_registration_content_restriction_message' );
-
-		$message = ( false === $message ) ? esc_html__( 'This content is restricted!', 'user-registration' ) : $message;
+		if ( function_exists( 'urcr_get_restriction_message' ) ) {
+			$message = urcr_get_restriction_message();
+		} else {
+			$message = get_option( 'user_registration_content_restriction_message' );
+			$message = ( false === $message || '' === $message ) ? esc_html__( 'This content is restricted!', 'user-registration' ) : $message;
+		}
 
 		return new \WP_REST_Response(
 			array(

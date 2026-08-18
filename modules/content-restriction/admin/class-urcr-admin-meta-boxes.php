@@ -232,7 +232,7 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 					'label'   => __( 'Restricted Content Message: ', 'user-registration' ),
 					'desc'    => __( 'Enter the message to show to users who do not have access to this content.', 'user-registration' ),
 					'type'   => 'tinymce',
-					'default' =>  __( 'This content is restricted!', 'user-registration' ),
+					'default' => function_exists( 'urcr_get_default_restriction_message' ) ? urcr_get_default_restriction_message() : '',
 				)
 			);
 		}

@@ -58,13 +58,13 @@ class URCR_Shortcodes {
 
 				$allowed_memberships = isset( $rule['logic_map'], $rule['logic_map']['conditions'], $rule['logic_map']['conditions'][0], $rule['logic_map']['conditions'][0]['type'], $rule['logic_map']['conditions'][0]['value'] ) && 'memberships' === $rule['logic_map']['conditions'][0]['type'] ? $rule['logic_map']['conditions'][0]['value'] : '';
 
-				$message = isset( $rule['actions'], $rule['actions'][0], $rule['actions'][0]['message'] ) ? $rule['actions'][0]['message'] : __( 'This content is restricted!', 'user-registration' );
+				$message = urcr_get_restriction_message( isset( $rule['actions'][0]['message'] ) ? $rule['actions'][0]['message'] : '' );
 
 			} else {
 
 				$allowed_roles       = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
 				$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships' );
-				$message             = get_option( 'user_registration_content_restriction_message', '' );
+				$message             = urcr_get_restriction_message();
 			}
 
 			$get_meta_data_memberships = get_post_meta( $post->ID, 'urcr_meta_memberships', true );
@@ -188,7 +188,7 @@ class URCR_Shortcodes {
 				$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : $message;
 			}
 
-			$message = empty( $message ) ? __( 'This content is restricted1!', 'user-registration' ) : $message;
+			$message = urcr_get_restriction_message( $message );
 			$message = apply_filters( 'user_registration_process_smart_tags', $message );
 			$message = do_shortcode( $message );
 

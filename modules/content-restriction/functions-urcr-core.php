@@ -178,6 +178,57 @@ function urcr_is_action_specified( $access_rule = array() ) {
 }
 
 /**
+ * The message shown in place of restricted content when nothing else supplies one.
+ * Lives here rather than in the admin only URCR_Admin_Assets so the frontend can reach it.
+ *
+ * @return string
+ */
+function urcr_get_default_restriction_message() {
+	return '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
+<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
+<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
+<p>{{sign_up}} {{log_in}}</p>';
+}
+
+/**
+ * Resolve the message shown in place of restricted content: the one passed in, else the
+ * global setting, else the built in default. Never returns empty, so a visitor is never
+ * shown a blank box with no explanation and no way to log in.
+ *
+ * @param string $message Message supplied by a rule or a post. May be empty.
+ *
+ * @return string
+ */
+function urcr_get_restriction_message( $message = '' ) {
+	if ( urcr_restriction_message_has_content( $message ) ) {
+		return $message;
+	}
+
+	$global_message = get_option( 'user_registration_content_restriction_message', '' );
+
+	if ( urcr_restriction_message_has_content( $global_message ) ) {
+		return $global_message;
+	}
+
+	return apply_filters( 'urcr_default_restriction_message', urcr_get_default_restriction_message() );
+}
+
+/**
+ * A message of only markup or whitespace still renders as a blank box, so it does not count.
+ *
+ * @param mixed $message Candidate message.
+ *
+ * @return bool
+ */
+function urcr_restriction_message_has_content( $message ) {
+	if ( ! is_string( $message ) || '' === $message ) {
+		return false;
+	}
+
+	return '' !== trim( wp_strip_all_tags( $message ) );
+}
+
+/**
  * See if the post is in the provided targets list.
  *
  * @param array       $targets Targets list.
@@ -687,7 +738,7 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 
 	if ( isset( $target_post->ID ) && $target_post->ID && ! empty( $action['type'] ) ) {
 		if ( 'message' === $action['type'] ) {
-			$message = ! empty( $action['message'] ) ? urldecode( $action['message'] ) : get_option( 'user_registration_content_restriction_message', '' );
+			$message = urcr_get_restriction_message( empty( $action['message'] ) ? '' : urldecode( $action['message'] ) );
 			$message = apply_filters( 'user_registration_process_smart_tags', $message );
 			if ( function_exists( 'apply_shortcodes' ) ) {
 				$message = apply_shortcodes( $message );

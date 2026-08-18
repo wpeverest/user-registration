@@ -780,9 +780,9 @@ if ( ! function_exists( 'urwc_handle_shop_restriction' ) ) {
 			}
 		);
 
-		$message = ! empty( $access_rule['actions'][0]['message'] )
-			? urldecode( $access_rule['actions'][0]['message'] )
-			: get_option( 'user_registration_content_restriction_message', '' );
+		$message = urcr_get_restriction_message(
+			empty( $access_rule['actions'][0]['message'] ) ? '' : urldecode( $access_rule['actions'][0]['message'] )
+		);
 
 		$message = apply_filters( 'user_registration_process_smart_tags', $message );
 

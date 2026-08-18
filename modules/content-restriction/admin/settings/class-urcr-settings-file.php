@@ -90,7 +90,7 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 						'desc'     => __( 'The message you would like to display in restricted content.', 'user-registration' ),
 						'id'       => 'user_registration_content_restriction_message',
 						'type'     => 'tinymce',
-						'default'  => 'This content is restricted!',
+						'default'  => function_exists( 'urcr_get_default_restriction_message' ) ? urcr_get_default_restriction_message() : '',
 						'css'      => '',
 						'show-smart-tags-button' => false,
 						'desc_tip' => true,
