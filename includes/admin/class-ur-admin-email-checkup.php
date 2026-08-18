@@ -70,20 +70,22 @@ class UR_Admin_Email_Checkup {
 	 * SmartSMTP's primary connection screen, with Gmail preselected and its
 	 * one-click setup offered rather than the default provider.
 	 *
-	 * The `evf_setup` parameter is the only deep link SmartSMTP reads (see
-	 * ProviderContainer's isEverestFormsGoogleWorkspaceSetup): it selects Gmail,
-	 * highlights the setup, and strips itself from the URL afterwards. Named for
-	 * Everest Forms because that product asked for it first — SmartSMTP has no
-	 * product-neutral equivalent yet, and a bare `#gmail` cannot work because the
-	 * app is a HashRouter and `#gmail` matches no route.
+	 * `urm_setup` is our deep link, alongside Everest Forms' `evf_setup`: it
+	 * selects Gmail and highlights the setup. The rest ask for the provider and
+	 * One-Click toggles to arrive on, which SmartSMTP shows but does not save
+	 * until the admin does. It strips all of them from the URL afterwards. A bare
+	 * `#gmail` cannot do this: the app is a HashRouter and matches no such route.
 	 *
 	 * @return string
 	 */
 	public static function smartsmtp_gmail_url() {
 		return add_query_arg(
 			array(
-				'page'      => 'smart-smtp',
-				'evf_setup' => 'google_workspace',
+				'page'            => 'smart-smtp',
+				'urm_setup'       => 'google_workspace',
+				'is_active'       => 'true',
+				'one_click_setup' => 'true',
+				'source'          => 'urm',
 			),
 			admin_url( 'admin.php' )
 		) . '#/primary-connection';
