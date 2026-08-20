@@ -1272,6 +1272,18 @@ class NewPaypalService {
 		$member_subscription    = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $member_order['subscription_id'] );
 		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'], true );
 		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $url_params['current_membership_id'] ?? '' ] );
+
+		// UR-4827: that guard is transient user meta. An abandoned or retried attempt can clear it, and
+		// the member then pays and is never moved to the new plan. A pending upgrade payload, or an order
+		// flagged as an upgrade, says so regardless of the guard.
+		if ( ! $is_upgrading ) {
+			$is_upgrading = ! empty( get_user_meta( $member_id, 'urm_next_subscription_data', true ) );
+		}
+
+		if ( ! $is_upgrading && ! empty( $member_order['ID'] ) ) {
+			$upgrade_order_meta = $this->orders_repository->get_order_meta_by_order_id_and_meta_key( $member_order['ID'], 'is_proration_upgrade' );
+			$is_upgrading       = ! empty( $upgrade_order_meta['meta_value'] );
+		}
 		// Also treat as one-time if PayPal returned a token with no subscription_id (proration upgrade).
 		$is_rest_one_time_payment = ( 'paid' === $member_order['order_type'] || 'one-time' === $membership_type )
 			|| ( ! empty( $order_token ) && empty( $paypal_subscription_id ) );
@@ -3582,6 +3594,33 @@ class NewPaypalService {
 		return $this->paypal_rest_request(
 			'GET',
 			'/v2/checkout/orders/' . rawurlencode( $order_id ),
+			null,
+			$paypal_options
+		);
+	}
+
+	/**
+	 * Fetch one webhook event from PayPal by its event ID.
+	 *
+	 * Used when signature verification fails. PayPal refuses to verify a signature once the delivery
+	 * is old, so a retried event can never pass, and every genuine payment behind it is lost. Asking
+	 * PayPal for its own copy of the event settles authenticity just as well.
+	 *
+	 * @param string $event_id       PayPal webhook event ID.
+	 * @param array  $paypal_options Credentials.
+	 * @return array|WP_Error PayPal's copy of the event, or WP_Error when it could not be retrieved.
+	 */
+	public function fetch_webhook_event( $event_id, $paypal_options ) {
+		if ( empty( $event_id ) ) {
+			return new WP_Error(
+				'paypal_missing_event_id',
+				__( 'No PayPal event ID to look up.', 'user-registration' )
+			);
+		}
+
+		return $this->paypal_rest_request(
+			'GET',
+			'/v1/notifications/webhooks-events/' . rawurlencode( $event_id ),
 			null,
 			$paypal_options
 		);
