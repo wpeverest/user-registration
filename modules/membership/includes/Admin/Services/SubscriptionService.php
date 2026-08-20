@@ -1422,6 +1422,13 @@ class SubscriptionService {
 		 */
 		if ( is_array( $result ) && empty( $result['status'] ) ) {
 			$this->record_failed_retry_attempt( $subscription, isset( $result['message'] ) ? $result['message'] : '' );
+		} elseif ( is_array( $result ) ) {
+			/*
+			 * Payment recovered, so the retry run is over. Without this the counter
+			 * keeps its old value, and the member's next failure starts at or past
+			 * user_registration_payment_retry_count with no retry grace left.
+			 */
+			delete_user_meta( $subscription['member_id'], 'urm_is_payment_retrying' );
 		}
 	}
 

@@ -315,6 +315,7 @@ class EmailService {
 		}
 
 		$subject  = __( 'Payment Attempt Failed – Action Required on {{blog_info}}', 'user-registration' );
+		$subject  = get_option( 'user_registration_payment_retry_failed_email_subject', $subject );
 		$settings = $email_classes['UR_Settings_Payment_Retry_Failed_Email'];
 		$message  = $settings->ur_get_payment_retry_failed_email();
 		$message  = get_option( 'user_registration_payment_retry_failed_email', $message );
@@ -351,6 +352,7 @@ class EmailService {
 		}
 
 		$subject  = __( 'Payment Cancelled – Registration Cancelled on {{blog_info}}', 'user-registration' );
+		$subject  = get_option( 'user_registration_payment_retry_cancel_email_subject', $subject );
 		$settings = $email_classes['UR_Settings_Payment_Retry_Cancel_Email'];
 		$message  = $settings->ur_get_payment_retry_cancel_email();
 		$message  = get_option( 'user_registration_payment_retry_cancel_email', $message );
