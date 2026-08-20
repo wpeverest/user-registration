@@ -1379,22 +1379,113 @@ class SubscriptionService {
 	 * Payment retry callback for a failed attempt.
 	 */
 	public function failed_payment_retry_callback( $subscription ) {
+		/**
+		 * Allow a gateway that retries failed payments on its own side to opt out
+		 * of the scheduler-driven retry.
+		 *
+		 * Authorize.Net (ARB) re-attempts collection itself and reports the outcome
+		 * over webhooks, so running it through here would double-count the retry
+		 * attempt against `urm_is_payment_retrying`.
+		 *
+		 * @param bool  $should_retry Whether the scheduler should drive this retry.
+		 * @param array $subscription Subscription row from get_subscriptions_to_retry().
+		 */
+		if ( ! apply_filters( 'urm_should_handle_failed_payment_retry', true, $subscription ) ) {
+			return;
+		}
+
 		// update the counter for failed payment retry.
 		$retry_count = (int) get_user_meta( $subscription['member_id'], 'urm_is_payment_retrying', true );
 		update_user_meta( $subscription['member_id'], 'urm_is_payment_retrying', $retry_count + 1 );
+		$result = null;
+
 		switch ( $subscription['payment_method'] ) {
 			case 'paypal':
 				$paypal_service = new NewPaypalService();
-				$paypal_service->retry_subscription( $subscription );
+				$result         = $paypal_service->retry_subscription( $subscription );
 				break;
 			case 'stripe':
 				$stripe_service = new StripeService();
-				$stripe_service->retry_subscription( $subscription );
+				$result         = $stripe_service->retry_subscription( $subscription );
 				break;
 			default:
+				// Gateways on this hook report the outcome themselves.
 				do_action( 'urm_handle_failed_payment_retry', $subscription );
-				break;
+				return;
 		}
+
+		/*
+		 * Stripe and PayPal report the outcome through their return value, which
+		 * used to be discarded — so a failed retry left no order row and sent the
+		 * member no email. Record and notify centrally instead, matching what the
+		 * webhook-driven gateways already do. See UR-4857.
+		 */
+		if ( is_array( $result ) && empty( $result['status'] ) ) {
+			$this->record_failed_retry_attempt( $subscription, isset( $result['message'] ) ? $result['message'] : '' );
+		}
+	}
+
+	/**
+	 * Record a failed retry attempt and tell the member.
+	 *
+	 * @param array  $subscription Subscription row from get_subscriptions_to_retry().
+	 * @param string $reason       Gateway-supplied failure message, for the order note.
+	 *
+	 * @return void
+	 */
+	protected function record_failed_retry_attempt( $subscription, $reason = '' ) {
+		$member_id = isset( $subscription['member_id'] ) ? absint( $subscription['member_id'] ) : 0;
+		$sub_pk    = isset( $subscription['subscription_id'] ) ? absint( $subscription['subscription_id'] ) : 0;
+
+		if ( ! $member_id || ! $sub_pk ) {
+			return;
+		}
+
+		$member_subscription = $this->members_subscription_repository->retrieve( $sub_pk );
+
+		if ( empty( $member_subscription ) ) {
+			return;
+		}
+
+		$membership       = $this->membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
+		$membership_metas = empty( $membership['meta_value'] ) ? array() : (array) wp_unslash( json_decode( $membership['meta_value'], true ) );
+
+		$order_info = array(
+			'membership_data' => array(
+				'membership'     => $member_subscription['item_id'],
+				'payment_method' => $subscription['payment_method'],
+			),
+		);
+
+		$order_service = new OrderService();
+		$order_data    = $order_service->prepare_orders_data( $order_info, $member_id, $member_subscription );
+
+		$note = __( 'Renewal payment retry failed', 'user-registration' );
+
+		if ( ! empty( $reason ) ) {
+			$note .= ' - ' . $reason;
+		}
+
+		$order_data['orders_data']['status']          = 'failed';
+		$order_data['orders_data']['user_id']         = $member_id;
+		$order_data['orders_data']['created_by']      = $member_id;
+		$order_data['orders_data']['trial_status']    = 'off';
+		$order_data['orders_data']['notes']           = sanitize_text_field( $note );
+		$order_data['orders_data']['total_amount']    = isset( $membership_metas['amount'] ) ? $membership_metas['amount'] : 0;
+		$order_data['orders_data']['subscription_id'] = $member_subscription['ID'];
+
+		$this->orders_repository->create( $order_data );
+
+		$email_service = new EmailService();
+		$email_service->send_email(
+			array(
+				'subscription'     => $member_subscription,
+				'order'            => $this->members_orders_repository->get_member_orders( $member_id ),
+				'membership_metas' => $membership_metas,
+				'member_id'        => $member_id,
+			),
+			'payment_retry_failed'
+		);
 	}
 
 	/**
