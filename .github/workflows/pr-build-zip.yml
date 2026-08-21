@@ -1,0 +1,26 @@
+name: Build Testable ZIP
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  zip:
+    uses: wpeverest/.github/.github/workflows/pr-build-zip.yml@master
+    with:
+      node-version: '20.x'
+      php-version: '7.4'
+      package-manager: pnpm
+      # `pnpm exec grunt` needs grunt already in node_modules/.bin, so the
+      # default `pnpm install` step must run first (left un-overridden).
+      # grunt release:dev then does its OWN composer install (--no-dev) and a
+      # second pnpm install internally (see Gruntfile.js) -- so we skip this
+      # workflow's separate composer step to avoid doing it twice.
+      composer-install: false
+      build-command: pnpm exec grunt release:dev
+      zip-glob: 'release/*.zip'
+      public-base-url: https://themegrill-pr-artifacts.s3.amazonaws.com
+      s3-region: us-east-1
+    secrets: inherit
