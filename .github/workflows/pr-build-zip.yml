@@ -21,6 +21,7 @@ jobs:
       composer-install: false
       build-command: pnpm exec grunt release:dev
       zip-glob: 'release/*.zip'
+      artifacts-bucket: themegrill-pr-artifacts
       public-base-url: https://themegrill-pr-artifacts.s3.amazonaws.com
       s3-region: us-east-1
     secrets: inherit
