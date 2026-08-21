@@ -3,7 +3,7 @@ name: Build Testable ZIP
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches: [master]
+    branches: [develop]
   workflow_dispatch:
 
 jobs:
