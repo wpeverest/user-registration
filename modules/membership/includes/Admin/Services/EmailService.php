@@ -314,6 +314,11 @@ class EmailService {
 			return;
 		}
 
+		// Respect the per-email toggle; defaults to on so existing installs are unaffected.
+		if ( ! ur_option_checked( 'user_registration_enable_payment_retry_failed_email', true ) ) {
+			return;
+		}
+
 		$subject  = __( 'Payment Attempt Failed – Action Required on {{blog_info}}', 'user-registration' );
 		$subject  = get_option( 'user_registration_payment_retry_failed_email_subject', $subject );
 		$settings = $email_classes['UR_Settings_Payment_Retry_Failed_Email'];
@@ -348,6 +353,11 @@ class EmailService {
 		$email_classes = apply_filters( 'user_registration_email_classes', array() );
 
 		if ( ! isset( $email_classes['UR_Settings_Payment_Retry_Cancel_Email'] ) ) {
+			return;
+		}
+
+		// Respect the per-email toggle; defaults to on so existing installs are unaffected.
+		if ( ! ur_option_checked( 'user_registration_enable_payment_retry_cancel_email', true ) ) {
 			return;
 		}
 
