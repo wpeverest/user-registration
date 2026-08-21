@@ -1,0 +1,12 @@
+# TEMPLATE -- copy into a consuming repo as
+# .github/workflows/copilot-review-on-comment.yml
+name: Copilot review on comment
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  review:
+    uses: wpeverest/.github/.github/workflows/copilot-review-on-comment.yml@master
+    secrets: inherit
