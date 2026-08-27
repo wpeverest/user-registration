@@ -5405,7 +5405,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					wp_send_json_success( array( 'message' => $redirect ) );
 					wp_send_json( $user );
 				} else {
-					wp_redirect( wp_validate_redirect( $redirect, $redirect ) ); // phpcs:ignore
+					wp_safe_redirect( wp_validate_redirect( $redirect, ur_get_my_account_url() ) );
 					exit;
 				}
 
@@ -5459,9 +5459,9 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				 */
 				do_action( 'user_registration_login_failed' );
 
-				$redirect_url = wp_get_raw_referer() ? wp_get_raw_referer() : ur_get_my_account_url();
+				$redirect_url = wp_validate_redirect( wp_get_raw_referer(), ur_get_my_account_url() );
 				$redirect_url = add_query_arg( 'urm_error', $error_key, $redirect_url );
-				wp_redirect( $redirect_url );
+				wp_safe_redirect( $redirect_url );
 				exit;
 
 			}

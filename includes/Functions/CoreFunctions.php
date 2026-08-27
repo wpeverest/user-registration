@@ -95,6 +95,31 @@ if ( ! function_exists( 'ur_membership_verify_nonce' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_membership_get_safe_role' ) ) {
+	/**
+	 * Constrain a role assigned through a self-service membership flow to a non-privileged one.
+	 *
+	 * @param string $role     Role slug taken from membership data.
+	 * @param string $fallback Fallback role when the requested role is missing or privileged.
+	 * @return string Safe role slug.
+	 */
+	function ur_membership_get_safe_role( $role, $fallback = 'subscriber' ) {
+		$role = sanitize_key( $role );
+
+		if ( empty( $role ) || ! wp_roles()->is_role( $role ) ) {
+			return $fallback;
+		}
+
+		$role_object = wp_roles()->get_role( $role );
+
+		if ( $role_object && ( ! empty( $role_object->capabilities['manage_options'] ) || ! empty( $role_object->capabilities['promote_users'] ) ) ) {
+			return $fallback;
+		}
+
+		return $role;
+	}
+}
+
 if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 	/**
 	 * ur_membership_get_currencies

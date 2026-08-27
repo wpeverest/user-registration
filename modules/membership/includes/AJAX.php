@@ -1818,6 +1818,14 @@ class AJAX {
 			);
 		}
 
+		if ( ! ( new MembershipService() )->is_membership_purchasable( absint( $_POST['selected_membership_id'] ) ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid membership selected.', 'user-registration' ),
+				)
+			);
+		}
+
 		if ( isset( $_POST['form_data'] ) && ! empty( $_POST['form_data'] ) ) {
 			$single_field = array();
 			$form_data    = json_decode( wp_unslash( $_POST['form_data'] ) );
@@ -2071,6 +2079,14 @@ class AJAX {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Field selected_membership_id is required', 'user-registration' ),
+				)
+			);
+		}
+
+		if ( ! ( new MembershipService() )->is_membership_purchasable( absint( $_POST['selected_membership_id'] ) ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid membership selected.', 'user-registration' ),
 				)
 			);
 		}

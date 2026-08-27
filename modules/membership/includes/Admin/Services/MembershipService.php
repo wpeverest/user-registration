@@ -99,6 +99,24 @@ class MembershipService {
 	}
 
 	/**
+	 * Whether a membership can be selected/purchased from the front end.
+	 *
+	 * @param int $membership_id Membership post ID.
+	 * @return bool True when the membership is published and active.
+	 */
+	public function is_membership_purchasable( $membership_id ) {
+		$membership = $this->membership_repository->get_single_membership_by_ID( absint( $membership_id ) );
+
+		if ( empty( $membership ) ) {
+			return false;
+		}
+
+		$post_content = json_decode( wp_unslash( $membership['post_content'] ), true );
+
+		return ! empty( $post_content['status'] );
+	}
+
+	/**
 	 * Replace the old membership form shortcode with new registration form shortcode.
 	 *
 	 * @param int $form_id The form ID of the membership form which needs to be updated.

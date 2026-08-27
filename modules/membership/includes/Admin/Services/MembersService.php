@@ -229,12 +229,19 @@ class MembersService {
 		$response['tier']       = $tier;
 		$response['team_seats'] = $team_seats;
 
+		if ( 'frontend' === $context ) {
+			$response['role'] = ur_membership_get_safe_role( $response['role'] );
+		}
+
 		return $response;
 	}
 
 	public function update_user_meta( $data, $new_user_id ) {
 		$user = new \WP_User( $new_user_id );
 		update_user_meta( $new_user_id, 'ur_registration_source', 'membership' );
+
+		// Self-service membership assignment must never grant a privileged role.
+		$data['role'] = ur_membership_get_safe_role( $data['role'] ?? '' );
 
 		// UR-4573: Role handling on membership assignment.
 		// UR-4710: Paid memberships are still pending here — defer the role until payment is confirmed (maybe_grant_pending_role()).
@@ -277,6 +284,8 @@ class MembersService {
 		if ( empty( $pending ) || empty( $pending['role'] ) || empty( $pending['membership_id'] ) ) {
 			return;
 		}
+
+		$pending['role'] = ur_membership_get_safe_role( $pending['role'] );
 
 		$subscription_repository = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
 		$subscription            = $subscription_repository->get_subscription_data_by_member_and_membership_id( $user_id, $pending['membership_id'] );
