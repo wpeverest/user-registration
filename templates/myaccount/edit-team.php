@@ -12,7 +12,7 @@
  *
  * @see     https://docs.wpuserregistration.com/docs/how-to-edit-user-registration-template-files-such-as-login-form/
  * @package UserRegistration/Templates
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -24,7 +24,7 @@ if ( empty( $team ) ) {
 	return;
 }
 
-$team_id   = $team['ID'] ?? '';
+$team_id   = absint( $team['ID'] ?? 0 );
 $team_name = $team['team_name'] ?? '';
 $members   = $team['meta']['urm_member_emails'] ?? [];
 $leader_id = (int) ( $team['meta']['urm_team_leader_id'] ?? 0 );
@@ -70,7 +70,7 @@ $ordered_emails = array_merge( $ordered_emails, $other_emails );
 		<form class="user-registration-EditTeam ur-edit-team-form" method="post" action="">
 			<div class="ur-form-row" style="display: block;">
 				<div class="ur-form-grid">
-					<?php wp_nonce_field( 'ur_edit_team_nonce', 'ur_edit_team_nonce' ); ?>
+					<?php wp_nonce_field( 'ur_edit_team_' . $team_id, 'ur_edit_team_nonce' ); ?>
 					<input type="hidden" name="team_id" value="<?php esc_attr_e( $team_id ); ?>" required>
 					<input type="hidden" name="invited_member_emails">
 					<input type="hidden" name="existing_member_emails" value="<?php esc_attr_e( implode( ',', $members ) ); ?>">
