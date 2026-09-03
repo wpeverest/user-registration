@@ -1729,3 +1729,267 @@ function urcr_migrated_global_rule() {
 
 	return ! empty( $posts ) ? json_decode( $posts[0]->post_content, true ) : array();
 }
+
+/**
+ * Get every published access rule.
+ *
+ * @return array List of access rule posts.
+ * @since 5.2.8
+ */
+function urcr_get_published_access_rules() {
+	global $wpdb;
+
+	static $access_rules = null;
+
+	if ( null === $access_rules ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Mirrors URCR_Frontend::get_all_access_rules(); the result is cached in $access_rules for the rest of the request.
+		$access_rules = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s",
+				'urcr_access_rule',
+				'publish'
+			)
+		);
+	}
+
+	return $access_rules;
+}
+
+/**
+ * See if the given access rule holds the minimum data required to be evaluated.
+ *
+ * @param mixed $access_rule Decoded access rule.
+ *
+ * @return bool
+ * @since 5.2.8
+ */
+function urcr_is_access_rule_evaluable( $access_rule ) {
+	if ( ! is_array( $access_rule ) ) {
+		return false;
+	}
+
+	if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
+		return false;
+	}
+
+	if ( ! is_array( $access_rule['logic_map'] ) || empty( $access_rule['logic_map']['conditions'] ) ) {
+		return false;
+	}
+
+	return urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule );
+}
+
+/**
+ * See if any published access rule targets the whole site.
+ *
+ * @return bool
+ * @since 5.2.8
+ */
+function urcr_has_whole_site_access_rule() {
+	foreach ( urcr_get_published_access_rules() as $access_rule_post ) {
+		$access_rule = json_decode( $access_rule_post->post_content, true );
+
+		if ( ! is_array( $access_rule ) || empty( $access_rule['enabled'] ) || empty( $access_rule['target_contents'] ) ) {
+			continue;
+		}
+
+		if ( ! ur_string_to_bool( $access_rule['enabled'] ) || ! is_array( $access_rule['target_contents'] ) ) {
+			continue;
+		}
+
+		if ( in_array( 'whole_site', wp_list_pluck( $access_rule['target_contents'], 'type' ), true ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Resolve the access rules that apply to the given post.
+ *
+ * Mirrors the decision taken by URCR_Frontend::advanced_restriction_with_access_rules()
+ * and URCR_Frontend::restrict_whole_site() without applying any restriction.
+ *
+ * @param object $target_post Post to check against.
+ *
+ * @return array {
+ *     @type bool       $granted  Whether a rule explicitly granted access.
+ *     @type array|null $rule     The rule that restricts access, when one matched.
+ *     @type bool       $matched  Whether any rule targeted the post at all.
+ * }
+ * @since 5.2.8
+ */
+function urcr_resolve_access_rules( $target_post ) {
+	$granted          = false;
+	$matched          = false;
+	$restriction_rule = null;
+
+	foreach ( urcr_get_published_access_rules() as $access_rule_post ) {
+		$access_rule = json_decode( $access_rule_post->post_content, true );
+
+		if ( ! urcr_is_access_rule_evaluable( $access_rule ) ) {
+			continue;
+		}
+
+		if ( true !== urcr_is_target_post( $access_rule['target_contents'], $target_post ) ) {
+			continue;
+		}
+
+		$matched = true;
+
+		$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $target_post );
+		$access_control      = ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
+
+		if ( ( $should_allow_access && 'access' === $access_control ) || ( ! $should_allow_access && 'restrict' === $access_control ) ) {
+			$granted = true;
+		} else {
+			$restriction_rule = $access_rule;
+		}
+	}
+
+	return array(
+		'granted' => $granted,
+		'rule'    => $restriction_rule,
+		'matched' => $matched,
+	);
+}
+
+/**
+ * See if the current user satisfies a basic restriction mode.
+ *
+ * @param string $allow_access_to      Allow access mode. 0: logged in users, 1: roles, 2: guests, 3: memberships.
+ * @param array  $allowed_roles        Roles allowed by the mode.
+ * @param array  $allowed_memberships  Memberships allowed by the mode.
+ *
+ * @return bool
+ * @since 5.2.8
+ */
+function urcr_is_basic_access_granted( $allow_access_to, $allowed_roles, $allowed_memberships ) {
+	$current_user_roles = ( is_user_logged_in() && ! empty( wp_get_current_user()->roles ) ) ? (array) wp_get_current_user()->roles : array();
+
+	switch ( (string) $allow_access_to ) {
+		case '0':
+			return is_user_logged_in();
+
+		case '1':
+			if ( ! is_array( $allowed_roles ) ) {
+				return false;
+			}
+
+			return ! empty( array_intersect( $current_user_roles, $allowed_roles ) );
+
+		case '2':
+			return ! is_user_logged_in();
+
+		case '3':
+			if ( ! ur_check_module_activation( 'membership' ) || ! is_array( $allowed_memberships ) ) {
+				return false;
+			}
+
+			return urm_check_user_membership_has_access( $allowed_memberships );
+	}
+
+	return true;
+}
+
+/**
+ * See if the current user is allowed to read the given post.
+ *
+ * Single authorization gate shared by the template based restriction flow and the
+ * WordPress core REST API. It only decides, it never applies a restriction.
+ *
+ * @param int|object $target_post Post ID or post object to check against.
+ *
+ * @return bool True when the content may be read, false when it is restricted.
+ * @since 5.2.8
+ */
+function urcr_is_content_access_granted( $target_post ) {
+	if ( ! ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) ) ) {
+		return true;
+	}
+
+	$target_post = is_object( $target_post ) ? $target_post : get_post( $target_post );
+
+	if ( ! $target_post instanceof WP_Post ) {
+		return true;
+	}
+
+	$post_id = absint( $target_post->ID );
+
+	if ( ! $post_id || is_super_admin() || current_user_can( 'edit_post', $post_id ) ) {
+		return true;
+	}
+
+	if ( urcr_is_page_excluded( $post_id ) ) {
+		return true;
+	}
+
+	$override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', true );
+
+	// Per post restriction replaces the global settings entirely.
+	if ( ur_string_to_bool( $override_global_settings ) ) {
+		$allow_to = get_post_meta( $post_id, 'urcr_allow_to', true );
+
+		// A role restriction without any selected role never restricts on the front end.
+		if ( '1' === (string) $allow_to && empty( get_post_meta( $post_id, 'urcr_meta_roles', true ) ) ) {
+			return true;
+		}
+
+		return urcr_is_basic_access_granted(
+			$allow_to,
+			get_post_meta( $post_id, 'urcr_meta_roles', true ),
+			get_post_meta( $post_id, 'urcr_meta_memberships', true )
+		);
+	}
+
+	$resolved_rules = urcr_resolve_access_rules( $target_post );
+
+	// A granting rule always wins over a restricting one.
+	if ( ! $resolved_rules['granted'] && null !== $resolved_rules['rule'] ) {
+		return false;
+	}
+
+	// Whole site members only, applied when no access rule covers the whole site.
+	if ( ! $resolved_rules['granted']
+		&& ! urcr_has_whole_site_access_rule()
+		&& ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) ) ) {
+
+		$basic_access_granted = urcr_is_basic_access_granted(
+			get_option( 'user_registration_content_restriction_allow_access_to', '0' ),
+			get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' ),
+			get_option( 'user_registration_content_restriction_allow_to_memberships' )
+		);
+
+		if ( ! $basic_access_granted ) {
+			return false;
+		}
+	}
+
+	// Content drip delays content that no rule has restricted outright.
+	if ( urcr_is_content_drip_pending( $target_post ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * See if the given post is still waiting for its content drip to release.
+ *
+ * @param object $target_post Post to check against.
+ *
+ * @return bool
+ * @since 5.2.8
+ */
+function urcr_is_content_drip_pending( $target_post ) {
+	if ( ! defined( 'UR_PRO_ACTIVE' ) || ! UR_PRO_ACTIVE || ! ur_check_module_activation( 'content-drip' ) ) {
+		return false;
+	}
+
+	if ( ! class_exists( '\WPEverest\URM\ContentDrip\Frontend' ) ) {
+		return false;
+	}
+
+	return \WPEverest\URM\ContentDrip\Frontend::is_drip_pending( $target_post );
+}
