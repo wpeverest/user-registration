@@ -418,6 +418,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			foreach ( $field_sections as $section ) {
 				$class_to_check = $section['fields_parent_class'];
 
+				// Payment fields are frozen, so new sites are not upsold them either.
+				if ( 'User_Registration_Payments_Admin' === $class_to_check && ! ur_legacy_payment_fields_enabled() ) {
+					continue;
+				}
+
 				if ( ! class_exists( $class_to_check ) ) {
 					$fields       = $section['fields'];
 					$plan         = isset( $section['plan'] ) ? $section['plan'] : '';

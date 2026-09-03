@@ -173,6 +173,19 @@ class UR_Admin_Import_Export_Forms {
 								return $post_id;
 							}
 							array_push( $post_ids, $post_id );
+
+							// An imported form can carry payment fields the builder no longer offers. Keep the site on the legacy path instead of dropping its fields.
+							if ( ! ur_legacy_payment_fields_enabled() ) {
+								$charging_keys = apply_filters( 'user_registration_payments_menu_field_keys', array( 'single_item', 'multiple_choice', 'subscription_plan' ) );
+
+								foreach ( (array) $charging_keys as $charging_key ) {
+									if ( false !== strpos( $form_data->form_post->post_content, '"field_key":"' . $charging_key . '"' ) ) {
+										update_option( 'urm_is_legacy_payment_fields_user', 1 );
+										break;
+									}
+								}
+							}
+
 							if ( $post_id ) {
 
 								// check for non empty post_meta array.

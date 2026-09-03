@@ -166,6 +166,10 @@ class UR_Install {
 			add_option( 'urm_is_legacy_paypal_user', $has_legacy_paypal_data ? 1 : 0 );
 		}
 
+		if ( null === get_option( 'urm_is_legacy_payment_fields_user', null ) ) {
+			add_option( 'urm_is_legacy_payment_fields_user', ur_has_payment_enabled_form() ? 1 : 0 );
+		}
+
 		self::create_files();
 		self::update_ur_version();
 		self::maybe_update_db_version();

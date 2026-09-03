@@ -11780,6 +11780,39 @@ if ( ! function_exists( 'ur_should_show_payments_menu' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_legacy_payment_fields_enabled' ) ) {
+	/**
+	 * Whether the legacy form payment fields stay available on this site.
+	 *
+	 * Payment fields are frozen: sites that already charge through them keep them,
+	 * new sites take payments through the membership field only. The verdict is
+	 * recorded once by UR_Install::install(); the live check is only a fallback for
+	 * the request that runs before the option lands.
+	 *
+	 * Deliberately does not consult ur_has_payment_entries(), which also counts
+	 * membership orders and would mark a membership-only site as legacy.
+	 *
+	 * @return bool
+	 * @since x.x.x
+	 */
+	function ur_legacy_payment_fields_enabled() {
+		$is_legacy = get_option( 'urm_is_legacy_payment_fields_user', null );
+
+		if ( null === $is_legacy ) {
+			$is_legacy = ur_has_payment_enabled_form();
+		}
+
+		/**
+		 * Filters whether the legacy form payment fields stay available.
+		 *
+		 * @param bool $is_legacy Whether payment fields remain available.
+		 *
+		 * @since x.x.x
+		 */
+		return (bool) apply_filters( 'user_registration_legacy_payment_fields_enabled', (bool) $is_legacy );
+	}
+}
+
 if ( ! function_exists( 'ur_should_show_subscriptions_menu' ) ) {
 	/**
 	 * Whether the Subscriptions submenu should be registered.
