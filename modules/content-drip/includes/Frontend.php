@@ -182,8 +182,17 @@ class Frontend {
 			return false;
 		}
 
-		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-		$memberships        = $members_repository->get_member_membership_by_id( get_current_user_id() );
+		// Cached per user because a REST collection calls this once for every item prepared.
+		static $memberships_by_user = array();
+
+		$user_id = get_current_user_id();
+
+		if ( ! isset( $memberships_by_user[ $user_id ] ) ) {
+			$members_repository              = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+			$memberships_by_user[ $user_id ] = $members_repository->get_member_membership_by_id( $user_id );
+		}
+
+		$memberships = $memberships_by_user[ $user_id ];
 
 		if ( empty( $memberships ) ) {
 			return false;
@@ -202,7 +211,7 @@ class Frontend {
 			$target_contents = array_filter(
 				$access_rule['target_contents'],
 				function ( $target_content ) {
-					return ! isset( $target_content['type'] ) || 'whole_site' !== $target_content['type'] || ! empty( $target_content['drip'] );
+					return ! isset( $target_content['type'] ) || 'whole_site' !== $target_content['type'] || empty( $target_content['drip'] );
 				}
 			);
 

@@ -98,6 +98,11 @@ class URCR_REST_Restriction {
 			}
 		}
 
+		// An attachment's guid is its file URL, so it leaks the media source on its own.
+		if ( 'attachment' === $post->post_type && isset( $data['guid'] ) ) {
+			$data['guid'] = array( 'rendered' => '' );
+		}
+
 		/**
 		 * Filter the REST response served for a restricted post.
 		 *

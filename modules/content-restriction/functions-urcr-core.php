@@ -1786,6 +1786,14 @@ function urcr_is_access_rule_evaluable( $access_rule ) {
  * @since 5.2.8
  */
 function urcr_has_whole_site_access_rule() {
+	static $has_whole_site_rule = null;
+
+	if ( null !== $has_whole_site_rule ) {
+		return $has_whole_site_rule;
+	}
+
+	$has_whole_site_rule = false;
+
 	foreach ( urcr_get_published_access_rules() as $access_rule_post ) {
 		$access_rule = json_decode( $access_rule_post->post_content, true );
 
@@ -1798,11 +1806,12 @@ function urcr_has_whole_site_access_rule() {
 		}
 
 		if ( in_array( 'whole_site', wp_list_pluck( $access_rule['target_contents'], 'type' ), true ) ) {
-			return true;
+			$has_whole_site_rule = true;
+			break;
 		}
 	}
 
-	return false;
+	return $has_whole_site_rule;
 }
 
 /**
@@ -1832,7 +1841,17 @@ function urcr_resolve_access_rules( $target_post ) {
 			continue;
 		}
 
-		if ( true !== urcr_is_target_post( $access_rule['target_contents'], $target_post ) ) {
+		/*
+		 * Whole site targets are matched by type, exactly as
+		 * URCR_Frontend::restrict_whole_site() does. urcr_is_target_post() skips any target
+		 * without a non-empty 'value', and both the legacy migration and the membership rule
+		 * save path build whole site targets with no 'value' at all.
+		 */
+		$target_types = wp_list_pluck( $access_rule['target_contents'], 'type' );
+		$is_target    = in_array( 'whole_site', $target_types, true )
+			|| true === urcr_is_target_post( $access_rule['target_contents'], $target_post );
+
+		if ( ! $is_target ) {
 			continue;
 		}
 
@@ -1896,8 +1915,10 @@ function urcr_is_basic_access_granted( $allow_access_to, $allowed_roles, $allowe
 /**
  * See if the current user is allowed to read the given post.
  *
- * Single authorization gate shared by the template based restriction flow and the
- * WordPress core REST API. It only decides, it never applies a restriction.
+ * Authorization gate for the WordPress core REST API. It mirrors the decisions taken by
+ * the template based restriction flow, which still evaluates access inline in
+ * URCR_Frontend, and it only decides, it never applies a restriction. Keep both in step
+ * until the template flow is consolidated onto this function.
  *
  * @param int|object $target_post Post ID or post object to check against.
  *
@@ -1952,8 +1973,8 @@ function urcr_is_content_access_granted( $target_post ) {
 
 	// Whole site members only, applied when no access rule covers the whole site.
 	if ( ! $resolved_rules['granted']
-		&& ! urcr_has_whole_site_access_rule()
-		&& ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) ) ) {
+		&& ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) )
+		&& ! urcr_has_whole_site_access_rule() ) {
 
 		$basic_access_granted = urcr_is_basic_access_granted(
 			get_option( 'user_registration_content_restriction_allow_access_to', '0' ),
