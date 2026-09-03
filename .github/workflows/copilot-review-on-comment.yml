@@ -1,6 +1,8 @@
 name: Copilot review on comment
 
 on:
+  pull_request_target:
+    types: [opened]
   issue_comment:
     types: [created]
 
