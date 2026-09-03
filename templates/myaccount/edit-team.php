@@ -67,15 +67,13 @@ $ordered_emails = array_merge( $ordered_emails, $other_emails );
 			}
 			?>
 		</div>
-		<form class="user-registration-EditTeam ur-edit-team-form" method="post" action="">
+		<form class="user-registration-EditTeam ur-edit-team-form" method="post" action="" data-max-seats="<?php echo esc_attr( $team['meta']['urm_team_seats'] ?? 0 ); ?>">
 			<div class="ur-form-row" style="display: block;">
 				<div class="ur-form-grid">
 					<?php wp_nonce_field( 'ur_edit_team_' . $team_id, 'ur_edit_team_nonce' ); ?>
 					<input type="hidden" name="team_id" value="<?php esc_attr_e( $team_id ); ?>" required>
 					<input type="hidden" name="invited_member_emails">
 					<input type="hidden" name="existing_member_emails" value="<?php esc_attr_e( implode( ',', $members ) ); ?>">
-					<input type="hidden" name="members_id" value="<?php esc_attr_e( implode( ',', $team['meta']['urm_member_ids'] ?? [] ) ); ?>">
-					<input type="hidden" name="max_seats" value="<?php esc_attr_e( $team['meta']['urm_team_seats'] ?? 0 ); ?>">
 
 					<div class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
 						<label for="team_name" class="ur-label">
