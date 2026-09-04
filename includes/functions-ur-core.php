@@ -5405,7 +5405,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					wp_send_json_success( array( 'message' => $redirect ) );
 					wp_send_json( $user );
 				} else {
-					wp_redirect( wp_validate_redirect( $redirect, $redirect ) ); // phpcs:ignore
+					wp_redirect( wp_validate_redirect( $redirect, get_home_url() ) ); // phpcs:ignore
 					exit;
 				}
 
