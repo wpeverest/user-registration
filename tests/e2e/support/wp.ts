@@ -1,5 +1,5 @@
-import { expect, type Page } from "@playwright/test";
-import { ADMIN_PASS, ADMIN_USER } from "./env";
+import { expect, type Browser, type BrowserContext, type Page } from "@playwright/test";
+import { ADMIN_PASS, ADMIN_USER, BASE_URL } from "./env";
 
 /**
  * Log in to wp-admin.
@@ -8,8 +8,18 @@ import { ADMIN_PASS, ADMIN_USER } from "./env";
  * "confirm your administration email" screen. It is not an error and it does
  * not appear every time, so it cannot be asserted on — it just has to be
  * stepped past, or every spec becomes flaky on a schedule nobody controls.
+ *
+ * The wp-admin check first is not an optimisation. Playground — the engine CI
+ * boots — runs with `--login`, which authenticates a browser context as admin
+ * on its first request to the site. Driving wp-login.php on top of that races
+ * the auto-login's own redirect, and the loser is `#wpadminbar`: one CI run
+ * failed here with "element(s) not found" and passed on retry, which is what
+ * that race looks like from the outside.
  */
 export async function loginAsAdmin(page: Page, user = ADMIN_USER, pass = ADMIN_PASS) {
+  await page.goto("/wp-admin/");
+  if (await page.locator("#wpadminbar").count()) return;
+
   await page.goto("/wp-login.php");
   await page.fill("#user_login", user);
   await page.fill("#user_pass", pass);
@@ -23,6 +33,47 @@ export async function loginAsAdmin(page: Page, user = ADMIN_USER, pass = ADMIN_P
     await page.waitForLoadState("domcontentloaded");
   }
   await expect(page.locator("#wpadminbar")).toBeVisible();
+}
+
+/**
+ * A browser context that really is a logged-out visitor.
+ *
+ * `browser.newContext()` is not one. Playground boots with `--login`, and that
+ * flag logs EVERY new context in as admin on its first request — so a spec that
+ * opens a "visitor" context, registers an account through the front end and
+ * then expects the My Account login form is handed the admin dashboard instead.
+ * The failure surfaces as `input[name=username]` never appearing, which reads
+ * like a broken login form rather than like a session that was never anonymous.
+ * Worse than the red: `settings-security.spec.ts` asserts that a subscriber
+ * keeps the admin bar, and an admin session satisfies that for the wrong reason.
+ *
+ * So the auto-login is allowed to happen once and then undone. The WordPress
+ * auth cookies are dropped and Playground's own
+ * `playground_auto_login_already_happened` marker is kept — keeping the marker
+ * is the whole trick, because clearing every cookie just invites the next
+ * request to log the context straight back in.
+ *
+ * On a normal WordPress there is neither a marker nor an auth cookie to drop,
+ * so this is an extra page load and nothing else. `baseURL` is passed
+ * explicitly because a context built from the `browser` fixture does not
+ * reliably inherit the one in `use`.
+ */
+export async function newVisitor(browser: Browser): Promise<BrowserContext> {
+  const context = await browser.newContext({
+    baseURL: BASE_URL,
+    ignoreHTTPSErrors: true,
+  });
+
+  const page = await context.newPage();
+  await page.goto("/");
+  const keep = (await context.cookies()).filter(
+    (cookie) => !cookie.name.startsWith("wordpress"),
+  );
+  await context.clearCookies();
+  await context.addCookies(keep);
+  await page.close();
+
+  return context;
 }
 
 /** Open a User Registration admin screen by its `page=` slug. */

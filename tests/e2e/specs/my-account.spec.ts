@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { STRONG_PASSWORD } from "../support/env";
-import { firstFormId, loginToMyAccount, registerOn, registrationPageFor } from "../support/urm";
-import { deleteUserByEmail, loginAsAdmin } from "../support/wp";
+import { ensureFirstRun, firstFormId, loginToMyAccount, registerOn, registrationPageFor } from "../support/urm";
+import { deleteUserByEmail, loginAsAdmin, newVisitor } from "../support/wp";
 
 /**
  * Ported from UR-Automation `03__my_account` — "Validate working of Edit
@@ -13,12 +13,38 @@ import { deleteUserByEmail, loginAsAdmin } from "../support/wp";
  * appeared and the data did not survive, so a spec that stops at the notice
  * would have passed through every one of them.
  */
-test.describe("my account @fresh", () => {
-  test("edit profile saves, and the change survives a reload @fresh @my-account", async ({ page, context }) => {
+/**
+ * Its own describe, deliberately: the runner filters tiers with `--grep`, and
+ * grep sees the FULL title, describe included. Left inside `my account @fresh`
+ * the tag below would be overridden by its parent and the test would keep
+ * running in the fresh tier — the retag has to happen at both levels or at
+ * neither.
+ */
+test.describe("my account profile fields @demo", () => {
+  /**
+   * `@demo`, not `@fresh`, and the reason is the Country field below.
+   *
+   * The registration form a clean install ends up with has four fields —
+   * username, email, password, confirm password — so its Edit Profile form
+   * offers exactly `user_registration_user_login` (readonly) and
+   * `user_registration_user_email`. There is no third field to mutate, and
+   * email is the one field this test must not touch, because changing it
+   * diverts into the pending-email-change flow.
+   *
+   * This passed for as long as it did because `test-urm.local` has a Country
+   * field on its form: the test was reading site configuration as if it were
+   * product behaviour. Adding the field here instead would mean hand-writing
+   * the builder's own field JSON in the suite — the third copy of a product
+   * detail that already lives in two places in the plugin — so the honest fix
+   * is the tier tag. A site with demo content has the field; CI, which runs
+   * only `@fresh`, no longer runs a test that cannot pass there.
+   */
+  test("edit profile saves, and the change survives a reload @demo @my-account", async ({ page, browser }) => {
     await loginAsAdmin(page);
+    await ensureFirstRun(page);
     const url = await registrationPageFor(page, await firstFormId(page));
 
-    const visitor = await context.browser()!.newContext({ ignoreHTTPSErrors: true });
+    const visitor = await newVisitor(browser);
     const user = await visitor.newPage();
     const account = await registerOn(user, url);
 
@@ -61,12 +87,15 @@ test.describe("my account @fresh", () => {
     await deleteUserByEmail(page, account.email);
     await visitor.close();
   });
+});
 
-  test("change password rejects reusing the current password @fresh @my-account", async ({ page, context }) => {
+test.describe("my account @fresh", () => {
+  test("change password rejects reusing the current password @fresh @my-account", async ({ page, browser }) => {
     await loginAsAdmin(page);
+    await ensureFirstRun(page);
     const url = await registrationPageFor(page, await firstFormId(page));
 
-    const visitor = await context.browser()!.newContext({ ignoreHTTPSErrors: true });
+    const visitor = await newVisitor(browser);
     const user = await visitor.newPage();
     const account = await registerOn(user, url);
     await loginToMyAccount(user, account.username, account.password);
@@ -88,11 +117,12 @@ test.describe("my account @fresh", () => {
     await visitor.close();
   });
 
-  test("change password accepts a new password and it works on the next login @fresh @my-account", async ({ page, context }) => {
+  test("change password accepts a new password and it works on the next login @fresh @my-account", async ({ page, browser }) => {
     await loginAsAdmin(page);
+    await ensureFirstRun(page);
     const url = await registrationPageFor(page, await firstFormId(page));
 
-    const visitor = await context.browser()!.newContext({ ignoreHTTPSErrors: true });
+    const visitor = await newVisitor(browser);
     const user = await visitor.newPage();
     const account = await registerOn(user, url);
     await loginToMyAccount(user, account.username, account.password);

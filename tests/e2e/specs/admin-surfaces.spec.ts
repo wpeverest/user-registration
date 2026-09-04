@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { ensureFirstRun } from "../support/urm";
 import { gotoAdminPage, loginAsAdmin } from "../support/wp";
 
 /**
@@ -53,6 +54,7 @@ test.describe("admin surfaces @fresh", () => {
   });
 
   test("registration forms list shows at least one form @fresh @admin", async ({ page }) => {
+    await ensureFirstRun(page);
     await page.goto("/wp-admin/edit.php?post_type=user_registration");
     await expect(page.locator("#the-list tr[id^='post-']").first()).toBeVisible();
   });

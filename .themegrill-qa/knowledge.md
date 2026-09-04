@@ -477,6 +477,49 @@ date, content-restriction rules.
   `emails.spec.ts` skips rather than fails. The helper deliberately has no
   purge/delete: that mailbox holds hundreds of unrelated real messages, and
   isolation comes from the unique per-run address instead.
+- **Activating the plugin does not set the site up, and a `@fresh` spec cannot
+  assume it did.** `UR_Install::install()` creates options, tables and roles and
+  records `user_registration_first_time_activation_flag`; it calls neither
+  `create_form()` nor `create_pages()`. So a clean install has no registration
+  form, no `/my-account/`, and `users_can_register` still off — the admin screen
+  says so itself ("Please choose a My Account page", "Anyone can register option
+  is turned off"). Those are the setup wizard's job. Provisioning happens in the
+  handler for **opening** the wizard: an authenticated GET to
+  `/wp-json/user-registration/v1/getting-started` runs
+  `install_initial_pages()` and `ensure_default_form()`, which is what
+  `ensureFirstRun()` in `tests/e2e/support/urm.ts` calls. It bails out when a
+  form already exists, because the bootstrap also writes `users_can_register`
+  and `user_registration_login_options_prevent_core_login` and must not edit a
+  developer's real site.
+- **The form a clean install ends up with has four fields** — username, email,
+  password, confirm password — so its Edit Profile form offers only a readonly
+  `user_registration_user_login` and `user_registration_user_email`. Any spec
+  that mutates a profile field other than email needs demo content and belongs
+  in `@demo`; `test-urm.local` has a Country field on its form, and one spec
+  read that site configuration as product behaviour for a while.
+- **Playground's auto-login makes `browser.newContext()` an admin session, not a
+  visitor.** `boot-wp.mjs` starts the CLI with `--login`, which authenticates
+  every new context as admin on its first request. A "visitor" context therefore
+  lands on the My Account dashboard instead of the login form — and, worse than
+  a red test, `settings-security.spec.ts`'s "a subscriber keeps the admin bar"
+  passed for the wrong reason. `newVisitor()` in `tests/e2e/support/wp.ts` lets
+  the auto-login happen once, then drops the `wordpress*` cookies while keeping
+  `playground_auto_login_already_happened` — keeping that marker is what stops
+  the next request logging the context back in. `loginAsAdmin()` checks
+  `/wp-admin/` before driving wp-login.php for the same reason: going through the
+  form on top of the auto-login races its redirect, which is how one CI run
+  failed on `#wpadminbar` and passed on retry.
+- **Playground sends no mail at all**, so the email specs cannot pass there
+  whatever is listening. `mailAvailable()` returns false when
+  `TGQA_ENV=playground` rather than probing: Local runs a Mailpit per site, so a
+  suite pointed at a Playground site from a machine where Local is up finds a
+  healthy catcher on :10000 and then fails waiting 30s for mail that never left.
+  Set `TGQA_ENV=playground` when running the suite by hand against a Playground
+  site — `run-suite.mjs` and the CI workflow both export it already.
+- **`boot-wp.mjs` reuses a persisted site keyed on the checkout path; `--reset`
+  is opt-in.** A local boot without it can be a site that has already been
+  through onboarding, which is the opposite of the state CI gets. Reproducing a
+  CI-only failure means `--reset`, or the run proves nothing.
 - Two settings that look like they belong on a settings tab do not:
   **Login Methods** (`user_registration_general_setting_login_options_with`) and
   **Enable Ajax Login** (`ur_login_ajax_submission`) both live in the Login Forms

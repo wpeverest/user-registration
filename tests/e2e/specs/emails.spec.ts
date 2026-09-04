@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { addressedTo, mailAvailable, waitForMessage } from "../support/mail";
-import { firstFormId, registerOn, registrationPageFor } from "../support/urm";
-import { deleteUserByEmail, loginAsAdmin } from "../support/wp";
+import { ensureFirstRun, firstFormId, registerOn, registrationPageFor } from "../support/urm";
+import { deleteUserByEmail, loginAsAdmin, newVisitor } from "../support/wp";
 
 /**
  * Ported from UR-Automation `06__email_related_tests` — "Validate Admin Email
@@ -15,7 +15,7 @@ import { deleteUserByEmail, loginAsAdmin } from "../support/wp";
 test.describe("registration emails @fresh", () => {
   test("registering sends the user a welcome email and notifies the admin @fresh @email-notification", async ({
     page,
-    context,
+    browser,
   }) => {
     test.skip(
       !(await mailAvailable()),
@@ -23,13 +23,14 @@ test.describe("registration emails @fresh", () => {
     );
 
     await loginAsAdmin(page);
+    await ensureFirstRun(page);
     const url = await registrationPageFor(page, await firstFormId(page));
 
     // Anything already in the mailbox predates this; the unique address plus
     // this cutoff is what isolates the assertion without deleting anyone's mail.
     const cutoff = Date.now() - 5_000;
 
-    const visitor = await context.browser()!.newContext({ ignoreHTTPSErrors: true });
+    const visitor = await newVisitor(browser);
     const guest = await visitor.newPage();
     const account = await registerOn(guest, url);
 

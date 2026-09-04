@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
-import { firstFormId, registerOn, registrationPageFor } from "../support/urm";
-import { deleteUserByEmail, loginAsAdmin } from "../support/wp";
+import { ensureFirstRun, firstFormId, registerOn, registrationPageFor } from "../support/urm";
+import { deleteUserByEmail, loginAsAdmin, newVisitor } from "../support/wp";
 
 /**
  * Ported from UR-Automation `05__setting_login_options` — "Form Login and edit
@@ -37,9 +37,10 @@ async function ajaxLoginEnabled(page: Page): Promise<boolean> {
 test.describe("ajax login @fresh", () => {
   test("login submits over XHR when Ajax Login is enabled @fresh @login-forms", async ({
     page,
-    context,
+    browser,
   }) => {
     await loginAsAdmin(page);
+    await ensureFirstRun(page);
     const original = await ajaxLoginEnabled(page);
 
     try {
@@ -47,7 +48,7 @@ test.describe("ajax login @fresh", () => {
       expect(await ajaxLoginEnabled(page), "Ajax Login did not persist").toBe(true);
 
       const url = await registrationPageFor(page, await firstFormId(page));
-      const visitor = await context.browser()!.newContext({ ignoreHTTPSErrors: true });
+      const visitor = await newVisitor(browser);
       const user = await visitor.newPage();
       const account = await registerOn(user, url);
 

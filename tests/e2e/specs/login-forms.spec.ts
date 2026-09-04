@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { firstFormId, loginToMyAccount, registerOn, registrationPageFor } from "../support/urm";
-import { deleteUserByEmail, loginAsAdmin } from "../support/wp";
+import { ensureFirstRun, firstFormId, loginToMyAccount, registerOn, registrationPageFor } from "../support/urm";
+import { deleteUserByEmail, loginAsAdmin, newVisitor } from "../support/wp";
 
 /**
  * Ported from UR-Automation `05__setting_login_options` — "Login with Username
@@ -16,11 +16,12 @@ import { deleteUserByEmail, loginAsAdmin } from "../support/wp";
  * different test and it is not written yet.
  */
 test.describe("login methods @fresh", () => {
-  test("a registered user can log in with their username @fresh @login-forms", async ({ page, context }) => {
+  test("a registered user can log in with their username @fresh @login-forms", async ({ page, browser }) => {
     await loginAsAdmin(page);
+    await ensureFirstRun(page);
     const url = await registrationPageFor(page, await firstFormId(page));
 
-    const visitor = await context.browser()!.newContext({ ignoreHTTPSErrors: true });
+    const visitor = await newVisitor(browser);
     const user = await visitor.newPage();
     const account = await registerOn(user, url);
 
@@ -30,11 +31,12 @@ test.describe("login methods @fresh", () => {
     await visitor.close();
   });
 
-  test("the same user can log in with their email address @fresh @login-forms", async ({ page, context }) => {
+  test("the same user can log in with their email address @fresh @login-forms", async ({ page, browser }) => {
     await loginAsAdmin(page);
+    await ensureFirstRun(page);
     const url = await registrationPageFor(page, await firstFormId(page));
 
-    const visitor = await context.browser()!.newContext({ ignoreHTTPSErrors: true });
+    const visitor = await newVisitor(browser);
     const user = await visitor.newPage();
     const account = await registerOn(user, url);
 
@@ -44,11 +46,12 @@ test.describe("login methods @fresh", () => {
     await visitor.close();
   });
 
-  test("a wrong password is rejected @fresh @login-forms", async ({ page, context }) => {
+  test("a wrong password is rejected @fresh @login-forms", async ({ page, browser }) => {
     await loginAsAdmin(page);
+    await ensureFirstRun(page);
     const url = await registrationPageFor(page, await firstFormId(page));
 
-    const visitor = await context.browser()!.newContext({ ignoreHTTPSErrors: true });
+    const visitor = await newVisitor(browser);
     const user = await visitor.newPage();
     const account = await registerOn(user, url);
 

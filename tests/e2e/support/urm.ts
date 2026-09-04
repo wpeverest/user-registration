@@ -2,6 +2,58 @@ import { expect, type Page } from "@playwright/test";
 import { STRONG_PASSWORD, uniqueEmail, uniqueUsername } from "./env";
 import { ensurePage, restNonce } from "./wp";
 
+/**
+ * Put a clean install into the state the product's own onboarding leaves behind.
+ *
+ * Activating User Registration does not give the site a registration form, a
+ * My Account page, or "Anyone can register" — `UR_Install::install()` creates
+ * options, tables and roles and records that this is a first run, and stops
+ * there. The form and the front-end pages are the setup wizard's job, so until
+ * an admin has opened it there is no form to render and no `/my-account/` to log
+ * in on. That gap is invisible on a developer's site, where the wizard ran
+ * months ago, and total on a disposable CI site, where it never has: three
+ * @fresh specs passed locally and failed on every clean run, one of them
+ * reporting a 20s timeout on an admin list row that was correctly empty.
+ *
+ * Opening the wizard is a GET, and the provisioning happens in the handler for
+ * it — `UR_Getting_Started::get_wizard_state()` calls `install_initial_pages()`
+ * (which sets `users_can_register` and creates the registration, login,
+ * lost-password and my-account pages) and `ensure_default_form()`. So one
+ * authenticated request is the whole fixture.
+ *
+ * Going through the product's own bootstrap rather than hand-building a form is
+ * deliberate. The default form's field JSON is a product detail that already
+ * lives in two places in the plugin; a third copy here would be the one that
+ * quietly stops matching what a real install has, and every spec that fills the
+ * form would then be testing the fixture.
+ *
+ * Idempotent by the product's design — both helpers return existing ids when
+ * they find them — so specs call it unconditionally rather than probing first.
+ */
+export async function ensureFirstRun(page: Page): Promise<void> {
+  // A form already on the site means the wizard has run — on a developer's
+  // machine, months ago. Stop before touching anything, because the bootstrap
+  // is not read-only: `install_initial_pages()` sets `users_can_register` and
+  // clears `user_registration_login_options_prevent_core_login`. Flipping
+  // either of those on somebody's real site, unasked, is not a fixture's
+  // business, and a suite that edits the site it is measuring is one nobody
+  // will point at their own install twice.
+  if (await formIdFromAdminList(page)) return;
+
+  const nonce = await restNonce(page);
+  const status = await page.evaluate(async (nonce) => {
+    const r = await fetch("/wp-json/user-registration/v1/getting-started", {
+      headers: { "X-WP-Nonce": nonce },
+      credentials: "same-origin",
+    });
+    return r.status;
+  }, nonce);
+
+  if (status !== 200) {
+    throw new Error(`the first-run bootstrap answered HTTP ${status}`);
+  }
+}
+
 /** The id of the first registration form on the site. */
 export async function firstFormId(page: Page): Promise<number> {
   const nonce = await restNonce(page);
@@ -18,15 +70,37 @@ export async function firstFormId(page: Page): Promise<number> {
   }, nonce);
   if (id) return id;
 
-  // The CPT is not always REST-exposed; fall back to the admin list table.
+  // The CPT is not REST-exposed — `register_post_type` passes no `show_in_rest`
+  // — so the fetch above is always the losing branch today. The admin list
+  // table is the real lookup, not the fallback it reads as.
+  const fromList = await formIdFromAdminList(page);
+  if (fromList) return fromList;
+
+  // An empty list on a site whose wizard has never run is expected, not a
+  // failure. Provision it the way the product does and look once more.
+  await ensureFirstRun(page);
+  const afterBootstrap = await formIdFromAdminList(page);
+  if (afterBootstrap) return afterBootstrap;
+
+  throw new Error(
+    "no registration form exists on this site, and the first-run bootstrap did not create one",
+  );
+}
+
+/** Read the first form id off the admin list table, or null when it is empty. */
+async function formIdFromAdminList(page: Page): Promise<number | null> {
   await page.goto("/wp-admin/edit.php?post_type=user_registration");
-  const href = await page
-    .locator("#the-list tr[id^='post-']")
-    .first()
-    .getAttribute("id");
-  const parsed = Number((href ?? "").replace("post-", ""));
-  if (!parsed) throw new Error("no registration form exists on this site");
-  return parsed;
+  const row = page.locator("#the-list tr[id^='post-']").first();
+
+  // `count()` rather than letting `getAttribute` wait: "no forms yet" is an
+  // answer this function has to be able to give, and waiting the full action
+  // timeout for a row that is not coming turns it into a 20s TimeoutError
+  // pointing at the locator — which is how this read as a broken selector in
+  // CI rather than as an empty site.
+  if (!(await row.count())) return null;
+
+  const parsed = Number(((await row.getAttribute("id")) ?? "").replace("post-", ""));
+  return parsed || null;
 }
 
 /** Publish a page that renders the given form, and return its URL. */

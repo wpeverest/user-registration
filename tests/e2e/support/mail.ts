@@ -19,6 +19,15 @@ export type Message = {
 
 /** Is a mail catcher reachable? Used to skip, not to fail. */
 export async function mailAvailable(): Promise<boolean> {
+  // Playground has no outbound mail at all — `boot-wp.mjs` reports it as a
+  // caveat of the engine — so nothing the site sends can ever arrive, whatever
+  // is listening. Reachability alone is the wrong question there, and answering
+  // it "yes" is actively misleading on a developer machine: Local runs a Mailpit
+  // per site, so a suite pointed at a Playground site while Local is up finds a
+  // healthy catcher on :10000, waits the full 30s for mail that was never going
+  // to leave, and reports a red email test for a site that cannot send email.
+  if ((process.env.TGQA_ENV ?? "") === "playground") return false;
+
   try {
     const r = await fetch(`${BASE}/api/v1/messages?limit=1`, {
       signal: AbortSignal.timeout(3000),

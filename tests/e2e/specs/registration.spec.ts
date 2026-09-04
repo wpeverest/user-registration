@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { firstFormId, registerOn, registrationPageFor } from "../support/urm";
-import { deleteUserByEmail, loginAsAdmin } from "../support/wp";
+import { ensureFirstRun, firstFormId, registerOn, registrationPageFor } from "../support/urm";
+import { deleteUserByEmail, loginAsAdmin, newVisitor } from "../support/wp";
 
 /**
  * Ported from UR-Automation `02__form_settings` — "Validate User Approval and
@@ -13,14 +13,15 @@ import { deleteUserByEmail, loginAsAdmin } from "../support/wp";
  * its assertions on the outcome instead.
  */
 test.describe("registration @fresh", () => {
-  test("a visitor can register and the account is created @fresh @registration", async ({ page, context }) => {
+  test("a visitor can register and the account is created @fresh @registration", async ({ page, browser }) => {
     await loginAsAdmin(page);
+    await ensureFirstRun(page);
     const formId = await firstFormId(page);
     const url = await registrationPageFor(page, formId);
 
     // A real visitor is not logged in; reuse of the admin session here would
     // hide any capability bug in the front-end submit path.
-    const visitor = await context.browser()!.newContext({ ignoreHTTPSErrors: true });
+    const visitor = await newVisitor(browser);
     const guest = await visitor.newPage();
     const account = await registerOn(guest, url);
 

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { firstFormId, loginToMyAccount, registerOn, registrationPageFor } from "../support/urm";
-import { deleteUserByEmail, gotoAdminPage, loginAsAdmin } from "../support/wp";
+import { ensureFirstRun, firstFormId, loginToMyAccount, registerOn, registrationPageFor } from "../support/urm";
+import { deleteUserByEmail, gotoAdminPage, loginAsAdmin, newVisitor } from "../support/wp";
 
 /**
  * Ported from UR-Automation `04__setting_general_options/01__DashboardAccess`
@@ -63,12 +63,13 @@ test.describe("prevent wp dashboard access @fresh", () => {
     expect(await savedDisabledRoles(page)).not.toContain("subscriber");
   });
 
-  test("a subscriber keeps the admin bar when the setting is off @fresh @security", async ({ page, context }) => {
+  test("a subscriber keeps the admin bar when the setting is off @fresh @security", async ({ page, browser }) => {
     await loginAsAdmin(page);
+    await ensureFirstRun(page);
     await setDisabledRoles(page, []);
     const url = await registrationPageFor(page, await firstFormId(page));
 
-    const visitor = await context.browser()!.newContext({ ignoreHTTPSErrors: true });
+    const visitor = await newVisitor(browser);
     const user = await visitor.newPage();
     const account = await registerOn(user, url);
     await loginToMyAccount(user, account.username, account.password);
