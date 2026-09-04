@@ -289,6 +289,11 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 
 	/**
 	 * Fetches the list of subscriptions to retry based on payment retry settings and billing expiry.
+	 *
+	 * The orders join is pinned to each subscription's most recent order. Joining
+	 * every order returned one row per order, so a subscription with N orders was
+	 * retried N times in a single run - N counter increments, N failed order rows
+	 * and N duplicate emails to the member. See UR-4855.
 	 */
 	public function get_subscriptions_to_retry() {
 		// Check if payment retry is enabled
@@ -325,7 +330,9 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 			FROM $this->table wums
 			LEFT JOIN $this->users_table wu ON wums.user_id = wu.ID
 			LEFT JOIN $this->posts_table wp ON wums.item_id = wp.ID
-			LEFT JOIN $this->orders_table wo ON wums.ID = wo.subscription_id
+			LEFT JOIN $this->orders_table wo ON wo.ID = (
+				SELECT MAX( o2.ID ) FROM $this->orders_table o2 WHERE o2.subscription_id = wums.ID
+			)
 			WHERE (wums.status = 'failed' OR wums.status = 'expired')
 			AND wums.updated_at >= '%s'
 			ORDER BY wums.updated_at ASC

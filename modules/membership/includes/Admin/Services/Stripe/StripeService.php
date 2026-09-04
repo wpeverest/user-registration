@@ -2986,26 +2986,13 @@ class StripeService {
 						)
 					);
 
-					// Notify user via email about a failed retry attempt.
-					$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription['sub_id'], true );
-					if ( ! empty( $current_subscription ) ) {
-						$member_id = $current_subscription['user_id'];
-
-						if ( 1 === (int) get_user_meta( $member_id, 'urm_is_payment_retrying', true ) ) {
-							$latest_order     = $this->members_orders_repository->get_member_orders( $member_id );
-							$membership       = $this->membership_repository->get_single_membership_by_ID( $current_subscription['item_id'] );
-							$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
-							$email_service    = new EmailService();
-							$email_data       = array(
-								'subscription'     => $current_subscription,
-								'order'            => $latest_order,
-								'membership_metas' => $membership_metas,
-								'member_id'        => $member_id,
-							);
-							$email_service->send_email( $email_data, 'payment_retry_failed' );
-						}
-						$response['message'] = __( 'Subscription retry did not resolve the issue', 'user-registration' );
-					}
+					/*
+					 * The member notification and the failed order row are handled
+					 * centrally by SubscriptionService::record_failed_retry_attempt()
+					 * off this method's return value, so every failure path notifies
+					 * once and only once. See UR-4857.
+					 */
+					$response['message'] = __( 'Subscription retry did not resolve the issue', 'user-registration' );
 				}
 			} elseif ( 'active' === $stripe_subscription->status || 'trialing' === $stripe_subscription->status ) {
 				// Scenario: if automatic retry is enabled in stripe dashboard, it might be already active via smart retry.
