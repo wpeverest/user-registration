@@ -215,6 +215,12 @@ class UR_Email_Confirmation {
 		} else {
 			$ur_token_raw = sanitize_text_field( wp_unslash( $_GET['ur_token'] ) );
 			$ur_token     = str_split( $ur_token_raw, 50 );
+
+			// A token of 50 characters or fewer has no second chunk, so there is nothing to decrypt.
+			if ( count( $ur_token ) < 2 ) {
+				return;
+			}
+
 			$token_string = $ur_token[1];
 
 			if ( 2 < count( $ur_token ) ) {
