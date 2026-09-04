@@ -28,6 +28,7 @@ import {
 } from "@chakra-ui/react";
 import { FaCog, FaPlay, FaLock } from "react-icons/fa";
 import ReactPlayer from "react-player";
+import { urUtmUrl } from "../../../../utils/utm";
 import { activateModule, deactivateModule } from "./modules-api";
 import { __ } from "@wordpress/i18n";
 
@@ -144,9 +145,10 @@ const AddonCard = ({ addon, showToast }) => {
 		const { upgradeURL } =
 			typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 		if (upgradeURL) {
-			const plan_upgrade_url =
-				upgradeURL +
-				"&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
+			const plan_upgrade_url = urUtmUrl(upgradeURL, {
+				source: "dashboard-all-features",
+				medium: "upgrade-link"
+			});
 			window.open(plan_upgrade_url, "_blank");
 		}
 	};
