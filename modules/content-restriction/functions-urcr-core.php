@@ -1817,22 +1817,39 @@ function urcr_has_whole_site_access_rule() {
 /**
  * Resolve the access rules that apply to the given post.
  *
- * Mirrors the decision taken by URCR_Frontend::advanced_restriction_with_access_rules()
- * and URCR_Frontend::restrict_whole_site() without applying any restriction.
+ * Whole site rules and post targeted rules are resolved as two independent passes,
+ * because the front end enforces them through two independent hooks:
+ * URCR_Frontend::advanced_restriction_with_access_rules() only ever sees post targeted
+ * rules, while URCR_Frontend::restrict_whole_site() handles the whole site ones. A
+ * restriction from either pass wins, so a grant in one pass must never cancel a
+ * restriction found by the other. Nothing is applied here, this only decides.
  *
  * @param object $target_post Post to check against.
  *
  * @return array {
- *     @type bool       $granted  Whether a rule explicitly granted access.
- *     @type array|null $rule     The rule that restricts access, when one matched.
- *     @type bool       $matched  Whether any rule targeted the post at all.
+ *     Resolution of each pass, keyed 'whole_site' and 'post'.
+ *
+ *     @type array $... {
+ *         @type bool       $granted Whether a rule in this pass explicitly granted access.
+ *         @type array|null $rule    The rule that restricts access, when one matched.
+ *         @type bool       $matched Whether any rule in this pass targeted the post at all.
+ *     }
  * }
  * @since 5.2.8
  */
 function urcr_resolve_access_rules( $target_post ) {
-	$granted          = false;
-	$matched          = false;
-	$restriction_rule = null;
+	$resolved = array(
+		'whole_site' => array(
+			'granted' => false,
+			'rule'    => null,
+			'matched' => false,
+		),
+		'post'       => array(
+			'granted' => false,
+			'rule'    => null,
+			'matched' => false,
+		),
+	);
 
 	foreach ( urcr_get_published_access_rules() as $access_rule_post ) {
 		$access_rule = json_decode( $access_rule_post->post_content, true );
@@ -1847,31 +1864,27 @@ function urcr_resolve_access_rules( $target_post ) {
 		 * without a non-empty 'value', and both the legacy migration and the membership rule
 		 * save path build whole site targets with no 'value' at all.
 		 */
-		$target_types = wp_list_pluck( $access_rule['target_contents'], 'type' );
-		$is_target    = in_array( 'whole_site', $target_types, true )
-			|| true === urcr_is_target_post( $access_rule['target_contents'], $target_post );
-
-		if ( ! $is_target ) {
+		if ( in_array( 'whole_site', wp_list_pluck( $access_rule['target_contents'], 'type' ), true ) ) {
+			$pass = 'whole_site';
+		} elseif ( true === urcr_is_target_post( $access_rule['target_contents'], $target_post ) ) {
+			$pass = 'post';
+		} else {
 			continue;
 		}
 
-		$matched = true;
+		$resolved[ $pass ]['matched'] = true;
 
 		$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $target_post );
 		$access_control      = ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
 
 		if ( ( $should_allow_access && 'access' === $access_control ) || ( ! $should_allow_access && 'restrict' === $access_control ) ) {
-			$granted = true;
+			$resolved[ $pass ]['granted'] = true;
 		} else {
-			$restriction_rule = $access_rule;
+			$resolved[ $pass ]['rule'] = $access_rule;
 		}
 	}
 
-	return array(
-		'granted' => $granted,
-		'rule'    => $restriction_rule,
-		'matched' => $matched,
-	);
+	return $resolved;
 }
 
 /**
@@ -1965,14 +1978,32 @@ function urcr_is_content_access_granted( $target_post ) {
 	}
 
 	$resolved_rules = urcr_resolve_access_rules( $target_post );
+	$whole_site     = $resolved_rules['whole_site'];
+	$post_targeted  = $resolved_rules['post'];
 
-	// A granting rule always wins over a restricting one.
-	if ( ! $resolved_rules['granted'] && null !== $resolved_rules['rule'] ) {
+	/*
+	 * Post targeted rules, as enforced by
+	 * URCR_Frontend::advanced_restriction_with_access_rules(). Within this pass a granting
+	 * rule wins over a restricting one, but a whole site grant does not reach it.
+	 */
+	if ( ! $post_targeted['granted'] && null !== $post_targeted['rule'] ) {
 		return false;
 	}
 
+	/*
+	 * Whole site rules, as enforced separately by URCR_Frontend::restrict_whole_site().
+	 * That method returns early for a whole site grant and then, before applying the
+	 * restriction, walks the post targeted rules once more and bails out on a grant there
+	 * too, so either grant lifts a whole site restriction.
+	 */
+	if ( ! $whole_site['granted'] && ! $post_targeted['granted'] && null !== $whole_site['rule'] ) {
+		return false;
+	}
+
+	$rules_granted_access = $whole_site['granted'] || $post_targeted['granted'];
+
 	// Whole site members only, applied when no access rule covers the whole site.
-	if ( ! $resolved_rules['granted']
+	if ( ! $rules_granted_access
 		&& ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) )
 		&& ! urcr_has_whole_site_access_rule() ) {
 
