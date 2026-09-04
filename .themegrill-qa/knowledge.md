@@ -524,7 +524,14 @@ date, content-restriction rules.
   the ajax spec timed out. `qa-suite.yml` sets `test_timeout_ms: 90000`, about
   3x the measured worst case, so a hung spec is still capped.
   **Do not read a local pass as a CI pass** — build in headroom for a runner
-  that is roughly 1.5x slower than a developer's machine.
+  that is roughly 1.5x slower than a developer's machine. Real CI durations for
+  reference, measured on run 33857705477: login specs 35-37s, change-password
+  42s and 47s, registration 36s, membership 18s.
+- **The first test of a run pays a cold start.** Playground reports settled
+  while WASM PHP is still cold, so `loginAsAdmin()` asserts `#wpadminbar` with a
+  45s timeout rather than the 15s `expect` default — that assertion is where the
+  run's first test failed and its retry passed, which costs a retry to learn
+  nothing.
 - **`restNonce()` costs a full admin page load, so it is cached per browser
   context** — four helpers want it and one test's worth of redundant loads was
   most of the overshoot above. It must NOT be cached for the whole run: a

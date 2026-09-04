@@ -32,7 +32,13 @@ export async function loginAsAdmin(page: Page, user = ADMIN_USER, pass = ADMIN_P
     else await page.goto("/wp-admin/");
     await page.waitForLoadState("domcontentloaded");
   }
-  await expect(page.locator("#wpadminbar")).toBeVisible();
+  // 45s, not the 15s `expect` default. This is the first thing every spec does,
+  // and on the first test of a run it lands on a Playground that has only just
+  // settled — WASM PHP still cold, opcache empty. That is where the one
+  // remaining CI flake was: attempt 0 of the run's first test failed here with
+  // "#wpadminbar element(s) not found", and the retry passed on a warm site.
+  // A cold start is not a regression and should not cost a retry to discover.
+  await expect(page.locator("#wpadminbar")).toBeVisible({ timeout: 45_000 });
 }
 
 /**
