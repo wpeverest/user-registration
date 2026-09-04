@@ -99,7 +99,7 @@ class UR_Frontend_Form_Handler {
 		 *
 		 * @return array
 		 */
-		apply_filters_ref_array(
+		do_action_ref_array(
 			'user_registration_validate_form_data',
 			array(
 				&self::$valid_form_data,
