@@ -306,8 +306,13 @@ class UR_User_Approval {
 			}
 
 			return $user;
-		} elseif ( 'payment' === $login_option ) {
+		} elseif ( 'payment' === $login_option || ( $is_membership_active && function_exists( 'check_membership_field_in_form' ) && check_membership_field_in_form( $form_id ) ) ) {
 
+			// Membership-form accounts are gated here regardless of the form's login option (e.g. auto_login):
+			// the membership field is auto-required, so a legit registration always has an order, and an
+			// account with no completed order is either an omitted-field forgery or awaiting payment. UR-4811.
+			$membership = array();
+			$last_order = array();
 			if ( $is_membership_active ) {
 				$members_repository       = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 				$membership               = $members_repository->get_member_membership_by_id( $user->ID );
@@ -315,9 +320,8 @@ class UR_User_Approval {
 				$last_order               = $members_order_repository->get_member_orders( $user->ID );
 			}
 
-			$payment_status   = get_user_meta( $user->ID, 'ur_payment_status', true );
-			$requires_payment = 'yes' === get_user_meta( $user->ID, 'ur_requires_payment', true );
-			$is_member        = $is_membership_active && ! empty( $membership ) && ! empty( $last_order );
+			$payment_status = get_user_meta( $user->ID, 'ur_payment_status', true );
+			$is_member      = $is_membership_active && ! empty( $membership ) && ! empty( $last_order );
 			if ( $is_member ) {
 				$payment_status            = $last_order['status'];
 				$membership_payment_method = $last_order['payment_method'];
@@ -332,7 +336,11 @@ class UR_User_Approval {
 			 */
 			do_action( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
 
-			if ( 'completed' !== $payment_status && ( $requires_payment || ! empty( $payment_status ) ) ) {
+			// Payment Before Login fails closed: only a completed payment (paid) or a completed free/zero
+			// order lets the account in. Any other state — pending, or no order at all (a registration
+			// that skipped membership/order creation by omitting the membership field or client signals,
+			// including accounts made through the pre-patch bypass) — is treated as pending and denied.
+			if ( 'completed' !== $payment_status ) {
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending payment.', 'user-registration' );
 
 				$payment_method = $is_member ? $membership_payment_method : get_user_meta( $user->ID, 'ur_payment_method', true );

@@ -6382,14 +6382,12 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 			return $valid_form_data;
 		}
 
-		$field_name   = '';
-		$hidden_field = isset( $_POST['urcl_hide_fields'] ) ? ur_clean( $_POST['urcl_hide_fields'] ) : array(); //phpcs:ignore.
+		$field_name         = '';
+		$hidden_array_field = ur_get_conditionally_hidden_fields( $form_id );
 
-		if ( empty( $hidden_field ) ) {
+		if ( empty( $hidden_array_field ) ) {
 			return $valid_form_data;
 		}
-
-		$hidden_array_field = json_decode( stripslashes( $hidden_field ) );
 
 		if ( isset( $_POST['action'] ) && 'user_registration_user_form_submit' === $_POST['action'] ) { //phpcs:ignore.
 			foreach ( $hidden_array_field as $field ) {
@@ -6944,6 +6942,161 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_urcl_compare_arrays' ) ) {
+	function ur_urcl_compare_arrays( $a, $b ) {
+		if ( count( $a ) !== count( $b ) ) {
+			return false;
+		}
+		foreach ( $a as $x ) {
+			if ( ! in_array( $x, $b, true ) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+}
+
+if ( ! function_exists( 'ur_urcl_resolve_operator' ) ) {
+	function ur_urcl_resolve_operator( $subject, $against, $operator ) {
+		$subj_arr = is_array( $subject );
+		$ag_arr   = is_array( $against );
+		switch ( $operator ) {
+			case 'is':
+				if ( $subj_arr && $ag_arr ) {
+					return ur_urcl_compare_arrays( $subject, $against );
+				}
+				if ( $ag_arr ) {
+					return in_array( (string) $subject, array_map( 'strval', $against ), true );
+				}
+				return (string) $subject === (string) $against;
+			case 'is_not':
+				if ( $subj_arr && $ag_arr ) {
+					return ur_urcl_compare_arrays( $subject, $against );
+				}
+				if ( $ag_arr ) {
+					return ! in_array( (string) $subject, array_map( 'strval', $against ), true );
+				}
+				return (string) $subject !== (string) $against;
+			case 'empty':
+				return $ag_arr ? 0 === count( $against ) : 0 === strlen( (string) $against );
+			case 'not_empty':
+				return $ag_arr ? count( $against ) > 0 : strlen( (string) $against ) > 0;
+			case 'contains':
+				if ( $subj_arr && $ag_arr ) {
+					return ur_urcl_compare_arrays( $subject, $against );
+				}
+				if ( $ag_arr ) {
+					return in_array( (string) $subject, array_map( 'strval', $against ), true );
+				}
+				return false !== strpos( (string) $against, (string) $subject );
+			default:
+				return false;
+		}
+	}
+}
+
+if ( ! function_exists( 'ur_urcl_evaluate_condition' ) ) {
+	function ur_urcl_evaluate_condition( $rule, $values, $field_keys ) {
+		if ( isset( $rule->type ) && 'group' === $rule->type ) {
+			if ( ! isset( $rule->conditions ) || ! is_array( $rule->conditions ) ) {
+				return true;
+			}
+			$gate = ( ! isset( $rule->logic_gate ) || '' === $rule->logic_gate ) ? 'OR' : $rule->logic_gate;
+			foreach ( $rule->conditions as $sub ) {
+				$e = ur_urcl_evaluate_condition( $sub, $values, $field_keys );
+				if ( 'OR' === $gate && true === $e ) {
+					return true;
+				}
+				if ( 'AND' === $gate && false === $e ) {
+					return false;
+				}
+				if ( 'NOT' === $gate && true === $e ) {
+					return false;
+				}
+			}
+			if ( 'OR' === $gate ) {
+				return false;
+			}
+			return ( 'AND' === $gate || 'NOT' === $gate );
+		}
+		$subject = isset( $rule->value ) ? $rule->value : '';
+		$trigger = isset( $rule->triggerer_id ) ? $rule->triggerer_id : '';
+		$against = isset( $values[ $trigger ] ) ? $values[ $trigger ] : null;
+		$type    = isset( $field_keys[ $trigger ] ) ? $field_keys[ $trigger ] : '';
+		if ( in_array( $type, array( 'checkbox', 'multiple_choice' ), true ) && ! is_array( $against ) ) {
+			$against = ( null === $against || '' === $against ) ? array() : (array) $against;
+		}
+		return ur_urcl_resolve_operator( $subject, $against, isset( $rule->operator ) ? $rule->operator : '' );
+	}
+}
+
+if ( ! function_exists( 'ur_get_conditionally_hidden_fields' ) ) {
+	// Server-side conditional-logic visibility. Returns field_names hidden by the form's own cl_map rules,
+	// evaluated against submitted values — never trusts client $_POST['urcl_hide_fields']. UR-4811.
+	function ur_get_conditionally_hidden_fields( $form_id, $submitted_values = null ) {
+		static $cache = array();
+		$form_id = absint( $form_id );
+		if ( ! $form_id && isset( $_POST['form_id'] ) ) { // phpcs:ignore
+			$form_id = absint( wp_unslash( $_POST['form_id'] ) );
+		}
+		if ( isset( $cache[ $form_id ] ) ) {
+			return $cache[ $form_id ];
+		}
+		$hidden = array();
+		if ( ! class_exists( 'UserRegistrationConditionalLogic' ) || ! $form_id ) {
+			$cache[ $form_id ] = $hidden;
+			return $hidden;
+		}
+
+		if ( null === $submitted_values || ! is_array( $submitted_values ) ) {
+			$submitted_values = array();
+			$raw              = isset( $_POST['form_data'] ) ? json_decode( wp_unslash( $_POST['form_data'] ) ) : array(); // phpcs:ignore
+			foreach ( (array) $raw as $f ) {
+				if ( isset( $f->field_name ) ) {
+					$submitted_values[ $f->field_name ] = isset( $f->value ) ? $f->value : '';
+				}
+			}
+		}
+
+		$post = get_post( $form_id );
+		if ( ! $post || empty( $post->post_content ) ) {
+			$cache[ $form_id ] = $hidden;
+			return $hidden;
+		}
+		$rows       = json_decode( $post->post_content );
+		$cl_fields  = array();
+		$field_keys = array();
+		foreach ( (array) $rows as $row ) {
+			foreach ( (array) $row as $grid ) {
+				foreach ( (array) $grid as $field ) {
+					$fname = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
+					if ( '' === $fname ) {
+						continue;
+					}
+					$field_keys[ $fname ] = isset( $field->field_key ) ? $field->field_key : '';
+					if ( isset( $field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $field->advance_setting->enable_conditional_logic ) && ! empty( $field->advance_setting->cl_map ) ) {
+						$cl_fields[ $fname ] = json_decode( $field->advance_setting->cl_map );
+					}
+				}
+			}
+		}
+
+		foreach ( $cl_fields as $fname => $cl_map ) {
+			if ( ! isset( $cl_map->logic_map, $cl_map->action ) ) {
+				continue;
+			}
+			$eval      = ur_urcl_evaluate_condition( $cl_map->logic_map, $submitted_values, $field_keys );
+			$is_hidden = ( 'hide' === $cl_map->action ) ? $eval : ! $eval;
+			if ( $is_hidden ) {
+				$hidden[] = $fname;
+			}
+		}
+
+		$cache[ $form_id ] = $hidden;
+		return $hidden;
+	}
+}
+
 if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data' ) ) {
 
 	/**
@@ -6985,7 +7138,7 @@ if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data
 
 			$required = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : false;
 
-			$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
+			$urcl_hide_fields = ur_get_conditionally_hidden_fields( $form_id );
 
 			if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) ) {
 				array_unshift( $validations, 'required' );

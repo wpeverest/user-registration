@@ -476,7 +476,7 @@ class UR_Form_Validation extends UR_Validation {
 					return;
 				} else {
 					// phpcs:ignore WordPress.Security.NonceVerification.Missing
-					$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array();
+					$urcl_hide_fields = ur_get_conditionally_hidden_fields( $this->form_id );
 					if ( ! in_array( $form_field_data[ $key ]->general_setting->field_name, $urcl_hide_fields, true ) ) {
 						$field_label = $form_field_data[ $key ]->general_setting->label;
 						/* translators: %s - Field Label */
@@ -591,7 +591,7 @@ class UR_Form_Validation extends UR_Validation {
 
 		if ( ! empty( $field ) ) {
 			$required         = isset( $field->general_setting->required ) ? $field->general_setting->required : false;
-			$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
+			$urcl_hide_fields = ur_get_conditionally_hidden_fields( $this->form_id );
 			$field_name       = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 
 			if ( ! in_array( $field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) ) {

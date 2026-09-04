@@ -430,6 +430,9 @@ if ( ! class_exists( 'Admin' ) ) :
 				return $success_params;
 			}
 
+			// A plan was selected: membership and order creation are REQUIRED. Every failure past this
+			// point rolls back the just-created user, so a payment-gated account is never left without
+			// an order — which is what let an attacker skip payment by omitting the client signals.
 			$member    = get_userdata( $user_id );
 			$member_id = $user_id;
 			if ( ! $member ) {
