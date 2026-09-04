@@ -153,7 +153,12 @@ test.describe("my account @fresh", () => {
 async function gotoChangePassword(user: import("@playwright/test").Page) {
   // The Change Password action lives on the read-only Profile Details view;
   // the ?action=edit view replaces the tab strip with a back button.
-  await user.goto("/my-account/edit-profile/");
+  // `domcontentloaded`, not the default `load`: waiting for every subresource
+  // here produced `net::ERR_ABORTED` on both CI attempts of both change-password
+  // specs. The plugin redirects within the account area while the page is still
+  // pulling assets, and that supersedes the navigation Playwright is waiting on.
+  // The locator wait below is the real readiness signal either way.
+  await user.goto("/my-account/edit-profile/", { waitUntil: "domcontentloaded" });
   await user.locator("a:has-text('Change Password')").first().click();
   await user.waitForLoadState("domcontentloaded");
   await user.locator("#password_current").waitFor({ state: "visible", timeout: 20_000 });

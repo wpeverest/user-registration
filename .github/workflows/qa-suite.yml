@@ -36,4 +36,20 @@ jobs:
       product_slug: user-registration
       product_type: plugin
       scope: changed
+      # The shared default is 45s, and it is too tight for THIS product.
+      #
+      # Nearly every spec here is a whole user journey — provision a form,
+      # publish a page, register an account on the front end, log in as that
+      # account, then delete it — which is a dozen page loads against
+      # Playground's WASM PHP. Measured on a reset Playground locally the
+      # slowest is ~25s, and the GitHub runner is comfortably slower than a
+      # developer's machine: at 45s the three login specs passed only on retry
+      # and the ajax spec timed out outright, all of them for want of headroom
+      # rather than because anything was wrong.
+      #
+      # 90s is roughly 3x the measured worst case, so a genuinely hung spec is
+      # still capped. It stays well inside the ceilings above it, which the
+      # reusable workflow asks for: max_failures (3) x 90s is 4.5 minutes
+      # against a 30-minute timeout_ms and a 40-minute job limit.
+      test_timeout_ms: 90000
 

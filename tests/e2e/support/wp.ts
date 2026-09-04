@@ -90,13 +90,35 @@ export async function gotoAdminPage(page: Page, slug: string, extra = "") {
  * exactly the class of bug this product's history is full of.
  */
 export async function restNonce(page: Page): Promise<string> {
+  const cached = nonceByContext.get(page.context());
+  if (cached) return cached;
+
   await page.goto("/wp-admin/options-general.php");
   const nonce = await page.evaluate(
     () => (window as any).wpApiSettings?.nonce ?? null,
   );
   if (!nonce) throw new Error("could not read the REST nonce from wp-admin");
+
+  nonceByContext.set(page.context(), nonce);
   return nonce;
 }
+
+/**
+ * One nonce per browser context, because reading it costs a full admin page
+ * load and four helpers want it — `ensureFirstRun`, `firstFormId`,
+ * `ensurePage` and `deleteUserByEmail`. Under Playground's WASM PHP those
+ * three redundant loads are seconds each, and the first CI run of this suite
+ * spent them in every test: three login specs passed only on retry and the
+ * ajax spec blew the 45s per-test ceiling outright, on a runner slower than
+ * any developer's machine.
+ *
+ * Keyed on the CONTEXT and not memoised for the whole run, which is the part
+ * that matters for correctness. A WordPress nonce is tied to the user's session
+ * token, every test gets a fresh context, and a fresh context means a fresh
+ * login — so a nonce minted in one test is not valid in the next. A run-wide
+ * cache would hand out stale nonces and fail as "Cookie check failed".
+ */
+const nonceByContext = new WeakMap<BrowserContext, string>();
 
 /** Create or update a page by slug, returning its permalink. */
 export async function ensurePage(

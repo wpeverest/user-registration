@@ -516,6 +516,22 @@ date, content-restriction rules.
   healthy catcher on :10000 and then fails waiting 30s for mail that never left.
   Set `TGQA_ENV=playground` when running the suite by hand against a Playground
   site — `run-suite.mjs` and the CI workflow both export it already.
+- **These specs are whole user journeys, and CI's shared 45s per-test default
+  does not fit them.** Provision a form, publish a page, register on the front
+  end, log in as that account, delete it — a dozen page loads against WASM PHP.
+  Measured worst case on a reset Playground is ~25s locally, and the GitHub
+  runner is slower still: at 45s the three login specs passed only on retry and
+  the ajax spec timed out. `qa-suite.yml` sets `test_timeout_ms: 90000`, about
+  3x the measured worst case, so a hung spec is still capped.
+  **Do not read a local pass as a CI pass** — build in headroom for a runner
+  that is roughly 1.5x slower than a developer's machine.
+- **`restNonce()` costs a full admin page load, so it is cached per browser
+  context** — four helpers want it and one test's worth of redundant loads was
+  most of the overshoot above. It must NOT be cached for the whole run: a
+  WordPress nonce embeds the session token, every test gets a fresh context and
+  therefore a fresh login, and a nonce from a previous test fails as
+  "Cookie check failed". `ensureFirstRun()` and the form id ARE cached run-wide,
+  because those are site state and do not expire with a session.
 - **`boot-wp.mjs` reuses a persisted site keyed on the checkout path; `--reset`
   is opt-in.** A local boot without it can be a site that has already been
   through onboarding, which is the opposite of the state CI gets. Reproducing a

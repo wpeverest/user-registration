@@ -30,7 +30,21 @@ import { ensurePage, restNonce } from "./wp";
  * Idempotent by the product's design — both helpers return existing ids when
  * they find them — so specs call it unconditionally rather than probing first.
  */
+/**
+ * Site state, not session state, so these are cached for the whole run.
+ *
+ * Unlike the REST nonce these do not expire with a browser context: once the
+ * wizard has run it has run, and the default form keeps its id. Re-deriving
+ * them per test cost two admin page loads each, which is what put the first CI
+ * run of this suite over its per-test ceiling. A worker restart after a failure
+ * resets them and they are simply re-derived.
+ */
+let firstRunDone = false;
+let cachedFormId: number | null = null;
+
 export async function ensureFirstRun(page: Page): Promise<void> {
+  if (firstRunDone) return;
+
   // A form already on the site means the wizard has run — on a developer's
   // machine, months ago. Stop before touching anything, because the bootstrap
   // is not read-only: `install_initial_pages()` sets `users_can_register` and
@@ -38,7 +52,12 @@ export async function ensureFirstRun(page: Page): Promise<void> {
   // either of those on somebody's real site, unasked, is not a fixture's
   // business, and a suite that edits the site it is measuring is one nobody
   // will point at their own install twice.
-  if (await formIdFromAdminList(page)) return;
+  const existing = await formIdFromAdminList(page);
+  if (existing) {
+    cachedFormId = existing;
+    firstRunDone = true;
+    return;
+  }
 
   const nonce = await restNonce(page);
   const status = await page.evaluate(async (nonce) => {
@@ -52,10 +71,14 @@ export async function ensureFirstRun(page: Page): Promise<void> {
   if (status !== 200) {
     throw new Error(`the first-run bootstrap answered HTTP ${status}`);
   }
+
+  firstRunDone = true;
 }
 
 /** The id of the first registration form on the site. */
 export async function firstFormId(page: Page): Promise<number> {
+  if (cachedFormId) return cachedFormId;
+
   const nonce = await restNonce(page);
   const id = await page.evaluate(async (nonce) => {
     const r = await fetch("/wp-json/wp/v2/user_registration?per_page=1&status=publish", {
@@ -68,19 +91,19 @@ export async function firstFormId(page: Page): Promise<number> {
     }
     return null;
   }, nonce);
-  if (id) return id;
+  if (id) return (cachedFormId = id);
 
   // The CPT is not REST-exposed — `register_post_type` passes no `show_in_rest`
   // — so the fetch above is always the losing branch today. The admin list
   // table is the real lookup, not the fallback it reads as.
   const fromList = await formIdFromAdminList(page);
-  if (fromList) return fromList;
+  if (fromList) return (cachedFormId = fromList);
 
   // An empty list on a site whose wizard has never run is expected, not a
   // failure. Provision it the way the product does and look once more.
   await ensureFirstRun(page);
   const afterBootstrap = await formIdFromAdminList(page);
-  if (afterBootstrap) return afterBootstrap;
+  if (afterBootstrap) return (cachedFormId = afterBootstrap);
 
   throw new Error(
     "no registration form exists on this site, and the first-run bootstrap did not create one",

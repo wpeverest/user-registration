@@ -12,9 +12,19 @@ import { deleteUserByEmail, loginAsAdmin, newVisitor } from "../support/wp";
  * checkboxes behind styled toggles, so they are set on the input and saved with
  * the builder's own "Update Form" button.
  */
-async function setAjaxLogin(page: Page, on: boolean): Promise<void> {
+/**
+ * Set the toggle and save, returning what it was BEFORE the change.
+ *
+ * Returning the previous value is what lets the caller skip a separate
+ * `ajaxLoginEnabled()` read just to know what to restore. The builder is a
+ * heavy screen and this spec was loading it four times; under Playground's WASM
+ * PHP that was the difference between comfortably inside CI's per-test ceiling
+ * and timing out on it.
+ */
+async function setAjaxLogin(page: Page, on: boolean): Promise<boolean> {
   await page.goto("/wp-admin/admin.php?page=user-registration-login-forms");
   await page.locator("#ur_login_ajax_submission").waitFor({ state: "attached", timeout: 30_000 });
+  const was = await page.locator("#ur_login_ajax_submission").isChecked();
   await page.locator("#ur_login_ajax_submission").evaluate((el, on) => {
     const box = el as HTMLInputElement;
     if (box.checked === on) return;
@@ -23,8 +33,22 @@ async function setAjaxLogin(page: Page, on: boolean): Promise<void> {
     const jq = (window as any).jQuery;
     if (jq) jq(box).trigger("change");
   }, on);
+  // Wait for the save to actually answer, not for a fixed 3s. This function is
+  // called twice per run of this spec, so the sleep was six seconds of dead
+  // time — and on a slow runner three seconds was ALSO not enough: navigating
+  // away mid-flight aborts the request and the setting silently does not
+  // persist. Waiting on the response is both faster and correct.
+  const saved = page.waitForResponse(
+    (r) =>
+      r.url().includes("admin-ajax.php") &&
+      r.request().method() === "POST" &&
+      (r.request().postData() ?? "").includes("user_registration_login_settings_save_action"),
+    { timeout: 30_000 },
+  );
   await page.locator("[name=save_login_form]").first().click();
-  await page.waitForTimeout(3000);
+  await saved;
+
+  return was;
 }
 
 async function ajaxLoginEnabled(page: Page): Promise<boolean> {
@@ -41,10 +65,12 @@ test.describe("ajax login @fresh", () => {
   }) => {
     await loginAsAdmin(page);
     await ensureFirstRun(page);
-    const original = await ajaxLoginEnabled(page);
 
+    // `original` comes back from the write itself rather than from a read
+    // beforehand, so the builder screen is loaded once here instead of twice.
+    let original: boolean | null = null;
     try {
-      await setAjaxLogin(page, true);
+      original = await setAjaxLogin(page, true);
       expect(await ajaxLoginEnabled(page), "Ajax Login did not persist").toBe(true);
 
       const url = await registrationPageFor(page, await firstFormId(page));
@@ -78,8 +104,11 @@ test.describe("ajax login @fresh", () => {
       await deleteUserByEmail(page, account.email);
       await visitor.close();
     } finally {
-      // A global setting: restore whatever the site had, pass or fail.
-      await setAjaxLogin(page, original);
+      // A global setting: restore whatever the site had, pass or fail. `null`
+      // means the write never got as far as reading the old value, so there is
+      // nothing trustworthy to restore — guessing `false` here would turn the
+      // setting OFF on a site that had it on.
+      if (original !== null) await setAjaxLogin(page, original);
     }
   });
 });
