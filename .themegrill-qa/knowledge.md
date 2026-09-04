@@ -453,6 +453,13 @@ date, content-restriction rules.
   `import-users` and `mollie` add-ons are all **inactive**. That is the correct
   baseline for a free-plugin run — re-check it if anything starts behaving
   like pro.
+- Running the suite locally: `pnpm test:e2e` (all), `test:e2e:fresh`,
+  `test:e2e:demo`, `test:e2e:ui`, `test:e2e:report`, `test:e2e:install`
+  (chromium). `playwright.config.ts` loads `.themegrill-qa/.env.local` itself,
+  so these work without sourcing anything first; variables already in the
+  environment win, which is what keeps `run-suite.mjs` authoritative under CI.
+  No script uses shell quoting or lookahead grep patterns, so they behave the
+  same in Git Bash, PowerShell and cmd.
 - Package manager `pnpm`. A Playwright suite now exists: `playwright.config.ts`,
   specs under `tests/e2e/specs/`, helpers under `tests/e2e/support/`, and
   `@playwright/test` pinned to 1.57.0 — the version `@wordpress/scripts` already

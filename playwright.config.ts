@@ -1,4 +1,33 @@
 import { defineConfig, devices } from "@playwright/test";
+import fs from "node:fs";
+import path from "node:path";
+
+/**
+ * Load `.themegrill-qa/.env.local` when the variables are not already set.
+ *
+ * `run-suite.mjs` exports TGQA_* itself, so under the runner this is a no-op.
+ * It exists so the `test:e2e` npm scripts work on their own — otherwise a
+ * developer running `pnpm test:e2e` gets the localhost fallback and a wall of
+ * connection errors, and has to know to source the file first.
+ *
+ * Deliberately hand-rolled rather than pulling in dotenv: it is fifteen lines,
+ * and it keeps the suite free of a dependency the runner does not need. Parsing
+ * is line-based and strips CR, so a file written on Windows works unchanged.
+ */
+function loadEnvLocal() {
+  const file = path.join(__dirname, ".themegrill-qa", ".env.local");
+  if (!fs.existsSync(file)) return;
+  for (const raw of fs.readFileSync(file, "utf8").split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    const eq = line.indexOf("=");
+    if (eq < 1) continue;
+    const key = line.slice(0, eq).trim();
+    const value = line.slice(eq + 1).trim().replace(/^["']|["']$/g, "");
+    if (!(key in process.env)) process.env[key] = value;
+  }
+}
+loadEnvLocal();
 
 /**
  * Playwright configuration for the claudegrill QA suite.
